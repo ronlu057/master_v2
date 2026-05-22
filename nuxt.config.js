@@ -1,7 +1,7 @@
 // Nuxt 4 母版專案設定檔（純 JavaScript，無 TypeScript）
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 
   // 白皮書「無 TS 政策」：停用 TypeScript 檢查
   typescript: { typeCheck: false, shim: false },
