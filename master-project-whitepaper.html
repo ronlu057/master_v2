@@ -508,6 +508,36 @@ export function formatPrice(n) {
 }
 // 任何元件 / 頁面可直接呼叫 formatPrice(1280)，不需 import
 </code></pre>
+<h3 id="98-切版分工ai-使用範圍">9.8 切版分工（AI 使用範圍）</h3>
+<blockquote class="callout callout--note"><p><strong>不建議用 AI 做像素級切版</strong>
+經實測，AI 從設計圖將視覺稿轉為精準 CSS 時，尺寸／樣式會跑掉 —— AI 只能由平面圖「目測估算」px／顏色／間距，無法逐像素還原。</p>
+</blockquote>
+<p>視覺精準還原由人工處理；AI 專注於結構與邏輯：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>由 AI 處理</th>
+<th>由人工處理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>母版架構、專案類型、header 派發等系統</td>
+<td>像素級視覺還原</td>
+</tr>
+<tr>
+<td>RWD 斷點、元件結構組裝</td>
+<td>精準尺寸／配色對稿</td>
+</tr>
+<tr>
+<td>Pinia、API／mock 串接、Block 系統</td>
+<td>設計稿精修</td>
+</tr>
+<tr>
+<td>白皮書文件、設定檔、git</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<p>HTML 結構骨架可由 AI 建立，但 <code>&lt;style&gt;</code> 內的精準尺寸由人工調整。</p>
 <hr>
 <h2 id="10-頁面與模組對照表">10. 頁面與模組對照表</h2>
 <div class="table-wrap"><table>
@@ -591,14 +621,15 @@ export function formatPrice(n) {
 <pre data-lang="TEXT"><code class="language-text">components/
  ┣ AppHeader.vue        派發器（依設定選版型，不含設計）
  ┗ headers/
-    ┣ Header01.vue      版型 01（標準型：Logo 左、選單右）
-    ┣ Header02.vue      版型 02（置中型：Logo 置中、選單於下方）
-    ┗ HeaderXX.vue      …（依需求擴充，例如 15 種）
+    ┣ Header01.vue          標準型（Logo 左、選單右）
+    ┣ Header02.vue          置中型（Logo 置中、選單於下方）
+    ┣ header_value.vue      VALUE 佳質食品風格
+    ┗ &lt;檔名&gt;.vue            …（依需求擴充，檔名自取）
 </code></pre>
 <h3 id="112-設定與切換">11.2 設定與切換</h3>
-<p>於 <code>.env</code> 指定要使用的版型編號：</p>
-<pre data-lang="BASH"><code class="language-bash"># 選用 components/headers/ 內的版型編號
-NUXT_PUBLIC_HEADER=01
+<p>於 <code>.env</code> 指定版型 —— 值 = <code>headers/</code> 內的<strong>檔名</strong>（不含 <code>.vue</code>）：</p>
+<pre data-lang="BASH"><code class="language-bash"># 值 = 版型檔名，例如 Header01、header_value
+NUXT_PUBLIC_HEADER=header_value
 </code></pre>
 <p>切換版型只需改此值並重啟 dev server，版面程式碼完全不動。此設定與 <code>NUXT_PUBLIC_PROJECT_TYPE</code> 同屬 <code>runtimeConfig.public</code>，機制一致。</p>
 <h3 id="113-派發機制">11.3 派發機制</h3>
@@ -606,14 +637,14 @@ NUXT_PUBLIC_HEADER=01
 <pre data-lang="JAVASCRIPT"><code class="language-javascript">const headers = import.meta.glob(&#39;./headers/*.vue&#39;, { eager: true })
 const { public: pub } = useRuntimeConfig()
 const current =
-  headers[`./headers/Header${pub.header}.vue`]?.default ||
+  headers[`./headers/${pub.header}.vue`]?.default ||
   Object.values(headers)[0]?.default
 </code></pre>
 <blockquote>
 <p>⚠️ 勿用 <code>resolveComponent(&#39;字串&#39;)</code> 取版型 —— Nuxt 自動引入元件無法以字串解析（同 <code>BlockRenderer</code> §8.2 的限制）。<code>import.meta.glob</code> 是正解。</p>
 </blockquote>
 <h3 id="114-新增版型">11.4 新增版型</h3>
-<p>在 <code>headers/</code> 放一個 <code>HeaderXX.vue</code> 即可，<code>AppHeader.vue</code> 不需修改。各版型<strong>共用同一套資料 composable</strong>（<code>useSiteMenu</code> / <code>useProject</code> / <code>useUiStore</code>），只有版面與樣式不同 —— 資料層不重複撰寫。</p>
+<p>在 <code>headers/</code> 放一個 <code>.vue</code>（檔名自取）即可，再把 <code>NUXT_PUBLIC_HEADER</code> 設成該檔名；<code>AppHeader.vue</code> 不需修改。各版型<strong>共用同一套資料 composable</strong>（<code>useSiteMenu</code> / <code>useProject</code> / <code>useUiStore</code>），只有版面與樣式不同 —— 資料層不重複撰寫。</p>
 <hr>
 <h2 id="修訂紀錄">修訂紀錄</h2>
 <div class="table-wrap"><table>

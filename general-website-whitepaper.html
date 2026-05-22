@@ -722,6 +722,32 @@ GET /api/contact/unsubscribe?token=xxx
 </code></pre>
 <h3 id="84-前端整合">8.4 前端整合</h3>
 <p>Nuxt / Next：在 <code>useHead</code> / <code>Head</code> 把這支回來的欄位塞進去就好；head_script / body_script 用 <code>v-html</code> 或對應的 inject 機制注入。</p>
+<h3 id="85-結構化資料json-ld-sitemap--robotstxt--由前端負責">8.5 結構化資料（JSON-LD）/ sitemap / robots.txt — 由前端負責</h3>
+<p><strong>這三項後端不產生，由前端框架靜態 / SSR 生成</strong>：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>推薦做法（Nuxt 3 範例）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>JSON-LD</strong>（Product / Article / Organization 等）</td>
+<td>前端拿 detail API 後，組 schema.org 物件 → <code>useHead({ script: [{ type: &#39;application/ld+json&#39;, children: JSON.stringify(...) }] })</code></td>
+</tr>
+<tr>
+<td><strong>sitemap.xml</strong></td>
+<td>用 <code>@nuxtjs/sitemap</code> 模組；拉 <code>/api/shop/list</code> + <code>/api/news/list</code> + <code>/api/article/list</code> 等 build-time / runtime 動態產生</td>
+</tr>
+<tr>
+<td><strong>robots.txt</strong></td>
+<td>用 <code>@nuxtjs/robots</code> 模組；正式 / 測試環境給不同 policy（dev → <code>Disallow: /</code>、prod → <code>Allow: /</code>）</td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p><strong>後端目前不提供</strong> <code>/sitemap.xml</code> 或 <code>/robots.txt</code> endpoint —— 因為這兩個是「全站 metadata」由前端框架更知道路由結構。若要加，可以在 .htaccess 路由到對應的前端 SSR endpoint。</p>
+</blockquote>
+<p><strong>Firm 資料的結構化標記</strong>：<code>/api/firm/view</code> 回應裡有 <code>schema.localbusiness</code> 欄位（從 <code>db_firm.data_schema_localbusiness</code> 來），是後台手動編輯的 JSON-LD 字串。前端拿到後直接塞到 <code>&lt;script type=&quot;application/ld+json&quot;&gt;</code> 即可 — 不要 stringify 再 stringify。</p>
 <hr>
 <h2 id="9-輕量模組">9. 輕量模組</h2>
 <h3 id="91-firmapicontroller--公司資料">9.1 FirmApiController — 公司資料</h3>
@@ -1237,6 +1263,7 @@ $this-&gt;language  // 第一次存取才解語系
 <li><strong>結構</strong>：<code>data_m_id</code> 指父節點 id、<code>data_level</code> 層級深度，root 節點 <code>data_m_id=0</code></li>
 <li><strong>適用</strong>：知識庫、品牌故事、技術文章、企業歷史等需要多層的內容</li>
 <li><strong>麵包屑</strong>：<code>/detail</code> 會自動算從 root 到當前的路徑，前端直接渲染</li>
+<li><strong>麵包屑安全機制</strong>：後端用 <code>$safety=8</code> 限制最大層數，<strong>防止資料結構壞掉時無限迴圈</strong>（例：兩節點 m_id 互指）。實務上文章樹很少超過 5 層，8 已是寬鬆上限。若超過 8 層的真實樹狀資料，前端拿到的 breadcrumb 會被截斷在前 8 個，需要請後台調 <code>ArticleApiController::loadBreadcrumb</code> 的常數</li>
 </ul>
 <h3 id="127-洽詢車--b2b-詢價">12.7 洽詢車 / B2B 詢價</h3>
 <div class="table-wrap"><table>
@@ -1394,6 +1421,18 @@ $this-&gt;language  // 第一次存取才解語系
 </ul>
 </li>
 <li><strong>雙因子查狀態</strong>：<code>/repair/status</code> 必須同時帶<strong>編號 + 當初送出的 email</strong>，避免被任意爬資料；查不到一律回 404 不洩漏「編號存在但 email 不對」 vs 「編號不存在」的差別</li>
+</ul>
+<blockquote>
+<p>⚠️ <strong>編號欄位命名（容易踩雷）</strong>：</p>
+<ul>
+<li>DB 存欄位叫 <code>data_repair_no</code></li>
+<li>後端回應裡叫 <code>repair_no</code>（不帶 <code>data_</code> 前綴）</li>
+<li><code>/repair/status</code> 的 query parameter 叫 <code>number</code>（不是 <code>repair_no</code>）</li>
+<li>信件範本變數叫 <code>{repair_no}</code></li>
+</ul>
+<p>同一個東西在不同地方叫不同名字——前端串時注意：<strong>寫單拿到 <code>repair_no</code>，查狀態送 <code>?number=...</code></strong></p>
+</blockquote>
+<ul>
 <li><strong>信件範本變數</strong>：<code>{repair_no}</code> <code>{name}</code> <code>{email}</code> <code>{table}</code> <code>{message}</code></li>
 <li><strong>與 Inquiry / Enroll 的差別</strong>：報修是售後（客人已經是用戶），有編號可追蹤狀態；inquiry 是售前（B2B 詢價），enroll 是活動報名（一次性）</li>
 </ul>
