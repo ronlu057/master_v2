@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>母版專案開發白皮書 · AD-Design</title>
+<style>:root{
+  --ink:#1f2933;--ink-soft:#5b6b7a;--heading:#0f2b29;
+  --accent:#0d9488;--accent-dark:#0f766e;--accent-soft:#e6f5f3;
+  --bg:#fff;--bg-soft:#f4f7f7;--code-bg:#f6f8fa;--border:#e2e8ea;
+  --container:1180px;
+}
+*{box-sizing:border-box;margin:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  color:var(--ink);background:var(--bg-soft);line-height:1.8;-webkit-font-smoothing:antialiased;
+}
+.hero{background:linear-gradient(135deg,#0f766e 0%,#134e4a 60%,#0c3b38 100%);color:#fff;padding:64px 24px 56px;}
+.hero__inner{max-width:var(--container);margin:0 auto;}
+.hero__eyebrow{letter-spacing:3px;font-size:13px;font-weight:700;opacity:.7;}
+.hero__title{font-size:42px;margin:14px 0 10px;font-weight:800;letter-spacing:1px;}
+.hero__sub{font-size:17px;opacity:.88;}
+.hero__tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;}
+.hero__tags span{font-size:12px;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);}
+.layout{max-width:var(--container);margin:0 auto;padding:40px 24px 64px;display:grid;grid-template-columns:248px 1fr;gap:40px;align-items:start;}
+.sidebar{position:sticky;top:24px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px 14px;max-height:calc(100vh - 48px);overflow:auto;}
+.sidebar__title{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--ink-soft);padding:0 8px 10px;}
+.toc{display:flex;flex-direction:column;gap:2px;}
+.toc a{font-size:13.5px;color:var(--ink-soft);text-decoration:none;padding:7px 10px;border-radius:8px;border-left:2px solid transparent;transition:.15s;}
+.toc a:hover{background:var(--bg-soft);color:var(--accent-dark);}
+.toc a.is-active{background:var(--accent-soft);color:var(--accent-dark);font-weight:700;border-left-color:var(--accent);}
+.content{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:48px 56px;min-width:0;}
+.content h2{font-size:26px;color:var(--heading);margin:48px 0 18px;padding-bottom:12px;border-bottom:2px solid var(--border);scroll-margin-top:24px;}
+.content h3{font-size:20px;color:var(--accent-dark);margin:32px 0 12px;scroll-margin-top:24px;}
+.content h4{font-size:16px;color:var(--heading);margin:24px 0 10px;}
+.content p{margin:14px 0;}
+.content ul,.content ol{margin:14px 0;padding-left:24px;}
+.content li{margin:6px 0;}
+.content a{color:var(--accent-dark);text-decoration:none;border-bottom:1px solid var(--accent-soft);}
+.content a:hover{border-bottom-color:var(--accent);}
+.content hr{border:none;border-top:1px solid var(--border);margin:36px 0;}
+.content strong{color:var(--heading);font-weight:700;}
+.content code{font-family:'JetBrains Mono','Fira Code',Consolas,monospace;font-size:.88em;background:var(--accent-soft);color:var(--accent-dark);padding:2px 6px;border-radius:5px;}
+.content pre{position:relative;background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:22px 20px 20px;margin:18px 0;overflow-x:auto;}
+.content pre code{background:none;color:#24343d;padding:0;font-size:13px;line-height:1.7;}
+.content pre[data-lang]::before{content:attr(data-lang);position:absolute;top:0;right:0;font-size:11px;font-weight:700;letter-spacing:1px;background:var(--accent);color:#fff;padding:3px 10px;border-radius:0 9px 0 9px;}
+.content blockquote{margin:18px 0;padding:14px 20px;background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;color:var(--ink-soft);}
+.content blockquote p{margin:5px 0;}
+.content blockquote code{background:#fff;}
+.content .callout::before{display:block;font-weight:800;font-size:12.5px;letter-spacing:1px;margin-bottom:6px;}
+.content .callout--warning{background:#fff7ed;border-left-color:#f59e0b;color:#854d0e;}
+.content .callout--warning::before{content:'⚠ 注意 WARNING';color:#b45309;}
+.content .callout--caution{background:#fef2f2;border-left-color:#ef4444;color:#991b1b;}
+.content .callout--caution::before{content:'⚠ 警告 CAUTION';color:#dc2626;}
+.content .callout--note{background:#eff6ff;border-left-color:#3b82f6;color:#1e40af;}
+.content .callout--note::before{content:'ℹ 說明 NOTE';color:#2563eb;}
+.content .callout--important{background:#faf5ff;border-left-color:#a855f7;color:#6b21a8;}
+.content .callout--important::before{content:'★ 重要 IMPORTANT';color:#9333ea;}
+.content .callout--tip{background:#ecfdf5;border-left-color:#10b981;color:#065f46;}
+.content .callout--tip::before{content:'✓ 提示 TIP';color:#059669;}
+.table-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--border);border-radius:10px;}
+.content table{border-collapse:collapse;width:100%;font-size:14px;}
+.content thead th{background:#0f3b38;color:#fff;text-align:left;font-weight:700;padding:11px 14px;white-space:nowrap;}
+.content tbody td{padding:10px 14px;border-top:1px solid var(--border);vertical-align:top;}
+.content tbody tr:nth-child(even){background:var(--bg-soft);}
+.content tbody tr:hover{background:var(--accent-soft);}
+.content table code{font-size:12.5px;}
+.foot{text-align:center;padding:36px 24px;color:var(--ink-soft);font-size:13px;border-top:1px solid var(--border);background:var(--bg);}
+.foot__note{opacity:.6;margin-top:4px;font-size:12px;}
+.totop{position:fixed;right:24px;bottom:24px;width:46px;height:46px;border:none;border-radius:50%;background:var(--accent);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 6px 20px rgba(13,148,136,.4);opacity:0;visibility:hidden;transition:.25s;}
+.totop.is-show{opacity:1;visibility:visible;}
+@media(max-width:920px){
+  .layout{grid-template-columns:1fr;gap:20px;}
+  .sidebar{position:static;max-height:320px;}
+  .content{padding:32px 22px;}
+  .hero{padding:48px 22px 40px;}
+  .hero__title{font-size:30px;}
+}
+@media print{
+  body{background:#fff;}
+  .sidebar,.totop,.hero__tags{display:none;}
+  .content,.sidebar{border:none;}
+  .layout{display:block;padding:0;}
+}</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero__inner">
+    <p class="hero__eyebrow">AD-DESIGN · 開發指南</p>
+    <h1 class="hero__title">母版專案開發白皮書</h1>
+    <p class="hero__sub">一套母版，五種專案類型</p>
+    <div class="hero__tags"><span>模組件套版</span><span>客製首頁</span><span>全部客製開發</span><span>購物類型</span><span>臨時站</span></div>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <p class="sidebar__title">目錄 CONTENTS</p>
+    <nav class="toc">
+      <a href="#1-母版概述">1. 母版概述</a>
+      <a href="#2-核心技術棧">2. 核心技術棧</a>
+      <a href="#3-開發環境與啟動">3. 開發環境與啟動</a>
+      <a href="#4-五種專案類型">4. 五種專案類型</a>
+      <a href="#6-專案類型切換機制">6. 專案類型切換機制</a>
+      <a href="#7-api-串接層與-mock-json">7. API 串接層與 Mock JSON</a>
+      <a href="#8-block-模組系統">8. Block 模組系統</a>
+      <a href="#9-開發與編程規範">9. 開發與編程規範</a>
+      <a href="#10-頁面與模組對照表">10. 頁面與模組對照表</a>
+      <a href="#修訂紀錄">修訂紀錄</a>
+    </nav>
+  </aside>
+  <main class="content">
+
+<p><img src="https://img.shields.io/badge/Vue%203-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D" alt="Vue.js">
+<img src="https://img.shields.io/badge/Nuxt%204-002E3B?style=for-the-badge&logo=nuxt.js&logoColor=00C58E" alt="Nuxt.js">
+<img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite">
+<img src="https://img.shields.io/badge/Pinia-F6D365?style=for-the-badge&logo=vue.js&logoColor=white" alt="Pinia">
+<img src="https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white" alt="Sass">
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"></p>
+<p>本文件為<strong>母版專案</strong>的開發指南與規範。此母版以一套程式碼基底，透過設定切換衍生出<strong>五種專案類型</strong>，供開發團隊快速交付不同需求的網站。著手開發前請詳讀本文件。</p>
+<blockquote>
+<p>版本：v2.0　|　更新日期：2026-05-22　|　維護單位：AD-Design 技術部
+🔗 後端 API 規格請參閱：<a href="general-website-whitepaper.html">一般網站白皮書</a></p>
+</blockquote>
+<hr>
+<h2 id="目錄">📑 目錄</h2>
+<ul>
+<li><a href="#1-%E6%AF%8D%E7%89%88%E6%A6%82%E8%BF%B0">1. 母版概述</a></li>
+<li><a href="#2-%E6%A0%B8%E5%BF%83%E6%8A%80%E8%A1%93%E6%A3%A7">2. 核心技術棧</a></li>
+<li><a href="#3-%E9%96%8B%E7%99%BC%E7%92%B0%E5%A2%83%E8%88%87%E5%95%9F%E5%8B%95">3. 開發環境與啟動</a></li>
+<li><a href="#4-%E4%BA%94%E7%A8%AE%E5%B0%88%E6%A1%88%E9%A1%9E%E5%9E%8B">4. 五種專案類型</a></li>
+<li><a href="#5-%E5%B0%88%E6%A1%88%E7%9B%AE%E9%8C%84%E6%9E%B6%E6%A7%8B">5. 專案目錄架構</a></li>
+<li><a href="#6-%E5%B0%88%E6%A1%88%E9%A1%9E%E5%9E%8B%E5%88%87%E6%8F%9B%E6%A9%9F%E5%88%B6">6. 專案類型切換機制</a></li>
+<li><a href="#7-api-%E4%B8%B2%E6%8E%A5%E5%B1%A4%E8%88%87-mock-json">7. API 串接層與 Mock JSON</a></li>
+<li><a href="#8-block-%E6%A8%A1%E7%B5%84%E7%B3%BB%E7%B5%B1">8. Block 模組系統</a></li>
+<li><a href="#9-%E9%96%8B%E7%99%BC%E8%88%87%E7%B7%A8%E7%A8%8B%E8%A6%8F%E7%AF%84">9. 開發與編程規範</a></li>
+<li><a href="#10-%E9%A0%81%E9%9D%A2%E8%88%87%E6%A8%A1%E7%B5%84%E5%B0%8D%E7%85%A7%E8%A1%A8">10. 頁面與模組對照表</a></li>
+</ul>
+<hr>
+<h2 id="1-母版概述">1. 母版概述</h2>
+<h3 id="11-設計目標">1.1 設計目標</h3>
+<p>一套母版同時具備「快速套版」與「深度客製」兩端的能力。實務上專案需求落在一條光譜上 —— 從幾乎不改的套版站，到整站手刻。本母版用<strong>一個設定值</strong>決定當前專案落在光譜何處，其餘程式碼共用。</p>
+<h3 id="12-共用基底">1.2 共用基底</h3>
+<p>無論哪種專案類型，以下三層完全共用、不需重寫：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>層級</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>API 串接層</strong></td>
+<td><code>composables/useApi.js</code> — 統一處理<a href="general-website-whitepaper.html">一般網站白皮書</a> §2.1 回應格式</td>
+</tr>
+<tr>
+<td><strong>元件庫</strong></td>
+<td>頁首/頁尾/選單/Banner/彈跳廣告/Block 模組/新聞卡片…</td>
+</tr>
+<tr>
+<td><strong>頁面路由</strong></td>
+<td>首頁、新聞、關於、聯絡、搜尋、FAQ、服務據點、購物 等</td>
+</tr>
+</tbody></table></div>
+<p>差異在於「<strong>首頁與內頁各用多少手刻、多少 block 模組</strong>」，由專案類型決定。</p>
+<hr>
+<h2 id="2-核心技術棧">2. 核心技術棧</h2>
+<blockquote class="callout callout--warning"><p><strong>無 TypeScript 政策</strong>
+本專案全程使用 <strong>純 JavaScript (ES6+)</strong>，嚴禁引入 <code>.ts</code> 檔案或在 <code>&lt;script&gt;</code> 使用 <code>lang=&quot;ts&quot;</code>。
+參考網路文件複製範例時，務必手動移除所有 TS 類型定義（<code>: string</code>、<code>interface</code>、<code>&lt;T&gt;</code> 等）。</p>
+</blockquote>
+<ul>
+<li>🟢 <strong>基礎框架</strong>：<a href="https://vuejs.org/">Vue 3</a>（Composition API + <code>&lt;script setup&gt;</code>）</li>
+<li>⛰️ <strong>應用框架</strong>：<a href="https://nuxt.com/">Nuxt 4</a>（SSR、檔案路由、自動引入）</li>
+<li>⚡ <strong>建置工具</strong>：<a href="https://vitejs.dev/">Vite</a>（Nuxt 底層引擎）</li>
+<li>🍍 <strong>狀態管理</strong>：<a href="https://pinia.vuejs.org/">Pinia</a>（Setup Store 風格）</li>
+<li>🎨 <strong>CSS 預處理器</strong>：<a href="https://sass-lang.com/">Sass / SCSS</a>（搭配 CSS 變數做主題切換）</li>
+<li>🟨 <strong>程式語言</strong>：JavaScript</li>
+</ul>
+<hr>
+<h2 id="3-開發環境與啟動">3. 開發環境與啟動</h2>
+<h3 id="31-環境需求">3.1 環境需求</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="left">工具</th>
+<th align="left">版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Node.js</strong></td>
+<td align="left"><code>v20.x</code> 以上（建置時實測 <code>v24</code>）</td>
+</tr>
+<tr>
+<td align="left"><strong>套件管理</strong></td>
+<td align="left"><code>npm</code></td>
+</tr>
+<tr>
+<td align="left"><strong>編輯器</strong></td>
+<td align="left">VS Code + <code>Vue - Official</code> 擴充套件（請關閉 TS 報錯）</td>
+</tr>
+</tbody></table></div>
+<h3 id="32-指令">3.2 指令</h3>
+<pre data-lang="BASH"><code class="language-bash"># 安裝相依套件
+npm install
+
+# 啟動本地開發伺服器（http://localhost:3000）
+npm run dev
+
+# 建立正式環境佈署包
+npm run build
+
+# 預覽正式環境
+npm run preview
+</code></pre>
+<hr>
+<h2 id="4-五種專案類型">4. 五種專案類型</h2>
+<p>由 <code>.env</code> 的 <code>NUXT_PUBLIC_PROJECT_TYPE</code> 決定，五選一：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>類型</th>
+<th>設定值</th>
+<th>首頁</th>
+<th>內頁</th>
+<th>購物</th>
+<th>適用情境</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>模組件套版</strong></td>
+<td><code>module</code></td>
+<td>block 模組組裝</td>
+<td>block 模組組裝</td>
+<td>✗</td>
+<td>標準形象站，後台 cipage 編輯內容</td>
+</tr>
+<tr>
+<td><strong>客製首頁</strong></td>
+<td><code>custom-home</code></td>
+<td>手刻 + block 模組組裝</td>
+<td>block 模組組裝</td>
+<td>✗</td>
+<td>首頁要特殊視覺、內頁走標準模組</td>
+</tr>
+<tr>
+<td><strong>全部客製開發</strong></td>
+<td><code>full-custom</code></td>
+<td>手刻 + block 模組組裝</td>
+<td>手刻</td>
+<td>✗</td>
+<td>整站皆需獨特設計</td>
+</tr>
+<tr>
+<td><strong>購物類型</strong></td>
+<td><code>shop</code></td>
+<td>手刻 + block 模組組裝</td>
+<td>block 模組組裝</td>
+<td>✓</td>
+<td>電商站，啟用購物車與商品頁</td>
+</tr>
+<tr>
+<td><strong>臨時站</strong></td>
+<td><code>temp</code></td>
+<td>固定模板</td>
+<td>隱藏</td>
+<td>✗</td>
+<td>「即將開幕」、活動過渡頁、暫代站</td>
+</tr>
+</tbody></table></div>
+<h3 id="41-功能矩陣">4.1 功能矩陣</h3>
+<p>每種類型對應三個旗標（定義於 <code>app.config.js</code>）：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>旗標</th>
+<th>意義</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>customHome</code></td>
+<td>首頁採手刻版型、並可嵌入 block 模組（<code>true</code>）；或整頁 block 模組組裝（<code>false</code>）</td>
+</tr>
+<tr>
+<td><code>customPages</code></td>
+<td>內頁手刻（<code>true</code>）或 block 模組組裝（<code>false</code>）</td>
+</tr>
+<tr>
+<td><code>shop</code></td>
+<td>是否啟用購物模組</td>
+</tr>
+<tr>
+<td><code>minimal</code></td>
+<td>精簡模式（臨時站）：固定模板、單頁呈現、隱藏完整選單</td>
+</tr>
+</tbody></table></div>
+<h3 id="42-切換方式">4.2 切換方式</h3>
+<pre data-lang="BASH"><code class="language-bash"># 編輯 .env
+NUXT_PUBLIC_PROJECT_TYPE=shop
+
+# 重啟 dev server
+npm run dev
+</code></pre>
+<p>切換後 <code>&lt;html&gt;</code> 會帶上 <code>data-project=&quot;shop&quot;</code>，CSS 變數主題同步換色（見 §6、§9.4）。</p>
+<hr>
+<h2 id="5-專案目錄架構">5. 專案目錄架構</h2>
+<p>採 Nuxt 平鋪式結構（程式碼直接置於專案根目錄）：</p>
+<pre data-lang="TEXT"><code class="language-text">📦 master_v2/
+ ┣ 📂 assets/styles/    🎨 全域樣式（main.scss：CSS 變數主題 + reset + 共用 class）
+ ┣ 📂 components/       🧩 共用元件（自動引入）
+ ┃ ┣ AppHeader / AppFooter / SiteMenu / PopupAds / LoadingState / NewsCard / PageBanner
+ ┃ ┣ BlockRenderer + BlockBanner / BlockIntro / BlockNews / BlockGeneric   ← Block 模組
+ ┃ ┗ HomeModule / HomeCustom / HomeMinimal                                ← 三種首頁版型
+ ┣ 📂 composables/      🪝 組合式函式（自動引入）
+ ┃ ┣ useApi.js     API 串接層
+ ┃ ┣ useProject.js 專案類型與功能旗標
+ ┃ ┣ useSite.js    選單 / 公司資料 / 多語字典
+ ┃ ┗ useMeta.js    SEO Meta
+ ┣ 📂 layouts/         版型（default.vue / shop.vue）
+ ┣ 📂 pages/           📄 檔案路由頁面
+ ┣ 📂 stores/          🍍 Pinia（useUiStore / useCartStore）
+ ┣ 📂 server/
+ ┃ ┣ 📂 routes/api/[...slug].js   Mock API 派發器
+ ┃ ┗ 📂 mock/db.js                Mock 資料
+ ┣ 📜 app.vue          入口（掛 NuxtLayout / 設定 data-project 主題）
+ ┣ 📜 app.config.js    五種專案類型功能矩陣
+ ┣ 📜 error.vue        錯誤頁
+ ┣ 📝 nuxt.config.js   Nuxt 全局設定
+ ┗ 📝 .env             專案類型 / API 來源設定
+</code></pre>
+<hr>
+<h2 id="6-專案類型切換機制">6. 專案類型切換機制</h2>
+<p>三個檔案協同運作：</p>
+<pre><code>.env (NUXT_PUBLIC_PROJECT_TYPE)
+        ↓ 注入 runtimeConfig.public.projectType
+nuxt.config.js
+        ↓ 讀取
+composables/useProject.js  ←─ 對照 app.config.js 的 projectTypes 矩陣
+        ↓ 回傳 { type, customHome, customPages, isShop, isMinimal }
+頁面 / 元件
+</code></pre>
+<h3 id="61-在頁面元件中使用">6.1 在頁面/元件中使用</h3>
+<pre data-lang="JAVASCRIPT"><code class="language-javascript">const { type, customHome, isShop, isMinimal } = useProject()
+</code></pre>
+<h3 id="62-首頁分流pagesindexvue">6.2 首頁分流（<code>pages/index.vue</code>）</h3>
+<pre data-lang="VUE"><code class="language-vue">&lt;template&gt;
+  &lt;HomeMinimal v-if=&quot;isMinimal&quot; /&gt;       &lt;!-- 臨時站 --&gt;
+  &lt;HomeCustom  v-else-if=&quot;customHome&quot; /&gt; &lt;!-- 客製首頁 / 全客製 / 購物 --&gt;
+  &lt;HomeModule  v-else /&gt;                 &lt;!-- 模組件套版 --&gt;
+&lt;/template&gt;
+</code></pre>
+<p>新增專案類型：在 <code>app.config.js</code> 的 <code>projectTypes</code> 加一筆、<code>.env</code> 改設定值即可。</p>
+<hr>
+<h2 id="7-api-串接層與-mock-json">7. API 串接層與 Mock JSON</h2>
+<h3 id="71-統一串接層">7.1 統一串接層</h3>
+<p>所有 API 請求一律經 <code>composables/useApi.js</code>，它負責解開<a href="general-website-whitepaper.html">一般網站白皮書</a> §2.1 的回應格式 <code>{ status, data: { payload, meta } }</code>，頁面拿到的直接是 <code>payload</code>。</p>
+<pre data-lang="JAVASCRIPT"><code class="language-javascript">// SSR 資料獲取（頁面 / 元件 setup 階段）
+const { data } = await useApiData(&#39;/home/view&#39;)
+
+// 命令式請求（表單送出等 POST 互動）
+const res = await $api(&#39;/contact/submit&#39;, { method: &#39;POST&#39;, body })
+</code></pre>
+<h3 id="72-mock-json--真實後端切換">7.2 Mock JSON ↔ 真實後端切換</h3>
+<p>由 <code>.env</code> 的 <code>NUXT_PUBLIC_API_BASE</code> 控制：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><code>NUXT_PUBLIC_API_BASE</code></th>
+<th>行為</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>留空</td>
+<td>打本地 mock JSON（<code>server/routes/api/[...slug].js</code>）</td>
+</tr>
+<tr>
+<td>填後端網域</td>
+<td>打真實後端，回應格式不變，<strong>前端程式碼無需修改</strong></td>
+</tr>
+</tbody></table></div>
+<p>前端開發階段一律留空，用 mock 資料開發版面與互動；後端就緒後再填網域。</p>
+<h3 id="73-mock-層結構">7.3 Mock 層結構</h3>
+<ul>
+<li><code>server/mock/db.js</code> — 模擬資料（對應白皮書各 controller 的 payload）</li>
+<li><code>server/routes/api/[...slug].js</code> — 派發器，依路徑/方法回傳對應 mock，並包成白皮書回應格式</li>
+</ul>
+<p>新增 mock endpoint：在 <code>db.js</code> 補資料、在派發器 <code>switch</code> 加 <code>case</code> 即可。</p>
+<hr>
+<h2 id="8-block-模組系統">8. Block 模組系統</h2>
+<p>Block 系統讓後端一次回完整資料、前端只負責 render（<a href="general-website-whitepaper.html">一般網站白皮書</a> §3）。模組件套版整頁皆由 block 組裝；客製首頁／全客製／購物則在手刻版型中嵌入 block 模組（見 <code>components/HomeCustom.vue</code>）。</p>
+<h3 id="81-資料結構">8.1 資料結構</h3>
+<pre><code>payload.slots[] → slot.blocks[] → block.item.rows[]
+</code></pre>
+<p>每個 <code>block</code> 帶 <code>type</code>（決定套哪個元件）、<code>title</code>、<code>item.rows</code>（內容固定取此）。</p>
+<h3 id="82-blockrenderer">8.2 BlockRenderer</h3>
+<p><code>components/BlockRenderer.vue</code> 維護 <code>block.type → 元件</code> 對照表，未知 type 直接 skip：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><code>block.type</code></th>
+<th>對應元件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>banner</code></td>
+<td><code>BlockBanner</code>（輪播）</td>
+</tr>
+<tr>
+<td><code>intro</code></td>
+<td><code>BlockIntro</code>（圖文左右排版）</td>
+</tr>
+<tr>
+<td><code>news</code></td>
+<td><code>BlockNews</code>（新聞卡片列）</td>
+</tr>
+<tr>
+<td><code>push</code> / <code>other_ad</code></td>
+<td><code>BlockGeneric</code>（通用卡片格）</td>
+</tr>
+</tbody></table></div>
+<p>新增 block 樣式：建立 <code>BlockXxx.vue</code>、在 <code>BlockRenderer.vue</code> 的對照表加一筆。</p>
+<blockquote>
+<p>⚠️ Nuxt 自動引入的元件<strong>無法</strong>用 <code>resolveComponent(&#39;字串&#39;)</code> 取得；
+Block 元件須在 <code>BlockRenderer.vue</code> 以 <code>import</code> 明確引入後放入對照表。</p>
+</blockquote>
+<hr>
+<h2 id="9-開發與編程規範">9. 開發與編程規範</h2>
+<h3 id="91-vue-元件規範">9.1 Vue 元件規範</h3>
+<ol>
+<li>統一 <code>&lt;script setup&gt;</code> 語法。</li>
+<li><strong>不使用 TypeScript</strong>。</li>
+<li>元件命名 <strong>PascalCase</strong> 且多字詞（如 <code>AppHeader.vue</code>、<code>NewsCard.vue</code>）。</li>
+<li>善用 Nuxt 自動引入：<code>components/</code>、<code>composables/</code>、<code>stores/</code> 與 Vue API（<code>ref</code>、<code>computed</code>…）皆免手動 <code>import</code>。</li>
+</ol>
+<h3 id="92-狀態管理pinia">9.2 狀態管理（Pinia）</h3>
+<ul>
+<li>Store 集中於 <code>stores/</code>，採 <strong>Setup Store</strong> 風格。</li>
+<li>範例：<code>useUiStore</code>（行動選單開關）、<code>useCartStore</code>（購物車）。</li>
+</ul>
+<pre data-lang="JAVASCRIPT"><code class="language-javascript">// stores/useCartStore.js
+import { defineStore } from &#39;pinia&#39;
+import { ref, computed } from &#39;vue&#39;
+
+export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
+  const items = ref([])
+  const count = computed(() =&gt; items.value.reduce((s, i) =&gt; s + i.qty, 0))
+  function add(product, qty = 1) { /* ... */ }
+  return { items, count, add }
+})
+</code></pre>
+<h3 id="93-資料獲取">9.3 資料獲取</h3>
+<ul>
+<li>SSR 資料用 <code>useApiData</code>（包裝 <code>useFetch</code>）；POST 互動用 <code>$api</code>（包裝 <code>$fetch</code>）。</li>
+<li>勿在 setup 外部調用非同步生命週期鉤子。</li>
+</ul>
+<h3 id="94-樣式與主題">9.4 樣式與主題</h3>
+<ul>
+<li>主題色採 <strong>CSS 變數</strong>，定義於 <code>assets/styles/main.scss</code> 的 <code>:root</code>。</li>
+<li>五種專案類型各有一組主題色，以 <code>[data-project=&#39;xxx&#39;]</code> 覆寫（<code>&lt;html&gt;</code> 屬性由 <code>app.vue</code> 設定）。</li>
+<li>元件樣式用 <code>&lt;style lang=&quot;scss&quot; scoped&gt;</code>，色彩一律引用 <code>var(--color-primary)</code> 等變數。</li>
+</ul>
+<pre data-lang="SCSS"><code class="language-scss">.btn { background: var(--color-primary); }
+</code></pre>
+<hr>
+<h2 id="10-頁面與模組對照表">10. 頁面與模組對照表</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>路由</th>
+<th>檔案</th>
+<th>對應 API（<a href="general-website-whitepaper.html">一般網站白皮書</a>）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/</code></td>
+<td><code>pages/index.vue</code></td>
+<td><code>/home/view</code>、<code>/seo/home</code>、<code>/banner/home</code></td>
+</tr>
+<tr>
+<td><code>/news</code></td>
+<td><code>pages/news/index.vue</code></td>
+<td><code>/news/category</code>、<code>/news/list</code>、<code>/seo/list</code></td>
+</tr>
+<tr>
+<td><code>/news/[slug]</code></td>
+<td><code>pages/news/[slug].vue</code></td>
+<td><code>/news/detail</code>、<code>/news/view</code></td>
+</tr>
+<tr>
+<td><code>/about/[slug]</code></td>
+<td><code>pages/about/[slug].vue</code></td>
+<td><code>/about/detail</code>、<code>/about/view</code></td>
+</tr>
+<tr>
+<td><code>/contact</code></td>
+<td><code>pages/contact/index.vue</code></td>
+<td><code>/contact/subjects</code>、<code>/contact/csrf</code>、<code>/contact/submit</code></td>
+</tr>
+<tr>
+<td><code>/search</code></td>
+<td><code>pages/search/index.vue</code></td>
+<td><code>/search</code></td>
+</tr>
+<tr>
+<td><code>/faq</code></td>
+<td><code>pages/faq/index.vue</code></td>
+<td><code>/faq/category</code>、<code>/faq/list</code></td>
+</tr>
+<tr>
+<td><code>/location</code></td>
+<td><code>pages/location/index.vue</code></td>
+<td><code>/location/category</code>、<code>/location/list</code></td>
+</tr>
+<tr>
+<td><code>/firm/caption</code></td>
+<td><code>pages/firm/caption.vue</code></td>
+<td>法規 / 政策頁</td>
+</tr>
+<tr>
+<td><code>/shop</code></td>
+<td><code>pages/shop/index.vue</code></td>
+<td>購物模組（購物類型）</td>
+</tr>
+<tr>
+<td><code>/shop/[slug]</code></td>
+<td><code>pages/shop/[slug].vue</code></td>
+<td>商品詳細</td>
+</tr>
+<tr>
+<td><code>/shop/cart</code></td>
+<td><code>pages/shop/cart.vue</code></td>
+<td>購物車（<code>useCartStore</code>）</td>
+</tr>
+<tr>
+<td>全站</td>
+<td><code>AppHeader</code> / <code>AppFooter</code> / <code>PopupAds</code></td>
+<td><code>/menu/view</code>、<code>/firm/view</code>、<code>/i18n</code>、<code>/popupsAd/list</code></td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2 id="修訂紀錄">修訂紀錄</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>日期</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>v2.0</td>
+<td>2026-05-22</td>
+<td>調整類型規格：客製首頁／全客製／購物 的首頁改為「手刻 + block 模組組裝」、臨時站首頁定義為「固定模板」；<code>HomeCustom.vue</code> 加入 <code>BlockRenderer</code> 於手刻版型中嵌入 block 模組</td>
+</tr>
+<tr>
+<td>v2.0</td>
+<td>2026-05-22</td>
+<td>改版為母版專案白皮書：新增五種專案類型、類型切換機制、API 串接層、Mock JSON、Block 模組系統</td>
+</tr>
+<tr>
+<td>v1.0</td>
+<td>2026-05-21</td>
+<td>初版前端開發規範</td>
+</tr>
+</tbody></table></div>
+
+  </main>
+</div>
+<footer class="foot">
+  <p>© 2026 AD-Design 技術部 · 母版專案開發白皮書</p>
+  <p class="foot__note">本檔由 scripts/build-docs.mjs 自動產生</p>
+</footer>
+<button class="totop" id="totop" aria-label="回到頂部">↑</button>
+<script>const toTop=document.getElementById('totop');
+addEventListener('scroll',()=>toTop.classList.toggle('is-show',scrollY>600));
+toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+const links=[...document.querySelectorAll('.toc a')];
+const byId={};
+links.forEach(a=>byId[a.getAttribute('href').slice(1)]=a);
+const spy=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(a=>a.classList.remove('is-active'));
+      const a=byId[e.target.id];
+      if(a)a.classList.add('is-active');
+    }
+  });
+},{rootMargin:'-12% 0px -78% 0px'});
+document.querySelectorAll('.content h2[id]').forEach(h=>spy.observe(h));</script>
+</body>
+</html>

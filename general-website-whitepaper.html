@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一般網站白皮書 · AD-Design</title>
+<style>:root{
+  --ink:#1f2933;--ink-soft:#5b6b7a;--heading:#0f2b29;
+  --accent:#0d9488;--accent-dark:#0f766e;--accent-soft:#e6f5f3;
+  --bg:#fff;--bg-soft:#f4f7f7;--code-bg:#f6f8fa;--border:#e2e8ea;
+  --container:1180px;
+}
+*{box-sizing:border-box;margin:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  color:var(--ink);background:var(--bg-soft);line-height:1.8;-webkit-font-smoothing:antialiased;
+}
+.hero{background:linear-gradient(135deg,#0f766e 0%,#134e4a 60%,#0c3b38 100%);color:#fff;padding:64px 24px 56px;}
+.hero__inner{max-width:var(--container);margin:0 auto;}
+.hero__eyebrow{letter-spacing:3px;font-size:13px;font-weight:700;opacity:.7;}
+.hero__title{font-size:42px;margin:14px 0 10px;font-weight:800;letter-spacing:1px;}
+.hero__sub{font-size:17px;opacity:.88;}
+.hero__tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;}
+.hero__tags span{font-size:12px;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);}
+.layout{max-width:var(--container);margin:0 auto;padding:40px 24px 64px;display:grid;grid-template-columns:248px 1fr;gap:40px;align-items:start;}
+.sidebar{position:sticky;top:24px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px 14px;max-height:calc(100vh - 48px);overflow:auto;}
+.sidebar__title{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--ink-soft);padding:0 8px 10px;}
+.toc{display:flex;flex-direction:column;gap:2px;}
+.toc a{font-size:13.5px;color:var(--ink-soft);text-decoration:none;padding:7px 10px;border-radius:8px;border-left:2px solid transparent;transition:.15s;}
+.toc a:hover{background:var(--bg-soft);color:var(--accent-dark);}
+.toc a.is-active{background:var(--accent-soft);color:var(--accent-dark);font-weight:700;border-left-color:var(--accent);}
+.content{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:48px 56px;min-width:0;}
+.content h2{font-size:26px;color:var(--heading);margin:48px 0 18px;padding-bottom:12px;border-bottom:2px solid var(--border);scroll-margin-top:24px;}
+.content h3{font-size:20px;color:var(--accent-dark);margin:32px 0 12px;scroll-margin-top:24px;}
+.content h4{font-size:16px;color:var(--heading);margin:24px 0 10px;}
+.content p{margin:14px 0;}
+.content ul,.content ol{margin:14px 0;padding-left:24px;}
+.content li{margin:6px 0;}
+.content a{color:var(--accent-dark);text-decoration:none;border-bottom:1px solid var(--accent-soft);}
+.content a:hover{border-bottom-color:var(--accent);}
+.content hr{border:none;border-top:1px solid var(--border);margin:36px 0;}
+.content strong{color:var(--heading);font-weight:700;}
+.content code{font-family:'JetBrains Mono','Fira Code',Consolas,monospace;font-size:.88em;background:var(--accent-soft);color:var(--accent-dark);padding:2px 6px;border-radius:5px;}
+.content pre{position:relative;background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:22px 20px 20px;margin:18px 0;overflow-x:auto;}
+.content pre code{background:none;color:#24343d;padding:0;font-size:13px;line-height:1.7;}
+.content pre[data-lang]::before{content:attr(data-lang);position:absolute;top:0;right:0;font-size:11px;font-weight:700;letter-spacing:1px;background:var(--accent);color:#fff;padding:3px 10px;border-radius:0 9px 0 9px;}
+.content blockquote{margin:18px 0;padding:14px 20px;background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;color:var(--ink-soft);}
+.content blockquote p{margin:5px 0;}
+.content blockquote code{background:#fff;}
+.content .callout::before{display:block;font-weight:800;font-size:12.5px;letter-spacing:1px;margin-bottom:6px;}
+.content .callout--warning{background:#fff7ed;border-left-color:#f59e0b;color:#854d0e;}
+.content .callout--warning::before{content:'⚠ 注意 WARNING';color:#b45309;}
+.content .callout--caution{background:#fef2f2;border-left-color:#ef4444;color:#991b1b;}
+.content .callout--caution::before{content:'⚠ 警告 CAUTION';color:#dc2626;}
+.content .callout--note{background:#eff6ff;border-left-color:#3b82f6;color:#1e40af;}
+.content .callout--note::before{content:'ℹ 說明 NOTE';color:#2563eb;}
+.content .callout--important{background:#faf5ff;border-left-color:#a855f7;color:#6b21a8;}
+.content .callout--important::before{content:'★ 重要 IMPORTANT';color:#9333ea;}
+.content .callout--tip{background:#ecfdf5;border-left-color:#10b981;color:#065f46;}
+.content .callout--tip::before{content:'✓ 提示 TIP';color:#059669;}
+.table-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--border);border-radius:10px;}
+.content table{border-collapse:collapse;width:100%;font-size:14px;}
+.content thead th{background:#0f3b38;color:#fff;text-align:left;font-weight:700;padding:11px 14px;white-space:nowrap;}
+.content tbody td{padding:10px 14px;border-top:1px solid var(--border);vertical-align:top;}
+.content tbody tr:nth-child(even){background:var(--bg-soft);}
+.content tbody tr:hover{background:var(--accent-soft);}
+.content table code{font-size:12.5px;}
+.foot{text-align:center;padding:36px 24px;color:var(--ink-soft);font-size:13px;border-top:1px solid var(--border);background:var(--bg);}
+.foot__note{opacity:.6;margin-top:4px;font-size:12px;}
+.totop{position:fixed;right:24px;bottom:24px;width:46px;height:46px;border:none;border-radius:50%;background:var(--accent);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 6px 20px rgba(13,148,136,.4);opacity:0;visibility:hidden;transition:.25s;}
+.totop.is-show{opacity:1;visibility:visible;}
+@media(max-width:920px){
+  .layout{grid-template-columns:1fr;gap:20px;}
+  .sidebar{position:static;max-height:320px;}
+  .content{padding:32px 22px;}
+  .hero{padding:48px 22px 40px;}
+  .hero__title{font-size:30px;}
+}
+@media print{
+  body{background:#fff;}
+  .sidebar,.totop,.hero__tags{display:none;}
+  .content,.sidebar{border:none;}
+  .layout{display:block;padding:0;}
+}</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero__inner">
+    <p class="hero__eyebrow">AD-DESIGN · 技術白皮書</p>
+    <h1 class="hero__title">一般網站白皮書</h1>
+    <p class="hero__sub">形象 / 一般網站 — 前台 API 開發指南</p>
+    <div class="hero__tags"><span>Home</span><span>News</span><span>Menu</span><span>Contact</span><span>SEO</span><span>Search</span><span>Banner</span><span>About</span><span>FAQ</span><span>I18n</span></div>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <p class="sidebar__title">目錄 CONTENTS</p>
+    <nav class="toc">
+      <a href="#1-概述">1. 概述</a>
+      <a href="#2-共用約定">2. 共用約定</a>
+      <a href="#3-homeapicontroller--首頁-layout-聚合">3. HomeApiController — 首頁 Layout 聚合</a>
+      <a href="#4-searchapicontroller--全站跨模組搜尋">4. SearchApiController — 全站跨模組搜尋</a>
+      <a href="#5-newsapicontroller--新聞--文章">5. NewsApiController — 新聞 / 文章</a>
+      <a href="#6-menuapicontroller--選單">6. MenuApiController — 選單</a>
+      <a href="#7-contactapicontroller--表單--訂閱--退訂">7. ContactApiController — 表單 / 訂閱 / 退訂</a>
+      <a href="#8-seoapicontroller--seo-meta">8. SeoApiController — SEO Meta</a>
+      <a href="#9-輕量模組">9. 輕量模組</a>
+      <a href="#10-apibasecontroller-共用機制">10. ApiBaseController 共用機制</a>
+      <a href="#11-附錄endpoint-總表">11. 附錄：endpoint 總表</a>
+      <a href="#12-形象站擴充模組">12. 形象站擴充模組</a>
+      <a href="#修訂紀錄">修訂紀錄</a>
+    </nav>
+  </aside>
+  <main class="content">
+
+<blockquote>
+<p>版本：v1.0　|　更新日期：2026-05-21
+維護單位：AD-Design 技術部
+📦 程式位置：<code>api/Controllers/</code>（HTTP 入口）
+🔗 相關文件：</p>
+<ul>
+<li><a href="./%E8%B3%BC%E7%89%A9%E7%B3%BB%E7%B5%B1%E7%99%BD%E7%9A%AE%E6%9B%B8.md">購物系統白皮書</a>（顧客購物 / 結帳 / 會員中心）</li>
+<li><a href="./%E7%B6%A0%E7%95%8C%E6%95%B4%E5%90%88%E7%99%BD%E7%9A%AE%E6%9B%B8.md">綠界整合白皮書</a>（金流 / 物流 / 發票 SDK + 後台操作）</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="目錄">目錄</h2>
+<ul>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1. 概述</a></li>
+<li><a href="#2-%E5%85%B1%E7%94%A8%E7%B4%84%E5%AE%9A">2. 共用約定</a></li>
+<li><a href="#3-homeapicontroller--%E9%A6%96%E9%A0%81-layout-%E8%81%9A%E5%90%88">3. HomeApiController — 首頁 Layout 聚合</a></li>
+<li><a href="#4-searchapicontroller--%E5%85%A8%E7%AB%99%E8%B7%A8%E6%A8%A1%E7%B5%84%E6%90%9C%E5%B0%8B">4. SearchApiController — 全站跨模組搜尋</a></li>
+<li><a href="#5-newsapicontroller--%E6%96%B0%E8%81%9E--%E6%96%87%E7%AB%A0">5. NewsApiController — 新聞 / 文章</a></li>
+<li><a href="#6-menuapicontroller--%E9%81%B8%E5%96%AE">6. MenuApiController — 選單（多位置 / 多階層）</a></li>
+<li><a href="#7-contactapicontroller--%E8%A1%A8%E5%96%AE--%E8%A8%82%E9%96%B1--%E9%80%80%E8%A8%82">7. ContactApiController — 表單 / 訂閱 / 退訂</a></li>
+<li><a href="#8-seoapicontroller--seo-meta">8. SeoApiController — SEO Meta</a></li>
+<li><a href="#9-%E8%BC%95%E9%87%8F%E6%A8%A1%E7%B5%84">9. 輕量模組（Firm / Banner / About / I18n）</a></li>
+<li><a href="#10-apibasecontroller-%E5%85%B1%E7%94%A8%E6%A9%9F%E5%88%B6">10. ApiBaseController 共用機制</a></li>
+<li><a href="#11-%E9%99%84%E9%8C%84endpoint-%E7%B8%BD%E8%A1%A8">11. 附錄：endpoint 總表</a></li>
+</ul>
+<hr>
+<h2 id="1-概述">1. 概述</h2>
+<p>本文件描述<strong>形象 / 一般網站</strong>這部分的前台 API — 首頁、新聞、選單、聯絡表單、SEO、Banner、關於我們、多語等共 10 個 controller、約 5,000 行 PHP。</p>
+<p><strong>讀者</strong>：前端開發者（Vue / Nuxt / React / 行動 app）、UX 設計、QA、上手新團員。</p>
+<h3 id="11-與其他模組的職責分界">1.1 與其他模組的職責分界</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>模組</th>
+<th>範疇</th>
+<th>文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>本冊</strong></td>
+<td>首頁聚合、新聞、選單、表單、SEO、Banner、About、I18n</td>
+<td>本文件</td>
+</tr>
+<tr>
+<td>購物系統</td>
+<td>商品、購物車、結帳、付款、訂單、優惠券</td>
+<td><a href="./%E8%B3%BC%E7%89%A9%E7%B3%BB%E7%B5%B1%E7%99%BD%E7%9A%AE%E6%9B%B8.md">購物系統白皮書</a></td>
+</tr>
+<tr>
+<td>綠界整合</td>
+<td>金流 / 物流 / 發票 SDK、後台操作、庫存圈存</td>
+<td><a href="./%E7%B6%A0%E7%95%8C%E6%95%B4%E5%90%88%E7%99%BD%E7%9A%AE%E6%9B%B8.md">綠界整合白皮書</a></td>
+</tr>
+<tr>
+<td>WDM 後台</td>
+<td>內容管理、商品管理、訂單管理</td>
+<td><code>wdm/api/docs/*.md</code></td>
+</tr>
+</tbody></table></div>
+<h3 id="12-設計原則">1.2 設計原則</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>原則</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>聚合勝過分散</strong></td>
+<td>首頁、選單等「一個畫面有很多 slot」的場景，後端一次回完整資料；前端 <strong>只負責 render，不負責重組</strong></td>
+</tr>
+<tr>
+<td><strong>payload 結構穩定</strong></td>
+<td>每個 endpoint 的回應 schema 不變；前端可以放心預期欄位存在或為空陣列</td>
+</tr>
+<tr>
+<td><strong>fallback 一致</strong></td>
+<td>找不到時回空（[]、{}、null），不 throw — 讓前端可以 always render</td>
+</tr>
+<tr>
+<td><strong>語系自動切換</strong></td>
+<td>所有 query 自動帶 <code>language = current_language</code>，前端不用每次傳</td>
+</tr>
+<tr>
+<td><strong>軟刪除自動過濾</strong></td>
+<td>所有查詢自動帶 <code>data_open = 1 AND data_trash = 0</code>，下架的東西不會 leak</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2 id="2-共用約定">2. 共用約定</h2>
+<h3 id="21-統一回應格式">2.1 統一回應格式</h3>
+<p><strong>成功</strong>：</p>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;data&quot;: {
+    &quot;payload&quot;: &lt;controller-specific data&gt;,
+    &quot;meta&quot;:    { &quot;lang&quot;: &quot;tw&quot;, &quot;time&quot;: &quot;0.012s&quot;, ...action-specific... }
+  }
+}
+</code></pre>
+<p><strong>失敗</strong>（throw 對應 exception 由 dispatcher 統一處理）：</p>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;status&quot;:  &quot;error&quot;,
+  &quot;code&quot;:    &quot;VALIDATION&quot;,
+  &quot;message&quot;: &quot;...&quot;,
+  &quot;details&quot;: { ... }
+}
+</code></pre>
+<h3 id="22-語系">2.2 語系</h3>
+<p><code>language</code> 由 dispatcher 從 URL path 解析（<code>/tw/api/...</code> / <code>/en/api/...</code>）；無前綴則用 <code>_WebUseLanguage[0][&#39;lang_type&#39;]</code>。Controller 透過 <code>$this-&gt;language</code> 取得。</p>
+<h3 id="23-軟刪除">2.3 軟刪除</h3>
+<p>所有 list / detail 查詢自動排除 <code>data_trash = 1</code>，不需前端傳參數。</p>
+<h3 id="24-圖片-url-規則">2.4 圖片 URL 規則</h3>
+<p>回應內所有圖片欄位都是<strong>完整 URL</strong>（含 host），不是相對 path。前端拿到直接放進 <code>&lt;img src&gt;</code> 即可。</p>
+<hr>
+<h2 id="3-homeapicontroller--首頁-layout-聚合">3. HomeApiController — 首頁 Layout 聚合</h2>
+<blockquote>
+<p>程式位置：<code>api/Controllers/HomeApiController.php</code>
+規模：1,193 行 — 整個模組最大、最核心的 API</p>
+</blockquote>
+<h3 id="31-設計理念">3.1 設計理念</h3>
+<p>首頁通常一頁裡有多個區塊（橫幅、CTA、推薦商品、新聞、合作夥伴…），如果每塊各打一支 API，會：</p>
+<ul>
+<li>多次 round-trip</li>
+<li>載入順序難掌握</li>
+<li>前端要組裝邏輯</li>
+</ul>
+<p>本 controller 把首頁整頁需要的所有資料<strong>一次撈完、一次回</strong>。前端只要：</p>
+<pre data-lang="JS"><code class="language-js">const home = await api(&#39;/home/view&#39;);
+// 依照 payload 的 slots 順序 render 即可，不用做任何重組
+</code></pre>
+<h3 id="32-主要端點">3.2 主要端點</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/home/view</code></td>
+<td>GET</td>
+<td><strong>首頁整頁聚合</strong>（最重要）</td>
+</tr>
+<tr>
+<td><code>/api/home/cipage</code></td>
+<td>GET</td>
+<td>只回首頁框架 boxes（cipage 編輯器內容）</td>
+</tr>
+<tr>
+<td><code>/api/home/homePush</code></td>
+<td>GET</td>
+<td>推薦單元（push 區塊）</td>
+</tr>
+<tr>
+<td><code>/api/home/homeOtherAd</code></td>
+<td>GET</td>
+<td>其他廣告區（祝賀、行事曆等）</td>
+</tr>
+<tr>
+<td><code>/api/home/customBlocks</code></td>
+<td>GET</td>
+<td>自訂區塊（首頁標籤的新聞）</td>
+</tr>
+</tbody></table></div>
+<h3 id="33-homeview-payload-結構">3.3 <code>/home/view</code> payload 結構</h3>
+<p>最外層是 <strong>slots 陣列</strong>，每個 slot 來自不同資料來源：</p>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;slots&quot;: [
+    {
+      &quot;key&quot;:    &quot;cipage&quot;,
+      &quot;type&quot;:   &quot;slot&quot;,
+      &quot;blocks&quot;: [...]
+    },
+    {
+      &quot;key&quot;:    &quot;homePush&quot;,
+      &quot;type&quot;:   &quot;slot&quot;,
+      &quot;blocks&quot;: [...]
+    },
+    {
+      &quot;key&quot;:    &quot;homeOtherAd&quot;,
+      &quot;type&quot;:   &quot;slot&quot;,
+      &quot;blocks&quot;: [...]
+    },
+    {
+      &quot;key&quot;:    &quot;news_block&quot;,
+      &quot;type&quot;:   &quot;slot&quot;,
+      &quot;blocks&quot;: [...]
+    }
+  ]
+}
+</code></pre>
+<h3 id="34-block-通用格式">3.4 block 通用格式</h3>
+<p>每個 slot 內的 block 都長這樣：</p>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;type&quot;:  &quot;&lt;block-type&gt;&quot;,
+  &quot;title&quot;: &quot;&lt;可選的區塊標題&gt;&quot;,
+  &quot;item&quot;: {
+    &quot;rows&quot;: [
+      { ... 一筆資料 ... },
+      { ... 一筆資料 ... }
+    ]
+  }
+}
+</code></pre>
+<p><strong>關鍵約定</strong>：</p>
+<ul>
+<li>所有 block 的資料一律放在 <code>block.item.rows</code>（不會出現 <code>block.data</code> / <code>block.list</code> 等不一致 key）</li>
+<li>沒資料的 block <strong>不會出現在 blocks 陣列</strong>（不是回空 rows）</li>
+<li>前端只需用 <code>block.type</code> 決定要套哪個 template，內容固定從 <code>block.item.rows</code> 取</li>
+</ul>
+<h3 id="35-news_block-特殊欄位">3.5 news_block 特殊欄位</h3>
+<p>新聞區塊的每筆 row 多帶幾個常用欄位：</p>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;url&quot;:              &quot;/news/article-blink&quot;,
+  &quot;title&quot;:            &quot;文章標題&quot;,
+  &quot;date&quot;:             &quot;5.21,2026&quot;,          // 預格式化好
+  &quot;weekday&quot;:          &quot;Wed&quot;,
+  &quot;category_blinks&quot;:  [&quot;news&quot;, &quot;events&quot;],   // 分類麵包屑
+  &quot;allPage&quot;:          &quot;/news?category=news&quot;,
+  &quot;rows&quot;:             [ ...更多 sub-rows... ]
+}
+</code></pre>
+<h3 id="36-主要資料來源表">3.6 主要資料來源表</h3>
+<p><code>cipage</code> / <code>system_home_other_ad</code> / <code>system_items_file</code> / <code>system_relative_list</code> / <code>news_category</code> / <code>news</code></p>
+<h3 id="37-前端-render-pseudo-code">3.7 前端 render pseudo-code</h3>
+<pre data-lang="JS"><code class="language-js">const home = await api(&#39;/home/view&#39;);
+home.slots.forEach(slot =&gt; {
+  slot.blocks.forEach(block =&gt; {
+    const Component = BLOCK_COMPONENTS[block.type];
+    if (!Component) return; // 未知 type 直接 skip
+    render(Component, { title: block.title, rows: block.item.rows });
+  });
+});
+</code></pre>
+<hr>
+<h2 id="4-searchapicontroller--全站跨模組搜尋">4. SearchApiController — 全站跨模組搜尋</h2>
+<blockquote>
+<p>程式位置：<code>api/Controllers/SearchApiController.php</code>
+規模：921 行</p>
+</blockquote>
+<h3 id="41-設計理念">4.1 設計理念</h3>
+<p>「搜尋框打一個字 → 拿到全站所有相關結果（新聞、商品、頁面…）」這種跨模組搜尋，由本 controller 統一處理。</p>
+<p>各模組的 searchability 由後台 <code>db_system_unit_info</code> 設定，本 controller 動態讀取後逐表搜尋。</p>
+<h3 id="42-端點">4.2 端點</h3>
+<pre><code>GET /api/search?keyword=xxx&amp;page=1&amp;limit=20[&amp;url=xxx]
+</code></pre>
+<p><strong>INPUT_RULES</strong>：<code>keyword, page, limit, url</code></p>
+<h3 id="43-回應結構">4.3 回應結構</h3>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;keyword&quot;:    &quot;搜尋字&quot;,
+  &quot;categories&quot;: [
+    { &quot;unit_id&quot;: 1, &quot;type&quot;: &quot;news&quot;,  &quot;title&quot;: &quot;新聞&quot;,   &quot;count&quot;: 23 },
+    { &quot;unit_id&quot;: 5, &quot;type&quot;: &quot;shop&quot;,  &quot;title&quot;: &quot;商品&quot;,   &quot;count&quot;: 8 },
+    { &quot;unit_id&quot;: 9, &quot;type&quot;: &quot;about&quot;, &quot;title&quot;: &quot;關於我們&quot;, &quot;count&quot;: 2 }
+  ],
+  &quot;list&quot;: [
+    {
+      &quot;unit_id&quot;:         1,
+      &quot;type&quot;:            &quot;news&quot;,
+      &quot;type_title&quot;:      &quot;新聞&quot;,
+      &quot;title&quot;:           &quot;結果標題&quot;,
+      &quot;url&quot;:             &quot;/news/xxx&quot;,
+      &quot;category_blinks&quot;: [&quot;news&quot;],
+      &quot;allPage&quot;:         &quot;/news&quot;,
+      &quot;has_detail&quot;:      true,
+      &quot;page_button&quot;:     &quot;查看&quot;,
+      &quot;target&quot;:          &quot;_self&quot;,
+      &quot;summary&quot;:         &quot;節錄文字...&quot;
+    }
+  ]
+}
+</code></pre>
+<h3 id="44-前端-ui-建議">4.4 前端 UI 建議</h3>
+<ul>
+<li>上方 categories 變成 tab / chip 篩選器，秀每類筆數</li>
+<li>下方 list 用 <code>type</code> 切換顯示樣式（新聞顯示日期、商品顯示價格...）</li>
+<li><code>has_detail = false</code> 的項目可能只是分類連結（用 <code>page_button</code> 文字）</li>
+</ul>
+<hr>
+<h2 id="5-newsapicontroller--新聞--文章">5. NewsApiController — 新聞 / 文章</h2>
+<blockquote>
+<p>程式位置：<code>api/Controllers/NewsApiController.php</code>
+規模：800 行</p>
+</blockquote>
+<h3 id="51-端點">5.1 端點</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/news/category</code></td>
+<td>GET</td>
+<td>取分類樹（支援 parent / mode / level 控制深度）</td>
+</tr>
+<tr>
+<td><code>/api/news/list</code></td>
+<td>GET</td>
+<td>列表（可分組 / 分頁 / 多重篩選）</td>
+</tr>
+<tr>
+<td><code>/api/news/detail</code></td>
+<td>GET</td>
+<td>單篇詳細頁</td>
+</tr>
+<tr>
+<td><code>/api/news/view</code></td>
+<td>POST</td>
+<td>增加文章瀏覽數（session 防灌）</td>
+</tr>
+</tbody></table></div>
+<h3 id="52-list-篩選器">5.2 list 篩選器</h3>
+<pre><code>GET /api/news/list?
+  page=1&amp;limit=10
+  &amp;q=keyword                  // 關鍵字
+  &amp;category=blink             // 分類
+  &amp;tag=blink                  // 標籤
+  &amp;event_type=blink           // 活動類型
+  &amp;program=blink              // 活動方案
+  &amp;year=2026                  // 年份
+  &amp;order=newest|oldest
+  &amp;group_category=1           // 1 = 依分類分組回；0 = 平鋪
+</code></pre>
+<h3 id="53-list-回應">5.3 list 回應</h3>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;items&quot;: [
+    {
+      &quot;id&quot;:               123,
+      &quot;title&quot;:            &quot;文章標題&quot;,
+      &quot;date&quot;:             &quot;5.21,2026&quot;,
+      &quot;url&quot;:              &quot;/news/article-blink&quot;,
+      &quot;video&quot;:            &quot;https://...&quot;,
+      &quot;category_blinks&quot;:  [&quot;news&quot;, &quot;events&quot;],
+      &quot;news_multi_photo&quot;: [
+        { &quot;title&quot;: &quot;圖說&quot;, &quot;title2&quot;: &quot;副圖說&quot;, &quot;url&quot;: &quot;https://.../photo.jpg&quot; }
+      ]
+    }
+  ],
+  &quot;meta&quot;: {
+    &quot;mode&quot;:       &quot;paginated|grouped&quot;,
+    &quot;page&quot;:       1,
+    &quot;limit&quot;:      10,
+    &quot;total&quot;:      45,
+    &quot;category&quot;:   { ... 當前分類 ... },
+    &quot;breadcrumb&quot;: [ ... ],
+    &quot;filters&quot;:    { ... 啟用的篩選器 ... }
+  }
+}
+</code></pre>
+<h3 id="54-detail-回應">5.4 detail 回應</h3>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;title&quot;:             &quot;文章標題&quot;,
+  &quot;content&quot;:           &quot;&lt;HTML&gt;&quot;,
+  &quot;seo&quot;:               { title, description, keywords, ... },
+  &quot;share&quot;:             { facebook: true, line: true, ... },
+  &quot;advanced&quot;:          { 自訂進階欄位 },
+  &quot;publish&quot;:           { &quot;start_date&quot;: &quot;...&quot;, &quot;end_date&quot;: &quot;...&quot; },
+  &quot;news_multi_photo&quot;:  [ ... ]
+}
+</code></pre>
+<h3 id="55-瀏覽數">5.5 瀏覽數</h3>
+<p><code>/api/news/view</code> 用 session 防灌：<strong>同一個 session 對同一篇 30 分鐘內只 +1 一次</strong>。</p>
+<h3 id="56-對應-wdm-後台">5.6 對應 WDM 後台</h3>
+<p>文件：<a href="../wdm/api/docs/%E6%96%B0%E8%81%9E%E7%99%BD%E7%9A%AE%E6%9B%B8.md">wdm/api/docs/新聞白皮書.md</a></p>
+<p>前台這支 API 是讀取面 + 公開展示用，<strong>寫入由 WDM 後台操作</strong>。</p>
+<hr>
+<h2 id="6-menuapicontroller--選單">6. MenuApiController — 選單</h2>
+<blockquote>
+<p>程式位置：<code>api/Controllers/MenuApiController.php</code>
+規模：769 行</p>
+</blockquote>
+<h3 id="61-設計理念">6.1 設計理念</h3>
+<p>支援<strong>多位置選單</strong>（header / footer / mobile / quick）+ <strong>多階層 children</strong> + <strong>下拉選單</strong>（可帶資料）+ <strong>自訂連結</strong>。</p>
+<p>WDM 後台用 <code>db_system_unit_info</code> 管理每個選單項，本 controller 把它轉成前端易用的結構。</p>
+<h3 id="62-端點">6.2 端點</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/menu/view</code></td>
+<td>GET</td>
+<td><strong>前端 render 用</strong>（推薦） — 已 flatten 成標準 children 樹</td>
+</tr>
+<tr>
+<td><code>/api/menu/header</code></td>
+<td>GET</td>
+<td>只回 header 選單（含 dropdown）</td>
+</tr>
+<tr>
+<td><code>/api/menu/menu</code></td>
+<td>GET</td>
+<td>所有位置（raw 結構，含 dropdown layout）</td>
+</tr>
+</tbody></table></div>
+<h3 id="63-menuview-回應前端用">6.3 <code>/menu/view</code> 回應（前端用）</h3>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;header&quot;: [
+    {
+      &quot;title&quot;:     &quot;關於我們&quot;,
+      &quot;data_type&quot;: &quot;about&quot;,
+      &quot;url&quot;:       &quot;/about&quot;,
+      &quot;children&quot;: [
+        { &quot;title&quot;: &quot;公司簡介&quot;, &quot;url&quot;: &quot;/about/intro&quot;, &quot;children&quot;: [] },
+        { &quot;title&quot;: &quot;團隊&quot;, &quot;url&quot;: &quot;/about/team&quot;, &quot;children&quot;: [] }
+      ]
+    }
+  ],
+  &quot;footer&quot;: [ ... ],
+  &quot;mobile&quot;: [ ... ]
+}
+</code></pre>
+<h3 id="64-dropdown-模式">6.4 Dropdown 模式</h3>
+<p>後台可為每個選單項設定 dropdown 型態：</p>
+<ul>
+<li><code>none</code> — 無下拉</li>
+<li><code>simple</code> — 純連結列表</li>
+<li><code>with_data</code> — 把該分類底下最多 5 筆資料當 children 接上（例：在「商品」選單懸停顯示前 5 個熱門商品）</li>
+</ul>
+<p><code>/menu/view</code> 已經把 <code>with_data</code> 結果攤平到 <code>children</code>，前端不用區分。</p>
+<h3 id="65-自訂連結">6.5 自訂連結</h3>
+<p>每個位置都可在後台加「自訂連結區塊」（如：footer 加「客服 LINE」「FB 粉專」），會出現在 <code>custom_links</code> 陣列（<code>/menu/menu</code> raw 才看得到；<code>/menu/view</code> 已併入 children）。</p>
+<hr>
+<h2 id="7-contactapicontroller--表單--訂閱--退訂">7. ContactApiController — 表單 / 訂閱 / 退訂</h2>
+<blockquote>
+<p>程式位置：<code>api/Controllers/ContactApiController.php</code>
+規模：505 行</p>
+</blockquote>
+<h3 id="71-端點">7.1 端點</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/contact/csrf</code></td>
+<td>GET</td>
+<td>取 CSRF token（表單送出前必拿）</td>
+</tr>
+<tr>
+<td><code>/api/contact/submit</code></td>
+<td>POST</td>
+<td>一般聯絡表單</td>
+</tr>
+<tr>
+<td><code>/api/contact/subscribe</code></td>
+<td>POST</td>
+<td>訂閱電子報</td>
+</tr>
+<tr>
+<td><code>/api/contact/unsubscribe</code></td>
+<td>POST</td>
+<td>申請退訂（寄 token 信）</td>
+</tr>
+<tr>
+<td><code>/api/contact/unsubscribe</code></td>
+<td>GET</td>
+<td>點信中連結確認退訂（帶 <code>?token=</code>）</td>
+</tr>
+</tbody></table></div>
+<h3 id="72-欄位規格">7.2 欄位規格</h3>
+<h4 id="submit一般聯絡表單">submit（一般聯絡表單）</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>欄位</th>
+<th>必填</th>
+<th>規則</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td>✅</td>
+<td>姓名</td>
+</tr>
+<tr>
+<td><code>tel</code></td>
+<td>✅</td>
+<td>6–20 位數字</td>
+</tr>
+<tr>
+<td><code>mail</code></td>
+<td>✅</td>
+<td>email</td>
+</tr>
+<tr>
+<td><code>theme</code></td>
+<td>✅</td>
+<td>主題</td>
+</tr>
+<tr>
+<td><code>comment</code></td>
+<td>✅</td>
+<td>內容</td>
+</tr>
+<tr>
+<td><code>gender</code></td>
+<td>❌</td>
+<td>0 / 1</td>
+</tr>
+<tr>
+<td><code>company</code></td>
+<td>❌</td>
+<td>公司名</td>
+</tr>
+<tr>
+<td><code>address</code></td>
+<td>❌</td>
+<td>地址</td>
+</tr>
+<tr>
+<td><code>csrf_name</code> + <code>csrf_value</code></td>
+<td>✅</td>
+<td>由 <code>/csrf</code> 取得</td>
+</tr>
+</tbody></table></div>
+<h4 id="subscribe訂閱">subscribe（訂閱）</h4>
+<p><code>firstname / lastname / title / affiliation / mail</code> 全部必填。</p>
+<h4 id="unsubscribe_request退訂申請">unsubscribe_request（退訂申請）</h4>
+<p><code>mail</code> 必填、<code>suggest</code> 選填。</p>
+<h3 id="73-退訂的雙階段流程">7.3 退訂的雙階段流程</h3>
+<pre><code>顧客在退訂頁送出 mail
+        ↓
+POST /api/contact/unsubscribe { mail, suggest }
+        ↓
+系統產生退訂 token + 寄確認信
+        ↓
+顧客收信點裡面的連結
+        ↓
+GET /api/contact/unsubscribe?token=xxx
+        ↓
+真正執行退訂
+</code></pre>
+<p>設計理由：避免有心人士拿別人 email 亂退。</p>
+<h3 id="74-回應">7.4 回應</h3>
+<p>成功：<code>{ &quot;success&quot;: true }</code></p>
+<p>失敗會帶 <code>reason</code>（如 <code>mail_send_failed</code>）方便前端提示。</p>
+<h3 id="75-主要資料表">7.5 主要資料表</h3>
+<p><code>db_contact / db_contact_info / db_unsubscribe_token</code></p>
+<hr>
+<h2 id="8-seoapicontroller--seo-meta">8. SeoApiController — SEO Meta</h2>
+<blockquote>
+<p>程式位置：<code>api/Controllers/SeoApiController.php</code>
+規模：207 行</p>
+</blockquote>
+<h3 id="81-端點">8.1 端點</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/seo/list?page_type=xxx</code></td>
+<td>GET</td>
+<td>列表 / 詳細頁通用 SEO meta</td>
+</tr>
+<tr>
+<td><code>/api/seo/home</code></td>
+<td>GET</td>
+<td>首頁專屬 meta（含 OG、author / copyright / robots）</td>
+</tr>
+</tbody></table></div>
+<h3 id="82-fallback-機制">8.2 fallback 機制</h3>
+<p>當 <code>page_type</code> 沒設 SEO 時，<strong>自動 fallback 到 common 預設</strong>。回應會多帶兩個欄位讓前端知道來源：</p>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;title&quot;:           &quot;...&quot;,
+  &quot;description&quot;:     &quot;...&quot;,
+  &quot;keywords&quot;:        &quot;...&quot;,
+  &quot;head_script&quot;:     &quot;...&quot;,   // GTM / GA 等 head 追蹤碼
+  &quot;body_script&quot;:     &quot;...&quot;,   // body 追蹤碼
+  &quot;source&quot;:          &quot;page|common&quot;,
+  &quot;fallback_reason&quot;: &quot;page_not_found|empty|null&quot;
+}
+</code></pre>
+<h3 id="83-home-額外欄位">8.3 home 額外欄位</h3>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;og&quot;: {
+    &quot;title&quot;:       &quot;...&quot;,
+    &quot;description&quot;: &quot;...&quot;,
+    &quot;image&quot;:       &quot;https://...&quot;
+  },
+  &quot;meta&quot;: {
+    &quot;author&quot;:       &quot;...&quot;,
+    &quot;copyright&quot;:    &quot;...&quot;,
+    &quot;distribution&quot;: &quot;...&quot;,
+    &quot;rating&quot;:       &quot;...&quot;,
+    &quot;robots&quot;:       &quot;...&quot;
+  }
+}
+</code></pre>
+<h3 id="84-前端整合">8.4 前端整合</h3>
+<p>Nuxt / Next：在 <code>useHead</code> / <code>Head</code> 把這支回來的欄位塞進去就好；head_script / body_script 用 <code>v-html</code> 或對應的 inject 機制注入。</p>
+<hr>
+<h2 id="9-輕量模組">9. 輕量模組</h2>
+<h3 id="91-firmapicontroller--公司資料">9.1 FirmApiController — 公司資料</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/firm/view</code></td>
+<td>公司基本資料（聯絡、社群、追蹤碼、Footer 設定）</td>
+</tr>
+<tr>
+<td><code>/api/firm/caption?unit=xxx</code></td>
+<td>法規 / 政策頁（隱私權 / 條款）</td>
+</tr>
+</tbody></table></div>
+<p><code>/firm/view</code> 回應：</p>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;firm&quot;: {
+    &quot;title&quot;:     &quot;公司名&quot;,
+    &quot;mail&quot;:      &quot;info@xxx&quot;,
+    &quot;mail2&quot;:     &quot;service@xxx&quot;,
+    &quot;tel&quot;:       &quot;02-xxx&quot;,
+    &quot;address&quot;:   &quot;...&quot;,
+    &quot;google_map&quot;:&quot;...&quot;,
+    &quot;social&quot;:    { instagram, facebook, line, youtube, twitter },
+    &quot;analytics&quot;: { head, body_start, body_end },
+    &quot;schema&quot;:    { localbusiness: &quot;&lt;json-ld&gt;&quot; },
+    &quot;footer&quot;:    { list_pic, title2, link }
+  },
+  &quot;rules&quot;: [
+    { &quot;title&quot;: &quot;隱私權政策&quot;, &quot;url&quot;: &quot;/firm/caption?unit=privacy&quot; }
+  ]
+}
+</code></pre>
+<h3 id="92-bannerapicontroller--banner">9.2 BannerApiController — Banner</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/banner/home</code></td>
+<td>首頁輪播 banner（有上下架時間判斷）</td>
+</tr>
+<tr>
+<td><code>/api/banner/page?page=xxx</code></td>
+<td>各內頁 banner（找不到 fallback common）</td>
+</tr>
+</tbody></table></div>
+<p>回應：</p>
+<pre data-lang="JSON"><code class="language-json">[
+  {
+    &quot;title&quot;: &quot;...&quot;,
+    &quot;link&quot;:  &quot;...&quot;,
+    &quot;image&quot;: { &quot;pc&quot;: &quot;https://...&quot;, &quot;mb&quot;: &quot;https://...&quot; }
+  }
+]
+</code></pre>
+<p>meta 帶 <code>{ page, mode: &#39;home&#39;|&#39;page&#39;|&#39;common&#39;|&#39;none&#39;, total }</code>，前端可知道實際拿到的是哪一層。</p>
+<h3 id="93-aboutapicontroller--關於我們--一般內容頁">9.3 AboutApiController — 關於我們 / 一般內容頁</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/about/detail?url=xxx</code></td>
+<td>取單頁內容（按 <code>data_blink</code>）</td>
+</tr>
+<tr>
+<td><code>/api/about/view</code></td>
+<td>增加頁面瀏覽數（session 30 分鐘節流）</td>
+</tr>
+</tbody></table></div>
+<p>回應含：<code>title / url / content / content2 / page{button_type, out_link, video} / seo / share / advanced / publish{start_date, end_date}</code>。</p>
+<h3 id="94-i18napicontroller--多語字典">9.4 I18nApiController — 多語字典</h3>
+<pre><code>GET /api/i18n
+</code></pre>
+<p>回前端用的 key → value 字典（JSON 物件），翻譯空白時自動 fallback 為 key 本身（避免畫面破版）：</p>
+<pre data-lang="JSON"><code class="language-json">{
+  &quot;nav.home&quot;:      &quot;首頁&quot;,
+  &quot;nav.about&quot;:     &quot;關於我們&quot;,
+  &quot;btn.submit&quot;:    &quot;送出&quot;,
+  &quot;msg.success&quot;:   &quot;操作成功&quot;
+}
+</code></pre>
+<p>不依賴 DB，讀自 <code>_WebTranslateLangPath</code> 設定的檔案。</p>
+<hr>
+<h2 id="10-apibasecontroller-共用機制">10. ApiBaseController 共用機制</h2>
+<blockquote>
+<p>程式位置：<code>api/Controllers/ApiBaseController.php</code>
+規模：837 行</p>
+</blockquote>
+<p>所有 controller 共用的底層機制。日常開發不直接動，但理解這些 hook 有助於 debug。</p>
+<h3 id="101-自動驗證">10.1 自動驗證</h3>
+<p><code>runBeforeAction</code> 在每個 action 跑之前會：</p>
+<ol>
+<li>跑庫存 lock 過期清理（throttled，詳見 <a href="./%E7%B6%A0%E7%95%8C%E6%95%B4%E5%90%88%E7%99%BD%E7%9A%AE%E6%9B%B8.md#9-%E5%BA%AB%E5%AD%98%E5%9C%88%E5%AD%98%E6%A9%9F%E5%88%B6">綠界整合白皮書 §9</a>）</li>
+<li>跑 <code>autoValidateInputs</code> — 依 <code>INPUT_RULES</code> 自動把不在白名單的 GET / POST 欄位<strong>靜默剔除</strong>（不擋請求，避免 <code>utm_*</code> / <code>fbclid</code> 等追蹤參數誤殺）</li>
+</ol>
+<h3 id="102-lazy-db--language">10.2 Lazy DB / language</h3>
+<pre data-lang="PHP"><code class="language-php">$this-&gt;db        // 第一次存取才連 DB
+$this-&gt;language  // 第一次存取才解語系
+</code></pre>
+<h3 id="103-統一-success-格式">10.3 統一 success() 格式</h3>
+<pre data-lang="PHP"><code class="language-php">return $this-&gt;success($payload, $extraMeta);
+// 等同回
+// { &quot;payload&quot;: $payload, &quot;meta&quot;: { lang, time, ...$extraMeta } }
+</code></pre>
+<h3 id="104-圖片-url-builder">10.4 圖片 URL builder</h3>
+<p><code>absoluteUrl($relativePath)</code> — 把相對路徑（<code>upload/news/xxx.jpg</code>）轉成完整 URL（<code>https://hello.show.ad-design.tw/upload/news/xxx.jpg</code>）。
+所有 controller 回的圖片欄位都已經跑過這支。</p>
+<h3 id="105-軟刪除--開放狀態自動過濾">10.5 軟刪除 + 開放狀態自動過濾</h3>
+<p>所有 list / detail 查詢都會自動帶：</p>
+<pre data-lang="SQL"><code class="language-sql">WHERE data_open = 1
+  AND data_trash = 0
+  AND language = &#39;&lt;current_lang&gt;&#39;
+</code></pre>
+<p>這些<strong>不需要前端傳</strong>，也<strong>不會 leak 後台未發佈的內容</strong>。</p>
+<hr>
+<h2 id="11-附錄endpoint-總表">11. 附錄：endpoint 總表</h2>
+<h3 id="111-首頁--聚合">11.1 首頁 / 聚合</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/home/view</code></td>
+<td>GET</td>
+<td><strong>首頁整頁聚合</strong></td>
+</tr>
+<tr>
+<td><code>/api/home/cipage</code></td>
+<td>GET</td>
+<td>首頁框架 boxes</td>
+</tr>
+<tr>
+<td><code>/api/home/homePush</code></td>
+<td>GET</td>
+<td>推薦單元</td>
+</tr>
+<tr>
+<td><code>/api/home/homeOtherAd</code></td>
+<td>GET</td>
+<td>其他廣告</td>
+</tr>
+<tr>
+<td><code>/api/home/customBlocks</code></td>
+<td>GET</td>
+<td>自訂區塊</td>
+</tr>
+</tbody></table></div>
+<h3 id="112-內容模組">11.2 內容模組</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/news/category</code></td>
+<td>GET</td>
+<td>新聞分類樹</td>
+</tr>
+<tr>
+<td><code>/api/news/list</code></td>
+<td>GET</td>
+<td>新聞列表</td>
+</tr>
+<tr>
+<td><code>/api/news/detail</code></td>
+<td>GET</td>
+<td>新聞詳細</td>
+</tr>
+<tr>
+<td><code>/api/news/view</code></td>
+<td>POST</td>
+<td>新聞瀏覽數 +1</td>
+</tr>
+<tr>
+<td><code>/api/about/detail</code></td>
+<td>GET</td>
+<td>內容頁詳細</td>
+</tr>
+<tr>
+<td><code>/api/about/view</code></td>
+<td>POST</td>
+<td>內容頁瀏覽數 +1</td>
+</tr>
+<tr>
+<td><code>/api/firm/view</code></td>
+<td>GET</td>
+<td>公司資料</td>
+</tr>
+<tr>
+<td><code>/api/firm/caption</code></td>
+<td>GET</td>
+<td>法規 / 政策頁</td>
+</tr>
+</tbody></table></div>
+<h3 id="113-導航--layout">11.3 導航 / Layout</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/menu/view</code></td>
+<td>GET</td>
+<td>選單（前端用）</td>
+</tr>
+<tr>
+<td><code>/api/menu/header</code></td>
+<td>GET</td>
+<td>只取 header</td>
+</tr>
+<tr>
+<td><code>/api/menu/menu</code></td>
+<td>GET</td>
+<td>全部位置 raw</td>
+</tr>
+<tr>
+<td><code>/api/banner/home</code></td>
+<td>GET</td>
+<td>首頁 banner</td>
+</tr>
+<tr>
+<td><code>/api/banner/page</code></td>
+<td>GET</td>
+<td>內頁 banner</td>
+</tr>
+</tbody></table></div>
+<h3 id="114-seo--搜尋">11.4 SEO / 搜尋</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/seo/list</code></td>
+<td>GET</td>
+<td>通用 SEO meta</td>
+</tr>
+<tr>
+<td><code>/api/seo/home</code></td>
+<td>GET</td>
+<td>首頁 SEO + OG</td>
+</tr>
+<tr>
+<td><code>/api/search</code></td>
+<td>GET</td>
+<td>全站搜尋</td>
+</tr>
+</tbody></table></div>
+<h3 id="115-表單--互動">11.5 表單 / 互動</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/contact/subjects</code></td>
+<td>GET</td>
+<td>聯絡表單主題下拉選項（contactSubject）</td>
+</tr>
+<tr>
+<td><code>/api/contact/csrf</code></td>
+<td>GET</td>
+<td>取 CSRF</td>
+</tr>
+<tr>
+<td><code>/api/contact/submit</code></td>
+<td>POST</td>
+<td>聯絡表單送出</td>
+</tr>
+<tr>
+<td><code>/api/contact/subscribe</code></td>
+<td>POST</td>
+<td>電子報訂閱</td>
+</tr>
+<tr>
+<td><code>/api/contact/unsubscribe</code></td>
+<td>POST/GET</td>
+<td>退訂（雙階段）</td>
+</tr>
+</tbody></table></div>
+<h3 id="116-多語">11.6 多語</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/i18n</code></td>
+<td>GET</td>
+<td>翻譯字典</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2 id="12-形象站擴充模組">12. 形象站擴充模組</h2>
+<blockquote>
+<p>對應 WDM 後台的 CMS unit；前端 API 只讀（不寫），資料由後台輸入。
+每個都有獨立的 <code>_WebOpenXxx</code> toggle 在 <code>wdm/config/Define.php</code>，預設都啟用。
+後台不需要的客戶站把 toggle 設 0，對應 endpoint 會回 403。</p>
+</blockquote>
+<h3 id="121-faq-常見問題">12.1 FAQ 常見問題</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/faq/category</code></td>
+<td>GET</td>
+<td>FAQ 分類清單</td>
+</tr>
+<tr>
+<td><code>/api/faq/list</code></td>
+<td>GET</td>
+<td>FAQ 列表（支援分類 / 關鍵字 / 分頁）</td>
+</tr>
+<tr>
+<td><code>/api/faq/detail</code></td>
+<td>GET</td>
+<td>單筆 FAQ（含 HTML 答案 + SEO meta）</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>faq</code> / <code>faqCate</code></li>
+<li><strong>DB 表</strong>：<code>db_faq</code> / <code>db_faq_category</code></li>
+<li><strong>Toggle</strong>：<code>_WebOpenFaq</code></li>
+</ul>
+<h3 id="122-下載中心">12.2 下載中心</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/download/category</code></td>
+<td>GET</td>
+<td>下載分類清單</td>
+</tr>
+<tr>
+<td><code>/api/download/list</code></td>
+<td>GET</td>
+<td>下載項目清單（檔案 URL、檔案類型）</td>
+</tr>
+<tr>
+<td><code>/api/download/detail</code></td>
+<td>GET</td>
+<td>單筆下載資料</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>download</code> / <code>downloadCate</code></li>
+<li><strong>DB 表</strong>：<code>db_download</code> / <code>db_download_category</code></li>
+<li><strong>Toggle</strong>：<code>_WebOpenDownload</code></li>
+<li><strong>檔案路徑慣例</strong>：<code>upload/download/{filename}</code>；<code>open_in_browser=true</code> 時前端用 <code>&lt;a target=&quot;_blank&quot;&gt;</code>，否則 <code>&lt;a download&gt;</code> 強制下載</li>
+</ul>
+<h3 id="123-銷售據點--門市查詢">12.3 銷售據點 / 門市查詢</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/location/category</code></td>
+<td>GET</td>
+<td>門市分類（北中南 / 直營經銷 等）</td>
+</tr>
+<tr>
+<td><code>/api/location/list</code></td>
+<td>GET</td>
+<td>門市清單（含 lat/lng 給地圖標點）</td>
+</tr>
+<tr>
+<td><code>/api/location/detail</code></td>
+<td>GET</td>
+<td>單筆門市（含 4 張圖 / 營業時間 / 地圖連結）</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>location</code> / <code>locationCate</code></li>
+<li><strong>DB 表</strong>：<code>db_location</code> / <code>db_location_category</code></li>
+<li><strong>Toggle</strong>：<code>_WebOpenLocation</code></li>
+<li><strong>搜尋特性</strong>：<code>?q=</code> 同時比對 標題 / 地址 / 電話 三欄</li>
+</ul>
+<h3 id="124-彈跳廣告">12.4 彈跳廣告</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/popupsAd/list</code></td>
+<td>GET</td>
+<td>進站當下要顯示的所有 popups</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>popupsAd</code></li>
+<li><strong>DB 表</strong>：<code>db_popups_ad</code></li>
+<li><strong>Toggle</strong>：<code>_WebOpenPopupsAd</code></li>
+<li><strong>後端過濾</strong>：<code>data_open=1</code> + 時間區間有效</li>
+<li><strong>前端策略</strong>：進站 GET 一次 → localStorage 記哪些已關 → 沒關過的才顯示</li>
+<li><strong>target.type 值</strong>：<code>internal</code> / <code>external</code> / <code>video</code> / <code>image_gallery</code> / <code>file</code> / <code>none</code></li>
+</ul>
+<h3 id="125-產品型錄">12.5 產品型錄</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/product/category</code></td>
+<td>GET</td>
+<td>產品分類（支援 <code>mode=tree</code> 一次回整棵）</td>
+</tr>
+<tr>
+<td><code>/api/product/list</code></td>
+<td>GET</td>
+<td>產品列表（支援分類 / tag / 關鍵字 / 分頁）</td>
+</tr>
+<tr>
+<td><code>/api/product/detail</code></td>
+<td>GET</td>
+<td>單一產品（4 段 HTML：摘要 / 詳細 / 規格 / 應用 + 4 張圖）</td>
+</tr>
+<tr>
+<td><code>/api/product/tag</code></td>
+<td>GET</td>
+<td>產品 tag 清單</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>product</code> / <code>productCate</code> / <code>productTag</code></li>
+<li><strong>DB 表</strong>：<code>db_product</code> / <code>db_product_category</code> / <code>db_product_tag</code></li>
+<li><strong>Toggle</strong>：<code>_WebOpenProduct</code></li>
+<li><strong>⚠️ 重要</strong>：這是「展示型產品」（<strong>不能下單買</strong>），與 <code>/api/shop/*</code>（電商商品）是兩個不同模組</li>
+<li><strong>多分類支援</strong>：<code>data_select</code> 是主分類；<code>data_category_list</code> 是逗號分隔的多分類，list 查詢時兩邊都會比對</li>
+</ul>
+<h3 id="126-多層文章">12.6 多層文章</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/article/tree</code></td>
+<td>GET</td>
+<td>整棵文章樹狀目錄</td>
+</tr>
+<tr>
+<td><code>/api/article/children</code></td>
+<td>GET</td>
+<td>某節點底下的直接子文章</td>
+</tr>
+<tr>
+<td><code>/api/article/detail</code></td>
+<td>GET</td>
+<td>單篇文章（含 <code>breadcrumb</code> 路徑）</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>article</code></li>
+<li><strong>DB 表</strong>：<code>db_article</code>（自我參照，無獨立分類表）</li>
+<li><strong>Toggle</strong>：<code>_WebOpenArticle</code></li>
+<li><strong>結構</strong>：<code>data_m_id</code> 指父節點 id、<code>data_level</code> 層級深度，root 節點 <code>data_m_id=0</code></li>
+<li><strong>適用</strong>：知識庫、品牌故事、技術文章、企業歷史等需要多層的內容</li>
+<li><strong>麵包屑</strong>：<code>/detail</code> 會自動算從 root 到當前的路徑，前端直接渲染</li>
+</ul>
+<h3 id="127-洽詢車--b2b-詢價">12.7 洽詢車 / B2B 詢價</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/inquiry/info</code></td>
+<td>GET</td>
+<td>取得當前語系設定（標題、說明）</td>
+</tr>
+<tr>
+<td><code>/api/inquiry/index</code></td>
+<td>GET</td>
+<td>取得 session 詢價車（自動補產品最新標題 / 圖）</td>
+</tr>
+<tr>
+<td><code>/api/inquiry/add</code></td>
+<td>POST</td>
+<td>加產品進詢價車（同 product+spec 累計）</td>
+</tr>
+<tr>
+<td><code>/api/inquiry/update</code></td>
+<td>POST</td>
+<td>修改數量（qty=0 等同移除）</td>
+</tr>
+<tr>
+<td><code>/api/inquiry/remove</code></td>
+<td>POST</td>
+<td>移除單項</td>
+</tr>
+<tr>
+<td><code>/api/inquiry/clear</code></td>
+<td>POST</td>
+<td>清空</td>
+</tr>
+<tr>
+<td><code>/api/inquiry/submit</code></td>
+<td>POST</td>
+<td>送出 → 寫 db_inquiry + db_inquiry_items + 寄信通知</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>inquiry</code> / <code>inquiryInfo</code> / <code>inquiryItems</code></li>
+<li><strong>DB 表</strong>：<code>db_inquiry</code>（主表）/ <code>db_inquiry_items</code>（透過 <code>data_m_id</code> 關聯）/ <code>db_inquiry_info</code>（每語系一筆設定）</li>
+<li><strong>Toggle</strong>：<code>_WebOpenInquiry</code></li>
+<li><strong>⚠️ 與電商 Cart 區分</strong>：這是 B2B 詢價（不收費、不下單）；電商購物車走 <code>/api/cart/*</code></li>
+<li><strong>常搭配</strong>：<code>Product</code> 模組（展示型產品）— 使用者瀏覽 <code>/product/detail</code> → 加入詢價 → 填表送出</li>
+<li><strong>Cart 上限</strong>：每個 session 最多 100 個 line item，每項數量上限 9999</li>
+<li><strong>信件範本</strong>：<code>inquiry_info.data_mail_title</code> / <code>data_mail_content</code> 可用 <code>{name}</code> <code>{email}</code> <code>{table}</code> <code>{items}</code> <code>{message}</code> 變數替換；收件人在 <code>data_recipient</code>（可逗號分隔多人）</li>
+</ul>
+<h3 id="128-線上報名--活動課程">12.8 線上報名 / 活動課程</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/enroll/info</code></td>
+<td>GET</td>
+<td>取得當前語系設定</td>
+</tr>
+<tr>
+<td><code>/api/enroll/category</code></td>
+<td>GET</td>
+<td>活動分類清單</td>
+</tr>
+<tr>
+<td><code>/api/enroll/list</code></td>
+<td>GET</td>
+<td>活動列表（含 <code>current_signups</code> / <code>remaining</code> / <code>can_enroll</code>）</td>
+</tr>
+<tr>
+<td><code>/api/enroll/detail</code></td>
+<td>GET</td>
+<td>單一活動詳情(HTML 介紹 + SEO meta)</td>
+</tr>
+<tr>
+<td><code>/api/enroll/submit</code></td>
+<td>POST</td>
+<td>送出報名 → 寫 db_enrolllist + 寄確認信給報名者</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>enroll</code> / <code>enrollCate</code> / <code>enrollInfo</code> / <code>enrolllist</code></li>
+<li><strong>DB 表</strong>：<code>db_enroll</code> / <code>db_enroll_category</code> / <code>db_enroll_info</code> / <code>db_enrolllist</code></li>
+<li><strong>Toggle</strong>：<code>_WebOpenEnroll</code></li>
+<li><strong>⚠️ WDM 欄位借用慣例</strong>（前端 API 已對外 rename，不會吃到這個坑，但維護時要知道）：<ul>
+<li><code>db_enroll.data_phone</code> 實際是「課程代號」（不是電話）→ API 輸出為 <code>code</code></li>
+<li><code>db_enroll.data_mail</code> 實際是「報名人數上限」（不是 email）→ API 輸出為 <code>capacity</code></li>
+<li><code>db_enroll.data_open2</code> 才是「是否開放報名」（<code>data_open</code> 是顯示開關，跟報名分開）→ API 輸出為 <code>is_open</code></li>
+</ul>
+</li>
+<li><strong>業務檢查</strong>（submit 時後端自動跑）：<ul>
+<li><code>is_open</code> 必須是 true（<code>data_open2=1</code>）</li>
+<li><code>data_end_date</code> 未過</li>
+<li>名額未滿（<code>capacity &gt; 0</code> 時才檢查）</li>
+<li>任一不符 → 回 409 + error code（<code>ENROLL_CLOSED</code> / <code>ENROLL_EXPIRED</code> / <code>ENROLL_FULL</code>）</li>
+</ul>
+</li>
+<li><strong>快照欄位</strong>：寫入 <code>db_enrolllist</code> 時會把 enroll.title / code / start_date / address 複製進去，避免後續活動修改影響歷史紀錄</li>
+<li><strong>信件範本</strong>：每個活動可單獨設 <code>data_mail_title</code> + <code>data_mail_content2</code>，支援 <code>{name}</code> <code>{email}</code> <code>{title}</code> <code>{code}</code> <code>{start_date}</code> <code>{address}</code> <code>{message}</code> 變數</li>
+</ul>
+<h3 id="129-線上報修--售後申訴">12.9 線上報修 / 售後申訴</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/repair/info</code></td>
+<td>GET</td>
+<td>報修頁設定</td>
+</tr>
+<tr>
+<td><code>/api/repair/items</code></td>
+<td>GET</td>
+<td>報修物件下拉（電視 / 冷氣 / 印表機 ...）</td>
+</tr>
+<tr>
+<td><code>/api/repair/issues</code></td>
+<td>GET</td>
+<td>問題現象下拉（不動了 / 漏水 / 怪聲 ...）</td>
+</tr>
+<tr>
+<td><code>/api/repair/submit</code></td>
+<td>POST</td>
+<td>送出報修單 → 產編號 + 寫 db_repair + 寄站方信</td>
+</tr>
+<tr>
+<td><code>/api/repair/status</code></td>
+<td>GET</td>
+<td>雙因子查狀態（編號 + email）</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>repair</code> / <code>repairInfo</code> / <code>repairitem1</code>（物件）/ <code>repairhappen</code>（問題）</li>
+<li><strong>DB 表</strong>：<code>db_repair</code> / <code>db_repair_info</code> / <code>db_repair_item1</code> / <code>db_repair_happen</code></li>
+<li><strong>Toggle</strong>：<code>_WebOpenRepair</code></li>
+<li><strong>編號規則</strong>：<code>RP-YYYYMMDD-NNN</code>（當日序號從 1 起，3 位數補零）— 送出後給客人，是後續查狀態的識別</li>
+<li><strong>處理狀態 <code>data_audit</code></strong>：<ul>
+<li><code>0</code> = 審核中（剛送出，待派工）</li>
+<li><code>1</code> = 執行中（已派員）</li>
+<li><code>2</code> = 已結案</li>
+</ul>
+</li>
+<li><strong>雙因子查狀態</strong>：<code>/repair/status</code> 必須同時帶<strong>編號 + 當初送出的 email</strong>，避免被任意爬資料；查不到一律回 404 不洩漏「編號存在但 email 不對」 vs 「編號不存在」的差別</li>
+<li><strong>信件範本變數</strong>：<code>{repair_no}</code> <code>{name}</code> <code>{email}</code> <code>{table}</code> <code>{message}</code></li>
+<li><strong>與 Inquiry / Enroll 的差別</strong>：報修是售後（客人已經是用戶），有編號可追蹤狀態；inquiry 是售前（B2B 詢價），enroll 是活動報名（一次性）</li>
+</ul>
+<h3 id="1210-esg--永續報告">12.10 ESG / 永續報告</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/esg/category</code></td>
+<td>GET</td>
+<td>ESG 分類（環境 E / 社會 S / 治理 G）</td>
+</tr>
+<tr>
+<td><code>/api/esg/list</code></td>
+<td>GET</td>
+<td>文章列表</td>
+</tr>
+<tr>
+<td><code>/api/esg/detail</code></td>
+<td>GET</td>
+<td>單篇（含 HTML 內文 + 外部連結 + 附檔 + SEO meta）</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>esg</code> / <code>esgCate</code> / <code>esgInfo</code></li>
+<li><strong>DB 表</strong>：<code>db_esg</code> / <code>db_esg_category</code> / <code>db_esg_info</code></li>
+<li><strong>Toggle</strong>：<code>_WebOpenEsg</code></li>
+<li><strong>適用</strong>：上市公司、重視永續的企業；揭露 CSR / 永續報告書 / 環境承諾等</li>
+</ul>
+<h3 id="1211-投資人專區">12.11 投資人專區</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/investors/category</code></td>
+<td>GET</td>
+<td>分類（年報 / 季報 / 重大訊息 / 股東會）</td>
+</tr>
+<tr>
+<td><code>/api/investors/list</code></td>
+<td>GET</td>
+<td>列表（多帶 PDF <code>file_url</code> 供下載）</td>
+</tr>
+<tr>
+<td><code>/api/investors/detail</code></td>
+<td>GET</td>
+<td>單筆詳情</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>investors</code> / <code>investorsCate</code> / <code>investorsInfo</code></li>
+<li><strong>DB 表</strong>：<code>db_investors</code> / <code>db_investors_category</code> / <code>db_investors_info</code></li>
+<li><strong>Toggle</strong>：<code>_WebOpenInvestors</code></li>
+<li><strong>檔案路徑慣例</strong>：<code>upload/investors/{filename}</code></li>
+<li><strong>適用</strong>：上市公司投資人關係（IR）專區</li>
+</ul>
+<h3 id="1212-商品租賃">12.12 商品租賃</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/rental/category</code></td>
+<td>GET</td>
+<td>租賃分類</td>
+</tr>
+<tr>
+<td><code>/api/rental/list</code></td>
+<td>GET</td>
+<td>租賃商品列表（含庫存 / 押金）</td>
+</tr>
+<tr>
+<td><code>/api/rental/detail</code></td>
+<td>GET</td>
+<td>商品詳情（含 rules + meta）</td>
+</tr>
+<tr>
+<td><code>/api/rental/rules</code></td>
+<td>GET</td>
+<td>取得指定商品的租賃規則</td>
+</tr>
+<tr>
+<td><code>/api/rental/comments</code></td>
+<td>GET</td>
+<td>客戶評論列表</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>rental</code> / <code>rentalCate</code> / <code>rentalRule</code> / <code>rentalcomment</code></li>
+<li><strong>DB 表</strong>：<code>db_rental</code> / <code>db_rental_category</code> / <code>db_rental_rule</code> / <code>db_rentalcomment</code></li>
+<li><strong>Toggle</strong>：<code>_WebOpenRental</code></li>
+<li><strong>⚠️ 不含「下單」endpoint</strong>：租賃流程因業態而異很大，本 API 只負責展示。下單建議搭配 Inquiry / Contact 或客製化 Order 模組</li>
+<li><strong>規則欄位</strong>：<code>min_days</code> / <code>max_days</code> / <code>remove_dates</code>（不開放日期）/ <code>available_weeks</code>（可選週幾）/ <code>self_pickup</code> / <code>delivery</code> 時段設定</li>
+<li><strong>押金</strong>：<code>deposit_price</code> 是「押金」（不是日租金）；日租金等定價邏輯由站方在 <code>data_memo*</code> 自行展示</li>
+</ul>
+<h3 id="1213-客戶心得--用戶見證">12.13 客戶心得 / 用戶見證</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/passing/list</code></td>
+<td>GET</td>
+<td>心得列表</td>
+</tr>
+<tr>
+<td><code>/api/passing/detail</code></td>
+<td>GET</td>
+<td>單篇詳情（含 items 子項目陣列）</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>後台 unit</strong>：<code>passing</code> / <code>passingitem</code></li>
+<li><strong>DB 表</strong>：<code>db_passing</code> / <code>db_passingitem</code></li>
+<li><strong>Toggle</strong>：<code>_WebOpenPassing</code></li>
+<li><strong>結構</strong>：passing = 主表（一則心得），passingitem = 子段落（每段有 title/subtitle/memo/image），透過 <code>data_m_id</code> 關聯</li>
+<li><strong>適用</strong>：成功案例展示 / 客戶見證 / 學員心得</li>
+</ul>
+<hr>
+<h2 id="修訂紀錄">修訂紀錄</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>日期</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>v1.6</td>
+<td>2026-05-22</td>
+<td>§12.10-12.13 — 補完 4 個小眾 CMS 模組：ESG / 投資人 / 商品租賃 / 客戶心得（共 13 endpoint）。WDM 形象站側對齊基本完成</td>
+</tr>
+<tr>
+<td>v1.5</td>
+<td>2026-05-22</td>
+<td>§12.9 線上報修 — RepairService + Controller + 5 endpoint。含編號自動產生 + 雙因子狀態查詢</td>
+</tr>
+<tr>
+<td>v1.4</td>
+<td>2026-05-22</td>
+<td>§12.8 線上報名 — EnrollService + Controller + 5 endpoint。含名額計算 + 三層業務狀態檢查 + 自動寄確認信</td>
+</tr>
+<tr>
+<td>v1.3</td>
+<td>2026-05-22</td>
+<td>§12.7 洽詢車（B2B 詢價）— InquiryService + Controller + 7 endpoint。第一個有「寫入」邏輯的形象站擴充模組</td>
+</tr>
+<tr>
+<td>v1.2</td>
+<td>2026-05-22</td>
+<td>§12 再加 2 個模組：產品型錄（與 shop 區分）/ 多層文章（自我參照樹狀） — 共 7 endpoint</td>
+</tr>
+<tr>
+<td>v1.1</td>
+<td>2026-05-22</td>
+<td>新增 §12 形象站擴充模組：FAQ / 下載中心 / 銷售據點 / 彈跳廣告（4 個 controller、共 10 endpoint）。Contact 加 <code>/subjects</code> endpoint</td>
+</tr>
+<tr>
+<td>v1.0</td>
+<td>2026-05-21</td>
+<td>初版，涵蓋 Home / Search / News / Menu / Contact / Seo / Firm / Banner / About / I18n 共 10 個 controller</td>
+</tr>
+</tbody></table></div>
+
+  </main>
+</div>
+<footer class="foot">
+  <p>© 2026 AD-Design 技術部 · 一般網站白皮書</p>
+  <p class="foot__note">本檔由 scripts/build-docs.mjs 自動產生</p>
+</footer>
+<button class="totop" id="totop" aria-label="回到頂部">↑</button>
+<script>const toTop=document.getElementById('totop');
+addEventListener('scroll',()=>toTop.classList.toggle('is-show',scrollY>600));
+toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+const links=[...document.querySelectorAll('.toc a')];
+const byId={};
+links.forEach(a=>byId[a.getAttribute('href').slice(1)]=a);
+const spy=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(a=>a.classList.remove('is-active'));
+      const a=byId[e.target.id];
+      if(a)a.classList.add('is-active');
+    }
+  });
+},{rootMargin:'-12% 0px -78% 0px'});
+document.querySelectorAll('.content h2[id]').forEach(h=>spy.observe(h));</script>
+</body>
+</html>

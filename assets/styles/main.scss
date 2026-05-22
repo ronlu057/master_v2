@@ -1,0 +1,222 @@
+/* ============================================================
+   母版全域樣式 — CSS 變數主題 + reset + 共用樣式
+   ============================================================ */
+
+/* ---- 主題 token（預設：模組件套版）---- */
+:root {
+  --color-primary: #4fc08d;
+  --color-primary-dark: #3aa876;
+  --color-accent: #35495e;
+
+  --color-text: #2c3e50;
+  --color-text-muted: #7a8896;
+  --color-heading: #1f2d3d;
+
+  --color-bg: #ffffff;
+  --color-surface: #f6f8f9;
+  --color-border: #e3e8ec;
+
+  --container: 1200px;
+  --radius: 8px;
+  --radius-lg: 16px;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --transition: 0.25s ease;
+  --header-h: 72px;
+}
+
+/* ---- 專案類型主題切換（由 app.vue 設定 <html data-project>）---- */
+[data-project='custom-home'] {
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-accent: #1e3a5f;
+}
+[data-project='full-custom'] {
+  --color-primary: #8b5cf6;
+  --color-primary-dark: #7c3aed;
+  --color-accent: #3b2a5f;
+}
+[data-project='shop'] {
+  --color-primary: #e0594b;
+  --color-primary-dark: #c8412f;
+  --color-accent: #5f2a2a;
+}
+[data-project='temp'] {
+  --color-primary: #f59e0b;
+  --color-primary-dark: #d97706;
+  --color-accent: #5f4a1e;
+}
+
+/* ---- reset ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-heading);
+  line-height: 1.3;
+}
+
+/* ---- layout helpers ---- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.section {
+  padding: 64px 0;
+
+  &--surface {
+    background: var(--color-surface);
+  }
+}
+.section-title {
+  text-align: center;
+  margin-bottom: 40px;
+
+  &__main {
+    font-size: 30px;
+  }
+  &__sub {
+    color: var(--color-text-muted);
+    font-size: 15px;
+    margin-top: 6px;
+  }
+}
+
+/* ---- buttons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  transition: all var(--transition);
+
+  &--primary {
+    background: var(--color-primary);
+    color: #fff;
+
+    &:hover {
+      background: var(--color-primary-dark);
+    }
+  }
+  &--outline {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+
+    &:hover {
+      background: var(--color-primary);
+      color: #fff;
+    }
+  }
+  &--light {
+    border-color: #fff;
+    color: #fff;
+
+    &:hover {
+      background: #fff;
+      color: var(--color-heading);
+    }
+  }
+}
+
+/* ---- grid ---- */
+.grid {
+  display: grid;
+  gap: 24px;
+
+  &--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  &--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  &--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ---- 麵包屑 ---- */
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  padding: 16px 0;
+
+  a:hover {
+    color: var(--color-primary);
+  }
+}
+
+@media (max-width: 900px) {
+  .grid--3,
+  .grid--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  .grid--2,
+  .grid--3,
+  .grid--4 {
+    grid-template-columns: 1fr;
+  }
+  .section {
+    padding: 40px 0;
+  }
+  .section-title__main {
+    font-size: 24px;
+  }
+}
