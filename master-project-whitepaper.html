@@ -308,7 +308,7 @@ npm run dev
 <h2 id="5-專案目錄架構">5. 專案目錄架構</h2>
 <p>採 Nuxt 平鋪式結構（程式碼直接置於專案根目錄）：</p>
 <pre data-lang="TEXT"><code class="language-text">📦 master_v2/
- ┣ 📂 assets/styles/    🎨 全域樣式（main.scss：CSS 變數主題 + reset + 共用 class）
+ ┣ 📂 assets/styles/    🎨 全域樣式（main.scss：RWD 斷點 mixin + CSS 變數主題 + 共用 class）
  ┣ 📂 components/       🧩 共用元件（自動引入）
  ┃ ┣ AppHeader（頁首派發器）/ AppFooter / SiteMenu / PopupAds / LoadingState / NewsCard / PageBanner
  ┃ ┣ headers/Header01〜XX.vue                                              ← Header 多版型
@@ -319,6 +319,8 @@ npm run dev
  ┃ ┣ useProject.js 專案類型與功能旗標
  ┃ ┣ useSite.js    選單 / 公司資料 / 多語字典
  ┃ ┗ useMeta.js    SEO Meta
+ ┣ 📂 utils/            🔧 純函式工具（自動引入；無狀態的格式化 / 驗證等）
+ ┣ 📂 middleware/       🛡️ 路由中介層（導航前的守衛 / 攔截）
  ┣ 📂 layouts/         版型（default.vue / shop.vue）
  ┣ 📂 pages/           📄 檔案路由頁面
  ┣ 📂 stores/          🍍 Pinia（useUiStore / useCartStore）
@@ -457,12 +459,54 @@ export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
 <li>勿在 setup 外部調用非同步生命週期鉤子。</li>
 </ul>
 <h3 id="94-樣式與主題">9.4 樣式與主題</h3>
+<blockquote class="callout callout--important"><p><strong>全站樣式規範</strong></p>
+<ul>
+<li>一律使用 Sass：所有 <code>&lt;style&gt;</code> 必須加 <code>lang=&quot;scss&quot;</code>；嚴禁純 CSS、嚴禁無 <code>lang</code> 的 <code>&lt;style&gt;</code>，專案內不得出現獨立 <code>.css</code> 檔。</li>
+<li>嚴禁標籤行內 <code>style=&quot;...&quot;</code>：所有樣式寫進 <code>&lt;style lang=&quot;scss&quot; scoped&gt;</code> 以 class 套用；需動態切換時改用 <code>:class</code>。</li>
+</ul>
+</blockquote>
 <ul>
 <li>主題色採 <strong>CSS 變數</strong>，定義於 <code>assets/styles/main.scss</code> 的 <code>:root</code>。</li>
 <li>五種專案類型各有一組主題色，以 <code>[data-project=&#39;xxx&#39;]</code> 覆寫（<code>&lt;html&gt;</code> 屬性由 <code>app.vue</code> 設定）。</li>
 <li>元件樣式用 <code>&lt;style lang=&quot;scss&quot; scoped&gt;</code>，色彩一律引用 <code>var(--color-primary)</code> 等變數。</li>
 </ul>
 <pre data-lang="SCSS"><code class="language-scss">.btn { background: var(--color-primary); }
+</code></pre>
+<h3 id="95-rwd-斷點-mixin">9.5 RWD 斷點 mixin</h3>
+<p>9 個斷點 mixin 定義於 <code>assets/styles/main.scss</code> 頂部，供撰寫全站共用的響應式樣式使用。</p>
+<p>斷點（max-width）：<code>1920 / 1680 / 1440 / 1280 / 1200 / 1024 / 768 / 480 / 360</code>；其中 <strong>1200</strong> 為 header 變更樣式主斷點。</p>
+<pre data-lang="SCSS"><code class="language-scss">.box {
+  width: 25%;
+  @include rwd-1440 { width: 33%; }
+  @include rwd-1200 { width: 50%; }
+  @include rwd-768  { width: 100%; }
+}
+</code></pre>
+<blockquote>
+<p>mixin 僅 <code>main.scss</code> 內可 <code>@include</code>；元件 <code>&lt;style lang=&quot;scss&quot;&gt;</code> 的響應式樣式請直接寫 <code>@media (max-width: 1200px) { … }</code>。</p>
+</blockquote>
+<h3 id="96-路由中介層middleware">9.6 路由中介層（middleware）</h3>
+<p><code>middleware/</code> 放路由中介層 —— 進入頁面前執行的攔截 / 守衛邏輯（登入驗證、轉址、權限檢查等）。</p>
+<ul>
+<li><strong>具名中介層</strong>：<code>middleware/auth.js</code>，於頁面以 <code>definePageMeta({ middleware: &#39;auth&#39; })</code> 套用。</li>
+<li><strong>全域中介層</strong>：檔名加 <code>.global</code> 後綴（<code>middleware/xxx.global.js</code>），每次路由切換皆自動執行。</li>
+</ul>
+<pre data-lang="JAVASCRIPT"><code class="language-javascript">// middleware/auth.js — 具名中介層範例
+export default defineNuxtRouteMiddleware((to, from) =&gt; {
+  // 不符合條件時導向其他頁
+  // if (!isLoggedIn()) return navigateTo(&#39;/login&#39;)
+})
+</code></pre>
+<h3 id="97-工具函式utils">9.7 工具函式（utils）</h3>
+<p><code>utils/</code> 放<strong>純 JavaScript 工具函式</strong>（格式化、驗證、計算等不涉及 Vue 響應式的邏輯）。Nuxt 會<strong>自動引入</strong>，全站免 <code>import</code> 直接呼叫。</p>
+<ul>
+<li>與 <code>composables/</code> 的分工：<code>composables/</code> 放含響應式 / 生命週期的組合式函式（<code>useXxx</code>）；<code>utils/</code> 放無狀態的純函式。</li>
+</ul>
+<pre data-lang="JAVASCRIPT"><code class="language-javascript">// utils/formatPrice.js — 工具函式範例
+export function formatPrice(n) {
+  return &#39;NT$ &#39; + Number(n).toLocaleString()
+}
+// 任何元件 / 頁面可直接呼叫 formatPrice(1280)，不需 import
 </code></pre>
 <hr>
 <h2 id="10-頁面與模組對照表">10. 頁面與模組對照表</h2>

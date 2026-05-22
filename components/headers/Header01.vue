@@ -102,6 +102,19 @@ const { data: menuData } = useSiteMenu()
     border-top: 1px solid var(--color-border);
     padding: 8px 20px 16px;
   }
+
+  // 範例：1200 以下 header 變更樣式（依實際設計自行調整）
+  @media (max-width: 1200px) {
+    &__inner {
+      height: 64px;
+    }
+    &__logo {
+      font-size: 18px;
+    }
+    &__actions {
+      margin-left: 16px;
+    }
+  }
 }
 
 .drop-enter-active,

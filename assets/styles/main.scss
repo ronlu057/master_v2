@@ -1,6 +1,29 @@
 /* ============================================================
-   母版全域樣式 — CSS 變數主題 + reset + 共用樣式
+   母版全域樣式 — RWD 斷點 mixin + CSS 變數主題 + reset + 共用樣式
    ============================================================ */
+
+/* ---- RWD 斷點 mixin（max-width，桌機往下縮；僅 main.scss 內可 @include）----
+   用法：.box { @include rwd-1200 { width: 100%; } }
+   1200 為 header 變更樣式主斷點 */
+$bp-1920: 1920px;
+$bp-1680: 1680px;
+$bp-1440: 1440px;
+$bp-1280: 1280px;
+$bp-1200: 1200px;
+$bp-1024: 1024px;
+$bp-768: 768px;
+$bp-480: 480px;
+$bp-360: 360px;
+
+@mixin rwd-1920 { @media (max-width: $bp-1920) { @content; } }
+@mixin rwd-1680 { @media (max-width: $bp-1680) { @content; } }
+@mixin rwd-1440 { @media (max-width: $bp-1440) { @content; } }
+@mixin rwd-1280 { @media (max-width: $bp-1280) { @content; } }
+@mixin rwd-1200 { @media (max-width: $bp-1200) { @content; } }
+@mixin rwd-1024 { @media (max-width: $bp-1024) { @content; } }
+@mixin rwd-768 { @media (max-width: $bp-768) { @content; } }
+@mixin rwd-480 { @media (max-width: $bp-480) { @content; } }
+@mixin rwd-360 { @media (max-width: $bp-360) { @content; } }
 
 /* ---- 主題 token（預設：模組件套版）---- */
 :root {
@@ -219,4 +242,4 @@ h4 {
   .section-title__main {
     font-size: 24px;
   }
-} 1920 1680 1440 1280 1200headerfooter變更樣式 1024 768 480 360
+}
