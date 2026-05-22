@@ -40,9 +40,9 @@ npm run docs    # 由 .md 重新產生白皮書 HTML
 1. 安裝 Claude Code（IDE 擴充／CLI／桌面版），登入 Anthropic 帳號。
 2. `git clone https://github.com/ronlu057/master_v2.git`
 3. `cd master_v2 && npm install`
-4. **重建 `.env`**：`copy .env.example .env`（`.env` 不在版控，clone 後沒有，必須手動建）。
-5. 在專案資料夾啟動 Claude Code（終端機執行 `claude`，或用 IDE 開啟此資料夾）。
+4. 在專案資料夾啟動 Claude Code（終端機執行 `claude`，或用 IDE 開啟此資料夾）。
 
+> `.env` 已納入版控、clone 後即附帶（僅含 `NUXT_PUBLIC_*` 公開設定），不需手動重建；如有不同環境需求再自行調整。
 > 對話記錄與本機 memory 不會跨電腦；跟著走的只有此 repo。本檔會被 Claude Code 自動載入，作為新電腦的接手依據。
 
 ## 開發注意事項
