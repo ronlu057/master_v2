@@ -106,6 +106,7 @@ body{
       <a href="#8-block-模組系統">8. Block 模組系統</a>
       <a href="#9-開發與編程規範">9. 開發與編程規範</a>
       <a href="#10-頁面與模組對照表">10. 頁面與模組對照表</a>
+      <a href="#11-header-版型切換">11. Header 版型切換</a>
       <a href="#修訂紀錄">修訂紀錄</a>
     </nav>
   </aside>
@@ -135,6 +136,7 @@ body{
 <li><a href="#8-block-%E6%A8%A1%E7%B5%84%E7%B3%BB%E7%B5%B1">8. Block 模組系統</a></li>
 <li><a href="#9-%E9%96%8B%E7%99%BC%E8%88%87%E7%B7%A8%E7%A8%8B%E8%A6%8F%E7%AF%84">9. 開發與編程規範</a></li>
 <li><a href="#10-%E9%A0%81%E9%9D%A2%E8%88%87%E6%A8%A1%E7%B5%84%E5%B0%8D%E7%85%A7%E8%A1%A8">10. 頁面與模組對照表</a></li>
+<li><a href="#11-header-%E7%89%88%E5%9E%8B%E5%88%87%E6%8F%9B">11. Header 版型切換</a></li>
 </ul>
 <hr>
 <h2 id="1-母版概述">1. 母版概述</h2>
@@ -308,7 +310,8 @@ npm run dev
 <pre data-lang="TEXT"><code class="language-text">📦 master_v2/
  ┣ 📂 assets/styles/    🎨 全域樣式（main.scss：CSS 變數主題 + reset + 共用 class）
  ┣ 📂 components/       🧩 共用元件（自動引入）
- ┃ ┣ AppHeader / AppFooter / SiteMenu / PopupAds / LoadingState / NewsCard / PageBanner
+ ┃ ┣ AppHeader（頁首派發器）/ AppFooter / SiteMenu / PopupAds / LoadingState / NewsCard / PageBanner
+ ┃ ┣ headers/Header01〜XX.vue                                              ← Header 多版型
  ┃ ┣ BlockRenderer + BlockBanner / BlockIntro / BlockNews / BlockGeneric   ← Block 模組
  ┃ ┗ HomeModule / HomeCustom / HomeMinimal                                ← 三種首頁版型
  ┣ 📂 composables/      🪝 組合式函式（自動引入）
@@ -537,6 +540,36 @@ export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
 <td><code>/menu/view</code>、<code>/firm/view</code>、<code>/i18n</code>、<code>/popupsAd/list</code></td>
 </tr>
 </tbody></table></div>
+<hr>
+<h2 id="11-header-版型切換">11. Header 版型切換</h2>
+<p>頁首支援多版型，透過設定切換，不需改動版面程式碼（footer 等多版型區塊亦可比照辦理）。</p>
+<h3 id="111-檔案結構">11.1 檔案結構</h3>
+<pre data-lang="TEXT"><code class="language-text">components/
+ ┣ AppHeader.vue        派發器（依設定選版型，不含設計）
+ ┗ headers/
+    ┣ Header01.vue      版型 01（標準型：Logo 左、選單右）
+    ┣ Header02.vue      版型 02（置中型：Logo 置中、選單於下方）
+    ┗ HeaderXX.vue      …（依需求擴充，例如 15 種）
+</code></pre>
+<h3 id="112-設定與切換">11.2 設定與切換</h3>
+<p>於 <code>.env</code> 指定要使用的版型編號：</p>
+<pre data-lang="BASH"><code class="language-bash"># 選用 components/headers/ 內的版型編號
+NUXT_PUBLIC_HEADER=01
+</code></pre>
+<p>切換版型只需改此值並重啟 dev server，版面程式碼完全不動。此設定與 <code>NUXT_PUBLIC_PROJECT_TYPE</code> 同屬 <code>runtimeConfig.public</code>，機制一致。</p>
+<h3 id="113-派發機制">11.3 派發機制</h3>
+<p><code>components/AppHeader.vue</code> 是薄派發器，以 Vite 的 <code>import.meta.glob</code> 自動載入 <code>headers/</code> 內全部版型，依 <code>NUXT_PUBLIC_HEADER</code> 選用對應檔；找不到時自動 fallback 第一個。</p>
+<pre data-lang="JAVASCRIPT"><code class="language-javascript">const headers = import.meta.glob(&#39;./headers/*.vue&#39;, { eager: true })
+const { public: pub } = useRuntimeConfig()
+const current =
+  headers[`./headers/Header${pub.header}.vue`]?.default ||
+  Object.values(headers)[0]?.default
+</code></pre>
+<blockquote>
+<p>⚠️ 勿用 <code>resolveComponent(&#39;字串&#39;)</code> 取版型 —— Nuxt 自動引入元件無法以字串解析（同 <code>BlockRenderer</code> §8.2 的限制）。<code>import.meta.glob</code> 是正解。</p>
+</blockquote>
+<h3 id="114-新增版型">11.4 新增版型</h3>
+<p>在 <code>headers/</code> 放一個 <code>HeaderXX.vue</code> 即可，<code>AppHeader.vue</code> 不需修改。各版型<strong>共用同一套資料 composable</strong>（<code>useSiteMenu</code> / <code>useProject</code> / <code>useUiStore</code>），只有版面與樣式不同 —— 資料層不重複撰寫。</p>
 <hr>
 <h2 id="修訂紀錄">修訂紀錄</h2>
 <div class="table-wrap"><table>

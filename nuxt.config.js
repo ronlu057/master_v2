@@ -23,6 +23,8 @@ export default defineNuxtConfig({
       apiBase: '',
       // 預設語系
       defaultLang: 'tw',
+      // Header 版型：對應 components/headers/HeaderXX.vue
+      header: '01',
     },
   },
 

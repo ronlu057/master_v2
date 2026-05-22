@@ -109,6 +109,7 @@ body{
       <a href="#10-apibasecontroller-共用機制">10. ApiBaseController 共用機制</a>
       <a href="#11-附錄endpoint-總表">11. 附錄：endpoint 總表</a>
       <a href="#12-形象站擴充模組">12. 形象站擴充模組</a>
+      <a href="#13-前端整合範例v17-新增">13. 前端整合範例（v1.7 新增）</a>
       <a href="#修訂紀錄">修訂紀錄</a>
     </nav>
   </aside>
@@ -1530,6 +1531,114 @@ $this-&gt;language  // 第一次存取才解語系
 <li><strong>適用</strong>：成功案例展示 / 客戶見證 / 學員心得</li>
 </ul>
 <hr>
+<h2 id="13-前端整合範例v17-新增">13. 前端整合範例（v1.7 新增）</h2>
+<p>幾個常用 pattern 的 JS 範例 — FE 拿來改就能用，不必每個 module 都重發明輪子。</p>
+<h3 id="131-通用-list-分頁">13.1 通用 list 分頁</h3>
+<p>所有 list 類 endpoint（News / FAQ / Download / Location / Product / Article ...）都遵守同一個分頁約定，FE 可以寫一個通用函式：</p>
+<pre data-lang="JS"><code class="language-js">async function fetchList(endpoint, { page = 1, limit = 20, ...filters } = {}) {
+  const qs = new URLSearchParams({ page, limit, ...filters });
+  const r = await fetch(`${endpoint}?${qs}`).then(r =&gt; r.json());
+  return {
+    items: r.data.payload,
+    page:  r.data.meta.page,
+    total: r.data.meta.total,
+    totalPages: r.data.meta.total_pages,
+  };
+}
+
+// 例：拉新聞第 2 頁，類別=活動
+const news = await fetchList(&#39;/api/news/list&#39;, { page: 2, category: &#39;event&#39; });
+</code></pre>
+<h3 id="132-通用-detail含-seo-meta-跨模組共通">13.2 通用 detail（含 SEO meta 跨模組共通）</h3>
+<p>凡是有 detail endpoint 的模組（News/Faq/Download/Article/Esg/Product 等）都會回類似結構，FE 可以用同一個元件 render：</p>
+<pre data-lang="JS"><code class="language-js">async function fetchDetail(endpoint, blink) {
+  const r = await fetch(`${endpoint}?blink=${encodeURIComponent(blink)}`).then(r =&gt; r.json());
+  if (r.status === &#39;error&#39; &amp;&amp; r.code === &#39;NOT_FOUND&#39;) throw new Error(&#39;not_found&#39;);
+  const p = r.data.payload;
+  return {
+    title:   p.title,
+    content: p.content || p.memo2 || p.detail_html,
+    images:  p.images || [p.image].filter(Boolean),
+    meta:    p.meta,   // 給 &lt;Helmet&gt; 或 next/head 寫 SEO
+  };
+}
+</code></pre>
+<h3 id="133-contact-表單csrf-兩步">13.3 Contact 表單（CSRF 兩步）</h3>
+<p>聯絡 / 訂閱 / 退訂都需要先拿 CSRF token 才能 submit：</p>
+<pre data-lang="JS"><code class="language-js">async function submitContactForm(form) {
+  // Step 1: 拿 CSRF token
+  const csrf = await fetch(&#39;/api/contact/csrf&#39;).then(r =&gt; r.json().then(j =&gt; j.data.payload.csrf_token));
+
+  // Step 2: 帶 token 一起 submit
+  const r = await fetch(&#39;/api/contact/submit&#39;, {
+    method: &#39;POST&#39;,
+    headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+    body: JSON.stringify({ ...form, csrf_token: csrf }),
+  }).then(r =&gt; r.json());
+
+  if (r.status !== &#39;ok&#39;) throw new Error(r.message);
+  return r.data.payload;
+}
+</code></pre>
+<h3 id="134-彈跳廣告進站只跳一次">13.4 彈跳廣告（進站只跳一次）</h3>
+<pre data-lang="JS"><code class="language-js">async function showEntryPopups() {
+  const popups = await fetch(&#39;/api/popupsAd/list&#39;).then(r =&gt; r.json().then(j =&gt; j.data.payload));
+  const dismissed = JSON.parse(localStorage.getItem(&#39;dismissed_popups&#39;) || &#39;[]&#39;);
+
+  for (const p of popups) {
+    if (dismissed.includes(p.id)) continue;   // 使用者已關掉
+    showModal(p);
+    dismissed.push(p.id);
+  }
+  localStorage.setItem(&#39;dismissed_popups&#39;, JSON.stringify(dismissed));
+}
+</code></pre>
+<h3 id="135-報名業務狀態檢查在前端先過濾">13.5 報名（業務狀態檢查在前端先過濾）</h3>
+<p><code>/api/enroll/list</code> 後端會在每筆活動加 <code>is_open / is_expired / is_full / can_enroll</code> 旗標：</p>
+<pre data-lang="JS"><code class="language-js">const acts = await fetchList(&#39;/api/enroll/list&#39;, { category });
+acts.items.forEach(a =&gt; {
+  if (!a.can_enroll) {
+    // disable 報名按鈕；顯示原因（已滿 / 過期 / 未開放）
+    const reason = a.is_full ? &#39;已額滿&#39; : a.is_expired ? &#39;已截止&#39; : &#39;未開放&#39;;
+    renderClosedActivity(a, reason);
+    return;
+  }
+  renderOpenActivity(a);
+});
+</code></pre>
+<h3 id="136-報修狀態追蹤雙因子">13.6 報修狀態追蹤（雙因子）</h3>
+<pre data-lang="JS"><code class="language-js">async function trackRepair(repairNo, email) {
+  const qs = new URLSearchParams({ number: repairNo, mail: email });
+  const r = await fetch(`/api/repair/status?${qs}`).then(r =&gt; r.json());
+  if (r.status === &#39;error&#39; &amp;&amp; r.code === &#39;REPAIR_NOT_FOUND&#39;) {
+    // 後端不洩漏「編號存不存在」/「email 對不對」的差別 — UI 一律顯示「查無」
+    return null;
+  }
+  return r.data.payload;   // { audit, audit_label, ... }
+}
+</code></pre>
+<h3 id="137-統一錯誤處理">13.7 統一錯誤處理</h3>
+<p>形象站 endpoint 的錯誤回應都是統一 envelope：</p>
+<pre data-lang="JS"><code class="language-js">{
+  &quot;status&quot;: &quot;error&quot;,
+  &quot;code&quot;: &quot;INVALID_PARAM&quot;,
+  &quot;message&quot;: &quot;缺少必填：name&quot;,
+  &quot;meta&quot;: { &quot;request_id&quot;: &quot;...&quot;, &quot;time&quot;: &quot;...&quot; }
+}
+</code></pre>
+<p>FE 用統一 wrapper：</p>
+<pre data-lang="JS"><code class="language-js">async function apiCall(path, opts = {}) {
+  const r = await fetch(path, opts);
+  const j = await r.json();
+  if (j.status === &#39;ok&#39;) return j.data.payload;
+  // 後端 code 已分類（INVALID_PARAM / NOT_FOUND / FORBIDDEN / SERVER_ERROR ...）
+  const err = new Error(j.message);
+  err.code = j.code;
+  err.requestId = j.meta?.request_id;
+  throw err;
+}
+</code></pre>
+<hr>
 <h2 id="修訂紀錄">修訂紀錄</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -1540,6 +1649,11 @@ $this-&gt;language  // 第一次存取才解語系
 </tr>
 </thead>
 <tbody><tr>
+<td>v1.7</td>
+<td>2026-05-22</td>
+<td>新增 §13「前端整合範例」— 7 個 JS 範例（通用 list 分頁 / 通用 detail / Contact CSRF / 彈跳廣告 localStorage / 報名業務檢查 / 報修雙因子查詢 / 統一錯誤 wrapper）</td>
+</tr>
+<tr>
 <td>v1.6</td>
 <td>2026-05-22</td>
 <td>§12.10-12.13 — 補完 4 個小眾 CMS 模組：ESG / 投資人 / 商品租賃 / 客戶心得（共 13 endpoint）。WDM 形象站側對齊基本完成</td>
