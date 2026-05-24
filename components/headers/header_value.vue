@@ -94,7 +94,7 @@ $red: #bf3131;
     background: #fff;
     border-radius: 999px;
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
-    padding: 15px 44px 15px 56px;
+    padding: 0 50px;
     min-height: 80px;
   }
 
