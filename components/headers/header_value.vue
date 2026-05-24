@@ -81,10 +81,11 @@ function pickLang(l) {
 $red: #bf3131;
 
 .header-value {
+  width: 100%;
+  height: 80px;
   position: fixed;
-  top: 0;
+  top: 23px;
   z-index: 50;
-  padding: 18px 0;
 
   &__bar {
     display: flex;
@@ -94,7 +95,7 @@ $red: #bf3131;
     border-radius: 999px;
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
     padding: 15px 44px 15px 56px;
-    min-height: 90px;
+    min-height: 80px;
   }
 
   &__logo {
