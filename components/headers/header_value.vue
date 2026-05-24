@@ -81,7 +81,7 @@ function pickLang(l) {
 $red: #bf3131;
 
 .header-value {
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: 50;
   padding: 18px 0;
@@ -102,7 +102,7 @@ $red: #bf3131;
     display: block;
 
     img {
-      height: 60px;
+      height: 64px;
       width: auto;
       display: block;
     }
