@@ -273,6 +273,17 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 12px;
   font-size: 18px;
+  .navtool_icon {
+		width: 20px;
+		height: 20px;
+		svg {
+			display: block;
+			width: 100%;
+			height: 100%;
+			fill: $web_font_color;
+			transition: all 0.3s;
+		}
+	}
 }
 
 .search_btn .search_form {
