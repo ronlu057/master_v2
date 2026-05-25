@@ -27,11 +27,11 @@ function pickLang(l) {
           <img src="/img/icon/Logo.svg" alt="佳質食品" />
         </NuxtLink>
 
-        <!-- 主選單 -->
-        <SiteMenu v-if="!isMinimal" :items="menuData.header" class="header-value__nav" />
-
         <!-- 右側功能區 -->
         <div class="header-value__right">
+          <!-- 主選單 -->
+          <SiteMenu v-if="!isMinimal" :items="menuData.header" class="header-value__nav" />
+
           <!-- 語言切換 -->
           <div class="header-value__lang">
             <button

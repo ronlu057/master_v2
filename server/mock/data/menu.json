@@ -1,13 +1,7 @@
 {
   "header": [
     {
-      "title": "首頁",
-      "url": "/",
-      "data_type": "page",
-      "children": []
-    },
-    {
-      "title": "關於我們",
+      "title": "關於佳質",
       "url": "/about/company-intro",
       "data_type": "page",
       "children": [
@@ -26,20 +20,38 @@
       ]
     },
     {
+      "title": "產品系列",
+      "url": "/products",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "產品推薦",
+      "url": "/recommendation",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "客製化服務",
+      "url": "/custom-service",
+      "data_type": "page",
+      "children": []
+    },
+    {
       "title": "最新消息",
       "url": "/news",
       "data_type": "page",
       "children": []
     },
     {
-      "title": "服務據點",
-      "url": "/location",
+      "title": "線上型錄",
+      "url": "/catalog",
       "data_type": "page",
       "children": []
     },
     {
-      "title": "常見問題",
-      "url": "/faq",
+      "title": "聯絡我們",
+      "url": "/contact",
       "data_type": "page",
       "children": []
     },
