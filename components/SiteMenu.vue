@@ -39,7 +39,7 @@ const emit = defineEmits(['navigate'])
     align-items: center;
     gap: 4px;
     padding: 10px 14px;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 600;
     border-radius: var(--radius);
 
