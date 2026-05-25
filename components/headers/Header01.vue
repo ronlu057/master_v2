@@ -38,18 +38,33 @@ onBeforeUnmount(() => {
 <template>
   <header ref="headerEl" :class="['header01', { scroll: isScrolled }]">
     <NuxtLink class="logo" to="/" title="回首頁">
-      {{ firmData?.firm?.title || appConfig.site.name }}
-      <span class="logo__badge">{{ label }}</span>
+      <img src="/img/logo/logo-AD.svg" alt="Logo" />
     </NuxtLink>
 
     <div class="navbar">
       <nav v-if="!isMinimal" itemscope itemtype="https://www.schema.org/SiteNavigationElement">
-        <SiteMenu :items="menuData.header" class="navmenu" />
+        <ul class="navmenu">
+          <li
+            v-for="item in menuData.header"
+            :key="item.url"
+            class="navmenu__item"
+            itemprop="name"
+          >
+            <NuxtLink :to="item.url" itemprop="url" class="navmenu__link">
+              {{ item.title }}
+            </NuxtLink>
+            <ul v-if="item.children?.length" class="navmenu__sub">
+              <li v-for="child in item.children" :key="child.url">
+                <NuxtLink :to="child.url" itemprop="url">{{ child.title }}</NuxtLink>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </nav>
 
       <div class="navtool">
         <template v-if="!isMinimal">
-          <div class="search_btn">
+          <!--<div class="search_btn">
             <form class="search_form" @submit.prevent="onSearch">
               <input
                 v-model="keyword"
@@ -60,7 +75,7 @@ onBeforeUnmount(() => {
               />
               <button type="submit" aria-label="搜尋">🔍</button>
             </form>
-          </div>
+          </div>-->
 
           <NuxtLink v-if="isShop" class="cart_btn" to="/shop/cart" aria-label="購物車">
             🛍️
@@ -87,7 +102,16 @@ onBeforeUnmount(() => {
 
     <transition name="drop">
       <nav v-if="ui.menuOpen && !isMinimal" class="mb_panel">
-        <SiteMenu :items="menuData.mobile" mobile @navigate="ui.closeMenu" />
+        <ul class="mb_navmenu">
+          <li v-for="item in menuData.mobile" :key="item.url">
+            <NuxtLink :to="item.url" @click="ui.closeMenu">{{ item.title }}</NuxtLink>
+            <ul v-if="item.children?.length">
+              <li v-for="child in item.children" :key="child.url">
+                <NuxtLink :to="child.url" @click="ui.closeMenu">{{ child.title }}</NuxtLink>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </nav>
     </transition>
   </header>
@@ -101,7 +125,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 24px;
-  padding: 0 20px;
+  padding: 0 80px;
   height: var(--header-h);
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
@@ -142,6 +166,96 @@ onBeforeUnmount(() => {
 
 .navmenu {
   display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  &__item {
+    position: relative;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 24px 20px;
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: var(--radius);
+
+    &:hover,
+    &.router-link-active {
+      color: var(--color-primary);
+    }
+  }
+
+  &__caret {
+    font-size: 10px;
+  }
+
+  &__sub {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 160px;
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all var(--transition);
+
+    a {
+      display: block;
+      padding: 8px 12px;
+      font-size: 14px;
+      border-radius: 6px;
+
+      &:hover {
+        background: var(--color-surface);
+        color: var(--color-primary);
+      }
+    }
+  }
+
+  &__item:hover &__sub {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+.mb_navmenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  > li > a {
+    display: block;
+    padding: 12px 4px;
+    font-size: 18px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 16px;
+
+    a {
+      display: block;
+      padding: 8px 4px;
+      font-size: 14px;
+    }
+  }
 }
 
 .navtool {
