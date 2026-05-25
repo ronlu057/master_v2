@@ -6,8 +6,17 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
 
   // SVG 可用 `?component` 後綴 import 成 Vue 元件（檔案放 assets/icon/）
+  // SCSS additionalData：自動把 _variables.scss 注入所有 .vue scoped style，
+  // 讓 $web_font_color 等 SCSS 變數無需手動 @use 即可使用。
   vite: {
     plugins: [svgLoader()],
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "~/assets/styles/variables" as *;',
+        },
+      },
+    },
   },
 
   // 白皮書「無 TS 政策」：停用 TypeScript 檢查
