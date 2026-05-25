@@ -53,11 +53,16 @@ onBeforeUnmount(() => {
             <NuxtLink :to="item.url" itemprop="url" class="navmenu__link">
               {{ item.title }}
             </NuxtLink>
-            <ul v-if="item.children?.length" class="navmenu__sub">
-              <li v-for="child in item.children" :key="child.url">
-                <NuxtLink :to="child.url" itemprop="url">{{ child.title }}</NuxtLink>
-              </li>
-            </ul>
+            <div v-if="item.children?.length" class="navmenu__sub">
+              <NuxtLink
+                v-for="child in item.children"
+                :key="child.url"
+                :to="child.url"
+                itemprop="url"
+              >
+                {{ child.title }}
+              </NuxtLink>
+            </div>
           </li>
         </ul>
       </nav>
@@ -102,16 +107,23 @@ onBeforeUnmount(() => {
 
     <transition name="drop">
       <nav v-if="ui.menuOpen && !isMinimal" class="mb_panel">
-        <ul class="mb_navmenu">
-          <li v-for="item in menuData.mobile" :key="item.url">
-            <NuxtLink :to="item.url" @click="ui.closeMenu">{{ item.title }}</NuxtLink>
-            <ul v-if="item.children?.length">
-              <li v-for="child in item.children" :key="child.url">
-                <NuxtLink :to="child.url" @click="ui.closeMenu">{{ child.title }}</NuxtLink>
-              </li>
-            </ul>
-          </li>
-        </ul>
+        <div class="mb_navmenu">
+          <div v-for="item in menuData.mobile" :key="item.url" class="mb_navmenu__item">
+            <NuxtLink :to="item.url" class="mb_navmenu__link" @click="ui.closeMenu">
+              {{ item.title }}
+            </NuxtLink>
+            <div v-if="item.children?.length" class="mb_navmenu__sub">
+              <NuxtLink
+                v-for="child in item.children"
+                :key="child.url"
+                :to="child.url"
+                @click="ui.closeMenu"
+              >
+                {{ child.title }}
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
       </nav>
     </transition>
   </header>
@@ -200,8 +212,6 @@ onBeforeUnmount(() => {
     top: 100%;
     left: 0;
     min-width: 160px;
-    list-style: none;
-    margin: 0;
     padding: 6px;
     background: var(--color-bg);
     border: 1px solid var(--color-border);
@@ -233,11 +243,7 @@ onBeforeUnmount(() => {
 }
 
 .mb_navmenu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-
-  > li > a {
+  &__link {
     display: block;
     padding: 12px 4px;
     font-size: 18px;
@@ -245,9 +251,7 @@ onBeforeUnmount(() => {
     border-bottom: 1px solid var(--color-border);
   }
 
-  ul {
-    list-style: none;
-    margin: 0;
+  &__sub {
     padding: 0 0 0 16px;
 
     a {
