@@ -1,4 +1,6 @@
 <script setup>
+import SearchIcon from '~/assets/icon/search_icon.svg?component'
+
 const { label, isShop, isMinimal } = useProject()
 const ui = useUiStore()
 const appConfig = useAppConfig()
@@ -81,6 +83,10 @@ onBeforeUnmount(() => {
               <button type="submit" aria-label="搜尋">🔍</button>
             </form>
           </div>-->
+
+          <div class="navtool_icon">
+            <SearchIcon aria-label="搜尋" />
+          </div>
 
           <NuxtLink v-if="isShop" class="cart_btn" to="/shop/cart" aria-label="購物車">
             🛍️
