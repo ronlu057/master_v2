@@ -1,7 +1,14 @@
 // Nuxt 4 母版專案設定檔（純 JavaScript，無 TypeScript）
+import svgLoader from 'vite-svg-loader'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
+
+  // SVG 可用 `?component` 後綴 import 成 Vue 元件（檔案放 assets/icon/）
+  vite: {
+    plugins: [svgLoader()],
+  },
 
   // 白皮書「無 TS 政策」：停用 TypeScript 檢查
   typescript: { typeCheck: false, shim: false },

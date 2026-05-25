@@ -1,6 +1,9 @@
 <script setup>
 // 頁首版型 — VALUE 佳質食品風格（白色浮動圓角列）
 // 依截圖切版；精確數值可再依 Figma Dev Mode 調整。
+import LineIcon from '~/assets/icon/line_icon.svg?component'
+import Arrow from '~/assets/icon/Arrow.svg?component'
+
 const { isMinimal } = useProject()
 const ui = useUiStore()
 const { data: menuData } = useSiteMenu()
@@ -37,7 +40,7 @@ function pickLang(l) {
               @click="langOpen = !langOpen"
             >
               {{ currentLang }}
-              <span class="header-value__caret" />
+              <Arrow class="header-value__caret" />
             </button>
             <transition name="drop">
               <ul v-show="langOpen" class="header-value__lang-menu">
@@ -59,7 +62,7 @@ function pickLang(l) {
             class="header-value__line"
             aria-label="LINE"
           >
-            <img src="/img/icon/line_icon.svg" alt="LINE" />
+            <LineIcon />
           </a>
 
           <!-- 行動版選單鈕 -->
@@ -141,16 +144,14 @@ $red: #bf3131;
   }
 
   &__caret {
-    width: 7px;
-    height: 7px;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(45deg) translate(-1px, -1px);
+    width: 12px;
+    height: 12px;
+    display: block;
     transition: transform var(--transition);
   }
 
   &__lang-btn.is-open &__caret {
-    transform: rotate(-135deg) translate(-1px, -1px);
+    transform: rotate(180deg);
   }
 
   &__lang-menu {
@@ -186,9 +187,9 @@ $red: #bf3131;
     display: block;
     flex-shrink: 0;
 
-    img {
-      width: 44px;
-      height: 44px;
+    svg {
+      width: 38px;
+      height: 38px;
       display: block;
     }
   }
@@ -239,7 +240,7 @@ $red: #bf3131;
     padding: 10px 14px 10px 20px;
     min-height: 64px;
   }
-  .header-value__logo img {
+  .header-value__logo svg {
     height: 40px;
   }
 }
