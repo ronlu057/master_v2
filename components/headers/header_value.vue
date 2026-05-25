@@ -126,16 +126,18 @@ $red: #bf3131;
   }
 
   &__lang-btn {
+    width: auto;
+    height: 32px;
     display: flex;
     align-items: center;
     gap: 8px;
-    background: $red;
+    background: #BF3131;
     color: #fff;
     border: none;
     border-radius: 999px;
-    padding: 9px 20px;
-    font-size: 14px;
-    font-weight: 600;
+    padding: 0 16px;
+    font-size: 16px;
+    font-weight: 500;
   }
 
   &__caret {
