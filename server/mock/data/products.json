@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "blink": "product-a",
+    "title": "經典商品 A",
+    "category": "hot",
+    "price": 1280,
+    "origin_price": 1680,
+    "image": "https://picsum.photos/seed/prod-1/600/600",
+    "summary": "熱賣推薦款式。"
+  },
+  {
+    "id": 2,
+    "blink": "product-b",
+    "title": "人氣商品 B",
+    "category": "hot",
+    "price": 980,
+    "origin_price": 980,
+    "image": "https://picsum.photos/seed/prod-2/600/600",
+    "summary": "人氣不敗經典。"
+  },
+  {
+    "id": 3,
+    "blink": "product-c",
+    "title": "新品上市 C",
+    "category": "new",
+    "price": 2200,
+    "origin_price": 2200,
+    "image": "https://picsum.photos/seed/prod-3/600/600",
+    "summary": "本季最新上市。"
+  },
+  {
+    "id": 4,
+    "blink": "product-d",
+    "title": "新品上市 D",
+    "category": "new",
+    "price": 1750,
+    "origin_price": 1990,
+    "image": "https://picsum.photos/seed/prod-4/600/600",
+    "summary": "質感升級新選擇。"
+  },
+  {
+    "id": 5,
+    "blink": "product-e",
+    "title": "優惠商品 E",
+    "category": "sale",
+    "price": 590,
+    "origin_price": 1200,
+    "image": "https://picsum.photos/seed/prod-5/600/600",
+    "summary": "限時優惠特賣。"
+  },
+  {
+    "id": 6,
+    "blink": "product-f",
+    "title": "優惠商品 F",
+    "category": "sale",
+    "price": 850,
+    "origin_price": 1500,
+    "image": "https://picsum.photos/seed/prod-6/600/600",
+    "summary": "出清下殺價。"
+  }
+]

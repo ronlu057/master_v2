@@ -1,0 +1,38 @@
+{
+  "categories": [
+    {
+      "blink": "doc",
+      "title": "文件下載"
+    },
+    {
+      "blink": "tool",
+      "title": "工具資源"
+    }
+  ],
+  "items": [
+    {
+      "id": 1,
+      "category": "doc",
+      "title": "母版開發白皮書 PDF",
+      "file_url": "https://example.com/files/whitepaper.pdf",
+      "file_type": "pdf",
+      "open_in_browser": true
+    },
+    {
+      "id": 2,
+      "category": "doc",
+      "title": "專案交付清單",
+      "file_url": "https://example.com/files/checklist.xlsx",
+      "file_type": "xlsx",
+      "open_in_browser": false
+    },
+    {
+      "id": 3,
+      "category": "tool",
+      "title": "UI 元件設計稿",
+      "file_url": "https://example.com/files/ui-kit.zip",
+      "file_type": "zip",
+      "open_in_browser": false
+    }
+  ]
+}

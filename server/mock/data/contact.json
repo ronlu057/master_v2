@@ -1,0 +1,20 @@
+{
+  "subjects": [
+    {
+      "value": "quote",
+      "label": "網站開發報價"
+    },
+    {
+      "value": "support",
+      "label": "技術支援"
+    },
+    {
+      "value": "cooperation",
+      "label": "合作提案"
+    },
+    {
+      "value": "other",
+      "label": "其他"
+    }
+  ]
+}

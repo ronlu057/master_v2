@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "title": "母版示範站開幕",
+    "image": "https://picsum.photos/seed/popup-1/600/700",
+    "target": {
+      "type": "internal",
+      "value": "/news/master-launch"
+    }
+  }
+]

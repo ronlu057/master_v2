@@ -1,0 +1,84 @@
+{
+  "categories": [
+    {
+      "unit_id": 1,
+      "type": "news",
+      "title": "最新消息",
+      "count": 6
+    },
+    {
+      "unit_id": 2,
+      "type": "about",
+      "title": "關於我們",
+      "count": 2
+    },
+    {
+      "unit_id": 3,
+      "type": "faq",
+      "title": "常見問題",
+      "count": 4
+    }
+  ],
+  "list": [
+    {
+      "unit_id": 1,
+      "type": "news",
+      "type_title": "最新消息",
+      "title": "母版專案正式上線",
+      "url": "/news/master-launch",
+      "category_blinks": [
+        "news"
+      ],
+      "allPage": "/news",
+      "has_detail": true,
+      "page_button": "查看",
+      "target": "_self",
+      "summary": "支援五種專案類型的 Nuxt 4 母版正式釋出。"
+    },
+    {
+      "unit_id": 1,
+      "type": "news",
+      "type_title": "最新消息",
+      "title": "新增購物模組功能",
+      "url": "/news/shop-module",
+      "category_blinks": [
+        "news"
+      ],
+      "allPage": "/news",
+      "has_detail": true,
+      "page_button": "查看",
+      "target": "_self",
+      "summary": "購物類型專案新增購物車與結帳流程。"
+    },
+    {
+      "unit_id": 2,
+      "type": "about",
+      "type_title": "關於我們",
+      "title": "公司簡介",
+      "url": "/about/company-intro",
+      "category_blinks": [
+        "about"
+      ],
+      "allPage": "/about/company-intro",
+      "has_detail": true,
+      "page_button": "查看",
+      "target": "_self",
+      "summary": "專注前端網站開發的團隊。"
+    },
+    {
+      "unit_id": 3,
+      "type": "faq",
+      "type_title": "常見問題",
+      "title": "如何切換專案類型？",
+      "url": "/faq",
+      "category_blinks": [
+        "faq"
+      ],
+      "allPage": "/faq",
+      "has_detail": false,
+      "page_button": "前往",
+      "target": "_self",
+      "summary": "修改 .env 的 NUXT_PUBLIC_PROJECT_TYPE。"
+    }
+  ]
+}

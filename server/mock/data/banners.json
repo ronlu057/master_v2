@@ -1,0 +1,60 @@
+{
+  "home": [
+    {
+      "title": "一套母版，五種專案類型",
+      "link": "/about/company-intro",
+      "image": {
+        "pc": "https://picsum.photos/seed/banner-1/1600/600",
+        "mb": "https://picsum.photos/seed/banner-1m/800/800"
+      }
+    },
+    {
+      "title": "模組化 block 快速套版",
+      "link": "/news",
+      "image": {
+        "pc": "https://picsum.photos/seed/banner-2/1600/600",
+        "mb": "https://picsum.photos/seed/banner-2m/800/800"
+      }
+    },
+    {
+      "title": "購物模組一鍵啟用",
+      "link": "/shop",
+      "image": {
+        "pc": "https://picsum.photos/seed/banner-3/1600/600",
+        "mb": "https://picsum.photos/seed/banner-3m/800/800"
+      }
+    }
+  ],
+  "page": {
+    "news": [
+      {
+        "title": "最新消息",
+        "link": "",
+        "image": {
+          "pc": "https://picsum.photos/seed/page-news/1600/360",
+          "mb": "https://picsum.photos/seed/page-newsm/800/400"
+        }
+      }
+    ],
+    "about": [
+      {
+        "title": "關於我們",
+        "link": "",
+        "image": {
+          "pc": "https://picsum.photos/seed/page-about/1600/360",
+          "mb": "https://picsum.photos/seed/page-aboutm/800/400"
+        }
+      }
+    ]
+  },
+  "common": [
+    {
+      "title": "",
+      "link": "",
+      "image": {
+        "pc": "https://picsum.photos/seed/page-common/1600/360",
+        "mb": "https://picsum.photos/seed/page-commonm/800/400"
+      }
+    }
+  ]
+}

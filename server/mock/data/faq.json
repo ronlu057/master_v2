@@ -1,0 +1,38 @@
+{
+  "categories": [
+    {
+      "blink": "general",
+      "title": "一般問題"
+    },
+    {
+      "blink": "tech",
+      "title": "技術問題"
+    }
+  ],
+  "items": [
+    {
+      "id": 1,
+      "category": "general",
+      "question": "這套母版支援哪些專案類型？",
+      "answer": "<p>模組件套版、客製首頁、全客製、購物、臨時站，共五種。</p>"
+    },
+    {
+      "id": 2,
+      "category": "general",
+      "question": "如何切換專案類型？",
+      "answer": "<p>修改 .env 的 NUXT_PUBLIC_PROJECT_TYPE 並重啟 dev server。</p>"
+    },
+    {
+      "id": 3,
+      "category": "tech",
+      "question": "前端開發階段如何取得資料？",
+      "answer": "<p>NUXT_PUBLIC_API_BASE 留空時自動使用本地 mock JSON。</p>"
+    },
+    {
+      "id": 4,
+      "category": "tech",
+      "question": "可以用 TypeScript 嗎？",
+      "answer": "<p>不行，本母版採無 TypeScript 政策，全程純 JavaScript。</p>"
+    }
+  ]
+}

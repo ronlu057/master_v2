@@ -1,0 +1,54 @@
+{
+  "categories": [
+    {
+      "blink": "north",
+      "title": "北部"
+    },
+    {
+      "blink": "central",
+      "title": "中部"
+    },
+    {
+      "blink": "south",
+      "title": "南部"
+    }
+  ],
+  "items": [
+    {
+      "id": 1,
+      "category": "north",
+      "title": "台北旗艦店",
+      "address": "台北市信義區範例路 100 號",
+      "tel": "02-1234-5678",
+      "lat": 25.033,
+      "lng": 121.5654,
+      "image": "https://picsum.photos/seed/loc-1/600/400",
+      "open_time": "10:00 - 21:00",
+      "map_link": "https://maps.google.com"
+    },
+    {
+      "id": 2,
+      "category": "central",
+      "title": "台中服務中心",
+      "address": "台中市西屯區範例大道 200 號",
+      "tel": "04-2345-6789",
+      "lat": 24.1477,
+      "lng": 120.6736,
+      "image": "https://picsum.photos/seed/loc-2/600/400",
+      "open_time": "10:00 - 20:00",
+      "map_link": "https://maps.google.com"
+    },
+    {
+      "id": 3,
+      "category": "south",
+      "title": "高雄門市",
+      "address": "高雄市前鎮區範例街 300 號",
+      "tel": "07-3456-7890",
+      "lat": 22.6273,
+      "lng": 120.3014,
+      "image": "https://picsum.photos/seed/loc-3/600/400",
+      "open_time": "11:00 - 21:00",
+      "map_link": "https://maps.google.com"
+    }
+  ]
+}

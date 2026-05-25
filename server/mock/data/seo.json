@@ -1,0 +1,44 @@
+{
+  "home": {
+    "title": "母版專案 — 一套母版，五種專案類型",
+    "description": "Nuxt 4 + Vue 3 + Pinia 前端母版，支援模組件套版、客製首頁、全客製、購物、臨時站。",
+    "keywords": "Nuxt4, Vue3, 母版, 套版, 購物網站",
+    "head_script": "",
+    "body_script": "",
+    "og": {
+      "title": "母版專案",
+      "description": "一套母版，五種專案類型",
+      "image": "https://picsum.photos/seed/og-home/1200/630"
+    },
+    "meta": {
+      "author": "AD-Design",
+      "copyright": "AD-Design",
+      "distribution": "global",
+      "rating": "general",
+      "robots": "index,follow"
+    }
+  },
+  "common": {
+    "title": "母版專案",
+    "description": "Nuxt 4 前端母版示範站。",
+    "keywords": "Nuxt, Vue, 母版",
+    "head_script": "",
+    "body_script": ""
+  },
+  "pages": {
+    "news": {
+      "title": "最新消息 — 母版專案",
+      "description": "查看最新消息與活動公告。",
+      "keywords": "消息,活動",
+      "source": "page",
+      "fallback_reason": ""
+    },
+    "about": {
+      "title": "關於我們 — 母版專案",
+      "description": "認識我們的團隊與服務。",
+      "keywords": "關於,團隊",
+      "source": "page",
+      "fallback_reason": ""
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "company-intro": {
+    "title": "公司簡介",
+    "url": "/about/company-intro",
+    "content": "<h3>關於我們</h3><p>我們是專注於前端網站開發的團隊，以 Nuxt 4 母版快速交付高品質網站。</p><p>從形象網站到購物平台，一套母版滿足多元專案需求。</p>",
+    "content2": "",
+    "page": {
+      "button_type": "",
+      "out_link": "",
+      "video": ""
+    },
+    "seo": {
+      "title": "公司簡介",
+      "description": "認識我們的團隊",
+      "keywords": "關於我們"
+    },
+    "share": {
+      "facebook": true,
+      "line": true
+    },
+    "advanced": {},
+    "publish": {
+      "start_date": "",
+      "end_date": ""
+    }
+  },
+  "team": {
+    "title": "服務團隊",
+    "url": "/about/team",
+    "content": "<h3>服務團隊</h3><p>由前端工程、UI/UX 設計與專案管理組成的跨領域團隊。</p>",
+    "content2": "",
+    "page": {
+      "button_type": "",
+      "out_link": "",
+      "video": ""
+    },
+    "seo": {
+      "title": "服務團隊",
+      "description": "專業跨領域團隊",
+      "keywords": "團隊"
+    },
+    "share": {
+      "facebook": true,
+      "line": true
+    },
+    "advanced": {},
+    "publish": {
+      "start_date": "",
+      "end_date": ""
+    }
+  }
+}

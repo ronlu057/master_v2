@@ -1,0 +1,35 @@
+{
+  "firm": {
+    "title": "AD-Design 母版示範站",
+    "mail": "info@ad-design.tw",
+    "mail2": "service@ad-design.tw",
+    "tel": "02-1234-5678",
+    "address": "台北市信義區範例路 100 號 8 樓",
+    "google_map": "https://maps.google.com/?q=台北101",
+    "social": {
+      "instagram": "https://instagram.com",
+      "facebook": "https://facebook.com",
+      "line": "https://line.me",
+      "youtube": "https://youtube.com",
+      "twitter": ""
+    },
+    "analytics": {
+      "head": "",
+      "body_start": "",
+      "body_end": ""
+    },
+    "footer": {
+      "title2": "專業前端網站開發 · Nuxt 4 母版"
+    }
+  },
+  "rules": [
+    {
+      "title": "隱私權政策",
+      "url": "/firm/caption?unit=privacy"
+    },
+    {
+      "title": "服務條款",
+      "url": "/firm/caption?unit=terms"
+    }
+  ]
+}

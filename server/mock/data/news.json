@@ -1,0 +1,194 @@
+{
+  "categories": [
+    {
+      "blink": "news",
+      "title": "公司公告",
+      "count": 3
+    },
+    {
+      "blink": "events",
+      "title": "活動快訊",
+      "count": 2
+    },
+    {
+      "blink": "blog",
+      "title": "技術部落格",
+      "count": 1
+    }
+  ],
+  "items": [
+    {
+      "id": 1,
+      "blink": "master-launch",
+      "title": "母版專案正式上線",
+      "date": "5.21,2026",
+      "weekday": "Wed",
+      "url": "/news/master-launch",
+      "video": "",
+      "category_blinks": [
+        "news"
+      ],
+      "summary": "支援五種專案類型的 Nuxt 4 母版正式對內釋出。",
+      "news_multi_photo": [
+        {
+          "title": "母版專案正式上線",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-1/800/500"
+        },
+        {
+          "title": "內文配圖",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-1b/800/500"
+        }
+      ],
+      "content": "<p>支援五種專案類型的 Nuxt 4 母版正式對內釋出。</p><p>這是 mock 文章內文，用於前端開發階段驗證版面。正式上線後由 WDM 後台輸入實際內容。</p>"
+    },
+    {
+      "id": 2,
+      "blink": "summer-event",
+      "title": "2026 夏季活動開跑",
+      "date": "5.18,2026",
+      "weekday": "Sun",
+      "url": "/news/summer-event",
+      "video": "",
+      "category_blinks": [
+        "events"
+      ],
+      "summary": "夏季限定活動正式登場，多項優惠同步開放。",
+      "news_multi_photo": [
+        {
+          "title": "2026 夏季活動開跑",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-2/800/500"
+        },
+        {
+          "title": "內文配圖",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-2b/800/500"
+        }
+      ],
+      "content": "<p>夏季限定活動正式登場，多項優惠同步開放。</p><p>這是 mock 文章內文，用於前端開發階段驗證版面。正式上線後由 WDM 後台輸入實際內容。</p>"
+    },
+    {
+      "id": 3,
+      "blink": "shop-module",
+      "title": "新增購物模組功能",
+      "date": "5.12,2026",
+      "weekday": "Mon",
+      "url": "/news/shop-module",
+      "video": "",
+      "category_blinks": [
+        "news"
+      ],
+      "summary": "購物類型專案新增購物車與結帳流程。",
+      "news_multi_photo": [
+        {
+          "title": "新增購物模組功能",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-3/800/500"
+        },
+        {
+          "title": "內文配圖",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-3b/800/500"
+        }
+      ],
+      "content": "<p>購物類型專案新增購物車與結帳流程。</p><p>這是 mock 文章內文，用於前端開發階段驗證版面。正式上線後由 WDM 後台輸入實際內容。</p>"
+    },
+    {
+      "id": 4,
+      "blink": "new-location",
+      "title": "服務據點擴點公告",
+      "date": "5.05,2026",
+      "weekday": "Mon",
+      "url": "/news/new-location",
+      "video": "",
+      "category_blinks": [
+        "news"
+      ],
+      "summary": "台中、高雄服務據點正式啟用。",
+      "news_multi_photo": [
+        {
+          "title": "服務據點擴點公告",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-4/800/500"
+        },
+        {
+          "title": "內文配圖",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-4b/800/500"
+        }
+      ],
+      "content": "<p>台中、高雄服務據點正式啟用。</p><p>這是 mock 文章內文，用於前端開發階段驗證版面。正式上線後由 WDM 後台輸入實際內容。</p>"
+    },
+    {
+      "id": 5,
+      "blink": "member-upgrade",
+      "title": "會員制度升級說明",
+      "date": "4.28,2026",
+      "weekday": "Mon",
+      "url": "/news/member-upgrade",
+      "video": "",
+      "category_blinks": [
+        "events"
+      ],
+      "summary": "會員分級制度全面升級，回饋更有感。",
+      "news_multi_photo": [
+        {
+          "title": "會員制度升級說明",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-5/800/500"
+        },
+        {
+          "title": "內文配圖",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-5b/800/500"
+        }
+      ],
+      "content": "<p>會員分級制度全面升級，回饋更有感。</p><p>這是 mock 文章內文，用於前端開發階段驗證版面。正式上線後由 WDM 後台輸入實際內容。</p>"
+    },
+    {
+      "id": 6,
+      "blink": "nuxt4-blog",
+      "title": "技術筆記：Nuxt 4 導入心得",
+      "date": "4.20,2026",
+      "weekday": "Mon",
+      "url": "/news/nuxt4-blog",
+      "video": "",
+      "category_blinks": [
+        "blog"
+      ],
+      "summary": "從 Nuxt 3 升級 Nuxt 4 的目錄結構與效能實戰。",
+      "news_multi_photo": [
+        {
+          "title": "技術筆記：Nuxt 4 導入心得",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-6/800/500"
+        },
+        {
+          "title": "內文配圖",
+          "title2": "",
+          "url": "https://picsum.photos/seed/news-6b/800/500"
+        }
+      ],
+      "content": "<p>從 Nuxt 3 升級 Nuxt 4 的目錄結構與效能實戰。</p><p>這是 mock 文章內文，用於前端開發階段驗證版面。正式上線後由 WDM 後台輸入實際內容。</p>"
+    }
+  ],
+  "detailExtra": {
+    "seo": {
+      "title": "",
+      "description": "",
+      "keywords": ""
+    },
+    "share": {
+      "facebook": true,
+      "line": true,
+      "twitter": false
+    },
+    "advanced": {},
+    "publish": {
+      "start_date": "2026-04-01",
+      "end_date": ""
+    }
+  }
+}

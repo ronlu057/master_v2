@@ -1,0 +1,117 @@
+{
+  "header": [
+    {
+      "title": "首頁",
+      "url": "/",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "關於我們",
+      "url": "/about/company-intro",
+      "data_type": "page",
+      "children": [
+        {
+          "title": "公司簡介",
+          "url": "/about/company-intro",
+          "data_type": "page",
+          "children": []
+        },
+        {
+          "title": "服務團隊",
+          "url": "/about/team",
+          "data_type": "page",
+          "children": []
+        }
+      ]
+    },
+    {
+      "title": "最新消息",
+      "url": "/news",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "服務據點",
+      "url": "/location",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "常見問題",
+      "url": "/faq",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "聯絡我們",
+      "url": "/contact",
+      "data_type": "page",
+      "children": []
+    }
+  ],
+  "footer": [
+    {
+      "title": "關於我們",
+      "url": "/about/company-intro",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "最新消息",
+      "url": "/news",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "常見問題",
+      "url": "/faq",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "聯絡我們",
+      "url": "/contact",
+      "data_type": "page",
+      "children": []
+    }
+  ],
+  "mobile": [
+    {
+      "title": "首頁",
+      "url": "/",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "關於我們",
+      "url": "/about/company-intro",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "最新消息",
+      "url": "/news",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "服務據點",
+      "url": "/location",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "常見問題",
+      "url": "/faq",
+      "data_type": "page",
+      "children": []
+    },
+    {
+      "title": "聯絡我們",
+      "url": "/contact",
+      "data_type": "page",
+      "children": []
+    }
+  ]
+}

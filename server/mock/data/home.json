@@ -1,0 +1,206 @@
+{
+  "slots": [
+    {
+      "key": "cipage",
+      "type": "slot",
+      "blocks": [
+        {
+          "type": "banner",
+          "title": "",
+          "item": {
+            "rows": [
+              {
+                "title": "一套母版，五種專案類型",
+                "link": "/about/company-intro",
+                "image": {
+                  "pc": "https://picsum.photos/seed/banner-1/1600/600",
+                  "mb": "https://picsum.photos/seed/banner-1m/800/800"
+                }
+              },
+              {
+                "title": "模組化 block 快速套版",
+                "link": "/news",
+                "image": {
+                  "pc": "https://picsum.photos/seed/banner-2/1600/600",
+                  "mb": "https://picsum.photos/seed/banner-2m/800/800"
+                }
+              },
+              {
+                "title": "購物模組一鍵啟用",
+                "link": "/shop",
+                "image": {
+                  "pc": "https://picsum.photos/seed/banner-3/1600/600",
+                  "mb": "https://picsum.photos/seed/banner-3m/800/800"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "intro",
+          "title": "關於母版",
+          "item": {
+            "rows": [
+              {
+                "title": "一套母版，五種專案類型",
+                "text": "模組件套版、客製首頁、全客製、購物、臨時站 — 透過設定切換，共用同一套 API 串接層與元件庫。",
+                "image": "https://picsum.photos/seed/intro/900/600",
+                "url": "/about/company-intro"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "homePush",
+      "type": "slot",
+      "blocks": [
+        {
+          "type": "push",
+          "title": "精選服務",
+          "item": {
+            "rows": [
+              {
+                "title": "模組化開發",
+                "text": "block 模組快速組裝頁面",
+                "image": "https://picsum.photos/seed/push-1/600/400",
+                "url": "/about/company-intro"
+              },
+              {
+                "title": "SSR 效能",
+                "text": "Nuxt 4 伺服器渲染與 SEO",
+                "image": "https://picsum.photos/seed/push-2/600/400",
+                "url": "/about/company-intro"
+              },
+              {
+                "title": "購物整合",
+                "text": "一鍵啟用購物模組",
+                "image": "https://picsum.photos/seed/push-3/600/400",
+                "url": "/shop"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "homeOtherAd",
+      "type": "slot",
+      "blocks": [
+        {
+          "type": "other_ad",
+          "title": "最新活動",
+          "item": {
+            "rows": [
+              {
+                "title": "2026 夏季活動",
+                "text": "多項優惠同步開放",
+                "image": "https://picsum.photos/seed/ad-1/800/450",
+                "url": "/news/summer-event"
+              },
+              {
+                "title": "會員制度升級",
+                "text": "回饋更有感",
+                "image": "https://picsum.photos/seed/ad-2/800/450",
+                "url": "/news/member-upgrade"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "news_block",
+      "type": "slot",
+      "blocks": [
+        {
+          "type": "news",
+          "title": "最新消息",
+          "item": {
+            "rows": [
+              {
+                "id": 1,
+                "blink": "master-launch",
+                "title": "母版專案正式上線",
+                "date": "5.21,2026",
+                "weekday": "Wed",
+                "url": "/news/master-launch",
+                "video": "",
+                "category_blinks": [
+                  "news"
+                ],
+                "summary": "支援五種專案類型的 Nuxt 4 母版正式對內釋出。",
+                "news_multi_photo": [
+                  {
+                    "title": "母版專案正式上線",
+                    "title2": "",
+                    "url": "https://picsum.photos/seed/news-1/800/500"
+                  },
+                  {
+                    "title": "內文配圖",
+                    "title2": "",
+                    "url": "https://picsum.photos/seed/news-1b/800/500"
+                  }
+                ],
+                "content": "<p>支援五種專案類型的 Nuxt 4 母版正式對內釋出。</p><p>這是 mock 文章內文，用於前端開發階段驗證版面。正式上線後由 WDM 後台輸入實際內容。</p>"
+              },
+              {
+                "id": 2,
+                "blink": "summer-event",
+                "title": "2026 夏季活動開跑",
+                "date": "5.18,2026",
+                "weekday": "Sun",
+                "url": "/news/summer-event",
+                "video": "",
+                "category_blinks": [
+                  "events"
+                ],
+                "summary": "夏季限定活動正式登場，多項優惠同步開放。",
+                "news_multi_photo": [
+                  {
+                    "title": "2026 夏季活動開跑",
+                    "title2": "",
+                    "url": "https://picsum.photos/seed/news-2/800/500"
+                  },
+                  {
+                    "title": "內文配圖",
+                    "title2": "",
+                    "url": "https://picsum.photos/seed/news-2b/800/500"
+                  }
+                ],
+                "content": "<p>夏季限定活動正式登場，多項優惠同步開放。</p><p>這是 mock 文章內文，用於前端開發階段驗證版面。正式上線後由 WDM 後台輸入實際內容。</p>"
+              },
+              {
+                "id": 3,
+                "blink": "shop-module",
+                "title": "新增購物模組功能",
+                "date": "5.12,2026",
+                "weekday": "Mon",
+                "url": "/news/shop-module",
+                "video": "",
+                "category_blinks": [
+                  "news"
+                ],
+                "summary": "購物類型專案新增購物車與結帳流程。",
+                "news_multi_photo": [
+                  {
+                    "title": "新增購物模組功能",
+                    "title2": "",
+                    "url": "https://picsum.photos/seed/news-3/800/500"
+                  },
+                  {
+                    "title": "內文配圖",
+                    "title2": "",
+                    "url": "https://picsum.photos/seed/news-3b/800/500"
+                  }
+                ],
+                "content": "<p>購物類型專案新增購物車與結帳流程。</p><p>這是 mock 文章內文，用於前端開發階段驗證版面。正式上線後由 WDM 後台輸入實際內容。</p>"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
