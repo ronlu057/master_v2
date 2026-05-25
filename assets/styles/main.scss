@@ -25,6 +25,49 @@ $bp-360: 360px;
 @mixin rwd-480 { @media (max-width: $bp-480) { @content; } }
 @mixin rwd-360 { @media (max-width: $bp-360) { @content; } }
 
+
+//==================================================
+// 網站用色設定
+//==================================================
+$web_header_1: #000; //主選單 主色系
+$web_header_2: #000; //主選單 次色系
+
+$web_footer_1: #000000; //頁尾版權 主色系
+$web_footer_2: #7a7a7a; //頁尾版權 次色系
+
+$web_quick_link_1: #535353; //快速連結 主色系
+$web_quick_link_2: #535353; //快速連結 次色系
+
+$web_color_1: #000000; //網站 主色系
+$web_color_2: #393993; //網站 次色系
+$web_color_3: #fff; //網站 次色系
+
+$web_title_1: #e6e6e6; //標題 主色系
+$web_title_2: #000; //標題 次色系
+
+$web_loading_1: #ffffff; //loading 主色系
+$web_loading_2: #ffffff; //loading 次色系
+
+$web_font_color: #4e4e4e; //一般文字 色系
+
+
+//==================================================
+// 用圖比例設定
+//==================================================
+$ratio_news: calc(190 / 328 * 100%); //最新消息
+$ratio_pros: calc(240 / 360 * 100%); //產品介紹
+$ratio_location: calc(240 / 360 * 100%); //銷售據點
+$ratio_download: calc(1278 / 1000 * 100%); //下載專區
+$ratio_investor: calc(241 / 377 * 100%); //投資人專區
+
+
+$web_font: 'Noto Sans TC', sans-serif; //全站 主字體
+
+$title_font_en: 'Poppins', sans-serif; //標題 主字體
+$title_font_cht: 'Noto Sans TC', sans-serif; //標題 副字體
+
+$btn_font: 'Noto Sans TC', sans-serif; //按鈕 主字體
+
 /* ---- 主題 token（預設：模組件套版）---- */
 :root {
   --color-primary: #4fc08d;
