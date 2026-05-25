@@ -92,6 +92,7 @@ $red: #bf3131;
 
   &__bar {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 28px;
     background: #fff;
