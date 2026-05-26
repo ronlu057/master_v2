@@ -358,6 +358,7 @@ body[data-page="index"] {
         align-items: center;
         gap: 26px;
         font-size: 18px;
+        mrgin-right: 25px;
 
         @media (max-width: 1200px) { display: none; }
 
