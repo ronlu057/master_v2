@@ -666,6 +666,29 @@ $btn_font: &#39;Noto Sans TC&#39;, sans-serif;        // 按鈕字體
 </ol>
 <h4 id="993-為何用-displayswap">9.9.3 為何用 <code>display=swap</code></h4>
 <p><code>&amp;display=swap</code> 告訴瀏覽器：字型還沒載入完成時，<strong>先用 fallback 顯示文字</strong>，等載完再切換 —— 避免使用者看到空白文字（FOIT）。代價是字型切換瞬間會有微小視覺跳動（FOUT），但對使用者體驗整體較好。</p>
+<h3 id="910-語系切換-ui-規範">9.10 語系切換 UI 規範</h3>
+<p>語系切換 icon 與選單在任何元件（Header / Footer / 浮動工具列…）顯示時，<strong>必須</strong>判斷語系數量，符合下列規則才渲染：</p>
+<ul>
+<li>語系數量 ≤ 1 → <strong>不顯示</strong> icon（無切換意義，多餘 UI）</li>
+<li>語系數量 ≥ 2 → 才顯示 icon + 切換選單</li>
+</ul>
+<p>範例（<a href="./components/headers/Header01.vue"><code>components/headers/Header01.vue</code></a>）：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;div v-if=&quot;languages.length &gt; 1&quot; class=&quot;navtool_icon&quot;&gt;
+  &lt;LanguageIcon aria-label=&quot;語系&quot; /&gt;
+  &lt;div class=&quot;lang_box&quot;&gt;
+    &lt;button
+      v-for=&quot;lang in languages&quot;
+      :key=&quot;lang.code&quot;
+      :class=&quot;{ &#39;is-active&#39;: lang.code === currentLang }&quot;
+      @click=&quot;switchLang(lang.code)&quot;
+    &gt;
+      {{ lang.label }}
+    &lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<blockquote class="callout callout--important"><p>之後接真實 i18n 模組（如 <a href="https://i18n.nuxtjs.org/"><code>@nuxtjs/i18n</code></a>）時，<code>languages</code> 會從 i18n 模組的 <code>locales</code> 取得（多由 <code>.env</code> 或設定檔控制）。此 <code>v-if</code> 判斷無需修改即可正常運作 —— 後台關到只剩一個語系時，icon 自動消失。</p>
+</blockquote>
 <hr>
 <h2 id="10-頁面與模組對照表">10. 頁面與模組對照表</h2>
 <div class="table-wrap"><table>

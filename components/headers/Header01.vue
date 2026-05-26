@@ -357,6 +357,7 @@ onBeforeUnmount(() => {
       transform: translateY(8px);
       transition: all var(--transition);
       z-index: 60;
+      margin-top: 26px;
     }
     .search_box { min-width: 280px; }
     .lang_box {
