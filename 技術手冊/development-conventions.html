@@ -258,7 +258,51 @@ onBeforeUnmount(() =&gt; {
 <li>元件內 <code>style=&quot;...&quot;</code> 行內樣式</li>
 <li>獨立 <code>.css</code> 檔</li>
 <li>用 <code>!important</code>（除非有極特殊覆寫第三方需求）</li>
+<li><strong>BEM <code>&amp;__</code> 巢狀寫法</strong>（詳見下方 §3.1.1）</li>
 </ul>
+<h4 id="311-禁用-bem-amp__-巢狀寫法">3.1.1 禁用 BEM <code>&amp;__</code> 巢狀寫法</h4>
+<p>❌ <strong>禁止</strong>用 SCSS 的 <code>&amp;</code> 父選擇器組 BEM child class：</p>
+<pre data-lang="SCSS"><code class="language-scss">// 禁
+.card {
+  padding: 20px;
+
+  &amp;__title {       // ❌ 編譯後變 .card__title
+    font-size: 20px;
+  }
+  &amp;__body {        // ❌ 同上
+    color: #333;
+  }
+}
+</code></pre>
+<p>✅ <strong>必須</strong>寫完整 class 名稱（攤平結構）：</p>
+<pre data-lang="SCSS"><code class="language-scss">// 推薦
+.card {
+  padding: 20px;
+}
+.card__title {     // ✓ 直接寫完整 class
+  font-size: 20px;
+}
+.card__body {      // ✓
+  color: #333;
+}
+</code></pre>
+<p><strong>為什麼</strong>：</p>
+<ul>
+<li><strong>可搜尋性高</strong>：<code>grep .card__title</code> 直接找到定義，不用先找 <code>.card { &amp;__title }</code></li>
+<li><strong>重構不易出錯</strong>：改 <code>.card</code> 為 <code>.product-card</code> 時，<code>&amp;__</code> 衍生 class 會跟著變，可能造成「外面用 .card__title 但 SCSS 已變 .product-card__title」斷裂</li>
+<li><strong>編譯結果相同</strong>：兩種寫法輸出 CSS 完全一樣，沒效能差異</li>
+<li><strong>降低 SCSS 學習負擔</strong>：新進工程師看完整 class 就懂，不用懂 <code>&amp;</code> 上下文</li>
+</ul>
+<blockquote class="callout callout--note"><p><code>&amp;</code> 用在「修飾／狀態」場景仍然 <strong>OK</strong>（不是 BEM child 攤平）：</p>
+<pre data-lang="SCSS"><code class="language-scss">.btn {
+  color: #333;
+  &amp;:hover { color: blue; }    // ✓ 偽類
+  &amp;.is-active { color: red; } // ✓ 狀態
+  &amp;--primary { ... }          // ✓ BEM modifier（這個爭議，可選擇也禁用）
+}
+</code></pre>
+<p>只有「<code>&amp;__xxx</code> 組合衍生 child class」這種寫法<strong>禁用</strong>。</p>
+</blockquote>
 <h3 id="32-scss-變數與-mixin">3.2 SCSS 變數與 mixin</h3>
 <p>✅ 全域 SCSS 變數與 RWD mixin 來源：<a href="../assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a></p>
 <p>由 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>additionalData</code> 自動注入，<strong>任何 <code>&lt;style lang=&quot;scss&quot;&gt;</code> 都能直接用</strong>，不需 <code>@use</code>：</p>

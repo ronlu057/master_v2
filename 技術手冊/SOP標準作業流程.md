@@ -130,6 +130,9 @@ npm run preview   # 本地預覽 production build
 
 > 「零件」= Header 版型 / Banner 版型 / Block 區塊 / 頁面 / 共用組件。
 
+> [!CAUTION]
+> **新增任何零件時，SCSS 一律禁用 `&__` BEM 巢狀寫法**。class 必須寫完整名稱（例 `.card__title` 而非 `.card { &__title }`）。詳見 [製作規範 §3.1.1](./製作規範.md#311-禁用-bem-__-巢狀寫法) / [白皮書 §9.4.1](./開發母版專案.md#941-禁用-bem-__-巢狀寫法)。
+
 ### 2.1 新增 Header 版型
 
 **情境**：客戶提供新設計稿，要做第三種 header。

@@ -509,6 +509,7 @@ export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
 <ul>
 <li>一律使用 Sass：所有 <code>&lt;style&gt;</code> 必須加 <code>lang=&quot;scss&quot;</code>；嚴禁純 CSS、嚴禁無 <code>lang</code> 的 <code>&lt;style&gt;</code>，專案內不得出現獨立 <code>.css</code> 檔。</li>
 <li>嚴禁標籤行內 <code>style=&quot;...&quot;</code>：所有樣式寫進 <code>&lt;style lang=&quot;scss&quot; scoped&gt;</code> 以 class 套用；需動態切換時改用 <code>:class</code>。</li>
+<li><strong>禁用 BEM <code>&amp;__</code> 巢狀寫法</strong> —— class 必須寫完整名稱（詳見 §9.4.1）。</li>
 </ul>
 </blockquote>
 <ul>
@@ -518,6 +519,57 @@ export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
 </ul>
 <pre data-lang="SCSS"><code class="language-scss">.btn { background: var(--color-primary); }
 </code></pre>
+<h4 id="941-禁用-bem-amp__-巢狀寫法">9.4.1 禁用 BEM <code>&amp;__</code> 巢狀寫法</h4>
+<p>❌ 不要用 <code>&amp;</code> 父選擇器組 BEM child class：</p>
+<pre data-lang="SCSS"><code class="language-scss">// 禁
+.card {
+  padding: 20px;
+  &amp;__title { font-size: 20px; }    // ❌ 巢狀組合 child
+  &amp;__body  { color: #333; }        // ❌
+}
+</code></pre>
+<p>✅ 必須寫完整 class 名稱：</p>
+<pre data-lang="SCSS"><code class="language-scss">// 推薦
+.card       { padding: 20px; }
+.card__title { font-size: 20px; }   // ✓ 完整名稱
+.card__body  { color: #333; }       // ✓
+</code></pre>
+<p><strong>為什麼禁用</strong>：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>理由</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>可搜尋性</strong></td>
+<td><code>grep .card__title</code> 直接找得到定義；用 <code>&amp;__</code> 寫法要先找父 selector</td>
+</tr>
+<tr>
+<td><strong>重構安全</strong></td>
+<td>改 <code>.card</code> 為 <code>.product-card</code> 時，<code>&amp;__</code> 衍生 class 不會自動連動，容易斷裂</td>
+</tr>
+<tr>
+<td><strong>學習負擔低</strong></td>
+<td>新進工程師看完整 class 就懂，不用懂 <code>&amp;</code> 上下文</td>
+</tr>
+<tr>
+<td><strong>編譯結果相同</strong></td>
+<td>兩種寫法輸出 CSS 完全一樣，無效能差異</td>
+</tr>
+</tbody></table></div>
+<blockquote class="callout callout--note"><p><code>&amp;</code> 用在「狀態 / 偽類 / 媒體查詢」場景仍然 OK，<strong>只有 <code>&amp;__xxx</code> 衍生 child class 的寫法禁用</strong>：</p>
+<pre data-lang="SCSS"><code class="language-scss">.btn {
+  color: #333;
+  &amp;:hover { color: blue; }       // ✓ 偽類
+  &amp;.is-active { color: red; }    // ✓ 狀態
+  @media (max-width: 768px) {    // ✓ 媒體查詢
+    padding: 10px;
+  }
+}
+</code></pre>
+</blockquote>
 <h3 id="95-rwd-斷點-mixin">9.5 RWD 斷點 mixin</h3>
 <p>9 個斷點 mixin 定義於 <code>assets/styles/main.scss</code> 頂部，供撰寫全站共用的響應式樣式使用。</p>
 <p>斷點（max-width）：<code>1920 / 1680 / 1440 / 1280 / 1200 / 1024 / 768 / 480 / 360</code>；其中 <strong>1200</strong> 為 header 變更樣式主斷點。</p>

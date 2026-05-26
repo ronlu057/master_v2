@@ -244,6 +244,8 @@ npm run preview   # 本地預覽 production build
 <blockquote>
 <p>「零件」= Header 版型 / Banner 版型 / Block 區塊 / 頁面 / 共用組件。</p>
 </blockquote>
+<blockquote class="callout callout--caution"><p><strong>新增任何零件時，SCSS 一律禁用 <code>&amp;__</code> BEM 巢狀寫法</strong>。class 必須寫完整名稱（例 <code>.card__title</code> 而非 <code>.card { &amp;__title }</code>）。詳見 <a href="development-conventions.html#311-%E7%A6%81%E7%94%A8-bem-__-%E5%B7%A2%E7%8B%80%E5%AF%AB%E6%B3%95">製作規範 §3.1.1</a> / <a href="master-project-whitepaper.html#941-%E7%A6%81%E7%94%A8-bem-__-%E5%B7%A2%E7%8B%80%E5%AF%AB%E6%B3%95">白皮書 §9.4.1</a>。</p>
+</blockquote>
 <h3 id="21-新增-header-版型">2.1 新增 Header 版型</h3>
 <p><strong>情境</strong>：客戶提供新設計稿，要做第三種 header。</p>
 <div class="table-wrap"><table>
