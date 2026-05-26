@@ -129,7 +129,7 @@ onBeforeUnmount(() => {
           <!-- 購物車：正式上線時加上 v-if="isShop" 才只在購物站顯示；目前先強制顯示，方便看版面 -->
           <NuxtLink class="navtool_icon cart_btn" to="/shop/cart" aria-label="購物車">
             <ShopcartIcon />
-            <p v-if="cart.count">{{ cart.count }}</p>
+            <div class="quantity_item">{{ cart.count || 0 }}</div>
           </NuxtLink>
 
           <!-- 我的最愛：同上，正式上線時加 v-if="isShop" -->
@@ -432,7 +432,9 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
 
-  p {
+  // 徽章：icon 右上角的數字小紅點（p 給 cart.count 用、.quantity_item 給寫死數字用）
+  p,
+  .quantity_item {
     position: absolute;
     top: -6px;
     right: -10px;
