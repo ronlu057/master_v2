@@ -97,11 +97,16 @@ onBeforeUnmount(() => {
               itemprop="name"
             >
               <NuxtLink :to="item.url" itemprop="url">{{ item.title }}</NuxtLink>
-              <ul v-if="item.children?.length">
-                <li v-for="child in item.children" :key="child.url">
-                  <NuxtLink :to="child.url" itemprop="url">{{ child.title }}</NuxtLink>
-                </li>
-              </ul>
+              <div v-if="item.children?.length" class="navmenu__sub">
+                <NuxtLink
+                  v-for="child in item.children"
+                  :key="child.url"
+                  :to="child.url"
+                  itemprop="url"
+                >
+                  {{ child.title }}
+                </NuxtLink>
+              </div>
             </li>
           </ul>
         </nav>
@@ -310,44 +315,43 @@ body[data-page="index"] {
             > a { color: $web_header_1; }
           }
 
-          ul {
+          // 下拉浮層（採用 Header01 的 popup 動畫風格 — opacity / visibility / translateY）
+          .navmenu__sub {
             position: absolute;
             top: 100%;
             left: 50%;
-            width: max-content;
-            min-width: 100%;
-            list-style: none;
-            margin: 0;
-            padding: 0;
+            min-width: 160px;
+            padding: 6px;
+            background: #fff;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
             opacity: 0;
-            pointer-events: none;
-            transform: translate(-50%, 0);
-            transition: all 0.3s;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(8px);
+            transition: all var(--transition);
+            z-index: 60;
 
-            li {
-              position: relative;
+            a {
+              display: block;
+              color: $web_font_color;
+              font-size: 14px;
+              padding: 8px 12px;
+              border-radius: 6px;
+              transition: all 0.3s;
 
-              a {
-                display: block;
-                color: $web_font_color;
-                font-size: 14px;
-                text-align: center;
-                padding: 10px 20px;
-                background: #fff;
-                transition: all 0.3s;
-              }
-
-              &:hover > a,
-              > a.router-link-active {
-                color: #fff;
-                background: $web_header_1;
+              &:hover,
+              &.router-link-active {
+                background: var(--color-surface);
+                color: $web_header_1;
               }
             }
           }
 
-          &:hover > ul {
+          &:hover .navmenu__sub {
             opacity: 1;
-            pointer-events: auto;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
           }
         }
       }
@@ -395,6 +399,7 @@ body[data-page="index"] {
             transform: translateY(8px);
             transition: all var(--transition);
             z-index: 60;
+            margin-top: 26px;
           }
           .search_box { min-width: 280px; }
           .lang_box {
