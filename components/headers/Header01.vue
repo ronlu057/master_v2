@@ -2,6 +2,8 @@
 // SVG 以 Vue 元件方式 inline 進 HTML（可用 CSS 控制 fill）
 import SearchIcon from '~/assets/icon/search_icon.svg?component'
 import LanguageIcon from '~/assets/icon/language_icon.svg?component'
+import ShopcartIcon from '~/assets/icon/shopcart_icon.svg?component'
+import LikeIcon from '~/assets/icon/like_icon.svg?component'
 
 // 專案類型旗標：label=中文名稱、isShop=是否購物站、isMinimal=是否臨時站（只顯示 Logo + 聯絡鈕）
 const { label, isShop, isMinimal } = useProject()
@@ -124,12 +126,15 @@ onBeforeUnmount(() => {
             </div>
           </div>
 
-          <div class="navtool_icon">購物車 版型式購物車出現 但是先讓我看的到</div>
-          <div class="navtool_icon">我的最愛 與購物車一樣有購物車版型才會有</div>
-
-          <NuxtLink v-if="isShop" class="cart_btn" to="/shop/cart" aria-label="購物車">
-            🛍️
+          <!-- 購物車：正式上線時加上 v-if="isShop" 才只在購物站顯示；目前先強制顯示，方便看版面 -->
+          <NuxtLink class="navtool_icon cart_btn" to="/shop/cart" aria-label="購物車">
+            <ShopcartIcon />
             <p v-if="cart.count">{{ cart.count }}</p>
+          </NuxtLink>
+
+          <!-- 我的最愛：同上，正式上線時加 v-if="isShop" -->
+          <NuxtLink class="navtool_icon" to="/shop/favorite" aria-label="我的最愛">
+            <LikeIcon />
           </NuxtLink>
         </template>
 
