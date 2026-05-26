@@ -41,6 +41,9 @@ export default defineNuxtConfig({
       defaultLang: 'tw',
       // Header 版型：對應 components/headers/<檔名>.vue
       header: 'Header01',
+      // 購物功能開關：購物車 / 我的最愛 等 UI 是否顯示
+      // shop 類型自動啟用；其他類型可用 NUXT_PUBLIC_ENABLE_SHOP=true 強制啟用
+      enableShop: false,
     },
   },
 
@@ -50,6 +53,16 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      ],
+      link: [
+        // Google Fonts：preconnect 提前建連線，stylesheet 載入字型
+        // 替換原 jQuery WebFont.load 寫法 — 較新、無 FOUT、SSR 友好
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Gruppo&family=Noto+Sans+TC:wght@100;200;300;400;500;600;700;800;900&family=Noto+Serif+TC:wght@200;300;400;500;600;700;800;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap',
+        },
       ],
     },
   },

@@ -304,6 +304,50 @@ NUXT_PUBLIC_PROJECT_TYPE=shop
 npm run dev
 </code></pre>
 <p>切換後 <code>&lt;html&gt;</code> 會帶上 <code>data-project=&quot;shop&quot;</code>，CSS 變數主題同步換色（見 §6、§9.4）。</p>
+<h3 id="43-加掛購物功能強制購物開關">4.3 加掛購物功能（強制購物開關）</h3>
+<p>客戶為非 <code>shop</code> 類型、但又需要單獨啟用購物車 / 我的最愛等 UI（<strong>混合需求</strong>）時，可用獨立開關 <code>NUXT_PUBLIC_ENABLE_SHOP</code> 強制啟用：</p>
+<pre data-lang="BASH"><code class="language-bash"># 編輯 .env
+NUXT_PUBLIC_PROJECT_TYPE=module     # 維持原本專案類型（不切換整站架構）
+NUXT_PUBLIC_ENABLE_SHOP=true        # 強制開啟購物 UI
+
+# 重啟 dev server
+npm run dev
+</code></pre>
+<p>對應 <code>useProject()</code> 兩個旗標差別：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>旗標</th>
+<th>啟用條件</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>isShop</code></td>
+<td>僅 <code>NUXT_PUBLIC_PROJECT_TYPE=shop</code> 時為 <code>true</code></td>
+<td><strong>架構決策</strong>：首頁版型派發、shop layout、商品路由等</td>
+</tr>
+<tr>
+<td><code>enableShop</code></td>
+<td><code>isShop</code> 為 <code>true</code> <strong>或</strong> <code>NUXT_PUBLIC_ENABLE_SHOP=true</code></td>
+<td><strong>UI 顯示</strong>：購物車、我的最愛、收藏等元件是否渲染</td>
+</tr>
+</tbody></table></div>
+<blockquote class="callout callout--important"><p><strong>元件內請用 <code>enableShop</code> 控制購物 UI 顯示</strong>（如 <code>&lt;NuxtLink v-if=&quot;enableShop&quot; to=&quot;/shop/cart&quot;&gt;</code>），不要直接用 <code>isShop</code>。
+<code>isShop</code> 是「整站是不是購物站」，<code>enableShop</code> 是「要不要顯示購物功能」—— 後者比前者寬鬆，混合需求才能 work。</p>
+</blockquote>
+<p>範例（<a href="./components/headers/Header01.vue"><code>components/headers/Header01.vue</code></a>）：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+const { enableShop } = useProject()
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;template v-if=&quot;enableShop&quot;&gt;
+    &lt;NuxtLink to=&quot;/shop/cart&quot;&gt;購物車&lt;/NuxtLink&gt;
+    &lt;NuxtLink to=&quot;/shop/favorite&quot;&gt;我的最愛&lt;/NuxtLink&gt;
+  &lt;/template&gt;
+&lt;/template&gt;
+</code></pre>
 <hr>
 <h2 id="5-專案目錄架構">5. 專案目錄架構</h2>
 <p>採 Nuxt 平鋪式結構（程式碼直接置於專案根目錄）：</p>
@@ -538,6 +582,90 @@ export function formatPrice(n) {
 </tr>
 </tbody></table></div>
 <p>HTML 結構骨架可由 AI 建立，但 <code>&lt;style&gt;</code> 內的精準尺寸由人工調整。</p>
+<h3 id="99-google-fonts-字型">9.9 Google Fonts 字型</h3>
+<p>字型於 <a href="./nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>app.head.link</code> 集中設定，會自動注入每個頁面的 <code>&lt;head&gt;</code>。<strong>不採用 Google 早期的 <code>webfont.js</code> 載入器</strong>（SSR 不友好、會多下載 28KB JS、首屏會閃白）。</p>
+<pre data-lang="JS"><code class="language-js">// nuxt.config.js
+app: {
+  head: {
+    link: [
+      { rel: &#39;preconnect&#39;, href: &#39;https://fonts.googleapis.com&#39; },
+      { rel: &#39;preconnect&#39;, href: &#39;https://fonts.gstatic.com&#39;, crossorigin: &#39;&#39; },
+      {
+        rel: &#39;stylesheet&#39;,
+        href: &#39;https://fonts.googleapis.com/css2?family=…&amp;display=swap&#39;,
+      },
+    ],
+  },
+},
+</code></pre>
+<p><strong>目前已載入</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>字型</th>
+<th>字重</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Noto Sans TC</td>
+<td>100, 200, 300, 400, 500, 600, 700, 800, 900</td>
+</tr>
+<tr>
+<td>Noto Serif TC</td>
+<td>200, 300, 400, 500, 600, 700, 800, 900</td>
+</tr>
+<tr>
+<td>Poppins</td>
+<td>100, 200, 300, 400, 500, 600, 700, 800, 900</td>
+</tr>
+<tr>
+<td>Roboto</td>
+<td>100, 300, 400, 500, 700, 900</td>
+</tr>
+<tr>
+<td>Gruppo</td>
+<td>400</td>
+</tr>
+</tbody></table></div>
+<p><strong>對應 SCSS 變數</strong>（<a href="./assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a>）—— 元件內請直接引用變數，避免到處寫死字型名稱：</p>
+<pre data-lang="SCSS"><code class="language-scss">$web_font: &#39;Noto Sans TC&#39;, sans-serif;        // 全站主字體
+$title_font_en: &#39;Poppins&#39;, sans-serif;        // 標題英文
+$title_font_cht: &#39;Noto Sans TC&#39;, sans-serif;  // 標題中文
+$btn_font: &#39;Noto Sans TC&#39;, sans-serif;        // 按鈕字體
+</code></pre>
+<h4 id="991-新增或修改字型">9.9.1 新增或修改字型</h4>
+<p>當設計師指定新字型、或要調整字重時，請依序：</p>
+<ol>
+<li><p><strong>到 <a href="https://fonts.google.com">Google Fonts</a></strong> 選字型 → 點 <strong>Get font</strong> → <strong>Get embed code</strong> → 複製 <code>&lt;link&gt;</code> 內 <code>href</code> 的 URL 參數段，例如：</p>
+<pre><code>family=Inter:wght@300;400;500;700&amp;display=swap
+</code></pre>
+</li>
+<li><p><strong>修改 <a href="./nuxt.config.js"><code>nuxt.config.js</code></a></strong> 內 <code>app.head.link</code> 最後一筆 stylesheet 的 <code>href</code> —— 用 <code>&amp;family=</code> 串接新字型：</p>
+<pre data-lang="JS"><code class="language-js">href: &#39;https://fonts.googleapis.com/css2?&#39;
+  + &#39;family=Noto+Sans+TC:wght@100;200;300;400;500;600;700;800;900&#39;
+  + &#39;&amp;family=Inter:wght@300;400;500;700&#39;   // ← 新增這行
+  + &#39;&amp;display=swap&#39;,
+</code></pre>
+</li>
+<li><p><strong>更新 <a href="./assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a></strong> 的字型變數（如要設為全站主字體）：</p>
+<pre data-lang="SCSS"><code class="language-scss">$web_font: &#39;Inter&#39;, &#39;Noto Sans TC&#39;, sans-serif;
+</code></pre>
+</li>
+<li><p><strong>重啟 dev server</strong> —— <code>nuxt.config.js</code> 的變更不在 HMR 範圍。</p>
+</li>
+<li><p><strong>驗證</strong> —— DevTools → Network → 確認 <code>fonts.googleapis.com/css2?…</code> 回 200，且 <code>Computed → font-family</code> 確實是新字型。</p>
+</li>
+</ol>
+<blockquote class="callout callout--important"><p><strong>字型只在這兩個檔案管理</strong>：URL 在 <code>nuxt.config.js</code>、別名變數在 <code>_variables.scss</code>。<strong>禁止</strong>在元件內 import Google Fonts CSS、或重複寫死 <code>font-family: &#39;Noto Sans TC&#39;</code> —— 一律走 SCSS 變數，未來要改字型只動一處。</p>
+</blockquote>
+<h4 id="992-移除字型">9.9.2 移除字型</h4>
+<p>不再用的字型要主動移除以縮減首屏載入：</p>
+<ol>
+<li>從 <code>nuxt.config.js</code> 的 <code>href</code> 移除對應 <code>&amp;family=...</code> 段。</li>
+<li>grep 確認沒有 <code>_variables.scss</code> 變數或元件還在引用該字型名。</li>
+</ol>
+<h4 id="993-為何用-displayswap">9.9.3 為何用 <code>display=swap</code></h4>
+<p><code>&amp;display=swap</code> 告訴瀏覽器：字型還沒載入完成時，<strong>先用 fallback 顯示文字</strong>，等載完再切換 —— 避免使用者看到空白文字（FOIT）。代價是字型切換瞬間會有微小視覺跳動（FOUT），但對使用者體驗整體較好。</p>
 <hr>
 <h2 id="10-頁面與模組對照表">10. 頁面與模組對照表</h2>
 <div class="table-wrap"><table>

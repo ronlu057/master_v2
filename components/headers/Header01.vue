@@ -5,8 +5,12 @@ import LanguageIcon from '~/assets/icon/language_icon.svg?component'
 import ShopcartIcon from '~/assets/icon/shopcart_icon.svg?component'
 import LikeIcon from '~/assets/icon/like_icon.svg?component'
 
-// 專案類型旗標：label=中文名稱、isShop=是否購物站、isMinimal=是否臨時站（只顯示 Logo + 聯絡鈕）
-const { label, isShop, isMinimal } = useProject()
+// 專案類型旗標：
+//   label      = 中文名稱
+//   isShop     = 是否購物類型（projectType=shop）
+//   isMinimal  = 是否臨時站（只顯示 Logo + 聯絡鈕）
+//   enableShop = 是否顯示購物 UI（shop 類型自動 true；其他類型可用 NUXT_PUBLIC_ENABLE_SHOP=true 強制開啟）
+const { label, isShop, isMinimal, enableShop } = useProject()
 // 行動版選單開關狀態
 const ui = useUiStore()
 // 購物車（cart.count 用於顯示徽章數字）
@@ -126,16 +130,17 @@ onBeforeUnmount(() => {
             </div>
           </div>
 
-          <!-- 購物車：正式上線時加上 v-if="isShop" 才只在購物站顯示；目前先強制顯示，方便看版面 -->
-          <NuxtLink class="navtool_icon cart_btn" to="/shop/cart" aria-label="購物車">
-            <ShopcartIcon />
-            <div class="quantity_item">{{ cart.count || 0 }}</div>
-          </NuxtLink>
+          <!-- 購物車 / 我的最愛：購物類型自動顯示；其他類型 .env 設 NUXT_PUBLIC_ENABLE_SHOP=true 也能強制開啟 -->
+          <template v-if="enableShop">
+            <NuxtLink class="navtool_icon cart_btn" to="/shop/cart" aria-label="購物車">
+              <ShopcartIcon />
+              <div class="quantity_item">{{ cart.count || 0 }}</div>
+            </NuxtLink>
 
-          <!-- 我的最愛：同上，正式上線時加 v-if="isShop" -->
-          <NuxtLink class="navtool_icon" to="/shop/favorite" aria-label="我的最愛">
-            <LikeIcon />
-          </NuxtLink>
+            <NuxtLink class="navtool_icon" to="/shop/favorite" aria-label="我的最愛">
+              <LikeIcon />
+            </NuxtLink>
+          </template>
         </template>
 
         <NuxtLink v-else to="/contact" class="btn btn--primary">聯絡我們</NuxtLink>
@@ -321,7 +326,6 @@ onBeforeUnmount(() => {
   .navtool_icon {
     position: relative;
     cursor: pointer;
-    padding: 26px 0px;
 
     > svg {
       display: block;
