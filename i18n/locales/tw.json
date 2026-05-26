@@ -1,0 +1,37 @@
+{
+  "site": {
+    "title": "AD-Design 母版示範站",
+    "back_home": "回首頁",
+    "search_placeholder": "網站搜尋..."
+  },
+  "nav": {
+    "home": "首頁",
+    "about": "關於我們",
+    "news": "最新消息",
+    "products": "產品系列",
+    "contact": "聯絡我們",
+    "search": "搜尋"
+  },
+  "btn": {
+    "more": "看更多",
+    "submit": "送出",
+    "search": "搜尋",
+    "back": "返回",
+    "confirm": "確認",
+    "cancel": "取消",
+    "contact_us": "聯絡我們"
+  },
+  "msg": {
+    "loading": "載入中…",
+    "empty": "目前沒有資料",
+    "success": "操作成功",
+    "error": "發生錯誤，請稍後再試"
+  },
+  "aria": {
+    "search": "搜尋",
+    "language": "語系",
+    "cart": "購物車",
+    "favorite": "我的最愛",
+    "menu": "開啟選單"
+  }
+}

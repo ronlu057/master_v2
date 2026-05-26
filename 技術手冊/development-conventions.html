@@ -547,6 +547,29 @@ onBeforeUnmount(() =&gt; {
 </code></pre>
 <p>❌ <strong>不要</strong>用 Options Store 風格（state / getters / actions 物件式）。</p>
 <p>詳見白皮書 <a href="master-project-whitepaper.html#92-%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86pinia">§9.2</a>。</p>
+<h3 id="74-i18nnuxtjsi18n">7.4 i18n（@nuxtjs/i18n）</h3>
+<p>✅ 取翻譯字串、語系狀態統一用 <code>useI18n()</code>：</p>
+<pre data-lang="JS"><code class="language-js">const { t, locale, locales, setLocale } = useI18n()
+</code></pre>
+<p>✅ 介面固定文字（按鈕、選單、提示）用 <code>t(&#39;key&#39;)</code>，從 <a href="../i18n/locales/">i18n/locales/</a> 字典取。</p>
+<p>❌ <strong>不要</strong>在元件內硬編碼 <code>languages</code> 陣列：</p>
+<pre data-lang="JS"><code class="language-js">// 禁 — 與 nuxt.config.js 重複，改一處要改兩處
+const languages = [
+  { code: &#39;tw&#39;, label: &#39;繁體中文&#39; },
+  { code: &#39;en&#39;, label: &#39;English&#39; },
+]
+</code></pre>
+<p>✅ 一律用：</p>
+<pre data-lang="JS"><code class="language-js">const { locales } = useI18n()  // 從 nuxt.config.js i18n.locales 取
+</code></pre>
+<p>❌ <strong>不要</strong>手動寫死字串供翻譯：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;!-- 禁 — 切換語系時不會變 --&gt;
+&lt;button&gt;看更多&lt;/button&gt;
+</code></pre>
+<p>✅ 一律用 <code>$t()</code>：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;button&gt;{{ $t(&#39;btn.more&#39;) }}&lt;/button&gt;
+</code></pre>
+<p>詳見白皮書 <a href="master-project-whitepaper.html#910-%E5%A4%9A%E8%AA%9E%E7%B3%BBnuxtjsi18n">§9.10</a>。</p>
 <hr>
 <h2 id="8-git--commit--pr-規範">8. Git / Commit / PR 規範</h2>
 <h3 id="81-commit-message">8.1 Commit message</h3>

@@ -1,0 +1,37 @@
+{
+  "site": {
+    "title": "AD-Design Master Demo",
+    "back_home": "Back to Home",
+    "search_placeholder": "Search site..."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "news": "News",
+    "products": "Products",
+    "contact": "Contact",
+    "search": "Search"
+  },
+  "btn": {
+    "more": "Read More",
+    "submit": "Submit",
+    "search": "Search",
+    "back": "Back",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "contact_us": "Contact Us"
+  },
+  "msg": {
+    "loading": "Loading…",
+    "empty": "No data available",
+    "success": "Operation successful",
+    "error": "An error occurred, please try again later"
+  },
+  "aria": {
+    "search": "Search",
+    "language": "Language",
+    "cart": "Shopping Cart",
+    "favorite": "Favorites",
+    "menu": "Open Menu"
+  }
+}

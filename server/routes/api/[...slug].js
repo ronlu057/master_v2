@@ -35,10 +35,17 @@ export default defineEventHandler((event) => {
       return ok({ blocks: db.home.slots.find((s) => s.key === 'homeOtherAd')?.blocks || [] })
 
     // ── 選單 / 公司 / 多語 ────────────────────────────────
-    case 'GET /menu/view':
-      return ok(db.menu)
-    case 'GET /menu/header':
-      return ok({ header: db.menu.header })
+    // 選單依語系切換：?lang=tw|en|jp|kr；找不到 fallback 到 tw
+    case 'GET /menu/view': {
+      const lang = q.lang || 'tw'
+      const menu = db.menu[lang] || db.menu.tw
+      return ok(menu)
+    }
+    case 'GET /menu/header': {
+      const lang = q.lang || 'tw'
+      const menu = db.menu[lang] || db.menu.tw
+      return ok({ header: menu.header })
+    }
     case 'GET /firm/view':
       return ok(db.firm)
     case 'GET /i18n':

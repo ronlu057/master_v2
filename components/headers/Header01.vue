@@ -25,16 +25,15 @@ const onSearch = () => {
   navigateTo({ path: '/search', query: { keyword: keyword.value.trim() } })
 }
 
-// 語系切換：currentLang 為目前語系；切換時改 currentLang（之後接 i18n 時改成切換 locale）
-const languages = [
-  { code: 'zh-TW', label: '繁體中文' },
-  { code: 'en', label: 'English' },
-  { code: 'ja', label: '日本語' },
-]
-const currentLang = ref('zh-TW')
-const switchLang = (code) => {
-  currentLang.value = code
-}
+// 語系切換：接 @nuxtjs/i18n 模組
+// languages 清單來自 nuxt.config.js 的 i18n.locales（單一來源，避免重複硬編碼）
+// 切換語系呼叫 setLocale(code) — 全站翻譯字串 / locale 同步更新
+const { locale, locales, setLocale } = useI18n()
+const languages = computed(() =>
+  locales.value.map((l) => ({ code: l.code, label: l.name })),
+)
+const currentLang = computed(() => locale.value)
+const switchLang = (code) => setLocale(code)
 
 // 捲動偵測：當 scrollTop 超過「banner 高 − header 高」時，給 header 加 .scroll class
 // 對應原 jQuery if($(this).scrollTop() >= bannerH - headerH) addClass('scroll')

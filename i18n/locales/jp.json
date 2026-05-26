@@ -1,0 +1,37 @@
+{
+  "site": {
+    "title": "AD-Design マスターサイト",
+    "back_home": "ホームへ戻る",
+    "search_placeholder": "サイト内検索..."
+  },
+  "nav": {
+    "home": "ホーム",
+    "about": "私たちについて",
+    "news": "最新ニュース",
+    "products": "製品",
+    "contact": "お問い合わせ",
+    "search": "検索"
+  },
+  "btn": {
+    "more": "もっと見る",
+    "submit": "送信",
+    "search": "検索",
+    "back": "戻る",
+    "confirm": "確認",
+    "cancel": "キャンセル",
+    "contact_us": "お問い合わせ"
+  },
+  "msg": {
+    "loading": "読み込み中…",
+    "empty": "データがありません",
+    "success": "操作が成功しました",
+    "error": "エラーが発生しました。後ほどお試しください"
+  },
+  "aria": {
+    "search": "検索",
+    "language": "言語",
+    "cart": "ショッピングカート",
+    "favorite": "お気に入り",
+    "menu": "メニューを開く"
+  }
+}

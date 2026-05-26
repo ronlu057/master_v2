@@ -249,15 +249,78 @@ npm run preview   # 本地預覽 production build
 > [!CAUTION]
 > 若後端格式不同，**不要**改 [`composables/useApi.js`](../composables/useApi.js) 的 `unwrap` 邏輯（避免破壞 mock 也支援統一格式的設計）—— 改成在後端側調整回應格式，或在後端與前端之間加一層 adapter。
 
-### 3.5 接 i18n 多語
+### 3.5 多語系（@nuxtjs/i18n 已裝）
 
-1. `npm install @nuxtjs/i18n`
-2. `nuxt.config.js` 加 `modules: ['@nuxtjs/i18n']` 與 `i18n` 設定
-3. Header01 / Header02 內的 local `languages` array 改為從 `useI18n()` 取得 `locales`
-4. `switchLang` 改為呼叫 `setLocale(code)`
-5. `v-if="languages.length > 1"` 的判斷無需修改即可繼續運作
+✅ 已預裝 `@nuxtjs/i18n` v10.4.0、Header 01 / 02 已接通切換邏輯、預設 4 語系（tw / en / jp / kr）。
 
-> 詳見白皮書 [§9.10 語系切換 UI 規範](./開發母版專案.md#910-語系切換-ui-規範)。
+#### 3.5.1 新增語系
+
+```vue
+<!-- 例：新增韓語以外的另一個語系，這裡示範阿拉伯語 -->
+```
+
+| 步驟 | 動作 |
+|---|---|
+| ① | 編輯 [`nuxt.config.js`](../nuxt.config.js) 的 `i18n.locales[]`，新增一筆：`{ code: 'ar', file: 'ar.json', name: 'العربية', language: 'ar-SA', dir: 'rtl' }`（`dir: 'rtl'` 給右至左語系） |
+| ② | 建翻譯檔 [`i18n/locales/ar.json`](../i18n/locales/)，複製 `tw.json` 翻譯內容（**key 結構必須一致**） |
+| ③ | 重啟 dev server |
+
+新語系自動出現在 Header 切換 popup（無需改 Header 元件）。
+
+#### 3.5.2 移除語系
+
+| 步驟 | 動作 |
+|---|---|
+| ① | 從 [`nuxt.config.js`](../nuxt.config.js) `i18n.locales[]` 移除該筆 |
+| ② | （可選）刪 `i18n/locales/<code>.json` |
+| ③ | 重啟 dev server |
+
+> 剩 1 個語系時 Header icon 自動隱藏（`v-if="languages.length > 1"`）。
+
+#### 3.5.3 編輯翻譯字串
+
+直接編輯 [`i18n/locales/<code>.json`](../i18n/locales/)。改完**不用重啟**（i18n 有 HMR），瀏覽器自動 reload。
+
+#### 3.5.4 改預設語系
+
+編輯 [`.env`](../.env)：
+
+```bash
+NUXT_PUBLIC_DEFAULT_LANG=en
+```
+
+`nuxt.config.js` 的 `i18n.defaultLocale` 會從這裡讀。重啟 dev server。
+
+#### 3.5.5 切換 URL 策略（SEO）
+
+目前是 `no_prefix`（URL 不變、靠 cookie）。要做 SEO 時改：
+
+```js
+// nuxt.config.js
+i18n: {
+  strategy: 'prefix_except_default',  // tw: /about、en: /en/about
+}
+```
+
+並在每頁加 `useLocaleHead()` 自動產生 hreflang。
+
+#### 3.5.6 在元件內使用
+
+```vue
+<script setup>
+const { t, locale, locales, setLocale } = useI18n()
+</script>
+
+<template>
+  <h1>{{ t('site.title') }}</h1>      <!-- 取翻譯 -->
+  <p>{{ locale }}</p>                  <!-- 取目前語系 -->
+  <button @click="setLocale('en')">EN</button>  <!-- 切換 -->
+</template>
+```
+
+template 內也可直接 `$t('btn.more')` 縮寫。
+
+> 詳見白皮書 [§9.10 多語系](./開發母版專案.md#910-多語系nuxtjsi18n)。
 
 ---
 

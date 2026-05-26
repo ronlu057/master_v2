@@ -1,0 +1,37 @@
+{
+  "site": {
+    "title": "AD-Design 마스터 사이트",
+    "back_home": "홈으로",
+    "search_placeholder": "사이트 검색..."
+  },
+  "nav": {
+    "home": "홈",
+    "about": "회사 소개",
+    "news": "최신 소식",
+    "products": "제품",
+    "contact": "문의하기",
+    "search": "검색"
+  },
+  "btn": {
+    "more": "더 보기",
+    "submit": "전송",
+    "search": "검색",
+    "back": "뒤로",
+    "confirm": "확인",
+    "cancel": "취소",
+    "contact_us": "문의하기"
+  },
+  "msg": {
+    "loading": "로딩 중…",
+    "empty": "데이터가 없습니다",
+    "success": "작업이 완료되었습니다",
+    "error": "오류가 발생했습니다. 잠시 후 다시 시도해 주세요"
+  },
+  "aria": {
+    "search": "검색",
+    "language": "언어",
+    "cart": "장바구니",
+    "favorite": "즐겨찾기",
+    "menu": "메뉴 열기"
+  }
+}

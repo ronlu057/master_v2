@@ -446,16 +446,85 @@ npm run preview   # 本地預覽 production build
 </ol>
 <blockquote class="callout callout--caution"><p>若後端格式不同，<strong>不要</strong>改 <a href="../composables/useApi.js"><code>composables/useApi.js</code></a> 的 <code>unwrap</code> 邏輯（避免破壞 mock 也支援統一格式的設計）—— 改成在後端側調整回應格式，或在後端與前端之間加一層 adapter。</p>
 </blockquote>
-<h3 id="35-接-i18n-多語">3.5 接 i18n 多語</h3>
-<ol>
-<li><code>npm install @nuxtjs/i18n</code></li>
-<li><code>nuxt.config.js</code> 加 <code>modules: [&#39;@nuxtjs/i18n&#39;]</code> 與 <code>i18n</code> 設定</li>
-<li>Header01 / Header02 內的 local <code>languages</code> array 改為從 <code>useI18n()</code> 取得 <code>locales</code></li>
-<li><code>switchLang</code> 改為呼叫 <code>setLocale(code)</code></li>
-<li><code>v-if=&quot;languages.length &gt; 1&quot;</code> 的判斷無需修改即可繼續運作</li>
-</ol>
+<h3 id="35-多語系nuxtjsi18n-已裝">3.5 多語系（@nuxtjs/i18n 已裝）</h3>
+<p>✅ 已預裝 <code>@nuxtjs/i18n</code> v10.4.0、Header 01 / 02 已接通切換邏輯、預設 4 語系（tw / en / jp / kr）。</p>
+<h4 id="351-新增語系">3.5.1 新增語系</h4>
+<pre data-lang="VUE"><code class="language-vue">&lt;!-- 例：新增韓語以外的另一個語系，這裡示範阿拉伯語 --&gt;
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>①</td>
+<td>編輯 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>i18n.locales[]</code>，新增一筆：<code>{ code: &#39;ar&#39;, file: &#39;ar.json&#39;, name: &#39;العربية&#39;, language: &#39;ar-SA&#39;, dir: &#39;rtl&#39; }</code>（<code>dir: &#39;rtl&#39;</code> 給右至左語系）</td>
+</tr>
+<tr>
+<td>②</td>
+<td>建翻譯檔 <a href="../i18n/locales/"><code>i18n/locales/ar.json</code></a>，複製 <code>tw.json</code> 翻譯內容（<strong>key 結構必須一致</strong>）</td>
+</tr>
+<tr>
+<td>③</td>
+<td>重啟 dev server</td>
+</tr>
+</tbody></table></div>
+<p>新語系自動出現在 Header 切換 popup（無需改 Header 元件）。</p>
+<h4 id="352-移除語系">3.5.2 移除語系</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>①</td>
+<td>從 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a> <code>i18n.locales[]</code> 移除該筆</td>
+</tr>
+<tr>
+<td>②</td>
+<td>（可選）刪 <code>i18n/locales/&lt;code&gt;.json</code></td>
+</tr>
+<tr>
+<td>③</td>
+<td>重啟 dev server</td>
+</tr>
+</tbody></table></div>
 <blockquote>
-<p>詳見白皮書 <a href="master-project-whitepaper.html#910-%E8%AA%9E%E7%B3%BB%E5%88%87%E6%8F%9B-ui-%E8%A6%8F%E7%AF%84">§9.10 語系切換 UI 規範</a>。</p>
+<p>剩 1 個語系時 Header icon 自動隱藏（<code>v-if=&quot;languages.length &gt; 1&quot;</code>）。</p>
+</blockquote>
+<h4 id="353-編輯翻譯字串">3.5.3 編輯翻譯字串</h4>
+<p>直接編輯 <a href="../i18n/locales/"><code>i18n/locales/&lt;code&gt;.json</code></a>。改完<strong>不用重啟</strong>（i18n 有 HMR），瀏覽器自動 reload。</p>
+<h4 id="354-改預設語系">3.5.4 改預設語系</h4>
+<p>編輯 <a href="../.env"><code>.env</code></a>：</p>
+<pre data-lang="BASH"><code class="language-bash">NUXT_PUBLIC_DEFAULT_LANG=en
+</code></pre>
+<p><code>nuxt.config.js</code> 的 <code>i18n.defaultLocale</code> 會從這裡讀。重啟 dev server。</p>
+<h4 id="355-切換-url-策略seo">3.5.5 切換 URL 策略（SEO）</h4>
+<p>目前是 <code>no_prefix</code>（URL 不變、靠 cookie）。要做 SEO 時改：</p>
+<pre data-lang="JS"><code class="language-js">// nuxt.config.js
+i18n: {
+  strategy: &#39;prefix_except_default&#39;,  // tw: /about、en: /en/about
+}
+</code></pre>
+<p>並在每頁加 <code>useLocaleHead()</code> 自動產生 hreflang。</p>
+<h4 id="356-在元件內使用">3.5.6 在元件內使用</h4>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+const { t, locale, locales, setLocale } = useI18n()
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;h1&gt;{{ t(&#39;site.title&#39;) }}&lt;/h1&gt;      &lt;!-- 取翻譯 --&gt;
+  &lt;p&gt;{{ locale }}&lt;/p&gt;                  &lt;!-- 取目前語系 --&gt;
+  &lt;button @click=&quot;setLocale(&#39;en&#39;)&quot;&gt;EN&lt;/button&gt;  &lt;!-- 切換 --&gt;
+&lt;/template&gt;
+</code></pre>
+<p>template 內也可直接 <code>$t(&#39;btn.more&#39;)</code> 縮寫。</p>
+<blockquote>
+<p>詳見白皮書 <a href="master-project-whitepaper.html#910-%E5%A4%9A%E8%AA%9E%E7%B3%BBnuxtjsi18n">§9.10 多語系</a>。</p>
 </blockquote>
 <hr>
 <h2 id="4-debug-與狀況排查">4. Debug 與狀況排查</h2>

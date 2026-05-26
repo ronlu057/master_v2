@@ -9,11 +9,18 @@ const ui = useUiStore()
 const { data: menuData } = useSiteMenu()
 const { data: firmData } = useSiteFirm()
 
-const langs = ['中文', 'English']
-const currentLang = ref('中文')
+// 語系切換（@nuxtjs/i18n）— 清單來自 nuxt.config.js i18n.locales
+// 此版型用「點 button 開合」風格（其他 header 用 hover），故保留 langOpen 狀態
+const { locale, locales, setLocale } = useI18n()
+const languages = computed(() =>
+  locales.value.map((l) => ({ code: l.code, label: l.name })),
+)
+const currentLang = computed(
+  () => languages.value.find((l) => l.code === locale.value)?.label || locale.value,
+)
 const langOpen = ref(false)
-function pickLang(l) {
-  currentLang.value = l
+function pickLang(code) {
+  setLocale(code)
   langOpen.value = false
 }
 </script>
@@ -32,8 +39,8 @@ function pickLang(l) {
           <!-- 主選單 -->
           <SiteMenu v-if="!isMinimal" :items="menuData.header" class="header-value__nav" />
 
-          <!-- 語言切換 -->
-          <div class="header-value__lang">
+          <!-- 語言切換（剩 1 個語系時隱藏） -->
+          <div v-if="languages.length > 1" class="header-value__lang">
             <button
               class="header-value__lang-btn"
               :class="{ 'is-open': langOpen }"
@@ -44,9 +51,12 @@ function pickLang(l) {
             </button>
             <transition name="drop">
               <ul v-show="langOpen" class="header-value__lang-menu">
-                <li v-for="l in langs" :key="l">
-                  <button :class="{ 'is-active': l === currentLang }" @click="pickLang(l)">
-                    {{ l }}
+                <li v-for="lang in languages" :key="lang.code">
+                  <button
+                    :class="{ 'is-active': lang.code === locale }"
+                    @click="pickLang(lang.code)"
+                  >
+                    {{ lang.label }}
                   </button>
                 </li>
               </ul>

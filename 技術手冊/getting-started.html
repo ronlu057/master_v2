@@ -359,8 +359,12 @@ useHead({ title: &#39;最新活動&#39; })
 <td><a href="sop-procedures.html#34-%E5%BE%9E-mock-%E5%88%87%E6%8F%9B%E5%88%B0%E7%9C%9F%E5%AF%A6%E5%BE%8C%E7%AB%AF">SOP §3.4</a></td>
 </tr>
 <tr>
-<td>接 i18n 多語</td>
-<td><a href="sop-procedures.html#35-%E6%8E%A5-i18n-%E5%A4%9A%E8%AA%9E">SOP §3.5</a></td>
+<td>新增 / 編輯 / 移除語系</td>
+<td><a href="sop-procedures.html#35-%E5%A4%9A%E8%AA%9E%E7%B3%BBnuxtjsi18n-%E5%B7%B2%E8%A3%9D">SOP §3.5</a> → 白皮書 <a href="master-project-whitepaper.html#910-%E5%A4%9A%E8%AA%9E%E7%B3%BBnuxtjsi18n">§9.10</a></td>
+</tr>
+<tr>
+<td>取翻譯字串 / 切換語系</td>
+<td>元件內用 <code>useI18n()</code>，詳見白皮書 <a href="master-project-whitepaper.html#9103-%E5%85%83%E4%BB%B6%E5%85%A7%E7%94%A8%E6%B3%95">§9.10.3</a></td>
 </tr>
 <tr>
 <td>用 GSAP 做進場動畫</td>
@@ -540,7 +544,8 @@ useHead({ title: &#39;最新活動&#39; })
 <h3 id="333-功能開關一個-env-設定即可開關">3.3.3 功能開關（一個 .env 設定即可開關）</h3>
 <ul>
 <li>✅ 購物車（即使不是 shop 類型也能加掛）</li>
-<li>✅ 多語切換（自動判斷只有一個語系時隱藏 icon）</li>
+<li>✅ 多語切換 — 目前內建 4 語系（繁中 / 英 / 日 / 韓），工程師可加減（自動判斷剩 1 個時隱藏 icon）</li>
+<li>✅ 預設語系（<code>.env</code> 的 <code>NUXT_PUBLIC_DEFAULT_LANG</code>，使用者第一次來看到的語言）</li>
 <li>✅ 搜尋功能</li>
 </ul>
 <h3 id="334-內容後端--後台調整">3.3.4 內容（後端 / 後台調整）</h3>

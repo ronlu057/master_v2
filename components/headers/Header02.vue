@@ -44,16 +44,14 @@ const onSearch = () => {
 }
 
 // ── 語系切換 ─────────────────────────────────────────────
-// currentLang = 目前語系；切換時改 currentLang（之後接 i18n 時改成切換 locale）
-const languages = [
-  { code: 'zh-TW', label: '繁體中文' },
-  { code: 'en', label: 'English' },
-  { code: 'ja', label: '日本語' },
-]
-const currentLang = ref('zh-TW')
-const switchLang = (code) => {
-  currentLang.value = code
-}
+// 接 @nuxtjs/i18n 模組：清單來自 nuxt.config.js 的 i18n.locales（單一來源）
+// 切換語系呼叫 setLocale(code) — 全站翻譯字串 / locale 同步更新
+const { locale, locales, setLocale } = useI18n()
+const languages = computed(() =>
+  locales.value.map((l) => ({ code: l.code, label: l.name })),
+)
+const currentLang = computed(() => locale.value)
+const switchLang = (code) => setLocale(code)
 
 // ── 捲動時讓 Header 變樣式 ─────────────────────────────────
 // 邏輯：當「捲動距離」≥「header 高度」就加上 .scroll class

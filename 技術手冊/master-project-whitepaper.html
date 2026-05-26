@@ -668,28 +668,185 @@ $btn_font: &#39;Noto Sans TC&#39;, sans-serif;        // 按鈕字體
 </ol>
 <h4 id="993-為何用-displayswap">9.9.3 為何用 <code>display=swap</code></h4>
 <p><code>&amp;display=swap</code> 告訴瀏覽器：字型還沒載入完成時，<strong>先用 fallback 顯示文字</strong>，等載完再切換 —— 避免使用者看到空白文字（FOIT）。代價是字型切換瞬間會有微小視覺跳動（FOUT），但對使用者體驗整體較好。</p>
-<h3 id="910-語系切換-ui-規範">9.10 語系切換 UI 規範</h3>
+<h3 id="910-多語系nuxtjsi18n">9.10 多語系（@nuxtjs/i18n）</h3>
+<p>全站採用 <a href="https://i18n.nuxtjs.org/"><code>@nuxtjs/i18n</code></a> 處理多語：清單集中設定、Header 自動渲染切換、cookie 自動記住使用者選擇。</p>
+<h4 id="9101-設定位置一覽">9.10.1 設定位置一覽</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>改什麼</th>
+<th>改哪</th>
+<th>重啟 dev?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>預設語系</td>
+<td><a href="../.env">.env</a> <code>NUXT_PUBLIC_DEFAULT_LANG=tw</code> + <a href="../nuxt.config.js">nuxt.config.js</a> <code>i18n.defaultLocale</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>語系清單</td>
+<td><a href="../nuxt.config.js">nuxt.config.js</a> 的 <code>i18n.locales[]</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>翻譯字串</td>
+<td><a href="../i18n/locales/">i18n/locales/<code>.json</a></td>
+<td>❌（HMR）</td>
+</tr>
+<tr>
+<td>URL 策略（是否帶 <code>/en/</code> 前綴）</td>
+<td><a href="../nuxt.config.js">nuxt.config.js</a> 的 <code>i18n.strategy</code></td>
+<td>✅</td>
+</tr>
+</tbody></table></div>
+<h4 id="9102-目前已設定的語系">9.10.2 目前已設定的語系</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>代碼</th>
+<th>顯示名稱</th>
+<th>IETF tag</th>
+<th>字典</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tw</code></td>
+<td>繁體中文</td>
+<td><code>zh-Hant-TW</code></td>
+<td><a href="../i18n/locales/tw.json">tw.json</a></td>
+</tr>
+<tr>
+<td><code>en</code></td>
+<td>English</td>
+<td><code>en-US</code></td>
+<td><a href="../i18n/locales/en.json">en.json</a></td>
+</tr>
+<tr>
+<td><code>jp</code></td>
+<td>日本語</td>
+<td><code>ja-JP</code></td>
+<td><a href="../i18n/locales/jp.json">jp.json</a></td>
+</tr>
+<tr>
+<td><code>kr</code></td>
+<td>한국어</td>
+<td><code>ko-KR</code></td>
+<td><a href="../i18n/locales/kr.json">kr.json</a></td>
+</tr>
+</tbody></table></div>
+<h4 id="9103-元件內用法">9.10.3 元件內用法</h4>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+// 取翻譯字串、目前語系、切換 function
+const { t, locale, locales, setLocale } = useI18n()
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;!-- 1. 取翻譯字串 --&gt;
+  &lt;h1&gt;{{ t(&#39;site.title&#39;) }}&lt;/h1&gt;
+  &lt;button&gt;{{ t(&#39;btn.more&#39;) }}&lt;/button&gt;
+
+  &lt;!-- 2. 取目前語系 --&gt;
+  &lt;p&gt;現在是：{{ locale }}&lt;/p&gt;
+
+  &lt;!-- 3. 切換語系 --&gt;
+  &lt;button @click=&quot;setLocale(&#39;en&#39;)&quot;&gt;English&lt;/button&gt;
+&lt;/template&gt;
+</code></pre>
+<p>template 內也可以直接用 <code>$t(&#39;key&#39;)</code> 縮寫（不用 <code>&lt;script setup&gt;</code> 內取出）：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;button&gt;{{ $t(&#39;btn.search&#39;) }}&lt;/button&gt;
+</code></pre>
+<h4 id="9104-header-切換-ui-規範">9.10.4 Header 切換 UI 規範</h4>
 <p>語系切換 icon 與選單在任何元件（Header / Footer / 浮動工具列…）顯示時，<strong>必須</strong>判斷語系數量，符合下列規則才渲染：</p>
 <ul>
 <li>語系數量 ≤ 1 → <strong>不顯示</strong> icon（無切換意義，多餘 UI）</li>
 <li>語系數量 ≥ 2 → 才顯示 icon + 切換選單</li>
 </ul>
 <p>範例（<a href="../components/headers/Header01.vue"><code>components/headers/Header01.vue</code></a>）：</p>
-<pre data-lang="VUE"><code class="language-vue">&lt;div v-if=&quot;languages.length &gt; 1&quot; class=&quot;navtool_icon&quot;&gt;
-  &lt;LanguageIcon aria-label=&quot;語系&quot; /&gt;
-  &lt;div class=&quot;lang_box&quot;&gt;
-    &lt;button
-      v-for=&quot;lang in languages&quot;
-      :key=&quot;lang.code&quot;
-      :class=&quot;{ &#39;is-active&#39;: lang.code === currentLang }&quot;
-      @click=&quot;switchLang(lang.code)&quot;
-    &gt;
-      {{ lang.label }}
-    &lt;/button&gt;
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+const { locale, locales, setLocale } = useI18n()
+const languages = computed(() =&gt;
+  locales.value.map((l) =&gt; ({ code: l.code, label: l.name })),
+)
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div v-if=&quot;languages.length &gt; 1&quot; class=&quot;navtool_icon&quot;&gt;
+    &lt;LanguageIcon aria-label=&quot;語系&quot; /&gt;
+    &lt;div class=&quot;lang_box&quot;&gt;
+      &lt;button
+        v-for=&quot;lang in languages&quot;
+        :key=&quot;lang.code&quot;
+        :class=&quot;{ &#39;is-active&#39;: lang.code === locale }&quot;
+        @click=&quot;setLocale(lang.code)&quot;
+      &gt;
+        {{ lang.label }}
+      &lt;/button&gt;
+    &lt;/div&gt;
   &lt;/div&gt;
-&lt;/div&gt;
+&lt;/template&gt;
 </code></pre>
-<blockquote class="callout callout--important"><p>之後接真實 i18n 模組（如 <a href="https://i18n.nuxtjs.org/"><code>@nuxtjs/i18n</code></a>）時，<code>languages</code> 會從 i18n 模組的 <code>locales</code> 取得（多由 <code>.env</code> 或設定檔控制）。此 <code>v-if</code> 判斷無需修改即可正常運作 —— 後台關到只剩一個語系時，icon 自動消失。</p>
+<blockquote class="callout callout--important"><p><strong>語系清單只在 <code>nuxt.config.js</code> 一處維護</strong>。Header / Footer / 任何元件都用 <code>useI18n().locales</code> 動態取得，<strong>禁止</strong>在元件內硬編碼 <code>languages</code> 陣列。</p>
+</blockquote>
+<h4 id="9105-url-策略選擇">9.10.5 URL 策略選擇</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>策略</th>
+<th>URL 結果（defaultLocale = tw）</th>
+<th>SEO</th>
+<th>適用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>no_prefix</code>（目前）</td>
+<td><code>/about</code> 全語系共用</td>
+<td>弱</td>
+<td>後台規模小、靠 cookie 切換</td>
+</tr>
+<tr>
+<td><code>prefix_except_default</code></td>
+<td>tw: <code>/about</code> / en: <code>/en/about</code></td>
+<td>佳</td>
+<td><strong>推薦</strong> SEO 友好</td>
+</tr>
+<tr>
+<td><code>prefix</code></td>
+<td>全部 <code>/tw/about</code> <code>/en/about</code></td>
+<td>佳</td>
+<td>對所有語系 SEO 均等</td>
+</tr>
+<tr>
+<td><code>prefix_and_default</code></td>
+<td>同 <code>prefix</code>，default 也接受無前綴</td>
+<td>中</td>
+<td>過渡用</td>
+</tr>
+</tbody></table></div>
+<p>切換策略時，記得每頁加 <code>useLocaleHead()</code> 產生 <code>&lt;link rel=&quot;alternate&quot; hreflang&gt;</code>：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+useLocaleHead()  // 自動為當前頁的所有語系變體產生 SEO meta
+&lt;/script&gt;
+</code></pre>
+<h4 id="9106-與-mock-i18n-endpoint-的關係">9.10.6 與 mock <code>/i18n</code> endpoint 的關係</h4>
+<p>專案另有 <a href="../composables/useSite.js"><code>composables/useSite.js</code></a> 的 <code>useDict()</code> 從 <code>/api/i18n</code> 拉動態字典 —— 這是<strong>從後台拿翻譯</strong>的機制，跟 <code>@nuxtjs/i18n</code> 的本地字典<strong>並行存在</strong>：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用途</th>
+<th>用什麼</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>介面固定文字（按鈕、Menu、提示）</td>
+<td><code>useI18n().t(&#39;key&#39;)</code> ← 推薦</td>
+</tr>
+<tr>
+<td>後台可改的動態文字（公告、橫幅文案）</td>
+<td><code>useDict().t(&#39;key&#39;)</code></td>
+</tr>
+</tbody></table></div>
+<blockquote class="callout callout--tip"><p>大部分時候用 <code>useI18n().t()</code> 就好。<code>useDict()</code> 只在「客戶要能後台改文字」時才用。</p>
 </blockquote>
 <h3 id="911-平滑捲動lenis--gsap">9.11 平滑捲動（Lenis + GSAP）</h3>
 <p>全站採用 <a href="https://github.com/darkroomengineering/lenis">Lenis</a> 接管 wheel / touch 捲動，加入慣性 + 緩動。同時整合 <a href="https://gsap.com/">GSAP</a> / <a href="https://gsap.com/docs/v3/Plugins/ScrollTrigger/">ScrollTrigger</a>，讓動畫與捲動位置同步。</p>

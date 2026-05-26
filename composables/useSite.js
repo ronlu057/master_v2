@@ -2,10 +2,15 @@
 // 選單、公司資料、多語字典 — 以固定 key 快取，全站共用一份。
 
 // 選單（/menu/view）— 已 flatten 成標準 children 樹
+// 依當前 locale 拉對應語系資料；
+// key / query 都用 reactive（傳 ref / computed），useFetch 切換語系時自動 refetch
 export function useSiteMenu() {
+  const { locale } = useI18n()
   return useApiData('/menu/view', {
-    key: 'site:menu',
+    key: computed(() => `site:menu:${locale.value}`),
+    query: { lang: locale }, // 傳 ref → query 跟著 locale 變
     default: () => ({ header: [], footer: [], mobile: [] }),
+    watch: [locale],
   })
 }
 

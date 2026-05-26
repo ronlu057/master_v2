@@ -22,7 +22,30 @@ export default defineNuxtConfig({
   // 白皮書「無 TS 政策」：停用 TypeScript 檢查
   typescript: { typeCheck: false, shim: false },
 
-  modules: ['@pinia/nuxt'],
+  modules: ['@pinia/nuxt', '@nuxtjs/i18n'],
+
+  // ── i18n 多語系設定 ─────────────────────────────────────
+  // 翻譯字典：i18n/locales/<code>.json
+  // 切換語系：元件內呼叫 const { setLocale } = useI18n(); setLocale('en')
+  // 取得目前語系：const { locale } = useI18n() → locale.value
+  // 取翻譯字串：const { t } = useI18n(); t('nav.home')
+  i18n: {
+    // 預設語系從 .env 讀取（NUXT_PUBLIC_DEFAULT_LANG），fallback 'tw'
+    // 此值在 build / SSR 時讀入，runtime 不會變
+    defaultLocale: process.env.NUXT_PUBLIC_DEFAULT_LANG || 'tw',
+    // URL 策略：預設語系（tw）不加前綴、其他語系加（tw: /about、en: /en/about、jp: /jp/about）
+    // SEO 友好：每個語系獨立 URL，搜尋引擎可分別索引
+    strategy: 'prefix_except_default',
+    locales: [
+      { code: 'tw', file: 'tw.json', name: '繁體中文', language: 'zh-Hant-TW' },
+      { code: 'en', file: 'en.json', name: 'English', language: 'en-US' },
+      { code: 'jp', file: 'jp.json', name: '日本語', language: 'ja-JP' },
+      { code: 'kr', file: 'kr.json', name: '한국어', language: 'ko-KR' },
+    ],
+    // detectBrowserLanguage 暫時關閉 — 過去發生過 cookie 卡住造成 /jp /kr 不認的問題
+    // 之後要做「第一次訪問依瀏覽器語言自動跳轉」再開回來
+    detectBrowserLanguage: false,
+  },
 
   // 全域樣式（CSS 變數主題 + reset + 共用樣式）
   css: ['~/assets/styles/main.scss'],
@@ -37,8 +60,6 @@ export default defineNuxtConfig({
       projectType: 'module',
       // API base URL；留空 = 使用本地 mock JSON（server/routes/api）
       apiBase: '',
-      // 預設語系
-      defaultLang: 'tw',
       // Header 版型：對應 components/headers/<檔名>.vue
       header: 'Header01',
       // 內頁 Banner 版型：對應 components/banners/PageBannerXX.vue
