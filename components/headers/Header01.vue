@@ -114,7 +114,8 @@ onBeforeUnmount(() => {
             </div>
           </div>
 
-          <div class="navtool_icon">
+          <!-- 只有一個語系（或零個）時不顯示 icon，避免無謂的選單 -->
+          <div v-if="languages.length > 1" class="navtool_icon">
             <LanguageIcon aria-label="語系" />
             <div class="lang_box">
               <button
