@@ -449,8 +449,9 @@ onBeforeUnmount(() => {
     background: var(--color-primary);
     color: #fff;
     font-size: 11px;
-    line-height: 18px;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
