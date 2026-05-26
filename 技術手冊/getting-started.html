@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>教學手冊 · AD-Design</title>
+<style>:root{
+  --ink:#1f2933;--ink-soft:#5b6b7a;--heading:#0f2b29;
+  --accent:#0d9488;--accent-dark:#0f766e;--accent-soft:#e6f5f3;
+  --bg:#fff;--bg-soft:#f4f7f7;--code-bg:#f6f8fa;--border:#e2e8ea;
+  --container:1180px;
+}
+*{box-sizing:border-box;margin:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  color:var(--ink);background:var(--bg-soft);line-height:1.8;-webkit-font-smoothing:antialiased;
+}
+.hero{background:linear-gradient(135deg,#0f766e 0%,#134e4a 60%,#0c3b38 100%);color:#fff;padding:64px 24px 56px;}
+.hero__inner{max-width:var(--container);margin:0 auto;}
+.hero__eyebrow{letter-spacing:3px;font-size:13px;font-weight:700;opacity:.7;}
+.hero__title{font-size:42px;margin:14px 0 10px;font-weight:800;letter-spacing:1px;}
+.hero__sub{font-size:17px;opacity:.88;}
+.hero__tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;}
+.hero__tags span{font-size:12px;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);}
+.layout{max-width:var(--container);margin:0 auto;padding:40px 24px 64px;display:grid;grid-template-columns:248px 1fr;gap:40px;align-items:start;}
+.sidebar{position:sticky;top:24px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px 14px;max-height:calc(100vh - 48px);overflow:auto;}
+.sidebar__title{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--ink-soft);padding:0 8px 10px;}
+.toc{display:flex;flex-direction:column;gap:2px;}
+.toc a{font-size:13.5px;color:var(--ink-soft);text-decoration:none;padding:7px 10px;border-radius:8px;border-left:2px solid transparent;transition:.15s;}
+.toc a:hover{background:var(--bg-soft);color:var(--accent-dark);}
+.toc a.is-active{background:var(--accent-soft);color:var(--accent-dark);font-weight:700;border-left-color:var(--accent);}
+.content{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:48px 56px;min-width:0;}
+.content h2{font-size:26px;color:var(--heading);margin:48px 0 18px;padding-bottom:12px;border-bottom:2px solid var(--border);scroll-margin-top:24px;}
+.content h3{font-size:20px;color:var(--accent-dark);margin:32px 0 12px;scroll-margin-top:24px;}
+.content h4{font-size:16px;color:var(--heading);margin:24px 0 10px;}
+.content p{margin:14px 0;}
+.content ul,.content ol{margin:14px 0;padding-left:24px;}
+.content li{margin:6px 0;}
+.content a{color:var(--accent-dark);text-decoration:none;border-bottom:1px solid var(--accent-soft);}
+.content a:hover{border-bottom-color:var(--accent);}
+.content hr{border:none;border-top:1px solid var(--border);margin:36px 0;}
+.content strong{color:var(--heading);font-weight:700;}
+.content code{font-family:'JetBrains Mono','Fira Code',Consolas,monospace;font-size:.88em;background:var(--accent-soft);color:var(--accent-dark);padding:2px 6px;border-radius:5px;}
+.content pre{position:relative;background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:22px 20px 20px;margin:18px 0;overflow-x:auto;}
+.content pre code{background:none;color:#24343d;padding:0;font-size:13px;line-height:1.7;}
+.content pre[data-lang]::before{content:attr(data-lang);position:absolute;top:0;right:0;font-size:11px;font-weight:700;letter-spacing:1px;background:var(--accent);color:#fff;padding:3px 10px;border-radius:0 9px 0 9px;}
+.content blockquote{margin:18px 0;padding:14px 20px;background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;color:var(--ink-soft);}
+.content blockquote p{margin:5px 0;}
+.content blockquote code{background:#fff;}
+.content .callout::before{display:block;font-weight:800;font-size:12.5px;letter-spacing:1px;margin-bottom:6px;}
+.content .callout--warning{background:#fff7ed;border-left-color:#f59e0b;color:#854d0e;}
+.content .callout--warning::before{content:'⚠ 注意 WARNING';color:#b45309;}
+.content .callout--caution{background:#fef2f2;border-left-color:#ef4444;color:#991b1b;}
+.content .callout--caution::before{content:'⚠ 警告 CAUTION';color:#dc2626;}
+.content .callout--note{background:#eff6ff;border-left-color:#3b82f6;color:#1e40af;}
+.content .callout--note::before{content:'ℹ 說明 NOTE';color:#2563eb;}
+.content .callout--important{background:#faf5ff;border-left-color:#a855f7;color:#6b21a8;}
+.content .callout--important::before{content:'★ 重要 IMPORTANT';color:#9333ea;}
+.content .callout--tip{background:#ecfdf5;border-left-color:#10b981;color:#065f46;}
+.content .callout--tip::before{content:'✓ 提示 TIP';color:#059669;}
+.table-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--border);border-radius:10px;}
+.content table{border-collapse:collapse;width:100%;font-size:14px;}
+.content thead th{background:#0f3b38;color:#fff;text-align:left;font-weight:700;padding:11px 14px;white-space:nowrap;}
+.content tbody td{padding:10px 14px;border-top:1px solid var(--border);vertical-align:top;}
+.content tbody tr:nth-child(even){background:var(--bg-soft);}
+.content tbody tr:hover{background:var(--accent-soft);}
+.content table code{font-size:12.5px;}
+.foot{text-align:center;padding:36px 24px;color:var(--ink-soft);font-size:13px;border-top:1px solid var(--border);background:var(--bg);}
+.foot__note{opacity:.6;margin-top:4px;font-size:12px;}
+.totop{position:fixed;right:24px;bottom:24px;width:46px;height:46px;border:none;border-radius:50%;background:var(--accent);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 6px 20px rgba(13,148,136,.4);opacity:0;visibility:hidden;transition:.25s;}
+.totop.is-show{opacity:1;visibility:visible;}
+@media(max-width:920px){
+  .layout{grid-template-columns:1fr;gap:20px;}
+  .sidebar{position:static;max-height:320px;}
+  .content{padding:32px 22px;}
+  .hero{padding:48px 22px 40px;}
+  .hero__title{font-size:30px;}
+}
+@media print{
+  body{background:#fff;}
+  .sidebar,.totop,.hero__tags{display:none;}
+  .content,.sidebar{border:none;}
+  .layout{display:block;padding:0;}
+}</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero__inner">
+    <p class="hero__eyebrow">AD-DESIGN · 入門指南</p>
+    <h1 class="hero__title">教學手冊</h1>
+    <p class="hero__sub">新進工程師 / 熟手快速索引 / 設計師 PM 指南</p>
+    <div class="hero__tags"><span>新手入門</span><span>快速索引</span><span>設計師</span><span>PM</span><span>練習任務</span></div>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <p class="sidebar__title">目錄 CONTENTS</p>
+    <nav class="toc">
+      <a href="#11-你需要先具備的知識">1.1 你需要先具備的知識</a>
+      <a href="#12-環境準備">1.2 環境準備</a>
+      <a href="#13-第一次啟動">1.3 第一次啟動</a>
+      <a href="#14-五分鐘理解整個專案結構">1.4 五分鐘理解整個專案結構</a>
+      <a href="#15-練習一改-mock-資料">1.5 練習一：改 mock 資料</a>
+      <a href="#16-練習二切換-header-版型">1.6 練習二：切換 Header 版型</a>
+      <a href="#17-練習三新增一個頁面">1.7 練習三：新增一個頁面</a>
+      <a href="#18-接下來該學的">1.8 接下來該學的</a>
+      <a href="#21-我要做這件事">2.1 我要做這件事</a>
+      <a href="#22-我遇到問題">2.2 我遇到問題</a>
+      <a href="#23-我要遵守規範">2.3 我要遵守規範</a>
+      <a href="#24-關鍵設計決策為何不是">2.4 關鍵設計決策（為何不是...）</a>
+      <a href="#31-一句話講懂本專案">3.1 一句話講懂本專案</a>
+      <a href="#32-五種專案類型">3.2 五種專案類型</a>
+      <a href="#33-哪些可以調不需要重寫">3.3 哪些「可以調」（不需要重寫）</a>
+      <a href="#34-哪些不可以調會牽動結構">3.4 哪些「不可以調」（會牽動結構）</a>
+      <a href="#35-跟工程師討論需求時">3.5 跟工程師討論需求時</a>
+      <a href="#36-從報價到上線流程是什麼">3.6 從報價到上線，流程是什麼？</a>
+      <a href="#37-看到工程師說這些意思是">3.7 看到工程師說這些，意思是</a>
+      <a href="#延伸閱讀">📚 延伸閱讀</a>
+    </nav>
+  </aside>
+  <main class="content">
+
+<blockquote>
+<p>三類讀者導覽，請從你的角色開始讀：</p>
+<ul>
+<li>🆕 <a href="#part-1--%E6%96%B0%E9%80%B2%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%B8%AB">新進前端工程師</a>：從零學會本專案</li>
+<li>👨‍💻 <a href="#part-2--%E7%86%9F%E6%89%8B%E5%B7%A5%E7%A8%8B%E5%B8%AB%E5%BF%AB%E9%80%9F%E7%B4%A2%E5%BC%95">熟手工程師快速索引</a>：直接跳到需要的章節</li>
+<li>🎨 <a href="#part-3--%E8%A8%AD%E8%A8%88%E5%B8%AB--pm-%E6%8C%87%E5%8D%97">設計師 / PM 指南</a>：哪些可調、哪些不可調</li>
+</ul>
+</blockquote>
+<hr>
+<h1>Part 1 — 新進前端工程師</h1>
+<h2 id="11-你需要先具備的知識">1.1 你需要先具備的知識</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>技術</th>
+<th>程度</th>
+<th>學習資源</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HTML / CSS</td>
+<td>熟練</td>
+<td><a href="https://developer.mozilla.org/zh-TW/docs/Web">MDN</a></td>
+</tr>
+<tr>
+<td>JavaScript（ES2020+）</td>
+<td>熟練</td>
+<td><a href="https://javascript.info/">JavaScript.info</a></td>
+</tr>
+<tr>
+<td>Vue 3 Composition API</td>
+<td>入門</td>
+<td><a href="https://vuejs.org/guide/introduction.html">Vue 3 文檔</a></td>
+</tr>
+<tr>
+<td>Nuxt 4 基本概念</td>
+<td>入門</td>
+<td><a href="https://nuxt.com/docs/getting-started/introduction">Nuxt 文檔</a></td>
+</tr>
+<tr>
+<td>Sass / SCSS</td>
+<td>入門</td>
+<td><a href="https://sass-lang.com/documentation/">Sass 文檔</a></td>
+</tr>
+<tr>
+<td>Git 基本操作</td>
+<td>熟練</td>
+<td><a href="https://git-scm.com/book/zh-tw/v2">Git Pro</a></td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p>沒接觸過 Vue / Nuxt 也沒關係，本專案結構單純，<strong>邊做邊學</strong>最快。</p>
+</blockquote>
+<h2 id="12-環境準備">1.2 環境準備</h2>
+<h3 id="121-軟體安裝">1.2.1 軟體安裝</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>軟體</th>
+<th>用途</th>
+<th>下載</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Node.js</strong>（≥ 20）</td>
+<td>JavaScript 執行環境</td>
+<td><a href="https://nodejs.org/">nodejs.org</a></td>
+</tr>
+<tr>
+<td><strong>VS Code</strong></td>
+<td>編輯器</td>
+<td><a href="https://code.visualstudio.com/">code.visualstudio.com</a></td>
+</tr>
+<tr>
+<td><strong>Git</strong></td>
+<td>版本控制</td>
+<td><a href="https://git-scm.com/">git-scm.com</a></td>
+</tr>
+<tr>
+<td><strong>Claude Code（選用）</strong></td>
+<td>AI 編程助手</td>
+<td><a href="https://claude.com/code">claude.com/code</a></td>
+</tr>
+</tbody></table></div>
+<h3 id="122-vs-code-推薦延伸套件">1.2.2 VS Code 推薦延伸套件</h3>
+<ul>
+<li>Vue - Official（Volar）</li>
+<li>ESLint</li>
+<li>Prettier</li>
+<li>SCSS IntelliSense</li>
+</ul>
+<h3 id="123-驗證環境">1.2.3 驗證環境</h3>
+<pre data-lang="BASH"><code class="language-bash">node -v    # 應該 ≥ v20.0.0
+npm -v     # 應該 ≥ 10.0.0
+git --version
+</code></pre>
+<h2 id="13-第一次啟動">1.3 第一次啟動</h2>
+<pre data-lang="BASH"><code class="language-bash"># 1. 取得程式碼
+git clone https://github.com/ronlu057/master_v2.git
+cd master_v2
+
+# 2. 安裝相依套件（約 30 秒）
+npm install
+
+# 3. 啟動開發伺服器
+npm run dev
+</code></pre>
+<p>瀏覽 <code>http://localhost:3000</code>。</p>
+<h3 id="看到什麼">看到什麼？</h3>
+<ul>
+<li>首頁 banner + 區塊</li>
+<li>主選單（依 mock 資料）</li>
+<li>切換各個 page（about / news / contact 等）</li>
+</ul>
+<h2 id="14-五分鐘理解整個專案結構">1.4 五分鐘理解整個專案結構</h2>
+<pre data-lang="TEXT"><code class="language-text">master_v2/
+├─ pages/              📄 檔案路由（檔名 = 網址）
+├─ components/         🧩 共用元件
+│  ├─ headers/         Header 版型集合
+│  ├─ banners/         Banner 版型集合
+│  ├─ AppHeader.vue    Header 派發器
+│  ├─ PageBanner.vue   PageBanner 派發器
+│  └─ ...
+├─ composables/        🪝 共用邏輯（自動引入，不用 import）
+├─ stores/             🍍 Pinia（全站狀態）
+├─ assets/
+│  ├─ styles/          主題色 / SCSS 變數
+│  └─ icon/            SVG icon
+├─ public/             原樣輸出的資源
+├─ server/mock/data/   假後端資料（前端開發階段用）
+├─ plugins/            Lenis / GSAP 等全站初始化
+├─ app.vue             進入點
+├─ app.config.js       五種專案類型功能矩陣
+├─ nuxt.config.js      Nuxt 全局設定（字體、SCSS、modules）
+└─ .env                專案類型 / Header / Banner / API 設定
+</code></pre>
+<p>關鍵概念：「<strong>一套程式碼 + 設定 = 不同的網站</strong>」</p>
+<ul>
+<li>改 <code>.env</code> 的 <code>NUXT_PUBLIC_PROJECT_TYPE</code> → 整站行為變</li>
+<li>改 <code>.env</code> 的 <code>NUXT_PUBLIC_HEADER</code> → 換頁首版型</li>
+<li>改 <code>.env</code> 的 <code>NUXT_PUBLIC_PAGE_BANNER</code> → 換內頁 Banner</li>
+</ul>
+<h2 id="15-練習一改-mock-資料">1.5 練習一：改 mock 資料</h2>
+<p><strong>目標</strong>：改首頁標題、改聯絡資訊。</p>
+<ol>
+<li>開 <a href="../server/mock/data/firm.json"><code>server/mock/data/firm.json</code></a></li>
+<li>把 <code>firm.title</code> 從「AD-Design 母版示範站」改成你想要的</li>
+<li>把 <code>firm.tel</code> 改成 <code>0912-345-678</code></li>
+<li>存檔，<strong>重啟 dev server</strong>（<code>Ctrl+C</code> → <code>npm run dev</code>）</li>
+<li>重新整理瀏覽器，看標題與聯絡資訊變了</li>
+</ol>
+<blockquote class="callout callout--important"><p>改 JSON <strong>必須</strong>重啟 dev server，因為 mock 不在 HMR 範圍。</p>
+</blockquote>
+<h2 id="16-練習二切換-header-版型">1.6 練習二：切換 Header 版型</h2>
+<p><strong>目標</strong>：把 Header01 切換成 Header02 看效果差異。</p>
+<ol>
+<li>開 <a href="../.env"><code>.env</code></a></li>
+<li>改 <code>NUXT_PUBLIC_HEADER=Header02</code></li>
+<li>重啟 dev server</li>
+<li>觀察 logo 位置、選單樣式、社群圖示的差異</li>
+</ol>
+<p>接著你可以試試自己建 <code>Header03.vue</code>（複製 <code>Header01.vue</code> 改個 class 與顏色），改 <code>.env</code> 指向 Header03，馬上看到自己的作品。</p>
+<h2 id="17-練習三新增一個頁面">1.7 練習三：新增一個頁面</h2>
+<p><strong>目標</strong>：新增「最新活動」頁面 <code>/events</code>。</p>
+<ol>
+<li>在 <code>pages/</code> 建 <code>events.vue</code>：</li>
+</ol>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+useHead({ title: &#39;最新活動&#39; })
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;PageBanner page=&quot;events&quot; title=&quot;最新活動&quot; subtitle=&quot;一年一度盛大開跑&quot; /&gt;
+    &lt;div class=&quot;container&quot;&gt;
+      &lt;h2 class=&quot;section-title__main&quot;&gt;本季精選&lt;/h2&gt;
+      &lt;p&gt;內容 placeholder...&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+</code></pre>
+<ol start="2">
+<li>在 <a href="../server/mock/data/menu.json"><code>server/mock/data/menu.json</code></a> 的 <code>header</code> 陣列加：</li>
+</ol>
+<pre data-lang="JSON"><code class="language-json">{ &quot;title&quot;: &quot;最新活動&quot;, &quot;url&quot;: &quot;/events&quot;, &quot;data_type&quot;: &quot;page&quot;, &quot;children&quot;: [] }
+</code></pre>
+<ol start="3">
+<li>重啟 dev server，點擊主選單的「最新活動」可以進到你的頁面。</li>
+</ol>
+<p>恭喜，這就是日常開發工作。</p>
+<h2 id="18-接下來該學的">1.8 接下來該學的</h2>
+<ul>
+<li>仔細讀 <a href="master-project-whitepaper.html">開發母版專案.md</a>（白皮書，全部架構）</li>
+<li>讀 <a href="development-conventions.html">製作規範.md</a>（DO / DON&#39;T 清單）</li>
+<li>遇到問題查 <a href="sop-procedures.html#4-debug-%E8%88%87%E7%8B%80%E6%B3%81%E6%8E%92%E6%9F%A5">SOP標準作業流程.md §4 Debug</a></li>
+</ul>
+<hr>
+<h1>Part 2 — 熟手工程師快速索引</h1>
+<blockquote>
+<p>已熟 Vue / Nuxt？這份索引直接告訴你「<strong>做 X 看哪裡</strong>」。</p>
+</blockquote>
+<h2 id="21-我要做這件事">2.1 我要做這件事</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>想做</th>
+<th>看哪</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>新增 Header 版型</td>
+<td><a href="sop-procedures.html#21-%E6%96%B0%E5%A2%9E-header-%E7%89%88%E5%9E%8B">SOP §2.1</a> → 白皮書 <a href="master-project-whitepaper.html#11-header-%E7%89%88%E5%9E%8B%E5%88%87%E6%8F%9B">§11</a></td>
+</tr>
+<tr>
+<td>新增 Banner 版型</td>
+<td><a href="sop-procedures.html#22-%E6%96%B0%E5%A2%9E-banner-%E7%89%88%E5%9E%8B">SOP §2.2</a> → 白皮書 <a href="master-project-whitepaper.html#12-banner-%E7%89%88%E5%9E%8B%E5%88%87%E6%8F%9B">§12</a></td>
+</tr>
+<tr>
+<td>新增 Block 區塊</td>
+<td><a href="sop-procedures.html#23-%E6%96%B0%E5%A2%9E-block-%E5%8D%80%E5%A1%8A">SOP §2.3</a> → 白皮書 <a href="master-project-whitepaper.html#8-block-%E6%A8%A1%E7%B5%84%E7%B3%BB%E7%B5%B1">§8</a></td>
+</tr>
+<tr>
+<td>新增頁面</td>
+<td><a href="sop-procedures.html#24-%E6%96%B0%E5%A2%9E%E9%A0%81%E9%9D%A2">SOP §2.4</a></td>
+</tr>
+<tr>
+<td>改主題色</td>
+<td><a href="sop-procedures.html#31-%E4%BF%AE%E6%94%B9-scss-%E8%AE%8A%E6%95%B8%E4%B8%BB%E8%89%B2--%E5%AD%97%E9%AB%94">SOP §3.1</a></td>
+</tr>
+<tr>
+<td>加 Google 字型</td>
+<td><a href="sop-procedures.html#32-%E6%96%B0%E5%A2%9E-google-%E5%AD%97%E5%9E%8B">SOP §3.2</a> → 白皮書 <a href="master-project-whitepaper.html#99-google-fonts-%E5%AD%97%E5%9E%8B">§9.9</a></td>
+</tr>
+<tr>
+<td>接真實後端</td>
+<td><a href="sop-procedures.html#34-%E5%BE%9E-mock-%E5%88%87%E6%8F%9B%E5%88%B0%E7%9C%9F%E5%AF%A6%E5%BE%8C%E7%AB%AF">SOP §3.4</a></td>
+</tr>
+<tr>
+<td>接 i18n 多語</td>
+<td><a href="sop-procedures.html#35-%E6%8E%A5-i18n-%E5%A4%9A%E8%AA%9E">SOP §3.5</a></td>
+</tr>
+<tr>
+<td>用 GSAP 做進場動畫</td>
+<td>白皮書 <a href="master-project-whitepaper.html#9116-gsap--scrolltrigger-%E7%94%A8%E6%B3%95">§9.11.6</a></td>
+</tr>
+<tr>
+<td>開 modal 鎖背景捲動</td>
+<td>白皮書 <a href="master-project-whitepaper.html#9113-%E9%80%B2%E9%9A%8Emodal--drawer-%E9%8E%96%E8%83%8C%E6%99%AF%E6%8D%B2%E5%8B%95">§9.11.3</a></td>
+</tr>
+</tbody></table></div>
+<h2 id="22-我遇到問題">2.2 我遇到問題</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>看哪</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.env</code> 改了沒生效</td>
+<td><a href="sop-procedures.html#41-%E6%94%B9%E4%BA%86-env-%E4%BD%86%E6%B2%92%E7%94%9F%E6%95%88">SOP §4.1</a></td>
+</tr>
+<tr>
+<td>mock JSON 改了沒生效</td>
+<td><a href="sop-procedures.html#43-%E6%94%B9%E4%BA%86-mock-json-%E4%BD%86%E6%B2%92%E7%94%9F%E6%95%88">SOP §4.3</a></td>
+</tr>
+<tr>
+<td>SVG hover 不變色</td>
+<td><a href="sop-procedures.html#44-svg-%E5%BC%95%E5%85%A5%E5%BE%8C%E9%A1%8F%E8%89%B2%E4%B8%8D%E5%B0%8D--hover-%E4%B8%8D%E8%AE%8A%E8%89%B2">SOP §4.4</a></td>
+</tr>
+<tr>
+<td>Undefined variable: $xxx</td>
+<td><a href="sop-procedures.html#45-scss-%E8%AE%8A%E6%95%B8%E7%B7%A8%E8%AD%AF%E5%A4%B1%E6%95%97undefined-variable">SOP §4.5</a></td>
+</tr>
+<tr>
+<td>boolean .env 怪行為</td>
+<td><a href="sop-procedures.html#46-%E7%92%B0%E5%A2%83%E8%AE%8A%E6%95%B8-boolean-%E8%A1%8C%E7%82%BA%E6%80%AA%E7%95%B0">SOP §4.6</a></td>
+</tr>
+<tr>
+<td>ScrollTrigger 路由切換後怪</td>
+<td><a href="sop-procedures.html#47-%E8%B7%AF%E7%94%B1%E5%88%87%E6%8F%9B%E5%BE%8C-scrolltrigger-%E8%A1%8C%E7%82%BA%E6%80%AA--%E6%85%A2">SOP §4.7</a></td>
+</tr>
+<tr>
+<td>元件不會自動引入</td>
+<td><a href="sop-procedures.html#49-%E5%85%83%E4%BB%B6%E4%B8%8D%E6%9C%83%E8%87%AA%E5%8B%95%E5%BC%95%E5%85%A5">SOP §4.9</a></td>
+</tr>
+</tbody></table></div>
+<h2 id="23-我要遵守規範">2.3 我要遵守規範</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>主題</th>
+<th>規範條</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>元件命名 / Props / 生命週期</td>
+<td><a href="development-conventions.html#2-vue-%E5%85%83%E4%BB%B6%E8%A6%8F%E7%AF%84">規範 §2</a></td>
+</tr>
+<tr>
+<td>SCSS 變數 / 顏色 / RWD</td>
+<td><a href="development-conventions.html#3-%E6%A8%A3%E5%BC%8Fscss%E8%A6%8F%E7%AF%84">規範 §3</a></td>
+</tr>
+<tr>
+<td>檔案結構 / 擺放位置</td>
+<td><a href="development-conventions.html#4-%E6%AA%94%E6%A1%88%E7%B5%90%E6%A7%8B%E8%A6%8F%E7%AF%84">規範 §4</a></td>
+</tr>
+<tr>
+<td>.env / config 寫法</td>
+<td><a href="development-conventions.html#5-%E8%A8%AD%E5%AE%9A%E5%80%BCenv--config%E8%A6%8F%E7%AF%84">規範 §5</a></td>
+</tr>
+<tr>
+<td>SVG / 字體</td>
+<td><a href="development-conventions.html#6-svg--%E5%9C%96%E7%89%87--%E5%AD%97%E9%AB%94%E8%A6%8F%E7%AF%84">規範 §6</a></td>
+</tr>
+<tr>
+<td>Lenis / GSAP / Pinia 用法</td>
+<td><a href="development-conventions.html#7-%E5%A5%97%E4%BB%B6%E4%BD%BF%E7%94%A8%E8%A6%8F%E7%AF%84lenis--gsap--pinia">規範 §7</a></td>
+</tr>
+<tr>
+<td>Commit message</td>
+<td><a href="development-conventions.html#8-git--commit--pr-%E8%A6%8F%E7%AF%84">規範 §8</a></td>
+</tr>
+</tbody></table></div>
+<h2 id="24-關鍵設計決策為何不是">2.4 關鍵設計決策（為何不是...）</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>為何</th>
+<th>答案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>為何不用 TypeScript</td>
+<td>白皮書 <a href="master-project-whitepaper.html#91-vue-%E5%85%83%E4%BB%B6%E8%A6%8F%E7%AF%84">§9.1</a> — 母版專案無 TS 政策</td>
+</tr>
+<tr>
+<td>為何不用 webfont.js</td>
+<td>白皮書 <a href="master-project-whitepaper.html#99-google-fonts-%E5%AD%97%E5%9E%8B">§9.9</a> — SSR 不友好、FOUT 嚴重</td>
+</tr>
+<tr>
+<td>為何 SiteMenu 不抽共用</td>
+<td>各 Header 版型樣式差異大，inline 比共用更好維護</td>
+</tr>
+<tr>
+<td>為何 LI 不包 UL</td>
+<td>改 div + a chain，更扁平、SEO 語意更清楚</td>
+</tr>
+<tr>
+<td>為何 PageBanner 用派發器</td>
+<td>多版型需求；新增版型不用改頁面碼</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h1>Part 3 — 設計師 / PM 指南</h1>
+<blockquote>
+<p>不寫程式也能看懂：<strong>這套網站，哪裡可以調？怎麼跟工程師討論需求？</strong></p>
+</blockquote>
+<h2 id="31-一句話講懂本專案">3.1 一句話講懂本專案</h2>
+<p>「<strong>一份程式碼，五種專案類型，靠設定值切換</strong>」 —— 工程師寫的程式可以同時做出五種不同的網站。</p>
+<h2 id="32-五種專案類型">3.2 五種專案類型</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>類型</th>
+<th>設定值</th>
+<th>適合什麼網站</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>模組件套版</strong></td>
+<td><code>module</code></td>
+<td>標準形象站、最快上線</td>
+</tr>
+<tr>
+<td><strong>客製首頁</strong></td>
+<td><code>custom-home</code></td>
+<td>首頁要特別、內頁標準</td>
+</tr>
+<tr>
+<td><strong>全部客製</strong></td>
+<td><code>full-custom</code></td>
+<td>整站獨特設計</td>
+</tr>
+<tr>
+<td><strong>購物類型</strong></td>
+<td><code>shop</code></td>
+<td>電商站，含購物車</td>
+</tr>
+<tr>
+<td><strong>臨時站</strong></td>
+<td><code>temp</code></td>
+<td>「即將開幕」、活動過渡頁</td>
+</tr>
+</tbody></table></div>
+<p><strong>選擇邏輯</strong>：</p>
+<ul>
+<li>預算 / 時程緊 → <code>module</code>（最便宜、最快）</li>
+<li>首頁要做出特色 → <code>custom-home</code></li>
+<li>整站不能將就 → <code>full-custom</code></li>
+<li>要賣東西 → <code>shop</code></li>
+<li>短期使用 → <code>temp</code></li>
+</ul>
+<h2 id="33-哪些可以調不需要重寫">3.3 哪些「可以調」（不需要重寫）</h2>
+<h3 id="331-視覺主題">3.3.1 視覺主題</h3>
+<ul>
+<li>✅ 主色、輔色、文字色、背景色（CSS 變數一改全站變）</li>
+<li>✅ 圓角、陰影、間距、容器寬度（CSS 變數）</li>
+<li>✅ 字體（從 Google Fonts 選任何字型）</li>
+</ul>
+<h3 id="332-版型切換一個-env-設定即可換">3.3.2 版型切換（一個 .env 設定即可換）</h3>
+<ul>
+<li>✅ Header 版型（已有 3 套：標準型 / 置中型 / VALUE 風格）</li>
+<li>✅ 內頁 Banner 版型</li>
+<li>✅ 首頁輪播 Banner 版型</li>
+</ul>
+<h3 id="333-功能開關一個-env-設定即可開關">3.3.3 功能開關（一個 .env 設定即可開關）</h3>
+<ul>
+<li>✅ 購物車（即使不是 shop 類型也能加掛）</li>
+<li>✅ 多語切換（自動判斷只有一個語系時隱藏 icon）</li>
+<li>✅ 搜尋功能</li>
+</ul>
+<h3 id="334-內容後端--後台調整">3.3.4 內容（後端 / 後台調整）</h3>
+<ul>
+<li>✅ 所有文字、圖片、選單項</li>
+<li>✅ 公司資訊、社群連結</li>
+<li>✅ Banner 內容（圖片、文字、連結）</li>
+<li>✅ FAQ、據點、下載中心、新聞</li>
+</ul>
+<h2 id="34-哪些不可以調會牽動結構">3.4 哪些「不可以調」（會牽動結構）</h2>
+<h3 id="改動成本高要工程師評估時程">❌ 改動成本高、要工程師評估時程</h3>
+<ul>
+<li>把「客製首頁」中途改成「全部客製」（首頁要重新手刻）</li>
+<li>改網站的根本路由結構（如 <code>/news</code> 改成 <code>/blog</code>）</li>
+<li>改 mock 資料的「結構」（不是內容） —— 例如把選單從兩層變三層</li>
+</ul>
+<h3 id="工程師會勸退建議走標準功能">❌ 工程師會勸退（建議走標準功能）</h3>
+<ul>
+<li>「我要每頁有不一樣的 Header」 —— 多版型機制是好，但建議<strong>保持一致</strong></li>
+<li>「我要客戶後台自己換 logo」 —— 那是後台功能，不在前端母版範圍</li>
+<li>「我要這顆按鈕做特殊動畫」 —— 可以做，但會吃進度，建議用既有的 hover transition</li>
+</ul>
+<h2 id="35-跟工程師討論需求時">3.5 跟工程師討論需求時</h2>
+<h3 id="高效溝通的關鍵字">高效溝通的關鍵字</h3>
+<p>✅ 用這套詞彙跟工程師描述：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>想說</th>
+<th>用這個詞</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>整個頁面的大圖</td>
+<td><strong>Banner</strong>（首頁輪播叫 BlockBanner，內頁叫 PageBanner）</td>
+</tr>
+<tr>
+<td>頁面上方的選單列</td>
+<td><strong>Header</strong></td>
+</tr>
+<tr>
+<td>頁面下方的版權區</td>
+<td><strong>Footer</strong></td>
+</tr>
+<tr>
+<td>首頁上一塊一塊內容</td>
+<td><strong>Block 區塊</strong>（如 BlockNews、BlockIntro）</td>
+</tr>
+<tr>
+<td>點選後跳出來的視窗</td>
+<td><strong>Modal</strong></td>
+</tr>
+<tr>
+<td>滑鼠移過去才出現的選單</td>
+<td><strong>Dropdown / Popup</strong></td>
+</tr>
+<tr>
+<td>一塊塊小區域的標題 + 圖</td>
+<td><strong>卡片 / Card</strong></td>
+</tr>
+</tbody></table></div>
+<h3 id="確認需求時必問">確認需求時必問</h3>
+<ol>
+<li><strong>是哪個專案類型？</strong>（module / custom-home / full-custom / shop / temp）</li>
+<li><strong>要不要購物功能？</strong>（NUXT_PUBLIC_ENABLE_SHOP）</li>
+<li><strong>要不要多語？</strong>（中、英、日等）</li>
+<li><strong>Header 用哪種？</strong>（給設計稿前先決定版型，避免做完才發現要換）</li>
+</ol>
+<h3 id="設計稿交付給工程師時">設計稿交付給工程師時</h3>
+<p>✅ <strong>DO</strong>：</p>
+<ul>
+<li>提供 desktop / tablet / mobile 三個尺寸</li>
+<li>用 Figma / XD 等工具標示間距、字級</li>
+<li>把所有 hover / active / focus 狀態都畫出來</li>
+<li>明確列出每個 block 的順序</li>
+</ul>
+<p>❌ <strong>DON&#39;T</strong>：</p>
+<ul>
+<li>只給一張 JPG 就要工程師「按這做」（吃資源、容易誤解）</li>
+<li>用「跟那個 OO 網站很像但不一樣」描述（請給具體規格）</li>
+<li>期待工程師逐像素 1:1 還原（<a href="master-project-whitepaper.html#98-%E5%88%87%E7%89%88%E5%88%86%E5%B7%A5ai-%E4%BD%BF%E7%94%A8%E7%AF%84%E5%9C%8D">白皮書 §9.8</a>：精準視覺由人工調整，AI 處理結構與邏輯）</li>
+</ul>
+<h2 id="36-從報價到上線流程是什麼">3.6 從報價到上線，流程是什麼？</h2>
+<pre data-lang="TEXT"><code class="language-text">1. 需求確認         決定專案類型、Header / Banner 版型、是否購物
+2. 設計階段         設計師出設計稿、PM 整理需求文件
+3. mock 階段        工程師建 mock JSON + 套版（看得到畫面但無真實資料）
+4. 後端串接         接真實 API，從 .env 切換 API_BASE
+5. 內容上稿         客戶 / 編輯把實際內容輸入後台
+6. 測試 / 修整      QA、跨瀏覽器測試、效能調整
+7. 部署上線         build 後部署到正式環境
+</code></pre>
+<h2 id="37-看到工程師說這些意思是">3.7 看到工程師說這些，意思是</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>工程師說</th>
+<th>翻譯</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>「這要重啟 dev server」</td>
+<td>改了設定檔（.env / nuxt.config.js），要重新啟動才生效</td>
+</tr>
+<tr>
+<td>「這個是 mock 資料」</td>
+<td>還沒接真實後端，先用假資料測畫面</td>
+</tr>
+<tr>
+<td>「白皮書沒寫」</td>
+<td>沒有預先設計這個機制，要評估改動範圍</td>
+</tr>
+<tr>
+<td>「會牽動 SSR」</td>
+<td>改的是伺服器端渲染邏輯，要小心，可能影響 SEO</td>
+</tr>
+<tr>
+<td>「需要 rebuild」</td>
+<td>改了某些設定，要重新編譯整個專案</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2 id="延伸閱讀">📚 延伸閱讀</h2>
+<ul>
+<li><a href="master-project-whitepaper.html">開發母版專案.md</a> — 規範與架構說明</li>
+<li><a href="sop-procedures.html">SOP標準作業流程.md</a> — 步驟化操作流程</li>
+<li><a href="development-conventions.html">製作規範.md</a> — DO / DON&#39;T 清單</li>
+<li><a href="https://hello.show.ad-design.tw/docs/%E4%B8%80%E8%88%AC%E7%B6%B2%E7%AB%99%E7%99%BD%E7%9A%AE%E6%9B%B8.md">一般網站白皮書</a> — 後端 API 規格</li>
+</ul>
+
+  </main>
+</div>
+<footer class="foot">
+  <p>© 2026 AD-Design 技術部 · 教學手冊</p>
+  <p class="foot__note">本檔由 scripts/build-docs.mjs 自動產生</p>
+</footer>
+<button class="totop" id="totop" aria-label="回到頂部">↑</button>
+<script>const toTop=document.getElementById('totop');
+addEventListener('scroll',()=>toTop.classList.toggle('is-show',scrollY>600));
+toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+const links=[...document.querySelectorAll('.toc a')];
+const byId={};
+links.forEach(a=>byId[a.getAttribute('href').slice(1)]=a);
+const spy=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(a=>a.classList.remove('is-active'));
+      const a=byId[e.target.id];
+      if(a)a.classList.add('is-active');
+    }
+  });
+},{rootMargin:'-12% 0px -78% 0px'});
+document.querySelectorAll('.content h2[id]').forEach(h=>spy.observe(h));</script>
+</body>
+</html>

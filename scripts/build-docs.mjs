@@ -11,11 +11,12 @@ import { dirname, join } from 'node:path'
 import { marked } from 'marked'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
+const docsDir = join(root, '技術手冊')
 
 const DOCS = [
   {
     src: 'https://hello.show.ad-design.tw/docs/%E4%B8%80%E8%88%AC%E7%B6%B2%E7%AB%99%E7%99%BD%E7%9A%AE%E6%9B%B8.md',
-    localFallback: join(root, '一般網站白皮書.md'),
+    localFallback: join(docsDir, '一般網站白皮書.md'),
     out: 'general-website-whitepaper.html',
     docTitle: '一般網站白皮書',
     eyebrow: 'AD-DESIGN · 技術白皮書',
@@ -23,12 +24,36 @@ const DOCS = [
     tags: ['Home', 'News', 'Menu', 'Contact', 'SEO', 'Search', 'Banner', 'About', 'FAQ', 'I18n'],
   },
   {
-    src: join(root, '開發母版專案.md'),
+    src: join(docsDir, '開發母版專案.md'),
     out: 'master-project-whitepaper.html',
     docTitle: '母版專案開發白皮書',
     eyebrow: 'AD-DESIGN · 開發指南',
     sub: '一套母版，五種專案類型',
     tags: ['模組件套版', '客製首頁', '全部客製開發', '購物類型', '臨時站'],
+  },
+  {
+    src: join(docsDir, 'SOP標準作業流程.md'),
+    out: 'sop-procedures.html',
+    docTitle: 'SOP 標準作業流程',
+    eyebrow: 'AD-DESIGN · 作業流程',
+    sub: '接手 / 新增 / 修改 / Debug — 步驟化操作流程',
+    tags: ['接手新案', '新增零件', '接後端', 'Debug', '版型切換', 'i18n'],
+  },
+  {
+    src: join(docsDir, '製作規範.md'),
+    out: 'development-conventions.html',
+    docTitle: '製作規範',
+    eyebrow: 'AD-DESIGN · 規範手冊',
+    sub: 'DO / DON\'T 條列 — Vue / SCSS / .env / 套件使用',
+    tags: ['Vue', 'SCSS', '.env', 'Pinia', 'Lenis', 'GSAP', 'SVG', 'Git'],
+  },
+  {
+    src: join(docsDir, '教學手冊.md'),
+    out: 'getting-started.html',
+    docTitle: '教學手冊',
+    eyebrow: 'AD-DESIGN · 入門指南',
+    sub: '新進工程師 / 熟手快速索引 / 設計師 PM 指南',
+    tags: ['新手入門', '快速索引', '設計師', 'PM', '練習任務'],
   },
 ]
 
@@ -66,9 +91,13 @@ async function loadSource(doc) {
 // ── Markdown → 美化 HTML ─────────────────────────────────
 function buildHtml(doc, md) {
   // 交叉連結：在 marked 處理前替換 .md 連結（避免 href 被 URL 編碼後比對不到）
+  // 同層 .md 引用（./xxx.md / xxx.md）→ 對應的 .html
   md = md
-    .replace(/\]\(\.?\/?一般網站白皮書\.md\)/g, '](general-website-whitepaper.html)')
-    .replace(/\]\(\.?\/?開發母版專案\.md\)/g, '](master-project-whitepaper.html)')
+    .replace(/\]\(\.?\/?一般網站白皮書\.md(#[^)]*)?\)/g, '](general-website-whitepaper.html$1)')
+    .replace(/\]\(\.?\/?開發母版專案\.md(#[^)]*)?\)/g, '](master-project-whitepaper.html$1)')
+    .replace(/\]\(\.?\/?SOP標準作業流程\.md(#[^)]*)?\)/g, '](sop-procedures.html$1)')
+    .replace(/\]\(\.?\/?製作規範\.md(#[^)]*)?\)/g, '](development-conventions.html$1)')
+    .replace(/\]\(\.?\/?教學手冊\.md(#[^)]*)?\)/g, '](getting-started.html$1)')
 
   let body = marked.parse(md, { gfm: true })
 
@@ -250,7 +279,7 @@ for (const doc of DOCS) {
   console.log('▶ ' + doc.docTitle)
   const md = await loadSource(doc)
   const html = buildHtml(doc, md)
-  await writeFile(join(root, doc.out), html, 'utf8')
-  console.log('  ✓ ' + doc.out + '（' + html.length + ' bytes）\n')
+  await writeFile(join(docsDir, doc.out), html, 'utf8')
+  console.log('  ✓ 技術手冊/' + doc.out + '（' + html.length + ' bytes）\n')
 }
 console.log('完成。')

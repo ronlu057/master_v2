@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>製作規範 · AD-Design</title>
+<style>:root{
+  --ink:#1f2933;--ink-soft:#5b6b7a;--heading:#0f2b29;
+  --accent:#0d9488;--accent-dark:#0f766e;--accent-soft:#e6f5f3;
+  --bg:#fff;--bg-soft:#f4f7f7;--code-bg:#f6f8fa;--border:#e2e8ea;
+  --container:1180px;
+}
+*{box-sizing:border-box;margin:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  color:var(--ink);background:var(--bg-soft);line-height:1.8;-webkit-font-smoothing:antialiased;
+}
+.hero{background:linear-gradient(135deg,#0f766e 0%,#134e4a 60%,#0c3b38 100%);color:#fff;padding:64px 24px 56px;}
+.hero__inner{max-width:var(--container);margin:0 auto;}
+.hero__eyebrow{letter-spacing:3px;font-size:13px;font-weight:700;opacity:.7;}
+.hero__title{font-size:42px;margin:14px 0 10px;font-weight:800;letter-spacing:1px;}
+.hero__sub{font-size:17px;opacity:.88;}
+.hero__tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;}
+.hero__tags span{font-size:12px;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);}
+.layout{max-width:var(--container);margin:0 auto;padding:40px 24px 64px;display:grid;grid-template-columns:248px 1fr;gap:40px;align-items:start;}
+.sidebar{position:sticky;top:24px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px 14px;max-height:calc(100vh - 48px);overflow:auto;}
+.sidebar__title{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--ink-soft);padding:0 8px 10px;}
+.toc{display:flex;flex-direction:column;gap:2px;}
+.toc a{font-size:13.5px;color:var(--ink-soft);text-decoration:none;padding:7px 10px;border-radius:8px;border-left:2px solid transparent;transition:.15s;}
+.toc a:hover{background:var(--bg-soft);color:var(--accent-dark);}
+.toc a.is-active{background:var(--accent-soft);color:var(--accent-dark);font-weight:700;border-left-color:var(--accent);}
+.content{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:48px 56px;min-width:0;}
+.content h2{font-size:26px;color:var(--heading);margin:48px 0 18px;padding-bottom:12px;border-bottom:2px solid var(--border);scroll-margin-top:24px;}
+.content h3{font-size:20px;color:var(--accent-dark);margin:32px 0 12px;scroll-margin-top:24px;}
+.content h4{font-size:16px;color:var(--heading);margin:24px 0 10px;}
+.content p{margin:14px 0;}
+.content ul,.content ol{margin:14px 0;padding-left:24px;}
+.content li{margin:6px 0;}
+.content a{color:var(--accent-dark);text-decoration:none;border-bottom:1px solid var(--accent-soft);}
+.content a:hover{border-bottom-color:var(--accent);}
+.content hr{border:none;border-top:1px solid var(--border);margin:36px 0;}
+.content strong{color:var(--heading);font-weight:700;}
+.content code{font-family:'JetBrains Mono','Fira Code',Consolas,monospace;font-size:.88em;background:var(--accent-soft);color:var(--accent-dark);padding:2px 6px;border-radius:5px;}
+.content pre{position:relative;background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:22px 20px 20px;margin:18px 0;overflow-x:auto;}
+.content pre code{background:none;color:#24343d;padding:0;font-size:13px;line-height:1.7;}
+.content pre[data-lang]::before{content:attr(data-lang);position:absolute;top:0;right:0;font-size:11px;font-weight:700;letter-spacing:1px;background:var(--accent);color:#fff;padding:3px 10px;border-radius:0 9px 0 9px;}
+.content blockquote{margin:18px 0;padding:14px 20px;background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;color:var(--ink-soft);}
+.content blockquote p{margin:5px 0;}
+.content blockquote code{background:#fff;}
+.content .callout::before{display:block;font-weight:800;font-size:12.5px;letter-spacing:1px;margin-bottom:6px;}
+.content .callout--warning{background:#fff7ed;border-left-color:#f59e0b;color:#854d0e;}
+.content .callout--warning::before{content:'⚠ 注意 WARNING';color:#b45309;}
+.content .callout--caution{background:#fef2f2;border-left-color:#ef4444;color:#991b1b;}
+.content .callout--caution::before{content:'⚠ 警告 CAUTION';color:#dc2626;}
+.content .callout--note{background:#eff6ff;border-left-color:#3b82f6;color:#1e40af;}
+.content .callout--note::before{content:'ℹ 說明 NOTE';color:#2563eb;}
+.content .callout--important{background:#faf5ff;border-left-color:#a855f7;color:#6b21a8;}
+.content .callout--important::before{content:'★ 重要 IMPORTANT';color:#9333ea;}
+.content .callout--tip{background:#ecfdf5;border-left-color:#10b981;color:#065f46;}
+.content .callout--tip::before{content:'✓ 提示 TIP';color:#059669;}
+.table-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--border);border-radius:10px;}
+.content table{border-collapse:collapse;width:100%;font-size:14px;}
+.content thead th{background:#0f3b38;color:#fff;text-align:left;font-weight:700;padding:11px 14px;white-space:nowrap;}
+.content tbody td{padding:10px 14px;border-top:1px solid var(--border);vertical-align:top;}
+.content tbody tr:nth-child(even){background:var(--bg-soft);}
+.content tbody tr:hover{background:var(--accent-soft);}
+.content table code{font-size:12.5px;}
+.foot{text-align:center;padding:36px 24px;color:var(--ink-soft);font-size:13px;border-top:1px solid var(--border);background:var(--bg);}
+.foot__note{opacity:.6;margin-top:4px;font-size:12px;}
+.totop{position:fixed;right:24px;bottom:24px;width:46px;height:46px;border:none;border-radius:50%;background:var(--accent);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 6px 20px rgba(13,148,136,.4);opacity:0;visibility:hidden;transition:.25s;}
+.totop.is-show{opacity:1;visibility:visible;}
+@media(max-width:920px){
+  .layout{grid-template-columns:1fr;gap:20px;}
+  .sidebar{position:static;max-height:320px;}
+  .content{padding:32px 22px;}
+  .hero{padding:48px 22px 40px;}
+  .hero__title{font-size:30px;}
+}
+@media print{
+  body{background:#fff;}
+  .sidebar,.totop,.hero__tags{display:none;}
+  .content,.sidebar{border:none;}
+  .layout{display:block;padding:0;}
+}</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero__inner">
+    <p class="hero__eyebrow">AD-DESIGN · 規範手冊</p>
+    <h1 class="hero__title">製作規範</h1>
+    <p class="hero__sub">DO / DON'T 條列 — Vue / SCSS / .env / 套件使用</p>
+    <div class="hero__tags"><span>Vue</span><span>SCSS</span><span>.env</span><span>Pinia</span><span>Lenis</span><span>GSAP</span><span>SVG</span><span>Git</span></div>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <p class="sidebar__title">目錄 CONTENTS</p>
+    <nav class="toc">
+      <a href="#1-一般原則">1. 一般原則</a>
+      <a href="#2-vue-元件規範">2. Vue 元件規範</a>
+      <a href="#3-樣式scss規範">3. 樣式（SCSS）規範</a>
+      <a href="#4-檔案結構規範">4. 檔案結構規範</a>
+      <a href="#5-設定值env--config規範">5. 設定值（.env / config）規範</a>
+      <a href="#6-svg--圖片--字體規範">6. SVG / 圖片 / 字體規範</a>
+      <a href="#7-套件使用規範lenis--gsap--pinia">7. 套件使用規範（Lenis / GSAP / Pinia）</a>
+      <a href="#8-git--commit--pr-規範">8. Git / Commit / PR 規範</a>
+      <a href="#延伸閱讀">📚 延伸閱讀</a>
+    </nav>
+  </aside>
+  <main class="content">
+
+<blockquote>
+<p>配合 <a href="master-project-whitepaper.html">開發母版專案.md</a> 使用。本檔講「<strong>該怎麼做、不該怎麼做</strong>」DO/DON&#39;T 條列；白皮書講「<strong>為什麼這樣設計</strong>」。</p>
+</blockquote>
+<h2 id="目錄">📑 目錄</h2>
+<ul>
+<li><a href="#1-%E4%B8%80%E8%88%AC%E5%8E%9F%E5%89%87">1. 一般原則</a></li>
+<li><a href="#2-vue-%E5%85%83%E4%BB%B6%E8%A6%8F%E7%AF%84">2. Vue 元件規範</a></li>
+<li><a href="#3-%E6%A8%A3%E5%BC%8Fscss%E8%A6%8F%E7%AF%84">3. 樣式（SCSS）規範</a></li>
+<li><a href="#4-%E6%AA%94%E6%A1%88%E7%B5%90%E6%A7%8B%E8%A6%8F%E7%AF%84">4. 檔案結構規範</a></li>
+<li><a href="#5-%E8%A8%AD%E5%AE%9A%E5%80%BCenv--config%E8%A6%8F%E7%AF%84">5. 設定值（.env / config）規範</a></li>
+<li><a href="#6-svg--%E5%9C%96%E7%89%87--%E5%AD%97%E9%AB%94%E8%A6%8F%E7%AF%84">6. SVG / 圖片 / 字體規範</a></li>
+<li><a href="#7-%E5%A5%97%E4%BB%B6%E4%BD%BF%E7%94%A8%E8%A6%8F%E7%AF%84lenis--gsap--pinia">7. 套件使用規範（Lenis / GSAP / Pinia）</a></li>
+<li><a href="#8-git--commit--pr-%E8%A6%8F%E7%AF%84">8. Git / Commit / PR 規範</a></li>
+</ul>
+<hr>
+<h2 id="1-一般原則">1. 一般原則</h2>
+<h3 id="do">✅ DO</h3>
+<ul>
+<li>開工前先讀 <a href="master-project-whitepaper.html">開發母版專案.md</a> 與本檔</li>
+<li>命名統一英文（PascalCase 元件、camelCase 變數、kebab-case CSS class）</li>
+<li>改任何「全站行為」（如 <code>.env</code> 開關、<code>nuxt.config.js</code>、<code>app.vue</code>）前，<strong>確認影響範圍</strong></li>
+<li>對「為什麼這樣寫」不確定時，去白皮書找對應章節</li>
+<li>增刪檔案要連動更新 mock 資料 / 設定 / 文件</li>
+</ul>
+<h3 id="don39t">❌ DON&#39;T</h3>
+<ul>
+<li><strong>禁用 TypeScript</strong>（白皮書 <a href="master-project-whitepaper.html#91-vue-%E5%85%83%E4%BB%B6%E8%A6%8F%E7%AF%84">§9.1</a> — 嚴禁 <code>.ts</code> 檔或 <code>&lt;script lang=&quot;ts&quot;&gt;</code>）</li>
+<li>不要在元件內 import Google Fonts CSS（一律走 <code>nuxt.config.js</code>）</li>
+<li>不要自行變更白皮書版本號 / 修訂紀錄（除非客戶明確要求 bump）</li>
+<li>不要硬填客戶資料進元件（用 mock JSON / firm 資料）</li>
+<li>不要繞過派發器（AppHeader / PageBanner / BlockBanner）直接 import 子版型</li>
+</ul>
+<hr>
+<h2 id="2-vue-元件規範">2. Vue 元件規範</h2>
+<h3 id="21-script-setup">2.1 Script setup</h3>
+<p>✅ <strong>必須</strong>用 <code>&lt;script setup&gt;</code> 語法：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+const { isShop } = useProject()
+const cart = useCartStore()
+&lt;/script&gt;
+</code></pre>
+<p>❌ <strong>禁止</strong>用 Options API 或 <code>&lt;script&gt;</code> 沒 setup：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;!-- 禁 --&gt;
+&lt;script&gt;
+export default {
+  setup() { ... }
+}
+&lt;/script&gt;
+</code></pre>
+<h3 id="22-props-宣告">2.2 Props 宣告</h3>
+<p>✅ 用 <code>defineProps()</code> 明確宣告每個 prop：</p>
+<pre data-lang="JS"><code class="language-js">const props = defineProps({
+  title: { type: String, default: &#39;&#39; },
+  rows: { type: Array, default: () =&gt; [] },
+})
+</code></pre>
+<p>❌ 不要用陣列簡寫（會少掉 type / default）：</p>
+<pre data-lang="JS"><code class="language-js">// 不建議
+const props = defineProps([&#39;title&#39;, &#39;rows&#39;])
+</code></pre>
+<h3 id="23-命名">2.3 命名</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>對象</th>
+<th>規則</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>元件檔名</td>
+<td><strong>PascalCase 多字詞</strong></td>
+<td><code>NewsCard.vue</code>、<code>BlockNews.vue</code>、<code>AppHeader.vue</code></td>
+</tr>
+<tr>
+<td>派發器子版型</td>
+<td><strong>前綴 + 數字</strong></td>
+<td><code>Header01.vue</code>、<code>PageBanner01.vue</code>、<code>BlockBanner02.vue</code></td>
+</tr>
+<tr>
+<td>Composable</td>
+<td><strong>小駝峰 + use 前綴</strong></td>
+<td><code>useProject.js</code>、<code>useSiteMenu.js</code></td>
+</tr>
+<tr>
+<td>Pinia store</td>
+<td><strong>小駝峰 + use 前綴 + Store 後綴</strong></td>
+<td><code>useUiStore.js</code>、<code>useCartStore.js</code></td>
+</tr>
+<tr>
+<td>Utils</td>
+<td><strong>小駝峰</strong></td>
+<td><code>formatPrice.js</code>、<code>parseBool.js</code></td>
+</tr>
+</tbody></table></div>
+<blockquote class="callout callout--caution"><p>單字元件名（如 <code>Card.vue</code>、<code>Logo.vue</code>）會跟 HTML 標籤衝突，Vue 會警告。<strong>一律用多字詞</strong>。</p>
+</blockquote>
+<h3 id="24-資料獲取">2.4 資料獲取</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>場景</th>
+<th>用什麼</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>頁面 / 元件 setup 階段取 SSR 資料</td>
+<td><code>useApiData(&#39;/path&#39;)</code>（白皮書 <a href="master-project-whitepaper.html#71-%E7%B5%B1%E4%B8%80%E4%B8%B2%E6%8E%A5%E5%B1%A4">§7.1</a>）</td>
+</tr>
+<tr>
+<td>表單送出、按鈕觸發等命令式請求</td>
+<td><code>$api(&#39;/path&#39;, { method: &#39;POST&#39;, body })</code></td>
+</tr>
+<tr>
+<td>全站共用資料（選單 / 公司 / 多語）</td>
+<td><code>useSiteMenu()</code> / <code>useSiteFirm()</code> / <code>useDict()</code></td>
+</tr>
+</tbody></table></div>
+<p>❌ <strong>不要</strong>直接用 <code>$fetch</code> 或 <code>fetch()</code> 繞過 <code>useApi.js</code>：</p>
+<pre data-lang="JS"><code class="language-js">// 禁 — 不會走統一格式 unwrap
+const data = await $fetch(&#39;/api/news/list&#39;)
+</code></pre>
+<h3 id="25-元件生命週期">2.5 元件生命週期</h3>
+<p>✅ 監聽器、interval、ScrollTrigger 等<strong>必須</strong>在 <code>onBeforeUnmount</code> 清理：</p>
+<pre data-lang="JS"><code class="language-js">const id = setInterval(...)
+window.addEventListener(&#39;scroll&#39;, handler)
+
+onBeforeUnmount(() =&gt; {
+  clearInterval(id)
+  window.removeEventListener(&#39;scroll&#39;, handler)
+})
+</code></pre>
+<p>詳見白皮書 <a href="master-project-whitepaper.html#9116-gsap--scrolltrigger-%E7%94%A8%E6%B3%95">§9.11.6</a>（含 ScrollTrigger 範例）。</p>
+<hr>
+<h2 id="3-樣式scss規範">3. 樣式（SCSS）規範</h2>
+<h3 id="31-全站規範白皮書-94-important">3.1 全站規範（白皮書 §9.4 IMPORTANT）</h3>
+<p>✅ <strong>必須</strong>：</p>
+<ul>
+<li>所有 <code>&lt;style&gt;</code> 加 <code>lang=&quot;scss&quot;</code></li>
+<li>用 <code>&lt;style lang=&quot;scss&quot; scoped&gt;</code> 避免全域污染</li>
+<li>主題色用 CSS 變數 <code>var(--color-primary)</code> 等</li>
+</ul>
+<p>❌ <strong>嚴禁</strong>：</p>
+<ul>
+<li>純 CSS（無 lang=&quot;scss&quot;）</li>
+<li>元件內 <code>style=&quot;...&quot;</code> 行內樣式</li>
+<li>獨立 <code>.css</code> 檔</li>
+<li>用 <code>!important</code>（除非有極特殊覆寫第三方需求）</li>
+</ul>
+<h3 id="32-scss-變數與-mixin">3.2 SCSS 變數與 mixin</h3>
+<p>✅ 全域 SCSS 變數與 RWD mixin 來源：<a href="../assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a></p>
+<p>由 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>additionalData</code> 自動注入，<strong>任何 <code>&lt;style lang=&quot;scss&quot;&gt;</code> 都能直接用</strong>，不需 <code>@use</code>：</p>
+<pre data-lang="SCSS"><code class="language-scss">.box {
+  color: $web_font_color;
+  z-index: $z_header;
+  @include rwd-1200 { width: 100%; }
+}
+</code></pre>
+<p>❌ <strong>不要</strong>在元件 SCSS 內 <code>@use &quot;../../basic/config&quot; as *</code> —— 路徑已不存在，且 <code>additionalData</code> 已自動處理。</p>
+<h3 id="33-顏色變數選用">3.3 顏色變數選用</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>變數類型</th>
+<th>場景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CSS 變數</strong>（<code>var(--color-primary)</code>）</td>
+<td>跟著「專案類型」變色的元素（白皮書 <a href="master-project-whitepaper.html#94-%E6%A8%A3%E5%BC%8F%E8%88%87%E4%B8%BB%E9%A1%8C">§9.4</a>）</td>
+</tr>
+<tr>
+<td><strong>SCSS 變數</strong>（<code>$web_header_1</code>）</td>
+<td>固定不隨主題變的色（例 Header02 內部使用）</td>
+</tr>
+</tbody></table></div>
+<p>✅ 新元件<strong>建議優先用 CSS 變數</strong>，跟主題系統一致。</p>
+<h3 id="34-rwd-斷點">3.4 RWD 斷點</h3>
+<p>✅ 9 個標準斷點：<code>1920 / 1680 / 1440 / 1280 / 1200 / 1024 / 768 / 480 / 360</code></p>
+<p>✅ 主斷點：<strong>1200</strong>（header 變更樣式主斷點）</p>
+<p>✅ 在 <code>&lt;style lang=&quot;scss&quot;&gt;</code> 寫直接 <code>@media</code>，不要 <code>@include rwd-xxx</code>（mixin 僅 main.scss 內使用）：</p>
+<pre data-lang="SCSS"><code class="language-scss">.box {
+  width: 25%;
+  @media (max-width: 1200px) { width: 50%; }
+  @media (max-width: 768px)  { width: 100%; }
+}
+</code></pre>
+<h3 id="35-樣式-hookdata-project--data-page">3.5 樣式 hook：<code>data-project</code> / <code>data-page</code></h3>
+<p>✅ 利用自動掛在 <code>&lt;html&gt;</code> / <code>&lt;body&gt;</code> 的屬性切換樣式：</p>
+<pre data-lang="SCSS"><code class="language-scss">// 整站類型差異
+[data-project=&quot;shop&quot;] .logo { font-weight: 900; }
+
+// 個別頁面 / 區塊差異
+body[data-page=&quot;index&quot;] .header02 { background: transparent; }
+body[data-page=&quot;news&quot;]  .page-banner__bg { filter: brightness(0.7); }
+</code></pre>
+<p>❌ <strong>不要</strong>自己手動往 <code>&lt;html&gt;</code> / <code>&lt;body&gt;</code> 加 class（一律在 <code>app.vue</code> 集中設定）。</p>
+<p>詳見白皮書 <a href="master-project-whitepaper.html#912-%E5%85%A8%E7%AB%99%E6%A8%A3%E5%BC%8F-hookdata-project--data-page">§9.12</a>。</p>
+<hr>
+<h2 id="4-檔案結構規範">4. 檔案結構規範</h2>
+<h3 id="41-目錄職責">4.1 目錄職責</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>目錄</th>
+<th>職責</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>components/</code></td>
+<td>共用 Vue 元件（自動引入）</td>
+<td><code>NewsCard.vue</code></td>
+</tr>
+<tr>
+<td><code>components/headers/</code></td>
+<td>Header 版型（檔名即版型名）</td>
+<td><code>Header01.vue</code></td>
+</tr>
+<tr>
+<td><code>components/banners/</code></td>
+<td>Banner 版型（檔名前綴 PageBanner / BlockBanner）</td>
+<td><code>PageBanner01.vue</code></td>
+</tr>
+<tr>
+<td><code>composables/</code></td>
+<td>組合式函式（自動引入）</td>
+<td><code>useProject.js</code></td>
+</tr>
+<tr>
+<td><code>stores/</code></td>
+<td>Pinia store（Setup Store 風格）</td>
+<td><code>useUiStore.js</code></td>
+</tr>
+<tr>
+<td><code>pages/</code></td>
+<td>檔案路由</td>
+<td><code>news/index.vue</code></td>
+</tr>
+<tr>
+<td><code>layouts/</code></td>
+<td>版型</td>
+<td><code>default.vue</code> / <code>shop.vue</code></td>
+</tr>
+<tr>
+<td><code>assets/</code></td>
+<td>經 Vite 處理的資源（icon / styles）</td>
+<td><code>assets/icon/search.svg</code></td>
+</tr>
+<tr>
+<td><code>public/</code></td>
+<td>原樣輸出的資源（URL 固定）</td>
+<td><code>public/img/logo/Logo.svg</code></td>
+</tr>
+<tr>
+<td><code>server/mock/data/</code></td>
+<td>Mock JSON</td>
+<td><code>firm.json</code> / <code>menu.json</code></td>
+</tr>
+<tr>
+<td><code>plugins/</code></td>
+<td>Nuxt plugins（client / server）</td>
+<td><code>lenis.client.js</code></td>
+</tr>
+<tr>
+<td><code>middleware/</code></td>
+<td>路由中介層</td>
+<td><code>auth.global.js</code></td>
+</tr>
+<tr>
+<td><code>utils/</code></td>
+<td>純函式工具（自動引入）</td>
+<td><code>formatPrice.js</code></td>
+</tr>
+</tbody></table></div>
+<h3 id="42-元件擺放位置">4.2 元件擺放位置</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>元件類型</th>
+<th>位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全站共用 UI（卡片、按鈕、版面元件）</td>
+<td><code>components/</code> 根層</td>
+</tr>
+<tr>
+<td>Header 派發子版型</td>
+<td><code>components/headers/</code></td>
+</tr>
+<tr>
+<td>Banner 派發子版型</td>
+<td><code>components/banners/</code></td>
+</tr>
+<tr>
+<td>Block 區塊</td>
+<td><code>components/</code> 根層，檔名前綴 <code>Block</code></td>
+</tr>
+</tbody></table></div>
+<blockquote class="callout callout--important"><p>為了元件名能直接以檔名引用（如 <code>&lt;NewsCard&gt;</code>），<a href="../nuxt.config.js"><code>nuxt.config.js</code></a> 設定了 <code>pathPrefix: false</code>。<strong>所以子目錄不會變成元件名前綴</strong>（不會變 <code>&lt;HeadersHeader01&gt;</code>）。</p>
+</blockquote>
+<hr>
+<h2 id="5-設定值env--config規範">5. 設定值（.env / config）規範</h2>
+<h3 id="51-env-規則">5.1 <code>.env</code> 規則</h3>
+<p>✅ <strong>DO</strong>：</p>
+<ul>
+<li>所有值前後<strong>不要有空格</strong></li>
+<li>字串就是字串（<code>true</code> / <code>false</code> 仍是字串，要靠 <code>parseBool</code> 解析）</li>
+<li>用註解區塊分組（如 <code># ── Header 版型 ───────</code>）</li>
+</ul>
+<p>❌ <strong>DON&#39;T</strong>：</p>
+<ul>
+<li>不要 commit 含敏感資料的 <code>.env</code>（檢查 .gitignore）</li>
+<li>不要把不確定的設定直接放 <code>.env</code>（先在 <code>nuxt.config.js</code> 設預設值）</li>
+</ul>
+<h3 id="52-boolean-環境變數">5.2 Boolean 環境變數</h3>
+<p>✅ <strong>必須</strong>用 <code>parseBool()</code> 解析：</p>
+<pre data-lang="JS"><code class="language-js">import { parseBool } from &#39;~/composables/useProject&#39; // 範例位置
+
+enableShop: !!matrix.shop || parseBool(pub.enableShop),
+</code></pre>
+<p>❌ <strong>不要</strong>用 <code>!!</code>：</p>
+<pre data-lang="JS"><code class="language-js">// 錯！&quot; false&quot;（含空格）會變 true
+enableShop: !!pub.enableShop,
+</code></pre>
+<p>詳見白皮書 <a href="master-project-whitepaper.html#913-env-boolean-%E5%80%BC%E6%AD%A3%E7%A2%BA%E5%AF%AB%E6%B3%95">§9.13</a>。</p>
+<h3 id="53-runtimeconfig-與-env-對應">5.3 <code>runtimeConfig</code> 與 <code>.env</code> 對應</h3>
+<p>✅ 命名規則：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>.env</th>
+<th>runtimeConfig.public</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>NUXT_PUBLIC_PROJECT_TYPE</code></td>
+<td><code>projectType</code></td>
+</tr>
+<tr>
+<td><code>NUXT_PUBLIC_API_BASE</code></td>
+<td><code>apiBase</code></td>
+</tr>
+<tr>
+<td><code>NUXT_PUBLIC_ENABLE_SHOP</code></td>
+<td><code>enableShop</code></td>
+</tr>
+<tr>
+<td><code>NUXT_PUBLIC_HEADER</code></td>
+<td><code>header</code></td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p>Nuxt 自動把 <code>NUXT_PUBLIC_XXX_YYY</code> 轉成 <code>xxxYyy</code> 小駝峰格式。</p>
+</blockquote>
+<hr>
+<h2 id="6-svg--圖片--字體規範">6. SVG / 圖片 / 字體規範</h2>
+<h3 id="61-svg-放哪">6.1 SVG 放哪</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用法</th>
+<th>位置</th>
+<th>引入方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>元件內用、要 CSS 控 fill（純向量）</td>
+<td><code>assets/icon/</code></td>
+<td><code>import Xxx from &#39;...?component&#39;</code> → <code>&lt;Xxx /&gt;</code></td>
+</tr>
+<tr>
+<td>含 base64 嵌入圖（假 SVG）</td>
+<td><code>assets/icon/</code> 或 <code>public/img/</code></td>
+<td><code>?url</code> 或 <code>&lt;img src=&quot;...&quot;&gt;</code></td>
+</tr>
+<tr>
+<td>需要固定 URL 對外（favicon、OG 圖）</td>
+<td><code>public/</code></td>
+<td><code>&lt;img src=&quot;/img/...&quot;&gt;</code></td>
+</tr>
+</tbody></table></div>
+<h3 id="62-svg-清理">6.2 SVG 清理</h3>
+<p>✅ Adobe Illustrator 匯出的 SVG 通常含 <code>&lt;defs&gt;&lt;style&gt;.st0 { fill: #xxx }&lt;/style&gt;&lt;/defs&gt;</code>，這會<strong>鎖死</strong> fill 顏色。匯入專案後請清掉這段：</p>
+<pre data-lang="BASH"><code class="language-bash"># 批次清理腳本（不會動含品牌色的 SVG，自己列檔名）
+node -e &quot;...&quot;
+</code></pre>
+<p>❌ <strong>不要清</strong>含品牌色的 SVG（LINE logo、Facebook 等），它們的顏色就是品牌規範。</p>
+<p>詳見白皮書 <a href="master-project-whitepaper.html#94-%E6%A8%A3%E5%BC%8F%E8%88%87%E4%B8%BB%E9%A1%8C">§9.4</a>。</p>
+<h3 id="63-字體">6.3 字體</h3>
+<p>✅ 從 <a href="https://fonts.google.com">Google Fonts</a> 透過 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>app.head.link</code> 載入。</p>
+<p>❌ <strong>不要</strong>在元件 / SCSS 內 <code>@import url(fonts.googleapis.com/...)</code>。</p>
+<p>✅ 引用字體名稱時用 <a href="../assets/styles/_variables.scss"><code>_variables.scss</code></a> 內的變數：</p>
+<pre data-lang="SCSS"><code class="language-scss">font-family: $web_font;          // ✓
+font-family: &#39;Noto Sans TC&#39;;     // ✗ 寫死字型名
+</code></pre>
+<p>詳見白皮書 <a href="master-project-whitepaper.html#99-google-fonts-%E5%AD%97%E5%9E%8B">§9.9 Google Fonts</a>。</p>
+<hr>
+<h2 id="7-套件使用規範lenis--gsap--pinia">7. 套件使用規範（Lenis / GSAP / Pinia）</h2>
+<h3 id="71-lenis平滑捲動">7.1 Lenis（平滑捲動）</h3>
+<p>✅ 自動全站接管，<strong>不需手動觸發</strong>。</p>
+<p>✅ 需要程式式捲動時用 <code>$lenis.scrollTo(目標)</code>：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+const { $lenis } = useNuxtApp()
+&lt;/script&gt;
+&lt;button @click=&quot;$lenis.scrollTo(0)&quot;&gt;↑ 回頂&lt;/button&gt;
+</code></pre>
+<p>❌ <strong>不要</strong>用 <code>window.scrollTo()</code> / <code>element.scrollIntoView()</code>（會跟 Lenis 衝突）。</p>
+<p>❌ <strong>不要</strong>用 <code>document.body.style.overflow = &#39;hidden&#39;</code> 鎖背景捲動 —— 用 <code>$lenis.stop()</code>。</p>
+<p>詳見白皮書 <a href="master-project-whitepaper.html#911-%E5%B9%B3%E6%BB%91%E6%8D%B2%E5%8B%95lenis--gsap">§9.11</a>。</p>
+<h3 id="72-gsap--scrolltrigger">7.2 GSAP / ScrollTrigger</h3>
+<p>✅ 元件內取出：</p>
+<pre data-lang="JS"><code class="language-js">const { $gsap, $ScrollTrigger } = useNuxtApp()
+</code></pre>
+<p>✅ ScrollTrigger 必須在 <code>onMounted</code> 內呼叫，並在 <code>onBeforeUnmount</code> <code>kill()</code>：</p>
+<pre data-lang="JS"><code class="language-js">onMounted(() =&gt; {
+  $gsap.from(target.value, { scrollTrigger: { trigger: target.value, ... } })
+})
+onBeforeUnmount(() =&gt; {
+  $ScrollTrigger.getAll().forEach((st) =&gt; {
+    if (st.vars.trigger === target.value) st.kill()
+  })
+})
+</code></pre>
+<p>詳見白皮書 <a href="master-project-whitepaper.html#9116-gsap--scrolltrigger-%E7%94%A8%E6%B3%95">§9.11.6</a>。</p>
+<h3 id="73-pinia-store">7.3 Pinia store</h3>
+<p>✅ 採 <strong>Setup Store</strong> 風格：</p>
+<pre data-lang="JS"><code class="language-js">export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
+  const items = ref([])
+  const count = computed(() =&gt; items.value.length)
+  function add(item) { items.value.push(item) }
+  return { items, count, add }
+})
+</code></pre>
+<p>❌ <strong>不要</strong>用 Options Store 風格（state / getters / actions 物件式）。</p>
+<p>詳見白皮書 <a href="master-project-whitepaper.html#92-%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86pinia">§9.2</a>。</p>
+<hr>
+<h2 id="8-git--commit--pr-規範">8. Git / Commit / PR 規範</h2>
+<h3 id="81-commit-message">8.1 Commit message</h3>
+<p>✅ 範例（觀察 git log 已有的風格）：</p>
+<pre><code>feat: 新增 Banner 版型派發機制
+fix: 修正 Header02 下拉動畫不對齊
+refactor: 把語系切換抽到 useLangStore
+docs: 更新白皮書 §12 Banner 版型切換
+chore: 升級 Lenis 至 1.3.23
+</code></pre>
+<p>✅ 動詞分類：</p>
+<ul>
+<li><code>feat:</code> 新功能</li>
+<li><code>fix:</code> 修 bug</li>
+<li><code>refactor:</code> 重構（不改行為）</li>
+<li><code>docs:</code> 只動文件</li>
+<li><code>chore:</code> 雜項（套件升級、設定調整）</li>
+<li><code>style:</code> 純樣式修改</li>
+</ul>
+<p>❌ 不要寫含糊 message：</p>
+<pre><code>update     // 太空泛
+fix bug    // 哪個 bug？
+asdf       // 無意義
+</code></pre>
+<h3 id="82-文件同步">8.2 文件同步</h3>
+<p>✅ 改 <code>.md</code> 後務必執行：</p>
+<pre data-lang="BASH"><code class="language-bash">npm run docs
+</code></pre>
+<p>把 HTML 同步產生，commit 時兩個檔（.md + .html）一起。</p>
+<p>❌ 不要只 commit .md 不 commit .html（線上閱讀靠 HTML）。</p>
+<h3 id="83-不要-push-到-main-前的-checklist">8.3 不要 push 到 main 前的 checklist</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>檢查</th>
+<th>指令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>沒有 console.log / debugger</td>
+<td><code>grep -rn &quot;console.log&quot; components/ pages/</code></td>
+</tr>
+<tr>
+<td>沒有 TODO 未處理</td>
+<td><code>grep -rn &quot;TODO&quot; components/ pages/</code></td>
+</tr>
+<tr>
+<td>build 沒錯</td>
+<td><code>npm run build</code></td>
+</tr>
+<tr>
+<td>docs 已同步</td>
+<td><code>npm run docs</code></td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2 id="延伸閱讀">📚 延伸閱讀</h2>
+<ul>
+<li><a href="master-project-whitepaper.html">開發母版專案.md</a> — 規範與架構說明</li>
+<li><a href="sop-procedures.html">SOP標準作業流程.md</a> — 步驟化操作流程</li>
+<li><a href="getting-started.html">教學手冊.md</a> — 新進者入門 + 設計師/PM 指南</li>
+</ul>
+
+  </main>
+</div>
+<footer class="foot">
+  <p>© 2026 AD-Design 技術部 · 製作規範</p>
+  <p class="foot__note">本檔由 scripts/build-docs.mjs 自動產生</p>
+</footer>
+<button class="totop" id="totop" aria-label="回到頂部">↑</button>
+<script>const toTop=document.getElementById('totop');
+addEventListener('scroll',()=>toTop.classList.toggle('is-show',scrollY>600));
+toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+const links=[...document.querySelectorAll('.toc a')];
+const byId={};
+links.forEach(a=>byId[a.getAttribute('href').slice(1)]=a);
+const spy=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(a=>a.classList.remove('is-active'));
+      const a=byId[e.target.id];
+      if(a)a.classList.add('is-active');
+    }
+  });
+},{rootMargin:'-12% 0px -78% 0px'});
+document.querySelectorAll('.content h2[id]').forEach(h=>spy.observe(h));</script>
+</body>
+</html>

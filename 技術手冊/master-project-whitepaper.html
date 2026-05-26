@@ -338,7 +338,7 @@ npm run dev
 <blockquote class="callout callout--important"><p><strong>元件內請用 <code>enableShop</code> 控制購物 UI 顯示</strong>（如 <code>&lt;NuxtLink v-if=&quot;enableShop&quot; to=&quot;/shop/cart&quot;&gt;</code>），不要直接用 <code>isShop</code>。
 <code>isShop</code> 是「整站是不是購物站」，<code>enableShop</code> 是「要不要顯示購物功能」—— 後者比前者寬鬆，混合需求才能 work。</p>
 </blockquote>
-<p>範例（<a href="./components/headers/Header01.vue"><code>components/headers/Header01.vue</code></a>）：</p>
+<p>範例（<a href="../components/headers/Header01.vue"><code>components/headers/Header01.vue</code></a>）：</p>
 <pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
 const { enableShop } = useProject()
 &lt;/script&gt;
@@ -585,7 +585,7 @@ export function formatPrice(n) {
 </tbody></table></div>
 <p>HTML 結構骨架可由 AI 建立，但 <code>&lt;style&gt;</code> 內的精準尺寸由人工調整。</p>
 <h3 id="99-google-fonts-字型">9.9 Google Fonts 字型</h3>
-<p>字型於 <a href="./nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>app.head.link</code> 集中設定，會自動注入每個頁面的 <code>&lt;head&gt;</code>。<strong>不採用 Google 早期的 <code>webfont.js</code> 載入器</strong>（SSR 不友好、會多下載 28KB JS、首屏會閃白）。</p>
+<p>字型於 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>app.head.link</code> 集中設定，會自動注入每個頁面的 <code>&lt;head&gt;</code>。<strong>不採用 Google 早期的 <code>webfont.js</code> 載入器</strong>（SSR 不友好、會多下載 28KB JS、首屏會閃白）。</p>
 <pre data-lang="JS"><code class="language-js">// nuxt.config.js
 app: {
   head: {
@@ -629,7 +629,7 @@ app: {
 <td>400</td>
 </tr>
 </tbody></table></div>
-<p><strong>對應 SCSS 變數</strong>（<a href="./assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a>）—— 元件內請直接引用變數，避免到處寫死字型名稱：</p>
+<p><strong>對應 SCSS 變數</strong>（<a href="../assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a>）—— 元件內請直接引用變數，避免到處寫死字型名稱：</p>
 <pre data-lang="SCSS"><code class="language-scss">$web_font: &#39;Noto Sans TC&#39;, sans-serif;        // 全站主字體
 $title_font_en: &#39;Poppins&#39;, sans-serif;        // 標題英文
 $title_font_cht: &#39;Noto Sans TC&#39;, sans-serif;  // 標題中文
@@ -642,14 +642,14 @@ $btn_font: &#39;Noto Sans TC&#39;, sans-serif;        // 按鈕字體
 <pre><code>family=Inter:wght@300;400;500;700&amp;display=swap
 </code></pre>
 </li>
-<li><p><strong>修改 <a href="./nuxt.config.js"><code>nuxt.config.js</code></a></strong> 內 <code>app.head.link</code> 最後一筆 stylesheet 的 <code>href</code> —— 用 <code>&amp;family=</code> 串接新字型：</p>
+<li><p><strong>修改 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a></strong> 內 <code>app.head.link</code> 最後一筆 stylesheet 的 <code>href</code> —— 用 <code>&amp;family=</code> 串接新字型：</p>
 <pre data-lang="JS"><code class="language-js">href: &#39;https://fonts.googleapis.com/css2?&#39;
   + &#39;family=Noto+Sans+TC:wght@100;200;300;400;500;600;700;800;900&#39;
   + &#39;&amp;family=Inter:wght@300;400;500;700&#39;   // ← 新增這行
   + &#39;&amp;display=swap&#39;,
 </code></pre>
 </li>
-<li><p><strong>更新 <a href="./assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a></strong> 的字型變數（如要設為全站主字體）：</p>
+<li><p><strong>更新 <a href="../assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a></strong> 的字型變數（如要設為全站主字體）：</p>
 <pre data-lang="SCSS"><code class="language-scss">$web_font: &#39;Inter&#39;, &#39;Noto Sans TC&#39;, sans-serif;
 </code></pre>
 </li>
@@ -674,7 +674,7 @@ $btn_font: &#39;Noto Sans TC&#39;, sans-serif;        // 按鈕字體
 <li>語系數量 ≤ 1 → <strong>不顯示</strong> icon（無切換意義，多餘 UI）</li>
 <li>語系數量 ≥ 2 → 才顯示 icon + 切換選單</li>
 </ul>
-<p>範例（<a href="./components/headers/Header01.vue"><code>components/headers/Header01.vue</code></a>）：</p>
+<p>範例（<a href="../components/headers/Header01.vue"><code>components/headers/Header01.vue</code></a>）：</p>
 <pre data-lang="VUE"><code class="language-vue">&lt;div v-if=&quot;languages.length &gt; 1&quot; class=&quot;navtool_icon&quot;&gt;
   &lt;LanguageIcon aria-label=&quot;語系&quot; /&gt;
   &lt;div class=&quot;lang_box&quot;&gt;
@@ -693,7 +693,7 @@ $btn_font: &#39;Noto Sans TC&#39;, sans-serif;        // 按鈕字體
 </blockquote>
 <h3 id="911-平滑捲動lenis--gsap">9.11 平滑捲動（Lenis + GSAP）</h3>
 <p>全站採用 <a href="https://github.com/darkroomengineering/lenis">Lenis</a> 接管 wheel / touch 捲動，加入慣性 + 緩動。同時整合 <a href="https://gsap.com/">GSAP</a> / <a href="https://gsap.com/docs/v3/Plugins/ScrollTrigger/">ScrollTrigger</a>，讓動畫與捲動位置同步。</p>
-<p><strong>設定位置</strong>：<a href="./plugins/lenis.client.js"><code>plugins/lenis.client.js</code></a>（<code>.client.js</code> 後綴 → 僅 client 端載入，SSR 階段不執行）</p>
+<p><strong>設定位置</strong>：<a href="../plugins/lenis.client.js"><code>plugins/lenis.client.js</code></a>（<code>.client.js</code> 後綴 → 僅 client 端載入，SSR 階段不執行）</p>
 <pre data-lang="JS"><code class="language-js">const lenis = new Lenis({
   duration: 1.2,                                          // 捲動緩衝時間（秒），越大越「滑」
   easing: (t) =&gt; Math.min(1, 1.001 - Math.pow(2, -10 * t)), // expoOut 緩動曲線
@@ -710,7 +710,7 @@ lenis.on(&#39;scroll&#39;, ScrollTrigger.update)
 <ul>
 <li>✅ <strong>全站接管捲動</strong> —— 任何頁面、任何長頁面都會自動有平滑效果</li>
 <li>✅ <strong>路由切換歸頂</strong> —— <code>router.afterEach</code> 內呼叫 <code>lenis.scrollTo(0, { immediate: true })</code>，新頁面不會「滑進」</li>
-<li>✅ <strong><code>window.scroll</code> 事件仍會 fire</strong> —— 元件內的 <code>window.addEventListener(&#39;scroll&#39;, ...)</code> 無需修改（如 <a href="./components/headers/Header01.vue"><code>Header01.vue</code></a> 的捲動偵測）</li>
+<li>✅ <strong><code>window.scroll</code> 事件仍會 fire</strong> —— 元件內的 <code>window.addEventListener(&#39;scroll&#39;, ...)</code> 無需修改（如 <a href="../components/headers/Header01.vue"><code>Header01.vue</code></a> 的捲動偵測）</li>
 <li>✅ <strong>第三方 modal 自動鎖背景</strong> —— <code>MutationObserver</code> 監聽 <code>&lt;body&gt;</code> class，當 LightGallery / Magnific Popup 等套件加上鎖捲動 class 時自動 <code>lenis.stop()</code>（詳見 §9.11.5）</li>
 </ul>
 <h4 id="9112-進階程式式捲動">9.11.2 進階：程式式捲動</h4>
@@ -770,9 +770,9 @@ watch(open, (v) =&gt; {
 <blockquote class="callout callout--caution"><p>任何「鎖背景捲動」的 UI（modal、drawer、彈跳廣告、行動版選單）都<strong>必須</strong>呼叫 <code>$lenis.stop()</code>，<strong>不要</strong>用 <code>document.body.style.overflow = &#39;hidden&#39;</code>。Lenis 是用 transform 模擬捲動，CSS <code>overflow: hidden</code> 無效，使用者仍會看到背景滑動。</p>
 </blockquote>
 <h4 id="9114-與-sticky--fixed-元素相容性">9.11.4 與 sticky / fixed 元素相容性</h4>
-<p><code>position: sticky</code> 與 <code>position: fixed</code> 跟 Lenis <strong>完全相容</strong>，無需任何特殊處理。例如 <a href="./components/headers/Header01.vue"><code>Header01.vue</code></a> 的 <code>.header01 { position: sticky; top: 0 }</code> 在 Lenis 接管後仍能正常吸頂。</p>
+<p><code>position: sticky</code> 與 <code>position: fixed</code> 跟 Lenis <strong>完全相容</strong>，無需任何特殊處理。例如 <a href="../components/headers/Header01.vue"><code>Header01.vue</code></a> 的 <code>.header01 { position: sticky; top: 0 }</code> 在 Lenis 接管後仍能正常吸頂。</p>
 <h4 id="9115-第三方-modal--lightbox-鎖捲動">9.11.5 第三方 modal / lightbox 鎖捲動</h4>
-<p>某些第三方套件（<a href="https://www.lightgalleryjs.com/">LightGallery</a>、<a href="https://dimsemenov.com/plugins/magnific-popup/">Magnific Popup</a> 等）開啟時會在 <code>&lt;body&gt;</code> 加 class 鎖背景。<a href="./plugins/lenis.client.js"><code>plugins/lenis.client.js</code></a> 用 <code>MutationObserver</code> 自動處理：</p>
+<p>某些第三方套件（<a href="https://www.lightgalleryjs.com/">LightGallery</a>、<a href="https://dimsemenov.com/plugins/magnific-popup/">Magnific Popup</a> 等）開啟時會在 <code>&lt;body&gt;</code> 加 class 鎖背景。<a href="../plugins/lenis.client.js"><code>plugins/lenis.client.js</code></a> 用 <code>MutationObserver</code> 自動處理：</p>
 <pre data-lang="JS"><code class="language-js">const LOCK_BODY_CLASSES = [&#39;overflow&#39;, &#39;popwinOverflow&#39;, &#39;loadingOverflow&#39;, &#39;lg-on&#39;]
 
 const observer = new MutationObserver(() =&gt; {
@@ -816,6 +816,137 @@ onBeforeUnmount(() =&gt; {
 &lt;/template&gt;
 </code></pre>
 <blockquote class="callout callout--caution"><p><strong>ScrollTrigger 一定要在 <code>onMounted</code> 內呼叫</strong>（不能在 <code>&lt;script setup&gt;</code> 頂層），因為它需要 DOM 已渲染。元件卸載時也要 <code>kill()</code> 對應的 ScrollTrigger 實例，否則路由切換後舊 trigger 仍在計算位置，會造成效能問題或錯誤。</p>
+</blockquote>
+<h3 id="912-全站樣式-hookdata-project--data-page">9.12 全站樣式 hook：<code>data-project</code> / <code>data-page</code></h3>
+<p>本專案有兩個自動掛在頁面上的 HTML 屬性，用來讓 SCSS 針對「整站類型」或「個別頁面」切換樣式 —— <strong>元件不需手動加 class，這兩個屬性永遠是最新的</strong>。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>屬性</th>
+<th>標在</th>
+<th>值</th>
+<th>由誰設定</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>data-project</code></td>
+<td><code>&lt;html&gt;</code></td>
+<td><code>module</code> / <code>custom-home</code> / <code>full-custom</code> / <code>shop</code> / <code>temp</code></td>
+<td><a href="../app.vue"><code>app.vue</code></a> 依 <code>NUXT_PUBLIC_PROJECT_TYPE</code></td>
+</tr>
+<tr>
+<td><code>data-page</code></td>
+<td><code>&lt;body&gt;</code></td>
+<td><code>index</code> / <code>news</code> / <code>about</code> / <code>contact</code> / …</td>
+<td><a href="../app.vue"><code>app.vue</code></a> 依當前路由第一段</td>
+</tr>
+</tbody></table></div>
+<p><strong><code>data-page</code> 規則</strong>（取路徑第一段；首頁為 <code>index</code>）：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>路徑</th>
+<th><code>data-page</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/</code></td>
+<td><code>index</code></td>
+</tr>
+<tr>
+<td><code>/news</code></td>
+<td><code>news</code></td>
+</tr>
+<tr>
+<td><code>/news/master-launch</code></td>
+<td><code>news</code>（同區共用）</td>
+</tr>
+<tr>
+<td><code>/about/company-intro</code></td>
+<td><code>about</code></td>
+</tr>
+<tr>
+<td><code>/shop/cart</code></td>
+<td><code>shop</code></td>
+</tr>
+<tr>
+<td><code>/firm/caption?unit=privacy</code></td>
+<td><code>firm</code></td>
+</tr>
+</tbody></table></div>
+<p><strong>使用範例</strong>（任何 <code>.vue</code> 的 <code>&lt;style lang=&quot;scss&quot; scoped&gt;</code>）：</p>
+<pre data-lang="SCSS"><code class="language-scss">// 整站類型差異 — 例：購物站時 logo 字體變粗
+[data-project=&quot;shop&quot;] .logo { font-weight: 900; }
+
+// 個別頁面差異 — 例：首頁 header 透明
+body[data-page=&quot;index&quot;] .header02:not(.scroll) {
+  background: transparent;
+}
+
+// 整區共用樣式 — 例：news 區所有頁面的 banner 加暗色濾鏡
+body[data-page=&quot;news&quot;] .page-banner__bg { filter: brightness(0.7); }
+</code></pre>
+<blockquote class="callout callout--important"><p>寫元件樣式時<strong>避免</strong>自己手動往 <code>&lt;html&gt;</code> / <code>&lt;body&gt;</code> 加 class 或屬性 —— 統一從 <code>app.vue</code> 的 <code>useHead({ htmlAttrs, bodyAttrs })</code> 設定，集中管理避免衝突。需要新增頁面層級屬性時，去 <code>app.vue</code> 擴充。</p>
+</blockquote>
+<h3 id="913-env-boolean-值正確寫法">9.13 <code>.env</code> boolean 值正確寫法</h3>
+<p><strong><code>.env</code> 內所有值都是字串</strong>，這是 JS 處理 boolean 環境變數最常見的坑 —— <code>&quot;false&quot;</code>、<code>&quot; false&quot;</code>（含空格）在 JS 裡都是 truthy（非空字串）！</p>
+<pre data-lang="BASH"><code class="language-bash"># ❌ 錯誤 — 值前後有空格，會被當 truthy 字串
+NUXT_PUBLIC_ENABLE_SHOP= false
+
+# ❌ 錯誤 — 值是字串 &quot;false&quot;，!!&quot;false&quot; === true
+# （但這個專案的 parseBool 會處理掉，所以這條算「險惡但救得回來」）
+
+# ✅ 正確
+NUXT_PUBLIC_ENABLE_SHOP=false
+NUXT_PUBLIC_ENABLE_SHOP=true
+</code></pre>
+<h4 id="9131-在-composable-內安全解析">9.13.1 在 composable 內安全解析</h4>
+<p>切勿用 <code>!!pub.someFlag</code> —— 因為 <code>&quot;false&quot;</code>、<code>&quot; false&quot;</code> 都會被解析為 <code>true</code>。改用 <a href="../composables/useProject.js"><code>composables/useProject.js</code></a> 內定義的 <code>parseBool</code> 模式：</p>
+<pre data-lang="JS"><code class="language-js">const parseBool = (v) =&gt; typeof v === &#39;string&#39;
+  ? v.trim().toLowerCase() === &#39;true&#39;
+  : !!v
+
+// 使用
+enableShop: !!matrix.shop || parseBool(pub.enableShop),
+</code></pre>
+<p><strong>解析對照表</strong>：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><code>.env</code> 寫法</th>
+<th><code>parseBool</code> 結果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>NUXT_PUBLIC_X=true</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>NUXT_PUBLIC_X= true</code>（前空格）</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>NUXT_PUBLIC_X=TRUE</code>（大寫）</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>NUXT_PUBLIC_X=false</code></td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>NUXT_PUBLIC_X= false</code>（前空格）</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>NUXT_PUBLIC_X=</code>（空值）</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td>未設定</td>
+<td><code>false</code></td>
+</tr>
+</tbody></table></div>
+<blockquote class="callout callout--caution"><p>之後任何要當 boolean 用的 <code>NUXT_PUBLIC_*</code> 環境變數（debug 開關、功能旗標等）都<strong>必須</strong>走 <code>parseBool</code>，不要用 <code>!!</code>。</p>
 </blockquote>
 <hr>
 <h2 id="10-頁面與模組對照表">10. 頁面與模組對照表</h2>
@@ -954,7 +1085,7 @@ const current =
 <tr>
 <td><code>&lt;BlockBanner&gt;</code></td>
 <td>首頁輪播 block</td>
-<td>由 <a href="./components/BlockRenderer.vue"><code>BlockRenderer.vue</code></a> 在首頁派發</td>
+<td>由 <a href="../components/BlockRenderer.vue"><code>BlockRenderer.vue</code></a> 在首頁派發</td>
 </tr>
 </tbody></table></div>
 <h3 id="122-設定與切換">12.2 設定與切換</h3>
@@ -967,7 +1098,7 @@ NUXT_PUBLIC_BLOCK_BANNER=BlockBanner01
 </code></pre>
 <p>切換版型只需改此值並重啟 dev server，頁面程式碼完全不動。</p>
 <h3 id="123-派發機制">12.3 派發機制</h3>
-<p><a href="./components/PageBanner.vue"><code>components/PageBanner.vue</code></a> 與 <a href="./components/BlockBanner.vue"><code>components/BlockBanner.vue</code></a> 都是薄派發器，以 Vite 的 <code>import.meta.glob</code> 自動載入 <code>banners/</code> 內對應前綴的所有版型，找不到時自動 fallback 第一個：</p>
+<p><a href="../components/PageBanner.vue"><code>components/PageBanner.vue</code></a> 與 <a href="../components/BlockBanner.vue"><code>components/BlockBanner.vue</code></a> 都是薄派發器，以 Vite 的 <code>import.meta.glob</code> 自動載入 <code>banners/</code> 內對應前綴的所有版型，找不到時自動 fallback 第一個：</p>
 <pre data-lang="JAVASCRIPT"><code class="language-javascript">// PageBanner.vue
 defineOptions({ inheritAttrs: false })
 const variants = import.meta.glob(&#39;./banners/PageBanner*.vue&#39;, { eager: true })
