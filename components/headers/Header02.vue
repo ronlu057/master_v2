@@ -356,8 +356,8 @@ body[data-page="index"] {
       .navtool {
         display: flex;
         align-items: center;
-        gap: 12px;
-        margin-right: 15px;
+        gap: 26px;
+        font-size: 18px;
 
         @media (max-width: 1200px) { display: none; }
 
