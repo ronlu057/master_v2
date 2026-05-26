@@ -107,6 +107,7 @@ body{
       <a href="#9-開發與編程規範">9. 開發與編程規範</a>
       <a href="#10-頁面與模組對照表">10. 頁面與模組對照表</a>
       <a href="#11-header-版型切換">11. Header 版型切換</a>
+      <a href="#12-banner-版型切換">12. Banner 版型切換</a>
       <a href="#修訂紀錄">修訂紀錄</a>
     </nav>
   </aside>
@@ -137,6 +138,7 @@ body{
 <li><a href="#9-%E9%96%8B%E7%99%BC%E8%88%87%E7%B7%A8%E7%A8%8B%E8%A6%8F%E7%AF%84">9. 開發與編程規範</a></li>
 <li><a href="#10-%E9%A0%81%E9%9D%A2%E8%88%87%E6%A8%A1%E7%B5%84%E5%B0%8D%E7%85%A7%E8%A1%A8">10. 頁面與模組對照表</a></li>
 <li><a href="#11-header-%E7%89%88%E5%9E%8B%E5%88%87%E6%8F%9B">11. Header 版型切換</a></li>
+<li><a href="#12-banner-%E7%89%88%E5%9E%8B%E5%88%87%E6%8F%9B">12. Banner 版型切換</a></li>
 </ul>
 <hr>
 <h2 id="1-母版概述">1. 母版概述</h2>
@@ -689,6 +691,132 @@ $btn_font: &#39;Noto Sans TC&#39;, sans-serif;        // 按鈕字體
 </code></pre>
 <blockquote class="callout callout--important"><p>之後接真實 i18n 模組（如 <a href="https://i18n.nuxtjs.org/"><code>@nuxtjs/i18n</code></a>）時，<code>languages</code> 會從 i18n 模組的 <code>locales</code> 取得（多由 <code>.env</code> 或設定檔控制）。此 <code>v-if</code> 判斷無需修改即可正常運作 —— 後台關到只剩一個語系時，icon 自動消失。</p>
 </blockquote>
+<h3 id="911-平滑捲動lenis--gsap">9.11 平滑捲動（Lenis + GSAP）</h3>
+<p>全站採用 <a href="https://github.com/darkroomengineering/lenis">Lenis</a> 接管 wheel / touch 捲動，加入慣性 + 緩動。同時整合 <a href="https://gsap.com/">GSAP</a> / <a href="https://gsap.com/docs/v3/Plugins/ScrollTrigger/">ScrollTrigger</a>，讓動畫與捲動位置同步。</p>
+<p><strong>設定位置</strong>：<a href="./plugins/lenis.client.js"><code>plugins/lenis.client.js</code></a>（<code>.client.js</code> 後綴 → 僅 client 端載入，SSR 階段不執行）</p>
+<pre data-lang="JS"><code class="language-js">const lenis = new Lenis({
+  duration: 1.2,                                          // 捲動緩衝時間（秒），越大越「滑」
+  easing: (t) =&gt; Math.min(1, 1.001 - Math.pow(2, -10 * t)), // expoOut 緩動曲線
+  smoothWheel: true,                                       // 滑鼠滾輪平滑
+  // syncTouch 預設 false → 行動裝置走系統原生慣性，避免雙重平滑感
+})
+
+// 用 GSAP ticker 驅動 Lenis（不用 requestAnimationFrame）
+gsap.ticker.add((time) =&gt; lenis.raf(time * 1000))
+gsap.ticker.lagSmoothing(0)
+lenis.on(&#39;scroll&#39;, ScrollTrigger.update)
+</code></pre>
+<h4 id="9111-自動行為不需手動觸發">9.11.1 自動行為（不需手動觸發）</h4>
+<ul>
+<li>✅ <strong>全站接管捲動</strong> —— 任何頁面、任何長頁面都會自動有平滑效果</li>
+<li>✅ <strong>路由切換歸頂</strong> —— <code>router.afterEach</code> 內呼叫 <code>lenis.scrollTo(0, { immediate: true })</code>，新頁面不會「滑進」</li>
+<li>✅ <strong><code>window.scroll</code> 事件仍會 fire</strong> —— 元件內的 <code>window.addEventListener(&#39;scroll&#39;, ...)</code> 無需修改（如 <a href="./components/headers/Header01.vue"><code>Header01.vue</code></a> 的捲動偵測）</li>
+<li>✅ <strong>第三方 modal 自動鎖背景</strong> —— <code>MutationObserver</code> 監聽 <code>&lt;body&gt;</code> class，當 LightGallery / Magnific Popup 等套件加上鎖捲動 class 時自動 <code>lenis.stop()</code>（詳見 §9.11.5）</li>
+</ul>
+<h4 id="9112-進階程式式捲動">9.11.2 進階：程式式捲動</h4>
+<p>任何元件 / 頁面取得 lenis instance：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+const { $lenis } = useNuxtApp()
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;!-- 捲到頂部（例：點 Logo 回頂、回到頂部按鈕） --&gt;
+  &lt;button @click=&quot;$lenis.scrollTo(0)&quot;&gt;↑ 回頂&lt;/button&gt;
+
+  &lt;!-- 捲到指定 selector（取代錨點 #xxx，可控速度） --&gt;
+  &lt;button @click=&quot;$lenis.scrollTo(&#39;#about&#39;, { duration: 1.5 })&quot;&gt;關於我們&lt;/button&gt;
+
+  &lt;!-- 捲到指定 DOM 元素 --&gt;
+  &lt;button @click=&quot;$lenis.scrollTo(myRef, { offset: -100 })&quot;&gt;滑到區塊&lt;/button&gt;
+&lt;/template&gt;
+</code></pre>
+<p><code>scrollTo</code> 第二參數常用選項：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>選項</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>duration</code></td>
+<td>緩衝時間（秒）；預設沿用 Lenis 全域設定</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td>目標位置上下偏移（px）；負值預留 Header 高度，正值往下</td>
+</tr>
+<tr>
+<td><code>immediate</code></td>
+<td><code>true</code> = 不平滑、立即跳到位置；<code>false</code>（預設）= 用設定的緩動</td>
+</tr>
+<tr>
+<td><code>lock</code></td>
+<td><code>true</code> = 捲動過程中禁止使用者干預</td>
+</tr>
+</tbody></table></div>
+<h4 id="9113-進階modal--drawer-鎖背景捲動">9.11.3 進階：modal / drawer 鎖背景捲動</h4>
+<p>開啟全螢幕對話框 / 側邊抽屜時，要鎖住背景捲動：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+const { $lenis } = useNuxtApp()
+const open = ref(false)
+
+watch(open, (v) =&gt; {
+  if (v) $lenis.stop()    // 鎖：滾輪/觸控/scrollTo 全部失效
+  else   $lenis.start()   // 恢復
+})
+&lt;/script&gt;
+</code></pre>
+<blockquote class="callout callout--caution"><p>任何「鎖背景捲動」的 UI（modal、drawer、彈跳廣告、行動版選單）都<strong>必須</strong>呼叫 <code>$lenis.stop()</code>，<strong>不要</strong>用 <code>document.body.style.overflow = &#39;hidden&#39;</code>。Lenis 是用 transform 模擬捲動，CSS <code>overflow: hidden</code> 無效，使用者仍會看到背景滑動。</p>
+</blockquote>
+<h4 id="9114-與-sticky--fixed-元素相容性">9.11.4 與 sticky / fixed 元素相容性</h4>
+<p><code>position: sticky</code> 與 <code>position: fixed</code> 跟 Lenis <strong>完全相容</strong>，無需任何特殊處理。例如 <a href="./components/headers/Header01.vue"><code>Header01.vue</code></a> 的 <code>.header01 { position: sticky; top: 0 }</code> 在 Lenis 接管後仍能正常吸頂。</p>
+<h4 id="9115-第三方-modal--lightbox-鎖捲動">9.11.5 第三方 modal / lightbox 鎖捲動</h4>
+<p>某些第三方套件（<a href="https://www.lightgalleryjs.com/">LightGallery</a>、<a href="https://dimsemenov.com/plugins/magnific-popup/">Magnific Popup</a> 等）開啟時會在 <code>&lt;body&gt;</code> 加 class 鎖背景。<a href="./plugins/lenis.client.js"><code>plugins/lenis.client.js</code></a> 用 <code>MutationObserver</code> 自動處理：</p>
+<pre data-lang="JS"><code class="language-js">const LOCK_BODY_CLASSES = [&#39;overflow&#39;, &#39;popwinOverflow&#39;, &#39;loadingOverflow&#39;, &#39;lg-on&#39;]
+
+const observer = new MutationObserver(() =&gt; {
+  const locked = LOCK_BODY_CLASSES.some((cls) =&gt; document.body.classList.contains(cls))
+  if (locked) lenis.stop()
+  else lenis.start()
+})
+observer.observe(document.body, { attributeFilter: [&#39;class&#39;] })
+</code></pre>
+<p>如果你引入新的第三方套件且它用其他 class 名稱鎖捲動，請把該 class <strong>加進 <code>LOCK_BODY_CLASSES</code> 陣列</strong>。</p>
+<h4 id="9116-gsap--scrolltrigger-用法">9.11.6 GSAP / ScrollTrigger 用法</h4>
+<p>GSAP 與 ScrollTrigger 已預先註冊，元件內可直接從 <code>useNuxtApp()</code> 取出：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+const { $gsap, $ScrollTrigger } = useNuxtApp()
+const target = ref(null)
+
+onMounted(() =&gt; {
+  $gsap.from(target.value, {
+    opacity: 0,
+    y: 60,
+    duration: 1,
+    scrollTrigger: {
+      trigger: target.value,
+      start: &#39;top 80%&#39;,   // 元素頂端碰到視窗 80% 位置時觸發
+      end: &#39;bottom 20%&#39;,
+      toggleActions: &#39;play none none reverse&#39;,
+    },
+  })
+})
+
+// 元件卸載時清掉這個元件相關的 ScrollTrigger，避免 memory leak
+onBeforeUnmount(() =&gt; {
+  $ScrollTrigger.getAll().forEach((st) =&gt; {
+    if (st.vars.trigger === target.value) st.kill()
+  })
+})
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;section ref=&quot;target&quot;&gt;滑進視窗時淡入&lt;/section&gt;
+&lt;/template&gt;
+</code></pre>
+<blockquote class="callout callout--caution"><p><strong>ScrollTrigger 一定要在 <code>onMounted</code> 內呼叫</strong>（不能在 <code>&lt;script setup&gt;</code> 頂層），因為它需要 DOM 已渲染。元件卸載時也要 <code>kill()</code> 對應的 ScrollTrigger 實例，否則路由切換後舊 trigger 仍在計算位置，會造成效能問題或錯誤。</p>
+</blockquote>
 <hr>
 <h2 id="10-頁面與模組對照表">10. 頁面與模組對照表</h2>
 <div class="table-wrap"><table>
@@ -796,6 +924,94 @@ const current =
 </blockquote>
 <h3 id="114-新增版型">11.4 新增版型</h3>
 <p>在 <code>headers/</code> 放一個 <code>.vue</code>（檔名自取）即可，再把 <code>NUXT_PUBLIC_HEADER</code> 設成該檔名；<code>AppHeader.vue</code> 不需修改。各版型<strong>共用同一套資料 composable</strong>（<code>useSiteMenu</code> / <code>useProject</code> / <code>useUiStore</code>），只有版面與樣式不同 —— 資料層不重複撰寫。</p>
+<hr>
+<h2 id="12-banner-版型切換">12. Banner 版型切換</h2>
+<p>Banner 支援多版型（首頁輪播、內頁 hero），透過設定切換，不需改動頁面程式碼。機制與 <a href="#11-header-%E7%89%88%E5%9E%8B%E5%88%87%E6%8F%9B">§11 Header 版型切換</a> 一致。</p>
+<h3 id="121-檔案結構">12.1 檔案結構</h3>
+<pre data-lang="TEXT"><code class="language-text">components/
+ ┣ PageBanner.vue            內頁 Banner 派發器
+ ┣ BlockBanner.vue           首頁 Banner block 派發器
+ ┗ banners/
+    ┣ PageBanner01.vue        內頁 — 純背景圖 + 標題（現況）
+    ┣ PageBannerXX.vue        內頁 — 其他版型（左圖右文、影片背景…）
+    ┣ BlockBanner01.vue       首頁 — Fade 輪播（現況）
+    ┗ BlockBannerXX.vue       首頁 — 其他輪播版型（Slide、Parallax…）
+</code></pre>
+<p>兩種派發器各自獨立，<strong>不要混淆</strong>：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>派發器</th>
+<th>用途</th>
+<th>對應頁面</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&lt;PageBanner&gt;</code></td>
+<td>內頁 hero 區塊</td>
+<td>news / about / contact / faq / location / search / firm 等</td>
+</tr>
+<tr>
+<td><code>&lt;BlockBanner&gt;</code></td>
+<td>首頁輪播 block</td>
+<td>由 <a href="./components/BlockRenderer.vue"><code>BlockRenderer.vue</code></a> 在首頁派發</td>
+</tr>
+</tbody></table></div>
+<h3 id="122-設定與切換">12.2 設定與切換</h3>
+<p>於 <code>.env</code> 指定版型 —— 值 = <code>banners/</code> 內的<strong>檔名</strong>（不含 <code>.vue</code>）：</p>
+<pre data-lang="BASH"><code class="language-bash"># 內頁 Banner 版型
+NUXT_PUBLIC_PAGE_BANNER=PageBanner01
+
+# 首頁 Banner block 版型
+NUXT_PUBLIC_BLOCK_BANNER=BlockBanner01
+</code></pre>
+<p>切換版型只需改此值並重啟 dev server，頁面程式碼完全不動。</p>
+<h3 id="123-派發機制">12.3 派發機制</h3>
+<p><a href="./components/PageBanner.vue"><code>components/PageBanner.vue</code></a> 與 <a href="./components/BlockBanner.vue"><code>components/BlockBanner.vue</code></a> 都是薄派發器，以 Vite 的 <code>import.meta.glob</code> 自動載入 <code>banners/</code> 內對應前綴的所有版型，找不到時自動 fallback 第一個：</p>
+<pre data-lang="JAVASCRIPT"><code class="language-javascript">// PageBanner.vue
+defineOptions({ inheritAttrs: false })
+const variants = import.meta.glob(&#39;./banners/PageBanner*.vue&#39;, { eager: true })
+const { public: pub } = useRuntimeConfig()
+const current =
+  variants[`./banners/${pub.pageBanner}.vue`]?.default ||
+  Object.values(variants)[0]?.default
+</code></pre>
+<pre data-lang="VUE"><code class="language-vue">&lt;template&gt;
+  &lt;component :is=&quot;current&quot; v-bind=&quot;$attrs&quot; /&gt;
+&lt;/template&gt;
+</code></pre>
+<blockquote class="callout callout--important"><p><strong><code>defineOptions({ inheritAttrs: false })</code> + <code>v-bind=&quot;$attrs&quot;</code></strong> 是關鍵 —— 讓所有 props（如 <code>page</code>、<code>title</code>、<code>subtitle</code>、<code>rows</code>）自動透傳給子版型。新增版型時派發器無需修改，只要子版型 <code>defineProps</code> 宣告對應參數即可接到值。</p>
+</blockquote>
+<h3 id="124-新增版型">12.4 新增版型</h3>
+<p>在 <code>banners/</code> 放一個 <code>&lt;PageBanner|BlockBanner&gt;XX.vue</code>（XX 自取），檔名前綴須為 <code>PageBanner</code> 或 <code>BlockBanner</code>，再把對應的 <code>.env</code> 變數設成該檔名即可。各版型<strong>共用同一份 API 來源</strong>（<code>/banner/page</code>、<code>/banner/home</code>），只有版面與動畫不同 —— 資料層不重複撰寫。</p>
+<p>範例（新增 <code>PageBanner02.vue</code> 左圖右文版）：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+const props = defineProps({
+  page: { type: String, default: &#39;&#39; },
+  title: { type: String, default: &#39;&#39; },
+  subtitle: { type: String, default: &#39;&#39; },
+})
+
+const { data: banners } = await useApiData(&#39;/banner/page&#39;, {
+  key: `page-banner:${props.page}`,
+  query: { page: props.page },
+  default: () =&gt; [],
+})
+
+const bg = computed(() =&gt; banners.value?.[0]?.image?.pc || &#39;&#39;)
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;section class=&quot;page-banner-02&quot;&gt;
+    &lt;div class=&quot;page-banner-02__text&quot;&gt;
+      &lt;h1&gt;{{ title }}&lt;/h1&gt;
+      &lt;p v-if=&quot;subtitle&quot;&gt;{{ subtitle }}&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;img :src=&quot;bg&quot; :alt=&quot;title&quot; class=&quot;page-banner-02__img&quot; /&gt;
+  &lt;/section&gt;
+&lt;/template&gt;
+</code></pre>
+<p><code>.env</code> 改 <code>NUXT_PUBLIC_PAGE_BANNER=PageBanner02</code> 並重啟 dev server，全站內頁 banner 立即套新版型。</p>
 <hr>
 <h2 id="修訂紀錄">修訂紀錄</h2>
 <div class="table-wrap"><table>

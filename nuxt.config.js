@@ -41,6 +41,10 @@ export default defineNuxtConfig({
       defaultLang: 'tw',
       // Header 版型：對應 components/headers/<檔名>.vue
       header: 'Header01',
+      // 內頁 Banner 版型：對應 components/banners/PageBannerXX.vue
+      pageBanner: 'PageBanner01',
+      // 首頁 Banner block 版型：對應 components/banners/BlockBannerXX.vue
+      blockBanner: 'BlockBanner01',
       // 購物功能開關：購物車 / 我的最愛 等 UI 是否顯示
       // shop 類型自動啟用；其他類型可用 NUXT_PUBLIC_ENABLE_SHOP=true 強制啟用
       enableShop: false,
