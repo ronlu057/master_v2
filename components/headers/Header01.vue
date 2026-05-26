@@ -86,6 +86,18 @@ onBeforeUnmount(() => {
 
           <div class="navtool_icon">
             <SearchIcon aria-label="搜尋" />
+            <div class="search_box">
+              <form class="search_form" @submit.prevent="onSearch">
+                <input
+                  v-model="keyword"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="網站搜尋..."
+                  aria-label="網站搜尋"
+                />
+                <button type="submit" aria-label="搜尋"><SearchIcon aria-label="搜尋" /></button>
+              </form>
+            </div>
           </div>
 
           <NuxtLink v-if="isShop" class="cart_btn" to="/shop/cart" aria-label="購物車">
@@ -273,36 +285,80 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 12px;
   font-size: 18px;
+
   .navtool_icon {
-		width: 20px;
-		height: 20px;
-		svg {
-			display: block;
-			width: 100%;
-			height: 100%;
-			fill: $web_font_color;
-			transition: all 0.3s;
-		}
-	}
-}
+    position: relative;
+    cursor: pointer;
 
-.search_btn .search_form {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+    > svg {
+      display: block;
+      width: 20px;
+      height: 20px;
+      fill: $web_font_color;
+      transition: all 0.3s;
+    }
 
-  input {
-    padding: 6px 10px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    font-size: 14px;
+    &:hover > svg,
+    &:focus-within > svg {
+      fill: var(--color-primary);
+    }
+
+    .search_box {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      min-width: 280px;
+      padding: 10px;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: all var(--transition);
+      z-index: 60;
+    }
+
+    &:hover .search_box,
+    &:focus-within .search_box {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
   }
 
-  button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
+  .search_form {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      font-size: 14px;
+    }
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+
+      svg {
+        width: 18px;
+        height: 18px;
+        fill: $web_font_color;
+        transition: fill 0.3s;
+      }
+
+      &:hover svg {
+        fill: var(--color-primary);
+      }
+    }
   }
 }
 
@@ -377,7 +433,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 860px) {
   .navmenu,
-  .search_btn {
+  .navtool_icon {
     display: none;
   }
   .mbPanel_btn {
