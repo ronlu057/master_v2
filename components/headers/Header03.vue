@@ -390,7 +390,7 @@ onBeforeUnmount(() => {
   visibility: hidden;
   pointer-events: none;
   transform: translateX(-100%) translateY(0);
-  transition: all 0.3s;
+  transition: all 1s in-ease-out;
 }
 
 .sp_inner {
