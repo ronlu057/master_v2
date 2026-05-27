@@ -58,6 +58,29 @@ const onPreviewHover = (seriesKey, previewKey) => {
 // 判斷 menu item 是否要顯示 mega menu（demo：URL 含 /products 視為產品節點）
 const isProductNode = (item) => item.url?.startsWith('/products')
 
+// ── Mega menu 顯示控制（JS delay，避免 hover gap 造成誤關閉）
+// 純 CSS hover 在 fixed mega menu 的情境下，滑鼠從 li 移到 mega menu 中間若有縫隙會觸發 mouseleave。
+// 用 200ms delay 給使用者足夠時間移過去；若中途又 enter（li 或 mega menu），cancel 關閉計時器。
+const megaOpen = ref(false)
+let closeTimer = null
+const openMega = () => {
+  if (closeTimer) {
+    clearTimeout(closeTimer)
+    closeTimer = null
+  }
+  megaOpen.value = true
+}
+const scheduleCloseMega = () => {
+  if (closeTimer) clearTimeout(closeTimer)
+  closeTimer = setTimeout(() => {
+    megaOpen.value = false
+    closeTimer = null
+  }, 200)
+}
+onBeforeUnmount(() => {
+  if (closeTimer) clearTimeout(closeTimer)
+})
+
 // ── 捲動偵測（仿 Header01：捲過 banner 就加 .scroll） ───────
 const headerEl = ref(null)
 const isScrolled = ref(false)
@@ -89,7 +112,13 @@ onBeforeUnmount(() => {
       <!-- 主選單（桌面） -->
       <nav v-if="!isMinimal" itemscope itemtype="https://www.schema.org/SiteNavigationElement">
         <ul class="navmenu">
-          <li v-for="item in menuData.header" :key="item.url" itemprop="name">
+          <li
+            v-for="item in menuData.header"
+            :key="item.url"
+            itemprop="name"
+            @mouseenter="isProductNode(item) && openMega()"
+            @mouseleave="isProductNode(item) && scheduleCloseMega()"
+          >
             <NuxtLink :to="item.url" itemprop="url">{{ item.title }}</NuxtLink>
 
             <!-- 一般 children 下拉 -->
@@ -107,8 +136,13 @@ onBeforeUnmount(() => {
               </NuxtLink>
             </div>
 
-            <!-- 產品節點：展開 mega menu -->
-            <div v-if="isProductNode(item) && headerProducts.series?.length" class="sp_dropdown">
+            <!-- 產品節點：展開 mega menu（JS 控制，hover li 或 mega menu 自身都保持開啟） -->
+            <div
+              v-if="isProductNode(item) && headerProducts.series?.length"
+              :class="['sp_dropdown', { open: megaOpen }]"
+              @mouseenter="openMega"
+              @mouseleave="scheduleCloseMega"
+            >
               <div class="sp_inner">
                 <div class="left">
                   <div class="overview_title">Products Overview</div>
@@ -303,6 +337,7 @@ onBeforeUnmount(() => {
 
 .navmenu {
   display: flex;
+  align-items: stretch;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -311,9 +346,14 @@ onBeforeUnmount(() => {
 
   > li {
     position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 70px;     // 撐滿 header 高度，讓 li hover 範圍延伸到 sp_dropdown 頂邊（消除 gap）
 
     > a {
-      display: block;
+      display: flex;
+      align-items: center;
+      height: 100%;        // a 也撐滿，確保整個 li 視覺都是 hover 區
       color: #fff;
       font-size: 16px;
       padding: 10px 20px;
@@ -334,13 +374,14 @@ onBeforeUnmount(() => {
       }
     }
 
-    &:hover > .navmenu_sub,
-    &:hover > .sp_dropdown {
+    // navmenu_sub：水平置中 popup，hover 時 Y 滑入（純 CSS hover 即可）
+    &:hover > .navmenu_sub {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
-      transform: translateX(0%) translateY(0);
+      transform: translateX(-50%) translateY(0);
     }
+    // sp_dropdown 改用 .open class 由 JS 控制（避免 fixed 元素 hover gap 問題）
   }
 }
 
@@ -378,7 +419,7 @@ onBeforeUnmount(() => {
   }
 }
 
-// 產品 mega menu
+// 產品 mega menu — fixed 全寬，由 JS .open class 控制開關（含 200ms delay 防誤關）
 .sp_dropdown {
   position: fixed;
   top: 70px;
@@ -389,8 +430,15 @@ onBeforeUnmount(() => {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translateX(-100%) translateY(0);
-  transition: all 1s in-ease-out;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
 }
 
 .sp_inner {
@@ -614,43 +662,44 @@ onBeforeUnmount(() => {
 .lang_toggle {
   span { margin-left: 6px; }
 
+  // 下拉樣式對齊 navmenu_sub（白底 + 主色字 hover）
   ul {
     position: absolute;
     top: 100%;
     left: 50%;
-    min-width: max-content;
-    padding-top: 9px;
+    min-width: 160px;
+    padding: 6px;
     list-style: none;
     margin: 0;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateX(-50%);
-    transition: all 0.3s;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: calc(50% - 8px);
-      border: 8px solid transparent;
-      border-bottom-color: $web_header_2;
-    }
+    transform: translateX(-50%) translateY(8px);
+    transition: all var(--transition);
+    z-index: 60;
 
     li button {
       display: block;
       width: 100%;
-      color: #fff;
+      color: $web_font_color;
       font-size: 14px;
-      text-align: center;
-      padding: 10px 20px;
-      background: $web_header_2;
+      padding: 8px 12px;
+      background: none;
       border: none;
+      border-radius: 6px;
       cursor: pointer;
+      text-align: left;
       transition: all 0.3s;
 
       &:hover,
-      &.active { background: $web_header_1; }
+      &.active {
+        background: var(--color-surface);
+        color: $web_header_1;
+      }
     }
   }
 }
@@ -675,54 +724,67 @@ onBeforeUnmount(() => {
   }
 }
 
+// search 下拉樣式對齊 navmenu_sub（白底 + 主色字 hover）
 .search_btn {
   form {
     position: absolute;
     top: 100%;
-    right: -15px;
-    width: fit-content;
-    padding-top: 9px;
+    right: 0;
+    min-width: 280px;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: all 0.3s;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 15px;
-      border: 8px solid transparent;
-      border-bottom-color: $web_header_2;
-    }
+    transform: translateY(8px);
+    transition: all var(--transition);
+    z-index: 60;
   }
 
   .search_box {
     display: flex;
     align-items: center;
-    padding: 15px;
-    background: $web_header_2;
+    gap: 6px;
 
     input {
       flex: 1;
-      padding: 6px 10px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      background: transparent;
-      color: #fff;
+      padding: 8px 12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: #fff;
+      color: $web_font_color;
       font-size: 14px;
 
-      &::placeholder { color: rgba(255, 255, 255, 0.6); }
+      &::placeholder { color: var(--color-text-muted); }
     }
 
     button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: none;
       border: none;
       cursor: pointer;
       padding: 4px;
-      margin-left: 10px;
-      display: flex;
+      flex-shrink: 0;
+      border-radius: 6px;
+      transition: background 0.3s;
 
-      svg { width: 18px; height: 18px; fill: #fff; }
+      svg {
+        display: block;
+        width: 18px;
+        height: 18px;
+        fill: $web_font_color;
+        transition: fill 0.3s;
+      }
+
+      &:hover {
+        background: var(--color-surface);
+        svg { fill: $web_header_1; }
+      }
     }
   }
 }
