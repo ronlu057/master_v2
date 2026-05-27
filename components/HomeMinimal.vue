@@ -66,7 +66,7 @@ const { data: firmData } = await useSiteFirm()
   }
 }
 
-@media (max-width: 560px) {
+@include rwd-480 {
   .minimal__title {
     font-size: 32px;
   }

@@ -65,7 +65,7 @@ const bg = computed(() => banners.value?.[0]?.image?.pc || '')
   }
 }
 
-@media (max-width: 560px) {
+@include rwd-480 {
   .page-banner {
     min-height: 180px;
   }

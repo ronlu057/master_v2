@@ -199,7 +199,7 @@ const features = [
   }
 }
 
-@media (max-width: 700px) {
+@include rwd-768 {
   .hero {
     min-height: 420px;
   }

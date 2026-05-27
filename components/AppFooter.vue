@@ -113,7 +113,7 @@ const year = new Date().getFullYear()
   }
 }
 
-@media (max-width: 760px) {
+@include rwd-768 {
   .footer__main {
     grid-template-columns: 1fr;
     gap: 28px;

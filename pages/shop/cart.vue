@@ -174,7 +174,7 @@ useSeoMeta({ title: '購物車 — 母版專案' })
   }
 }
 
-@media (max-width: 860px) {
+@include rwd-768 {
   .cart__layout {
     grid-template-columns: 1fr;
   }

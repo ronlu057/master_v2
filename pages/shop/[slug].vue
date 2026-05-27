@@ -153,7 +153,7 @@ useSeoMeta({ title: `${product.value.title} — 母版專案` })
   }
 }
 
-@media (max-width: 760px) {
+@include rwd-768 {
   .detail__grid {
     grid-template-columns: 1fr;
     gap: 24px;

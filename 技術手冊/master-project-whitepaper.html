@@ -571,7 +571,7 @@ export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
 </code></pre>
 </blockquote>
 <h3 id="95-rwd-斷點-mixin">9.5 RWD 斷點 mixin</h3>
-<p>9 個斷點 mixin 定義於 <code>assets/styles/main.scss</code> 頂部，供撰寫全站共用的響應式樣式使用。</p>
+<p>9 個斷點 mixin 定義於 <a href="../assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a>，由 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>additionalData</code> 自動注入到每個 <code>&lt;style lang=&quot;scss&quot;&gt;</code>，<strong>元件內直接 <code>@include</code> 即可</strong>，不需 <code>@use</code>：</p>
 <p>斷點（max-width）：<code>1920 / 1680 / 1440 / 1280 / 1200 / 1024 / 768 / 480 / 360</code>；其中 <strong>1200</strong> 為 header 變更樣式主斷點。</p>
 <pre data-lang="SCSS"><code class="language-scss">.box {
   width: 25%;
@@ -580,8 +580,8 @@ export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
   @include rwd-768  { width: 100%; }
 }
 </code></pre>
-<blockquote>
-<p>mixin 僅 <code>main.scss</code> 內可 <code>@include</code>；元件 <code>&lt;style lang=&quot;scss&quot;&gt;</code> 的響應式樣式請直接寫 <code>@media (max-width: 1200px) { … }</code>。</p>
+<blockquote class="callout callout--important"><p>元件內<strong>禁止</strong>寫 <code>@media (max-width: 1200px) { … }</code> 把斷點數字 hard-coded，會跟全站不同步。一律走 <code>@include rwd-XXX</code> mixin。</p>
+<p>例外：若斷點不在 9 個標準值內（如 <code>540px</code> 的客製尺寸），才寫 <code>@media</code>。</p>
 </blockquote>
 <h3 id="96-路由中介層middleware">9.6 路由中介層（middleware）</h3>
 <p><code>middleware/</code> 放路由中介層 —— 進入頁面前執行的攔截 / 守衛邏輯（登入驗證、轉址、權限檢查等）。</p>

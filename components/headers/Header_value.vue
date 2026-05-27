@@ -234,7 +234,7 @@ $red: #bf3131;
 }
 
 /* 1200 為 header 變更樣式主斷點 */
-@media (max-width: 1200px) {
+@include rwd-1200 {
   .header-value__nav {
     display: none;
   }
@@ -246,7 +246,7 @@ $red: #bf3131;
   }
 }
 
-@media (max-width: 560px) {
+@include rwd-480 {
   .header-value__bar {
     padding: 10px 14px 10px 20px;
     min-height: 64px;

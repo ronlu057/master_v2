@@ -54,7 +54,7 @@ const row = computed(() => props.rows[0] || {})
   }
 }
 
-@media (max-width: 760px) {
+@include rwd-768 {
   .intro {
     grid-template-columns: 1fr;
     gap: 28px;

@@ -495,7 +495,7 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 
-@media (max-width: 1200px) {
+@include rwd-1200 {
   .header01 {
     height: 64px;
   }
@@ -504,7 +504,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 860px) {
+@include rwd-768 {
   .navmenu,
   .navtool_icon {
     display: none;

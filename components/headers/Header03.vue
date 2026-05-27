@@ -245,9 +245,9 @@ body[data-page="index"] {
   z-index: $z_header;
   transition: all 0.3s;
 
-  @media (max-width: 1440px) { padding: 0 2.5vw; }
-  @media (max-width: 1200px) { padding: 0 30px; }
-  @media (max-width: 480px)  { padding: 0 15px; }
+  @include rwd-1440 { padding: 0 2.5vw; }
+  @include rwd-1200 { padding: 0 30px; }
+  @include rwd-480  { padding: 0 15px; }
 
   .navbar {
     display: flex;
@@ -264,7 +264,7 @@ body[data-page="index"] {
       display: flex;
       align-items: center;
 
-      @media (max-width: 1200px) {
+      @include rwd-1200 {
         height: 60px;
         margin-left: 25px;
       }
@@ -276,10 +276,10 @@ body[data-page="index"] {
         padding: 0;
         transition: all 0.3s;
 
-        @media (max-width: 1600px) { margin-right: 20px; }
-        @media (max-width: 1440px) { margin-right: 15px; }
-        @media (max-width: 1366px) { margin-right: 10px; }
-        @media (max-width: 1200px) { display: none; }
+        @include rwd-1680 { margin-right: 20px; }
+        @include rwd-1440 { margin-right: 15px; }
+        @include rwd-1280 { margin-right: 10px; }
+        @include rwd-1200 { display: none; }
 
         > li {
           position: relative;
@@ -297,10 +297,10 @@ body[data-page="index"] {
             padding: 23px 25px;
             transition: all 0.3s;
 
-            @media (max-width: 1600px) { padding: 23px 20px; }
-            @media (max-width: 1440px) { padding: 23px 15px; }
-            @media (max-width: 1366px) { padding: 23px 10px; }
-            @media (max-width: 1280px) { font-size: 15px; }
+            @include rwd-1680 { padding: 23px 20px; }
+            @include rwd-1440 { padding: 23px 15px; }
+            @include rwd-1280 { padding: 23px 10px; }
+            @include rwd-1280 { font-size: 15px; }
           }
 
           &:hover,
@@ -308,7 +308,7 @@ body[data-page="index"] {
             background-image: linear-gradient(to right, $web_header_1, $web_header_1);
             background-size: calc(100% - 30px) 2px;
 
-            @media (max-width: 1366px) { background-size: calc(100% - 15px) 2px; }
+            @include rwd-1280 { background-size: calc(100% - 15px) 2px; }
 
             > a { color: $web_header_1; }
           }
@@ -362,7 +362,7 @@ body[data-page="index"] {
         font-size: 18px;
         margin-right: 25px;
 
-        @media (max-width: 1200px) { display: none; }
+        @include rwd-1200 { display: none; }
 
         .navtool_icon {
           position: relative;
@@ -497,9 +497,9 @@ body[data-page="index"] {
         gap: 0 13px;
         transition: all 0.3s;
 
-        @media (max-width: 1440px) { gap: 0 10px; }
-        @media (max-width: 1366px) { gap: 0 7px; }
-        @media (max-width: 1200px) { display: none; }
+        @include rwd-1440 { gap: 0 10px; }
+        @include rwd-1280 { gap: 0 7px; }
+        @include rwd-1200 { display: none; }
 
         a {
           display: flex;

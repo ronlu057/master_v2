@@ -117,7 +117,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 700px) {
+@include rwd-768 {
   .banner {
     aspect-ratio: 4 / 5;
   }

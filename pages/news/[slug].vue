@@ -107,7 +107,7 @@ onMounted(() => {
   }
 }
 
-@media (max-width: 560px) {
+@include rwd-480 {
   .art__photos {
     grid-template-columns: 1fr;
   }
