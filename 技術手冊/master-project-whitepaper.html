@@ -580,8 +580,12 @@ export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
   @include rwd-768  { width: 100%; }
 }
 </code></pre>
-<blockquote class="callout callout--important"><p>元件內<strong>禁止</strong>寫 <code>@media (max-width: 1200px) { … }</code> 把斷點數字 hard-coded，會跟全站不同步。一律走 <code>@include rwd-XXX</code> mixin。</p>
-<p>例外：若斷點不在 9 個標準值內（如 <code>540px</code> 的客製尺寸），才寫 <code>@media</code>。</p>
+<blockquote class="callout callout--important"><p>兩種寫法都可以，差別在 <strong>數值是否落在標準斷點</strong>：</p>
+<ul>
+<li><strong>標準斷點</strong> → 用 <code>@include rwd-XXX</code>（與全站連動，未來改值動一處即可）</li>
+<li><strong>非標準斷點 / 非寬度條件</strong>（如 <code>540px</code>、<code>orientation: landscape</code>、<code>print</code>）→ 直接 <code>@media</code></li>
+</ul>
+<p>唯一禁止：用 <code>@media (max-width: 1200px)</code> 這種<strong>剛好等於標準斷點數字</strong>的寫法 —— 改成對應的 <code>@include rwd-1200</code> 才能跟全站同步。</p>
 </blockquote>
 <h3 id="96-路由中介層middleware">9.6 路由中介層（middleware）</h3>
 <p><code>middleware/</code> 放路由中介層 —— 進入頁面前執行的攔截 / 守衛邏輯（登入驗證、轉址、權限檢查等）。</p>

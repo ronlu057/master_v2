@@ -332,9 +332,11 @@ onBeforeUnmount(() =&gt; {
 </tbody></table></div>
 <p>✅ 新元件<strong>建議優先用 CSS 變數</strong>，跟主題系統一致。</p>
 <h3 id="34-rwd-斷點">3.4 RWD 斷點</h3>
-<p>✅ 9 個標準斷點：<code>1920 / 1680 / 1440 / 1280 / 1200 / 1024 / 768 / 480 / 360</code></p>
-<p>✅ 主斷點：<strong>1200</strong>（header 變更樣式主斷點）</p>
-<p>✅ 用 <code>@include rwd-xxx</code> mixin（從 <a href="../assets/styles/_variables.scss"><code>_variables.scss</code></a> 全域注入，元件內直接使用、不需 <code>@use</code>）：</p>
+<p>兩種寫法都可以，依「斷點是否落在標準值」選用：</p>
+<p><strong>9 個標準斷點</strong>：<code>1920 / 1680 / 1440 / 1280 / 1200 / 1024 / 768 / 480 / 360</code>
+主斷點：<strong>1200</strong>（header 變更樣式主斷點）</p>
+<h4 id="標準斷點--用-include-rwd-xxx-mixin建議">標準斷點 → 用 <code>@include rwd-xxx</code> mixin（建議）</h4>
+<p>從 <a href="../assets/styles/_variables.scss"><code>_variables.scss</code></a> 全域注入，元件內直接使用、不需 <code>@use</code>：</p>
 <pre data-lang="SCSS"><code class="language-scss">.box {
   width: 25%;
   @include rwd-1440 { width: 33%; }
@@ -342,13 +344,27 @@ onBeforeUnmount(() =&gt; {
   @include rwd-768  { width: 100%; }
 }
 </code></pre>
-<p>❌ 不要在元件內寫 <code>@media (max-width: 1200px) { ... }</code> 數字 hard-coded，會跟全站斷點不同步：</p>
-<pre data-lang="SCSS"><code class="language-scss">// 禁
+<p><strong>好處</strong>：斷點數值統一管理在 <code>_variables.scss</code>，未來要調整 <code>1200px → 1280px</code> 之類，動一處即可全站連動。</p>
+<h4 id="非標準斷點--寫-media-沒問題">非標準斷點 → 寫 <code>@media</code> 沒問題</h4>
+<p>當設計需要的斷點不在 9 個標準值內（例如 <code>540px</code>、<code>1440px 但要特殊處理</code>），直接寫 <code>@media</code>：</p>
+<pre data-lang="SCSS"><code class="language-scss">.box {
+  @media (max-width: 540px) { padding: 8px; }  // ✓ 客製斷點
+  @media (orientation: landscape) { ... }       // ✓ 非寬度條件
+  @media print { ... }                          // ✓ 列印
+}
+</code></pre>
+<h4 id="唯一禁止用-media-寫標準斷點數字">唯一禁止：用 <code>@media</code> 寫<strong>標準斷點數字</strong></h4>
+<pre data-lang="SCSS"><code class="language-scss">// ❌ 禁 — 標準斷點數字 hard-coded，與全站脫鉤
 .box {
   @media (max-width: 1200px) { width: 50%; }
 }
+
+// ✓ 改用 @include
+.box {
+  @include rwd-1200 { width: 50%; }
+}
 </code></pre>
-<blockquote class="callout callout--note"><p>例外：若斷點數值<strong>真的</strong>不在 9 個標準斷點內（如 <code>max-width: 540px</code> 之類客製尺寸），可寫 <code>@media</code>，但這種情況應該很少。</p>
+<blockquote class="callout callout--tip"><p>看到 <code>@media (max-width: 1200px)</code>、<code>(max-width: 768px)</code> 這種「<strong>剛好等於標準斷點</strong>」的寫法，改成 <code>@include rwd-XXX</code>。其他客製尺寸不用動。</p>
 </blockquote>
 <h3 id="35-樣式-hookdata-project--data-page">3.5 樣式 hook：<code>data-project</code> / <code>data-page</code></h3>
 <p>✅ 利用自動掛在 <code>&lt;html&gt;</code> / <code>&lt;body&gt;</code> 的屬性切換樣式：</p>
