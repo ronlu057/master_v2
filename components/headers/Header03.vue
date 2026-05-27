@@ -339,7 +339,7 @@ onBeforeUnmount(() => {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
-      transform: translateX(-50%) translateY(0);
+      transform: translateX(0%) translateY(0);
     }
   }
 }
@@ -389,7 +389,7 @@ onBeforeUnmount(() => {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translateY(8px);
+  transform: translateX(-100%) translateY(0);
   transition: all 0.3s;
 }
 
