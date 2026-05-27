@@ -267,7 +267,7 @@ const scrollDown = () => {
   left: 50%;
   width: 100%;
   height: 56.25vw;
-  min-width: 177.78vh;
+  min-width: 100%;
   min-height: 100vh;
   transform: translate(-50%, -50%);
   border: 0;
