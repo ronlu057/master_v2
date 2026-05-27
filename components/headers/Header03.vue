@@ -344,41 +344,36 @@ onBeforeUnmount(() => {
   }
 }
 
-// 一般 children 下拉
+// 一般 children 下拉（沿用 Header02 風格：白底 + 主色字 hover）
 .navmenu_sub {
   position: absolute;
   top: 100%;
   left: 50%;
-  width: max-content;
-  min-width: 200px;
-  padding: 8px 0;
-  background: $web_header_2;
+  min-width: 160px;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transform: translateX(-50%) translateY(8px);
-  transition: all 0.3s;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: calc(50% - 8px);
-    border: 8px solid transparent;
-    border-bottom-color: $web_header_2;
-  }
+  transition: all var(--transition);
+  z-index: 60;
 
   a {
     display: block;
-    color: #fff;
+    color: $web_font_color;
     font-size: 14px;
-    text-align: center;
-    padding: 10px 20px;
+    padding: 8px 12px;
+    border-radius: 6px;
     transition: all 0.3s;
 
     &:hover,
     &.router-link-active {
-      background: $web_header_1;
+      background: var(--color-surface);
+      color: $web_header_1;
     }
   }
 }
