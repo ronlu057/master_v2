@@ -265,7 +265,7 @@ const scrollDown = () => {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 100vw;
+  width: 100%;
   height: 56.25vw;
   min-width: 177.78vh;
   min-height: 100vh;
