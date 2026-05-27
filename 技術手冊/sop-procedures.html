@@ -276,7 +276,7 @@ npm run preview   # 本地預覽 production build
 </blockquote>
 <p>詳見白皮書 <a href="master-project-whitepaper.html#11-header-%E7%89%88%E5%9E%8B%E5%88%87%E6%8F%9B">§11 Header 版型切換</a>。</p>
 <h3 id="22-新增-banner-版型">2.2 新增 Banner 版型</h3>
-<p><strong>情境</strong>：要做不同視覺風格的首頁輪播（例 Slide 取代 Fade、Parallax 視差等）。</p>
+<p><strong>情境</strong>：要做不同視覺風格的首頁輪播（例 Slide 取代 Fade、Parallax 視差、雙 swiper 同步、含 YouTube 背景等）。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -290,7 +290,7 @@ npm run preview   # 本地預覽 production build
 </tr>
 <tr>
 <td>②</td>
-<td>仿 <code>BlockBanner01.vue</code> 或 <code>PageBanner01.vue</code> 結構（同樣 <code>defineProps</code>）</td>
+<td>仿 <a href="../components/banners/BlockBanner01.vue"><code>BlockBanner01.vue</code></a> 結構（已含 Swiper + 雙 swiper 同步 + YouTube embed 範例）</td>
 </tr>
 <tr>
 <td>③</td>
@@ -303,6 +303,101 @@ npm run preview   # 本地預覽 production build
 </tbody></table></div>
 <blockquote class="callout callout--caution"><p>派發器 <a href="../components/BlockBanner.vue"><code>BlockBanner.vue</code></a> 用 <code>defineOptions({ inheritAttrs: false })</code> + <code>v-bind=&quot;$attrs&quot;</code>，<strong>新版型必須宣告對應 <code>defineProps</code></strong> 才能收到 <code>title</code> / <code>rows</code> 等資料。</p>
 </blockquote>
+<h4 id="221-用-swiper-做輪播">2.2.1 用 Swiper 做輪播</h4>
+<p>✅ 已安裝 <a href="https://swiperjs.com/">Swiper 11</a> 官方 Vue 元件，<strong>禁止</strong>用 jQuery 版的 swiper / slick：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+import { Swiper, SwiperSlide } from &#39;swiper/vue&#39;
+import { Autoplay, EffectFade, Pagination } from &#39;swiper/modules&#39;
+import &#39;swiper/css&#39;
+import &#39;swiper/css/effect-fade&#39;
+import &#39;swiper/css/pagination&#39;
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;Swiper
+    :modules=&quot;[Autoplay, EffectFade, Pagination]&quot;
+    :slides-per-view=&quot;1&quot;
+    :loop=&quot;true&quot;
+    effect=&quot;fade&quot;
+    :autoplay=&quot;{ delay: 5000 }&quot;
+    :pagination=&quot;{ clickable: true }&quot;
+  &gt;
+    &lt;SwiperSlide v-for=&quot;(row, i) in rows&quot; :key=&quot;i&quot;&gt;...&lt;/SwiperSlide&gt;
+  &lt;/Swiper&gt;
+&lt;/template&gt;
+</code></pre>
+<p>詳見 <a href="development-conventions.html#75-swiper%E8%BC%AA%E6%92%AD">製作規範 §7.5 Swiper</a>。</p>
+<h4 id="222-youtube-影片背景">2.2.2 YouTube 影片背景</h4>
+<p>✅ 用 <code>&lt;iframe&gt;</code> embed，<strong>不要</strong>用 <code>jquery.mb.YTPlayer</code>（jQuery 套件跟 Vue 衝突）：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+const props = defineProps({ videoUrl: String })
+
+// 從 youtu.be/XXX 或 youtube.com/watch?v=XXX 解出 videoId
+const videoEmbedUrl = computed(() =&gt; {
+  if (!props.videoUrl) return &#39;&#39;
+  const m = props.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)
+  if (!m) return &#39;&#39;
+  const id = m[1]
+  return `https://www.youtube.com/embed/${id}?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=${id}&amp;controls=0&amp;modestbranding=1&amp;rel=0&amp;playsinline=1`
+})
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;iframe
+    v-if=&quot;videoEmbedUrl&quot;
+    :src=&quot;videoEmbedUrl&quot;
+    frameborder=&quot;0&quot;
+    allow=&quot;autoplay; encrypted-media&quot;
+    allowfullscreen
+  /&gt;
+&lt;/template&gt;
+</code></pre>
+<p>YouTube embed 重要參數：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>參數</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>autoplay=1</code></td>
+<td>自動播放（需配合 <code>mute=1</code> 才能在多數瀏覽器播）</td>
+</tr>
+<tr>
+<td><code>mute=1</code></td>
+<td>靜音（首頁背景必須）</td>
+</tr>
+<tr>
+<td><code>loop=1</code> + <code>playlist=&lt;id&gt;</code></td>
+<td>循環播放（兩者<strong>必須一起用</strong>，loop 才會生效）</td>
+</tr>
+<tr>
+<td><code>controls=0</code></td>
+<td>隱藏 YouTube 原生控制鈕</td>
+</tr>
+<tr>
+<td><code>modestbranding=1</code></td>
+<td>隱藏 YouTube logo</td>
+</tr>
+<tr>
+<td><code>playsinline=1</code></td>
+<td>iOS Safari 內嵌播放（不會全螢幕跳出）</td>
+</tr>
+</tbody></table></div>
+<h4 id="223-rwd-條件渲染桌面才載入影片">2.2.3 RWD 條件渲染（桌面才載入影片）</h4>
+<p>✅ 用 <code>window.matchMedia</code> 偵測，手機不掛 iframe（避免行動裝置浪費頻寬）：</p>
+<pre data-lang="JS"><code class="language-js">const isMobile = ref(false)
+let mq = null
+onMounted(() =&gt; {
+  mq = window.matchMedia(&#39;(max-width: 1024px)&#39;)
+  isMobile.value = mq.matches
+  mq.addEventListener(&#39;change&#39;, (e) =&gt; { isMobile.value = e.matches })
+})
+onBeforeUnmount(() =&gt; mq?.removeEventListener(&#39;change&#39;, ...))
+</code></pre>
+<pre data-lang="VUE"><code class="language-vue">&lt;iframe v-if=&quot;videoEmbedUrl &amp;&amp; !isMobile&quot; :src=&quot;videoEmbedUrl&quot; /&gt;
+</code></pre>
 <p>詳見白皮書 <a href="master-project-whitepaper.html#12-banner-%E7%89%88%E5%9E%8B%E5%88%87%E6%8F%9B">§12 Banner 版型切換</a>。</p>
 <h3 id="23-新增-block-區塊">2.3 新增 Block 區塊</h3>
 <p><strong>情境</strong>：首頁要新增「合作品牌跑馬燈」這類專屬區塊。</p>

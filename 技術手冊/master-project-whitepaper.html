@@ -559,20 +559,31 @@ export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
 <td>兩種寫法輸出 CSS 完全一樣，無效能差異</td>
 </tr>
 </tbody></table></div>
-<blockquote class="callout callout--note"><p><code>&amp;</code> 用在「狀態 / 偽類 / 媒體查詢」場景仍然 OK，<strong>只有 <code>&amp;__xxx</code> 衍生 child class 的寫法禁用</strong>：</p>
-<pre data-lang="SCSS"><code class="language-scss">.btn {
-  color: #333;
-  &amp;:hover { color: blue; }       // ✓ 偽類
-  &amp;.is-active { color: red; }    // ✓ 狀態
-  @media (max-width: 768px) {    // ✓ 媒體查詢
-    padding: 10px;
-  }
-}
-</code></pre>
+<blockquote class="callout callout--important"><p><strong>判斷標準</strong>：<code>&amp;</code> 後面是「<strong>衍生新 class 名稱</strong>」就禁；「<strong>附加既有條件</strong>」就 OK。詳見 <a href="development-conventions.html#311-%E7%A6%81%E7%94%A8-bem-__-%E5%B7%A2%E7%8B%80%E5%AF%AB%E6%B3%95">製作規範 §3.1.1</a>。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>寫法</th>
+<th>判定</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&amp;:hover</code> / <code>&amp;::before</code> / <code>&amp;[data-page]</code></td>
+<td>✅ OK（偽類 / 偽元素 / 屬性選擇器）</td>
+</tr>
+<tr>
+<td><code>&amp;.is-active</code> / <code>&amp;.show</code> / <code>&amp;.scroll</code></td>
+<td>✅ OK（附加既有狀態 class）</td>
+</tr>
+<tr>
+<td><code>&amp;__xxx</code> / <code>&amp;--xxx</code> / <code>&amp;-large</code></td>
+<td>❌ 禁 — 衍生新 class 名稱，難 grep</td>
+</tr>
+</tbody></table></div>
 </blockquote>
 <h3 id="95-rwd-斷點-mixin">9.5 RWD 斷點 mixin</h3>
-<p>9 個斷點 mixin 定義於 <a href="../assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a>，由 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>additionalData</code> 自動注入到每個 <code>&lt;style lang=&quot;scss&quot;&gt;</code>，<strong>元件內直接 <code>@include</code> 即可</strong>，不需 <code>@use</code>：</p>
-<p>斷點（max-width）：<code>1920 / 1680 / 1440 / 1280 / 1200 / 1024 / 768 / 480 / 360</code>；其中 <strong>1200</strong> 為 header 變更樣式主斷點。</p>
+<p>10 個斷點 mixin 定義於 <a href="../assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a>，由 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>additionalData</code> 自動注入到每個 <code>&lt;style lang=&quot;scss&quot;&gt;</code>，<strong>元件內直接 <code>@include</code> 即可</strong>，不需 <code>@use</code>：</p>
+<p>斷點（max-width）：<code>2560 / 1920 / 1680 / 1440 / 1280 / 1200 / 1024 / 768 / 480 / 360</code>（共 10 個）；其中 <strong>1200</strong> 為 header 變更樣式主斷點，<strong>2560</strong> 對應 4K 大螢幕。</p>
 <pre data-lang="SCSS"><code class="language-scss">.box {
   width: 25%;
   @include rwd-1440 { width: 33%; }
@@ -1278,7 +1289,7 @@ const current =
  ┗ banners/
     ┣ PageBanner01.vue        內頁 — 純背景圖 + 標題（現況）
     ┣ PageBannerXX.vue        內頁 — 其他版型（左圖右文、影片背景…）
-    ┣ BlockBanner01.vue       首頁 — Fade 輪播（現況）
+    ┣ BlockBanner01.vue       首頁 — Swiper 複合型（主圖 fade + cover 同步 + YouTube + 新聞）
     ┗ BlockBannerXX.vue       首頁 — 其他輪播版型（Slide、Parallax…）
 </code></pre>
 <p>兩種派發器各自獨立，<strong>不要混淆</strong>：</p>
@@ -1356,6 +1367,15 @@ const bg = computed(() =&gt; banners.value?.[0]?.image?.pc || &#39;&#39;)
 &lt;/template&gt;
 </code></pre>
 <p><code>.env</code> 改 <code>NUXT_PUBLIC_PAGE_BANNER=PageBanner02</code> 並重啟 dev server，全站內頁 banner 立即套新版型。</p>
+<h4 id="1241-用-swiper-做輪播版型">12.4.1 用 Swiper 做輪播版型</h4>
+<p>複雜輪播（fade / slide / 雙 swiper 同步 / 含 YouTube 影片背景等）請看：</p>
+<ul>
+<li>範例實作：<a href="../components/banners/BlockBanner01.vue"><code>components/banners/BlockBanner01.vue</code></a></li>
+<li>設定 / API：<a href="development-conventions.html#75-swiper%E8%BC%AA%E6%92%AD">製作規範 §7.5 Swiper</a></li>
+<li>操作步驟：<a href="sop-procedures.html#221-%E7%94%A8-swiper-%E5%81%9A%E8%BC%AA%E6%92%AD">SOP §2.2.1 用 Swiper 做輪播</a>、<a href="sop-procedures.html#222-youtube-%E5%BD%B1%E7%89%87%E8%83%8C%E6%99%AF">§2.2.2 YouTube 影片背景</a></li>
+</ul>
+<blockquote class="callout callout--important"><p><strong>禁用 jQuery 版 Swiper / Slick / Owl Carousel</strong> 等 — 跟 Vue reactive 衝突。詳見 <a href="development-conventions.html#76-jquery-%E5%A5%97%E4%BB%B6%E9%81%B7%E7%A7%BB%E5%B0%8D%E6%87%89%E8%A1%A8">製作規範 §7.6 jQuery 套件遷移對應表</a>。</p>
+</blockquote>
 <hr>
 <h2 id="修訂紀錄">修訂紀錄</h2>
 <div class="table-wrap"><table>

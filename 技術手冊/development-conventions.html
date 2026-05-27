@@ -293,16 +293,162 @@ onBeforeUnmount(() =&gt; {
 <li><strong>編譯結果相同</strong>：兩種寫法輸出 CSS 完全一樣，沒效能差異</li>
 <li><strong>降低 SCSS 學習負擔</strong>：新進工程師看完整 class 就懂，不用懂 <code>&amp;</code> 上下文</li>
 </ul>
-<blockquote class="callout callout--note"><p><code>&amp;</code> 用在「修飾／狀態」場景仍然 <strong>OK</strong>（不是 BEM child 攤平）：</p>
+<blockquote class="callout callout--important"><p><strong>判斷標準</strong>：<code>&amp;</code> 後面是「<strong>衍生新 class 名稱</strong>」就禁；「<strong>附加既有條件</strong>」就 OK。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>寫法</th>
+<th>編譯後</th>
+<th>判定</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&amp;:hover</code></td>
+<td><code>.parent:hover</code></td>
+<td>✅ OK（偽類）</td>
+</tr>
+<tr>
+<td><code>&amp;::before</code></td>
+<td><code>.parent::before</code></td>
+<td>✅ OK（偽元素）</td>
+</tr>
+<tr>
+<td><code>&amp;.is-active</code></td>
+<td><code>.parent.is-active</code></td>
+<td>✅ OK（附加既有狀態 class）</td>
+</tr>
+<tr>
+<td><code>&amp;.show</code> / <code>&amp;.scroll</code> / <code>&amp;.active</code></td>
+<td><code>.parent.show</code> 等</td>
+<td>✅ OK（附加既有 class）</td>
+</tr>
+<tr>
+<td><code>&amp;[data-page=&quot;index&quot;]</code></td>
+<td><code>.parent[data-page=&quot;index&quot;]</code></td>
+<td>✅ OK（屬性選擇器）</td>
+</tr>
+<tr>
+<td><code>&amp;__title</code></td>
+<td><code>.parent__title</code></td>
+<td>❌ <strong>禁</strong> — 衍生新 class，難 grep</td>
+</tr>
+<tr>
+<td><code>&amp;--primary</code></td>
+<td><code>.parent--primary</code></td>
+<td>❌ <strong>禁</strong> — 同上</td>
+</tr>
+<tr>
+<td><code>&amp;-large</code></td>
+<td><code>.parent-large</code></td>
+<td>❌ <strong>禁</strong> — 同上</td>
+</tr>
+</tbody></table></div>
 <pre data-lang="SCSS"><code class="language-scss">.btn {
   color: #333;
-  &amp;:hover { color: blue; }    // ✓ 偽類
-  &amp;.is-active { color: red; } // ✓ 狀態
-  &amp;--primary { ... }          // ✓ BEM modifier（這個爭議，可選擇也禁用）
+  &amp;:hover { color: blue; }        // ✓
+  &amp;.is-active { color: red; }     // ✓
+  &amp;.show { display: block; }      // ✓
+
+  &amp;--primary { ... }              // ❌ 改寫成 .btn--primary { ... }
+  &amp;__icon { ... }                 // ❌ 改寫成 .btn__icon { ... }
 }
 </code></pre>
-<p>只有「<code>&amp;__xxx</code> 組合衍生 child class」這種寫法<strong>禁用</strong>。</p>
+<p><strong>為什麼這樣分</strong>：<code>grep .btn--primary</code> 能直接找到定義 — 但 <code>grep &amp;--primary</code> 找不到（因為實際字串是 <code>&amp;--primary</code>，且不知道 <code>&amp;</code> 是什麼）。「附加既有 class」不會產生這個問題，因為兩個 class（如 <code>.btn</code> 跟 <code>.is-active</code>）都能單獨被 grep 找到。</p>
 </blockquote>
+<h4 id="312-後代選擇器巢狀parent--child---允許">3.1.2 後代選擇器巢狀（<code>.parent { .child {} }</code>）✅ 允許</h4>
+<p><strong>這跟 BEM <code>&amp;__</code> 是不同概念</strong>，編譯結果也不同：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>寫法</th>
+<th>編譯後 CSS</th>
+<th>套用範圍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.parent { &amp;__child {} }</code> ❌</td>
+<td><code>.parent__child {}</code></td>
+<td><strong>單一 class</strong>（child 是獨立 class）</td>
+</tr>
+<tr>
+<td><code>.parent { .child {} }</code> ✅</td>
+<td><code>.parent .child {}</code></td>
+<td><strong>後代關係</strong>（任何 .parent 內的 .child）</td>
+</tr>
+</tbody></table></div>
+<p>✅ <strong>建議優先用後代選擇器巢狀</strong>（更精簡、層次清楚）：</p>
+<pre data-lang="SCSS"><code class="language-scss">// 推薦
+.index_banner {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+
+  .swiper-slide {
+    position: relative;
+    overflow: hidden;
+
+    &amp;::after {            // ✓ &amp;::after 用偽類
+      content: &#39;&#39;;
+      ...
+    }
+  }
+
+  picture {
+    display: block;
+
+    img {                 // ✓ 多層後代巢狀 OK
+      object-fit: cover;
+    }
+  }
+
+  .swiper-pagination {
+    text-align: left;
+
+    @include rwd-768 {    // ✓ media query 內巢狀
+      text-align: center;
+    }
+  }
+}
+</code></pre>
+<p>✅ 也可以寫攤平形式（沒禁，看程式風格偏好）：</p>
+<pre data-lang="SCSS"><code class="language-scss">// 也 OK，但較囉嗦
+.index_banner { position: relative; ... }
+.index_banner .swiper-slide { ... }
+.index_banner .swiper-slide::after { ... }
+.index_banner picture { ... }
+.index_banner picture img { ... }
+</code></pre>
+<blockquote class="callout callout--important"><p><strong>避免重複 rule</strong>：同一個選擇器寫兩次（一次 nested、一次攤平）會造成 dead code 與意外覆寫。Lint 或 review 時請檢查。</p>
+</blockquote>
+<p><strong>何時用哪種？</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>場景</th>
+<th>推薦寫法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>元件內 BEM child class（自己定義的 class）</td>
+<td><strong>攤平</strong>（<code>.parent__child</code>），方便 grep</td>
+</tr>
+<tr>
+<td>第三方套件渲染的 DOM 後代（<code>.swiper-slide</code>、<code>.swiper-pagination</code> 等）</td>
+<td><strong>巢狀</strong> <code>.parent { .child {} }</code>，限定作用範圍</td>
+</tr>
+<tr>
+<td>偽類 / 狀態</td>
+<td><code>&amp;:hover</code>、<code>&amp;.is-active</code>（<code>&amp;</code> 偽類用法 OK）</td>
+</tr>
+<tr>
+<td>偽元素</td>
+<td><code>&amp;::before</code>、<code>&amp;::after</code>（OK）</td>
+</tr>
+<tr>
+<td>Media query</td>
+<td><code>@include rwd-XXX { ... }</code> 內巢狀（OK）</td>
+</tr>
+</tbody></table></div>
 <h3 id="32-scss-變數與-mixin">3.2 SCSS 變數與 mixin</h3>
 <p>✅ 全域 SCSS 變數與 RWD mixin 來源：<a href="../assets/styles/_variables.scss"><code>assets/styles/_variables.scss</code></a></p>
 <p>由 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>additionalData</code> 自動注入，<strong>任何 <code>&lt;style lang=&quot;scss&quot;&gt;</code> 都能直接用</strong>，不需 <code>@use</code>：</p>
@@ -333,8 +479,8 @@ onBeforeUnmount(() =&gt; {
 <p>✅ 新元件<strong>建議優先用 CSS 變數</strong>，跟主題系統一致。</p>
 <h3 id="34-rwd-斷點">3.4 RWD 斷點</h3>
 <p>兩種寫法都可以，依「斷點是否落在標準值」選用：</p>
-<p><strong>9 個標準斷點</strong>：<code>1920 / 1680 / 1440 / 1280 / 1200 / 1024 / 768 / 480 / 360</code>
-主斷點：<strong>1200</strong>（header 變更樣式主斷點）</p>
+<p><strong>10 個標準斷點</strong>：<code>2560 / 1920 / 1680 / 1440 / 1280 / 1200 / 1024 / 768 / 480 / 360</code>
+主斷點：<strong>1200</strong>（header 變更樣式主斷點）；<strong>2560</strong> 對應 4K 大螢幕</p>
 <h4 id="標準斷點--用-include-rwd-xxx-mixin建議">標準斷點 → 用 <code>@include rwd-xxx</code> mixin（建議）</h4>
 <p>從 <a href="../assets/styles/_variables.scss"><code>_variables.scss</code></a> 全域注入，元件內直接使用、不需 <code>@use</code>：</p>
 <pre data-lang="SCSS"><code class="language-scss">.box {
@@ -639,6 +785,110 @@ const languages = [
 <pre data-lang="VUE"><code class="language-vue">&lt;button&gt;{{ $t(&#39;btn.more&#39;) }}&lt;/button&gt;
 </code></pre>
 <p>詳見白皮書 <a href="master-project-whitepaper.html#910-%E5%A4%9A%E8%AA%9E%E7%B3%BBnuxtjsi18n">§9.10</a>。</p>
+<h3 id="75-swiper輪播">7.5 Swiper（輪播）</h3>
+<p>✅ 用 <a href="https://swiperjs.com/">Swiper 11</a> 官方 Vue 元件，<strong>不要</strong>用 jQuery 版的 swiper / slick / owl-carousel：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
+import { Swiper, SwiperSlide } from &#39;swiper/vue&#39;
+import { Autoplay, EffectFade, Pagination, Navigation, Controller } from &#39;swiper/modules&#39;
+import &#39;swiper/css&#39;
+import &#39;swiper/css/effect-fade&#39;
+import &#39;swiper/css/pagination&#39;
+import &#39;swiper/css/navigation&#39;
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;Swiper
+    :modules=&quot;[Autoplay, EffectFade, Pagination]&quot;
+    :slides-per-view=&quot;1&quot;
+    :loop=&quot;true&quot;
+    effect=&quot;fade&quot;
+    :autoplay=&quot;{ delay: 5000 }&quot;
+    :pagination=&quot;{ clickable: true }&quot;
+  &gt;
+    &lt;SwiperSlide v-for=&quot;(row, i) in rows&quot; :key=&quot;i&quot;&gt;...&lt;/SwiperSlide&gt;
+  &lt;/Swiper&gt;
+&lt;/template&gt;
+</code></pre>
+<p>✅ <strong>modules 按需 import</strong>（不要全部 import，會增加 bundle size）：每用一個功能就 import 對應 module + 對應 CSS。</p>
+<p>✅ <strong>雙 Swiper 同步</strong>（例：主圖 + 文字 cover 一起切換）—— 用 <code>Controller</code> module + <code>controller.control</code>：</p>
+<pre data-lang="JS"><code class="language-js">import { Controller } from &#39;swiper/modules&#39;
+
+const mainSwiper = ref(null)
+const coverSwiper = ref(null)
+const onMainReady = (s) =&gt; {
+  mainSwiper.value = s
+  if (coverSwiper.value) {
+    s.controller.control = coverSwiper.value
+    coverSwiper.value.controller.control = s
+  }
+}
+// cover 的 onSwiper 同樣處理
+</code></pre>
+<p>❌ <strong>不要</strong>用全域 jQuery <code>$(&#39;.banner&#39;).on(...)</code> 處理輪播事件，改用 Swiper Vue 元件的 <code>@slide-change</code> 等事件。</p>
+<p>範例：<a href="../components/banners/BlockBanner01.vue">components/banners/BlockBanner01.vue</a>。</p>
+<h3 id="76-jquery-套件遷移對應表">7.6 jQuery 套件遷移對應表</h3>
+<p>由舊專案搬過來的 jQuery 套件<strong>不要直接照用</strong>，本專案改用 Vue 友好的替代：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>舊 jQuery 套件</th>
+<th>Vue 友好替代</th>
+<th>備註</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>jquery.swiper</code> / Slick / Owl Carousel</td>
+<td><a href="https://swiperjs.com/vue">swiper 11 / Vue 元件</a></td>
+<td>詳見 §7.5</td>
+</tr>
+<tr>
+<td><code>jquery.mb.YTPlayer</code></td>
+<td><strong>YouTube iframe embed</strong></td>
+<td>用 <code>&lt;iframe src=&quot;https://www.youtube.com/embed/&lt;id&gt;?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=&lt;id&gt;&amp;controls=0&quot;&gt;</code>；要程式控制再考慮 <a href="https://github.com/anteriovieira/vue3-youtube">vue3-youtube</a></td>
+</tr>
+<tr>
+<td><code>jquery.lightgallery</code></td>
+<td>純 CSS + Vue <a href="https://vuejs.org/guide/built-ins/transition.html">Transition</a> 寫自己的 modal，或裝 <a href="https://github.com/vueform/">@vueform/multiselect</a> 等 Vue 套件</td>
+<td>LightGallery 也有 Vue 版本，但有授權限制</td>
+</tr>
+<tr>
+<td><code>magnific-popup</code></td>
+<td>同上，自寫 modal</td>
+<td></td>
+</tr>
+<tr>
+<td><code>bxslider</code></td>
+<td>swiper 11</td>
+<td></td>
+</tr>
+<tr>
+<td><code>wow.js</code> / <code>aos.js</code></td>
+<td>GSAP ScrollTrigger（詳見 §7.2）</td>
+<td></td>
+</tr>
+<tr>
+<td>jQuery scroll 偵測</td>
+<td><code>window.addEventListener(&#39;scroll&#39;, ...)</code> + Vue ref</td>
+<td>範例：<a href="../components/headers/Header01.vue">Header01.vue 的 isScrolled</a></td>
+</tr>
+<tr>
+<td>jQuery <code>$(...).addClass / removeClass</code></td>
+<td><code>:class=&quot;{ active: x }&quot;</code> 綁定 reactive state</td>
+<td></td>
+</tr>
+<tr>
+<td>jQuery <code>$(window).on(&#39;load&#39;)</code></td>
+<td><code>onMounted(...)</code></td>
+<td></td>
+</tr>
+<tr>
+<td>YTPlayer 控制</td>
+<td>iframe + <code>postMessage</code>，或 vue3-youtube</td>
+<td></td>
+</tr>
+</tbody></table></div>
+<blockquote class="callout callout--important"><p><strong>設計師交付 jQuery 樣板給工程師時</strong>：把 JS 邏輯拆出來看，照本表轉成 Vue 等價寫法。<strong>不要</strong>為了快直接 <code>import &#39;jquery&#39;</code> —— 一旦引入 jQuery，Vue 的 reactive 系統會跟 jQuery DOM 操作衝突（jQuery 改 DOM 後 Vue 不知道）。</p>
+</blockquote>
 <hr>
 <h2 id="8-git--commit--pr-規範">8. Git / Commit / PR 規範</h2>
 <h3 id="81-commit-message">8.1 Commit message</h3>

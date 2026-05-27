@@ -151,17 +151,105 @@ npm run preview   # 本地預覽 production build
 
 ### 2.2 新增 Banner 版型
 
-**情境**：要做不同視覺風格的首頁輪播（例 Slide 取代 Fade、Parallax 視差等）。
+**情境**：要做不同視覺風格的首頁輪播（例 Slide 取代 Fade、Parallax 視差、雙 swiper 同步、含 YouTube 背景等）。
 
 | 步驟 | 動作 |
 |---|---|
 | ① | 在 [`components/banners/`](../components/banners/) 建檔，**檔名前綴**須為 `PageBanner` 或 `BlockBanner` |
-| ② | 仿 `BlockBanner01.vue` 或 `PageBanner01.vue` 結構（同樣 `defineProps`） |
+| ② | 仿 [`BlockBanner01.vue`](../components/banners/BlockBanner01.vue) 結構（已含 Swiper + 雙 swiper 同步 + YouTube embed 範例） |
 | ③ | `.env` 改 `NUXT_PUBLIC_BLOCK_BANNER=BlockBanner02`（或 PAGE_BANNER） |
 | ④ | 重啟 dev server |
 
 > [!CAUTION]
 > 派發器 [`BlockBanner.vue`](../components/BlockBanner.vue) 用 `defineOptions({ inheritAttrs: false })` + `v-bind="$attrs"`，**新版型必須宣告對應 `defineProps`** 才能收到 `title` / `rows` 等資料。
+
+#### 2.2.1 用 Swiper 做輪播
+
+✅ 已安裝 [Swiper 11](https://swiperjs.com/) 官方 Vue 元件，**禁止**用 jQuery 版的 swiper / slick：
+
+```vue
+<script setup>
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Autoplay, EffectFade, Pagination } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/effect-fade'
+import 'swiper/css/pagination'
+</script>
+
+<template>
+  <Swiper
+    :modules="[Autoplay, EffectFade, Pagination]"
+    :slides-per-view="1"
+    :loop="true"
+    effect="fade"
+    :autoplay="{ delay: 5000 }"
+    :pagination="{ clickable: true }"
+  >
+    <SwiperSlide v-for="(row, i) in rows" :key="i">...</SwiperSlide>
+  </Swiper>
+</template>
+```
+
+詳見 [製作規範 §7.5 Swiper](./製作規範.md#75-swiper輪播)。
+
+#### 2.2.2 YouTube 影片背景
+
+✅ 用 `<iframe>` embed，**不要**用 `jquery.mb.YTPlayer`（jQuery 套件跟 Vue 衝突）：
+
+```vue
+<script setup>
+const props = defineProps({ videoUrl: String })
+
+// 從 youtu.be/XXX 或 youtube.com/watch?v=XXX 解出 videoId
+const videoEmbedUrl = computed(() => {
+  if (!props.videoUrl) return ''
+  const m = props.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)
+  if (!m) return ''
+  const id = m[1]
+  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0&playsinline=1`
+})
+</script>
+
+<template>
+  <iframe
+    v-if="videoEmbedUrl"
+    :src="videoEmbedUrl"
+    frameborder="0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen
+  />
+</template>
+```
+
+YouTube embed 重要參數：
+
+| 參數 | 用途 |
+|---|---|
+| `autoplay=1` | 自動播放（需配合 `mute=1` 才能在多數瀏覽器播） |
+| `mute=1` | 靜音（首頁背景必須） |
+| `loop=1` + `playlist=<id>` | 循環播放（兩者**必須一起用**，loop 才會生效） |
+| `controls=0` | 隱藏 YouTube 原生控制鈕 |
+| `modestbranding=1` | 隱藏 YouTube logo |
+| `playsinline=1` | iOS Safari 內嵌播放（不會全螢幕跳出） |
+
+#### 2.2.3 RWD 條件渲染（桌面才載入影片）
+
+✅ 用 `window.matchMedia` 偵測，手機不掛 iframe（避免行動裝置浪費頻寬）：
+
+```js
+const isMobile = ref(false)
+let mq = null
+onMounted(() => {
+  mq = window.matchMedia('(max-width: 1024px)')
+  isMobile.value = mq.matches
+  mq.addEventListener('change', (e) => { isMobile.value = e.matches })
+})
+onBeforeUnmount(() => mq?.removeEventListener('change', ...))
+```
+
+```vue
+<iframe v-if="videoEmbedUrl && !isMobile" :src="videoEmbedUrl" />
+```
 
 詳見白皮書 [§12 Banner 版型切換](./開發母版專案.md#12-banner-版型切換)。
 

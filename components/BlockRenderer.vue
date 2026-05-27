@@ -30,7 +30,7 @@ function blockComponent(type) {
       :is="blockComponent(block.type)"
       v-if="blockComponent(block.type)"
       :title="block.title"
-      :rows="block.item?.rows || []"
+      v-bind="block.item || {}"
     />
   </template>
 </template>
