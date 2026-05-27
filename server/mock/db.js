@@ -25,4 +25,5 @@ export default {
   location: load('location'),
   popupsAd: load('popupsAd'),
   products: load('products'),
+  headerProducts: load('header_products'),
 }

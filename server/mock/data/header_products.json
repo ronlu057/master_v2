@@ -1,0 +1,64 @@
+{
+  "series": [
+    {
+      "key": "ssd",
+      "title": "SSD Storage",
+      "items": [
+        {
+          "key": "ssd-pro",
+          "title": "SSD Pro Series",
+          "resume": "高效能 NVMe SSD，讀寫速度達 7000MB/s，適合專業工作站。",
+          "image": "https://picsum.photos/seed/ssd-pro/600/400",
+          "url": "/products/ssd-pro"
+        },
+        {
+          "key": "ssd-gaming",
+          "title": "SSD Gaming Series",
+          "resume": "為遊戲玩家設計，極致載入速度。",
+          "image": "https://picsum.photos/seed/ssd-gaming/600/400",
+          "url": "/products/ssd-gaming"
+        },
+        {
+          "key": "ssd-portable",
+          "title": "Portable SSD",
+          "resume": "輕便外接 SSD，隨身高速備份。",
+          "image": "https://picsum.photos/seed/ssd-portable/600/400",
+          "url": "/products/ssd-portable"
+        }
+      ]
+    },
+    {
+      "key": "memory",
+      "title": "Memory",
+      "items": [
+        {
+          "key": "ddr5",
+          "title": "DDR5 系列",
+          "resume": "次世代記憶體，最高 8000MHz。",
+          "image": "https://picsum.photos/seed/ddr5/600/400",
+          "url": "/products/ddr5"
+        },
+        {
+          "key": "ddr4-gaming",
+          "title": "DDR4 Gaming",
+          "resume": "電競專用記憶體，RGB 燈效。",
+          "image": "https://picsum.photos/seed/ddr4-gaming/600/400",
+          "url": "/products/ddr4-gaming"
+        }
+      ]
+    },
+    {
+      "key": "accessory",
+      "title": "Accessories",
+      "items": [
+        {
+          "key": "cable",
+          "title": "Premium Cables",
+          "resume": "高速資料傳輸線。",
+          "image": "https://picsum.photos/seed/cable/600/400",
+          "url": "/products/cable"
+        }
+      ]
+    }
+  ]
+}

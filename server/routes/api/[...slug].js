@@ -46,6 +46,8 @@ export default defineEventHandler((event) => {
       const menu = db.menu[lang] || db.menu.tw
       return ok({ header: menu.header })
     }
+    case 'GET /header/products':
+      return ok(db.headerProducts)
     case 'GET /firm/view':
       return ok(db.firm)
     case 'GET /i18n':
