@@ -10,6 +10,9 @@
     </main>
     <AppFooter />
     <PopupAds />
+    <ClientOnly>
+      <AdminPreviewBar />
+    </ClientOnly>
   </div>
 </template>
 

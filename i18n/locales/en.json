@@ -21,6 +21,11 @@
     "cancel": "Cancel",
     "contact_us": "Contact Us"
   },
+  "cta": {
+    "view_menu": "View Menu",
+    "order_online": "Order Online",
+    "book_appointment": "Book Now"
+  },
   "msg": {
     "loading": "Loading…",
     "empty": "No data available",

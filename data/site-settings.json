@@ -1,0 +1,9 @@
+{
+  "projectType": "module",
+  "header": "Header03",
+  "pageBanner": "PageBanner01",
+  "blockBanner": "BlockBanner01",
+  "apiBase": "",
+  "defaultLang": "tw",
+  "enableShop": false
+}

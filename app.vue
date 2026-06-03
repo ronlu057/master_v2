@@ -21,11 +21,12 @@ const dataPage = computed(() => {
   return firstNonLocale || 'index'
 })
 
+// type 為 ComputedRef，用 callback 形式讓 useHead 在 type 變動時 reactive 更新
 useHead({
-  htmlAttrs: {
-    'data-project': type,
+  htmlAttrs: () => ({
+    'data-project': type.value,
     ...head.value.htmlAttrs,
-  },
+  }),
   bodyAttrs: { 'data-page': dataPage },
   link: () => head.value.link,
   meta: () => head.value.meta,

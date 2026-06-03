@@ -1,15 +1,14 @@
 // Nuxt 4 母版專案設定檔（純 JavaScript，無 TypeScript）
-import svgLoader from 'vite-svg-loader'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
 
-  // SVG 可用 `?component` 後綴 import 成 Vue 元件（檔案放 assets/icon/）
+  // icon 全站走 .icon 字型法（mask-image），SVG 透過 CSS url() 載入，
+  // 不再需要 vite-svg-loader 把 SVG 變 Vue 元件。詳見 assets/styles/icons.scss。
   // SCSS additionalData：自動把 _variables.scss 注入所有 .vue scoped style，
   // 讓 $web_font_color 等 SCSS 變數無需手動 @use 即可使用。
   vite: {
-    plugins: [svgLoader()],
     css: {
       preprocessorOptions: {
         scss: {

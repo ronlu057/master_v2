@@ -1,11 +1,6 @@
 <script setup>
 // 頁首版型 02 — 置中型（Logo 左、選單 + 工具 + 社群 + 漢堡 在右）
-// SVG icon 用 Vue 元件方式 inline 進 HTML（可用 CSS 控 fill）
-import SearchIcon from '~/assets/icon/search_icon.svg?component'
-import LanguageIcon from '~/assets/icon/language_icon.svg?component'
-import ShopcartIcon from '~/assets/icon/shopcart_icon.svg?component'
-import LikeIcon from '~/assets/icon/like_icon.svg?component'
-
+// icon 全站走 .icon 字型法（assets/styles/icons.scss）：<i class="icon icon-XXX"></i>
 // 拿目前「專案類型」資訊
 //   isMinimal  = 是否臨時站（只顯示 Logo + 聯絡鈕）
 //   enableShop = 是否顯示購物 UI（shop 類型自動 true；或 NUXT_PUBLIC_ENABLE_SHOP=true）
@@ -24,17 +19,11 @@ const { data: menuData } = useSiteMenu()
 // 公司資料 — 用來取社群連結
 const { data: firmData } = useSiteFirm()
 
-// 社群連結清單 — 只列出 firm.json 內 social 有填值的項目
-const socialList = computed(() => {
-  const s = firmData.value?.firm?.social || {}
-  return [
-    { name: 'facebook', url: s.facebook, icon: '/img/icon/fb_icon.svg', label: 'Facebook' },
-    { name: 'instagram', url: s.instagram, icon: '/img/icon/ig_new_icon.svg', label: 'Instagram' },
-    { name: 'line', url: s.line, icon: '/img/icon/line_new_icon.svg', label: 'LINE' },
-    { name: 'youtube', url: s.youtube, icon: '/img/icon/youtube_icon.svg', label: 'YouTube' },
-    { name: 'twitter', url: s.twitter, icon: '/img/icon/x_icon.svg', label: 'X' },
-  ].filter((item) => item.url)
-})
+// navtool icon 配置（哪些顯示 + 順序），由 /admin → navtool 配置控制
+const navtool = useNavtoolConfig()
+
+// 社群連結清單（過濾掉 null / 空字串 / 全空格的項目）
+const socials = useSocials()
 
 // ── 搜尋表單 ─────────────────────────────────────────────
 const keyword = ref('')
@@ -109,11 +98,15 @@ onBeforeUnmount(() => {
           </ul>
         </nav>
 
-        <!-- 工具列：搜尋 / 語系 / 購物車 / 我的最愛（hover 展開 popup） -->
+        <!-- 工具列：search/language/social/member/cart/favorite — 由 useNavtoolConfig 控顯示 + 順序 -->
         <div v-if="!isMinimal" class="navtool">
-          <!-- 搜尋（hover icon 展開輸入框） -->
-          <div class="navtool_icon">
-            <SearchIcon aria-label="搜尋" />
+          <!-- 搜尋 -->
+          <div
+            v-if="navtool.isEnabled('search')"
+            class="navtool_icon"
+            :style="{ order: navtool.orderOf('search') }"
+          >
+            <i class="icon icon-search" aria-label="搜尋"></i>
             <div class="search_box">
               <form class="search_form" @submit.prevent="onSearch">
                 <input
@@ -123,14 +116,20 @@ onBeforeUnmount(() => {
                   placeholder="網站搜尋..."
                   aria-label="網站搜尋"
                 />
-                <button type="submit" aria-label="搜尋"><SearchIcon /></button>
+                <button type="submit" aria-label="搜尋">
+                  <i class="icon icon-search" aria-hidden="true"></i>
+                </button>
               </form>
             </div>
           </div>
 
-          <!-- 語系（只有一個語系時不顯示，避免無謂的選單） -->
-          <div v-if="languages.length > 1" class="navtool_icon">
-            <LanguageIcon aria-label="語系" />
+          <!-- 語系 -->
+          <div
+            v-if="navtool.isEnabled('language') && languages.length > 1"
+            class="navtool_icon"
+            :style="{ order: navtool.orderOf('language') }"
+          >
+            <i class="icon icon-language" aria-label="語系"></i>
             <div class="lang_box">
               <button
                 v-for="lang in languages"
@@ -145,31 +144,58 @@ onBeforeUnmount(() => {
             </div>
           </div>
 
-          <!-- 購物車 / 我的最愛：購物類型自動顯示；其他類型 .env 設 NUXT_PUBLIC_ENABLE_SHOP=true 也能強制開啟 -->
-          <template v-if="enableShop">
-            <NuxtLink class="navtool_icon cart_btn" to="/shop/cart" aria-label="購物車">
-              <ShopcartIcon />
-              <div class="quantity_item">{{ cart.count || 0 }}</div>
-            </NuxtLink>
-
-            <NuxtLink class="navtool_icon" to="/shop/favorite" aria-label="我的最愛">
-              <LikeIcon />
-            </NuxtLink>
-          </template>
-        </div>
-
-        <!-- 社群圖示（只列有填值的） -->
-        <div v-if="!isMinimal && socialList.length" class="social_media">
-          <a
-            v-for="item in socialList"
-            :key="item.name"
-            :href="item.url"
-            :aria-label="item.label"
-            target="_blank"
-            rel="noopener noreferrer"
+          <!-- 社群（一排平鋪小 icon） -->
+          <div
+            v-if="navtool.isEnabled('social') && socials.length"
+            class="navtool_social"
+            :style="{ order: navtool.orderOf('social') }"
           >
-            <img :src="item.icon" :alt="item.label" />
-          </a>
+            <a
+              v-for="s in socials"
+              :key="s.key"
+              :href="s.url"
+              :aria-label="s.key"
+              target="_blank"
+              rel="noopener"
+              class="navtool_social-link"
+            >
+              <i :class="['icon', `icon-${s.key}`]"></i>
+            </a>
+          </div>
+
+          <!-- 會員中心 -->
+          <NuxtLink
+            v-if="navtool.isEnabled('member')"
+            class="navtool_icon"
+            to="/member"
+            :style="{ order: navtool.orderOf('member') }"
+            aria-label="會員中心"
+          >
+            <i class="icon icon-member"></i>
+          </NuxtLink>
+
+          <!-- 購物車 -->
+          <NuxtLink
+            v-if="navtool.isEnabled('cart')"
+            class="navtool_icon cart_btn"
+            to="/shop/cart"
+            :style="{ order: navtool.orderOf('cart') }"
+            aria-label="購物車"
+          >
+            <i class="icon icon-shopcart"></i>
+            <div class="quantity_item">{{ cart.count || 0 }}</div>
+          </NuxtLink>
+
+          <!-- 我的最愛 -->
+          <NuxtLink
+            v-if="navtool.isEnabled('favorite')"
+            class="navtool_icon"
+            to="/shop/favorite"
+            :style="{ order: navtool.orderOf('favorite') }"
+            aria-label="我的最愛"
+          >
+            <i class="icon icon-like"></i>
+          </NuxtLink>
         </div>
 
         <!-- 行動版漢堡按鈕 -->
@@ -367,18 +393,14 @@ body[data-page="index"] {
         .navtool_icon {
           position: relative;
           cursor: pointer;
+          color: $web_font_color;
+          transition: color 0.3s;
 
-          > svg {
-            display: block;
-            width: 20px;
-            height: 20px;
-            fill: $web_font_color;
-            transition: all 0.3s;
-          }
+          > .icon { font-size: 20px; }
 
-          &:hover > svg,
-          &:focus-within > svg {
-            fill: $web_header_1;
+          &:hover,
+          &:focus-within {
+            color: $web_header_1;
           }
 
           // popup 浮層（搜尋框 / 語系列表 共用樣式）
@@ -458,15 +480,12 @@ body[data-page="index"] {
             cursor: pointer;
             padding: 4px;
             display: flex;
+            color: $web_font_color;
+            transition: color 0.3s;
 
-            svg {
-              width: 18px;
-              height: 18px;
-              fill: $web_font_color;
-              transition: fill 0.3s;
-            }
+            .icon { font-size: 18px; }
 
-            &:hover svg { fill: $web_header_1; }
+            &:hover { color: $web_header_1; }
           }
         }
 
@@ -492,35 +511,8 @@ body[data-page="index"] {
         }
       }
 
-      .social_media {
-        display: flex;
-        gap: 0 13px;
-        transition: all 0.3s;
-
-        @include rwd-1440 { gap: 0 10px; }
-        @include rwd-1280 { gap: 0 7px; }
-        @include rwd-1200 { display: none; }
-
-        a {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 35px;
-          height: 35px;
-          background: $web_font_color;
-          border-radius: 50%;
-          transition: all 0.3s;
-
-          img {
-            width: 21px;
-            height: 21px;
-            // 強制 icon 顯示為白色（適用任何顏色的原 SVG）
-            filter: brightness(0) invert(1);
-          }
-
-          &:hover { background: $web_header_1; }
-        }
-      }
+      // .social_media 樣式已下放到全域 main.scss → .navtool_social
+      // 不在此 scoped 覆寫，所有 Header 共用一致風格
     }
   }
 

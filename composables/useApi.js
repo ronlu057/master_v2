@@ -14,8 +14,9 @@ function unwrap(res) {
  * @param {object} opts  useFetch 選項（query / key / default ...）
  */
 export function useApiData(path, opts = {}) {
-  const { public: pub } = useRuntimeConfig()
-  const base = pub.apiBase || ''
+  // 走 useEffectiveSettings（initial = runtimeConfig.public.apiBase，可被 /admin 預覽覆寫）
+  const { state } = useEffectiveSettings()
+  const base = state.apiBase || ''
   return useFetch(`${base}/api${path}`, {
     transform: unwrap,
     ...opts,
@@ -28,8 +29,8 @@ export function useApiData(path, opts = {}) {
  * @param {object} opts  $fetch 選項（method / body ...）
  */
 export async function $api(path, opts = {}) {
-  const { public: pub } = useRuntimeConfig()
-  const base = pub.apiBase || ''
+  const { state } = useEffectiveSettings()
+  const base = state.apiBase || ''
   const res = await $fetch(`${base}/api${path}`, opts)
   return unwrap(res)
 }

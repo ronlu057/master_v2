@@ -1,13 +1,13 @@
 <script setup>
 // 頁首版型 — VALUE 佳質食品風格（白色浮動圓角列）
 // 依截圖切版；精確數值可再依 Figma Dev Mode 調整。
-import LineIcon from '~/assets/icon/line_icon.svg?component'
-import Arrow from '~/assets/icon/Arrow.svg?component'
-
+// icon 全站走 .icon 字型法（assets/styles/icons.scss）：<i class="icon icon-XXX"></i>
 const { isMinimal } = useProject()
 const ui = useUiStore()
+const cart = useCartStore()
 const { data: menuData } = useSiteMenu()
 const { data: firmData } = useSiteFirm()
+const navtool = useNavtoolConfig()
 
 // 語系切換（@nuxtjs/i18n）— 清單來自 nuxt.config.js i18n.locales
 // 此版型用「點 button 開合」風格（其他 header 用 hover），故保留 langOpen 狀態
@@ -23,6 +23,8 @@ function pickLang(code) {
   setLocale(code)
   langOpen.value = false
 }
+
+const socials = useSocials()
 </script>
 
 <template>
@@ -39,15 +41,30 @@ function pickLang(code) {
           <!-- 主選單 -->
           <SiteMenu v-if="!isMinimal" :items="menuData.header" class="header-value__nav" />
 
+          <!-- 搜尋 -->
+          <NuxtLink
+            v-if="navtool.isEnabled('search')"
+            to="/search"
+            class="header-value__icon-btn"
+            :style="{ order: navtool.orderOf('search') }"
+            aria-label="搜尋"
+          >
+            <i class="icon icon-search"></i>
+          </NuxtLink>
+
           <!-- 語言切換（剩 1 個語系時隱藏） -->
-          <div v-if="languages.length > 1" class="header-value__lang">
+          <div
+            v-if="navtool.isEnabled('language') && languages.length > 1"
+            class="header-value__lang"
+            :style="{ order: navtool.orderOf('language') }"
+          >
             <button
               class="header-value__lang-btn"
               :class="{ 'is-open': langOpen }"
               @click="langOpen = !langOpen"
             >
               {{ currentLang }}
-              <Arrow class="header-value__caret" />
+              <i class="icon icon-arrow header-value__caret"></i>
             </button>
             <transition name="drop">
               <ul v-show="langOpen" class="header-value__lang-menu">
@@ -63,17 +80,57 @@ function pickLang(code) {
             </transition>
           </div>
 
-          <!-- LINE -->
-          <a
-            v-if="firmData.firm.social?.line"
-            :href="firmData.firm.social.line"
-            target="_blank"
-            rel="noopener"
-            class="header-value__line"
-            aria-label="LINE"
+          <!-- 社群（一排平鋪） -->
+          <div
+            v-if="navtool.isEnabled('social') && socials.length"
+            class="header-value__social"
+            :style="{ order: navtool.orderOf('social') }"
           >
-            <LineIcon />
-          </a>
+            <a
+              v-for="s in socials"
+              :key="s.key"
+              :href="s.url"
+              :aria-label="s.key"
+              target="_blank"
+              rel="noopener"
+            >
+              <i :class="['icon', `icon-${s.key}`]"></i>
+            </a>
+          </div>
+
+          <!-- 會員 -->
+          <NuxtLink
+            v-if="navtool.isEnabled('member')"
+            to="/member"
+            class="header-value__icon-btn"
+            :style="{ order: navtool.orderOf('member') }"
+            aria-label="會員中心"
+          >
+            <i class="icon icon-member"></i>
+          </NuxtLink>
+
+          <!-- 購物車 -->
+          <NuxtLink
+            v-if="navtool.isEnabled('cart')"
+            to="/shop/cart"
+            class="header-value__icon-btn"
+            :style="{ order: navtool.orderOf('cart') }"
+            aria-label="購物車"
+          >
+            <i class="icon icon-shopcart"></i>
+            <span v-if="cart.count" class="header-value__cart-badge">{{ cart.count }}</span>
+          </NuxtLink>
+
+          <!-- 我的最愛 -->
+          <NuxtLink
+            v-if="navtool.isEnabled('favorite')"
+            to="/shop/favorite"
+            class="header-value__icon-btn"
+            :style="{ order: navtool.orderOf('favorite') }"
+            aria-label="我的最愛"
+          >
+            <i class="icon icon-like"></i>
+          </NuxtLink>
 
           <!-- 行動版選單鈕 -->
           <button class="header-value__toggle" aria-label="開啟選單" @click="ui.toggleMenu">☰</button>
@@ -155,9 +212,7 @@ $red: #bf3131;
   }
 
   &__caret {
-    width: 12px;
-    height: 12px;
-    display: block;
+    font-size: 12px;
     transition: transform var(--transition);
   }
 
@@ -197,12 +252,9 @@ $red: #bf3131;
   &__line {
     display: block;
     flex-shrink: 0;
+    color: $red;
 
-    svg {
-      width: 38px;
-      height: 38px;
-      display: block;
-    }
+    .icon { font-size: 38px; }
   }
 
   /* 行動版 */
@@ -251,7 +303,7 @@ $red: #bf3131;
     padding: 10px 14px 10px 20px;
     min-height: 64px;
   }
-  .header-value__logo svg {
+  .header-value__logo img {
     height: 40px;
   }
 }

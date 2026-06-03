@@ -15,11 +15,16 @@ const emit = defineEmits(['navigate'])
         <span v-if="item.children?.length" class="site-menu__caret">▾</span>
       </NuxtLink>
 
-      <ul v-if="item.children?.length" class="site-menu__sub">
-        <li v-for="child in item.children" :key="child.url">
-          <NuxtLink :to="child.url" @click="emit('navigate')">{{ child.title }}</NuxtLink>
-        </li>
-      </ul>
+      <div v-if="item.children?.length" class="site-menu__sub">
+        <NuxtLink
+          v-for="child in item.children"
+          :key="child.url"
+          :to="child.url"
+          @click="emit('navigate')"
+        >
+          {{ child.title }}
+        </NuxtLink>
+      </div>
     </li>
   </ul>
 </template>

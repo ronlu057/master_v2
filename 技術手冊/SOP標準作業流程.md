@@ -31,7 +31,7 @@ cd my-new-site
 npm install
 ```
 
-`npm install` 約 30 秒完成（含 Nuxt、Pinia、Lenis、GSAP、Vite-SVG-Loader、Sass）。
+`npm install` 約 30 秒完成（含 Nuxt、Pinia、Lenis、GSAP、Sass）。
 
 ### 1.3 選擇專案類型
 
@@ -73,22 +73,18 @@ npm run dev
 
 ### 1.6 替換 Logo
 
-1. 把客戶 Logo 放到 `assets/icon/logo-AD.svg`（純向量），或 `public/img/logo/logo-AD.svg`（如果含 base64 嵌入圖）
-2. 改 [`components/headers/Header01.vue`](../components/headers/Header01.vue) line 內的 `<img src="...">`
-3. 若是純向量，建議改為 `?component` import：
+1. 把客戶 Logo 放到 `public/img/logo/logo-AD.svg`（Logo 通常含品牌色或 base64 嵌入圖，必須用 `<img>` 載入，不能 mask 化）
+2. 改 [`components/headers/Header01.vue`](../components/headers/Header01.vue) 內 `<img src="/img/logo/logo-AD.svg">`
 
 ```vue
-<script setup>
-import LogoAD from '~/assets/icon/logo-AD.svg?component'
-</script>
 <template>
   <NuxtLink class="logo" to="/" title="回首頁">
-    <LogoAD />
+    <img src="/img/logo/logo-AD.svg" alt="Logo" />
   </NuxtLink>
 </template>
 ```
 
-> 詳見白皮書 [§9.10 SVG 引入](./開發母版專案.md#94-樣式與主題)（SVG 引入規則）。
+> ⚠️ **不要**用 `?component` 把 Logo 變 Vue 元件 — 全站 icon 走 [`.icon` 字型法](./製作規範.md#6-svg--圖片--字體規範)，但 Logo 屬於含圖型 SVG，必須 `<img>`。
 
 ### 1.7 客製化 mock 資料
 
@@ -434,20 +430,35 @@ npm run dev
 
 ✅ 同樣**重啟 dev server**。Mock JSON 由 [`server/mock/db.js`](../server/mock/db.js) 在 server 首次載入時讀檔，不會 watch JSON 檔。
 
-### 4.4 SVG 引入後顏色不對 / hover 不變色
+### 4.4 icon 顏色不對 / hover 不變色
 
-**症狀**：SVG 顯示原本顏色，CSS 的 `fill: $web_font_color` 沒效。
+**症狀**：icon 不接受 CSS `color`，hover 也不變色。
 
-**原因**：SVG 內含 `<defs><style>.st0 { fill: #xxx }</style></defs>` —— 內部 style 優先級高於外部 CSS。
+**原因**：可能寫成了舊的 `<XxxIcon />` Vue 元件用法，或漏寫 `.icon` class。
 
-**解法**：清掉 `<defs>` 區塊與 path 的 `class="st0"`，讓外部 CSS 接管。可用以下 Node 腳本批次處理（路徑與檔名請依需求修改）：
+**解法**：全站 icon **一律**用 `.icon` 字型法（mask-image，`color` 即為顏色）：
 
-```bash
-node -e "const fs=require('fs');const files=['search_icon','language_icon','shopcart_icon'];for(const n of files){const f='assets/icon/'+n+'.svg';let c=fs.readFileSync(f,'utf8');c=c.replace(/\s*<defs>[\s\S]*?<\/defs>/g,'').replace(/\s*class=\"st0\"/g,'');fs.writeFileSync(f,c);}"
+```html
+<!-- ✅ 正確 -->
+<i class="icon icon-search"></i>
+
+<!-- ❌ 舊寫法（vite-svg-loader 已從專案移除） -->
+<SearchIcon />
 ```
 
-> [!CAUTION]
-> 含品牌色的 SVG（如 LINE logo `#BF3131`）**不要清** —— 那是必須保留的品牌色，清掉就不對了。
+對應 CSS：
+
+```scss
+.search_btn {
+  color: $web_font_color;            // ← 控 icon 顏色
+  &:hover { color: $web_header_1; }   // ← hover 變色
+
+  .icon { font-size: 20px; }          // ← 控 icon 大小（預設 1em）
+}
+```
+
+> 詳見 [製作規範 §6](./製作規範.md#6-svg--圖片--字體規範) 與 [`assets/styles/icons.scss`](../assets/styles/icons.scss) 的 icon 清單。
+> 新增 icon：把 SVG 放 `assets/icon/`，然後在 `icons.scss` 加一條 `.icon-XXX { mask-image: url('../icon/檔名.svg'); }`（記得加 `-webkit-` 前綴版本）。
 
 ### 4.5 SCSS 變數編譯失敗（Undefined variable）
 

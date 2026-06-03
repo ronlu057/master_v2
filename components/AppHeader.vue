@@ -1,14 +1,16 @@
 <script setup>
-// 頁首派發器 — 依 NUXT_PUBLIC_HEADER 選用 components/headers/ 內的版型。
-// NUXT_PUBLIC_HEADER 的值 = 版型「檔名」（不含 .vue），例如 header_value、Header01。
+// 頁首派發器 — 依設定挑 components/headers/ 內的版型。
+// 設定來源：useEffectiveSettings（initial = data/site-settings.json，可被 localStorage 預覽覆寫）
 // 新增版型：在 headers/ 放一個 .vue 即可，本檔不需修改。
 const headers = import.meta.glob('./headers/*.vue', { eager: true })
-const { public: pub } = useRuntimeConfig()
+const { state } = useEffectiveSettings()
 
-// 依設定挑版型；找不到時 fallback 第一個
-const current =
-  headers[`./headers/${pub.header}.vue`]?.default ||
-  Object.values(headers)[0]?.default
+// 依設定挑版型（reactive，state.header 變動 → <component> 自動切換）；找不到時 fallback 第一個
+const current = computed(
+  () =>
+    headers[`./headers/${state.header}.vue`]?.default ||
+    Object.values(headers)[0]?.default,
+)
 </script>
 
 <template>

@@ -2,15 +2,16 @@
 // 頁首版型 03 — 含 mega menu 產品總覽（Products Overview）
 //   主結構：左 Logo + 右 navmenu + navtool（lang / cart / search / 漢堡）
 //   特色：產品主選單 hover 時展開 mega menu，含 Series → Preview 雙層 hover 互動
-import SearchIcon from '~/assets/icon/search_icon.svg?component'
-import LanguageIcon from '~/assets/icon/language_icon.svg?component'
-import ShopcartIcon from '~/assets/icon/shopcart_icon.svg?component'
-
+// icon 全站走 .icon 字型法（assets/styles/icons.scss）：<i class="icon icon-XXX"></i>
 // ── 專案類型 / 通用狀態 ─────────────────────────────────────
 const { isMinimal, enableShop } = useProject()
 const ui = useUiStore()
 const cart = useCartStore()
 const { data: menuData } = useSiteMenu()
+const { data: firmData } = useSiteFirm()
+const navtool = useNavtoolConfig()
+
+const socials = useSocials()
 
 // ── i18n ─────────────────────────────────────────────────
 const { locale, locales, setLocale } = useI18n()
@@ -204,11 +205,36 @@ onBeforeUnmount(() => {
         </ul>
       </nav>
 
-      <!-- 工具列 -->
-      <div class="navtool">
+      <!-- 工具列（順序 / 顯示由 useNavtoolConfig 控制） -->
+      <div v-if="!isMinimal" class="navtool">
+        <!-- 搜尋 -->
+        <div
+          v-if="navtool.isEnabled('search')"
+          class="search_btn"
+          :style="{ order: navtool.orderOf('search') }"
+        >
+          <i class="icon icon-search"></i>
+          <form @submit.prevent="onSearch">
+            <div class="search_box">
+              <input
+                v-model="keyword"
+                type="text"
+                autocomplete="off"
+                placeholder="網站搜尋..."
+                aria-label="網站搜尋"
+              />
+              <button type="submit" aria-label="搜尋"><i class="icon icon-search" aria-hidden="true"></i></button>
+            </div>
+          </form>
+        </div>
+
         <!-- 語系 -->
-        <div v-if="languages.length > 1" class="lang_toggle">
-          <LanguageIcon /> <span>Language</span>
+        <div
+          v-if="navtool.isEnabled('language') && languages.length > 1"
+          class="lang_toggle"
+          :style="{ order: navtool.orderOf('language') }"
+        >
+          <i class="icon icon-language"></i> <span>Language</span>
           <ul>
             <li v-for="lang in languages" :key="lang.code">
               <button
@@ -222,28 +248,57 @@ onBeforeUnmount(() => {
           </ul>
         </div>
 
+        <!-- 社群 -->
+        <div
+          v-if="navtool.isEnabled('social') && socials.length"
+          class="navtool_social"
+          :style="{ order: navtool.orderOf('social') }"
+        >
+          <a
+            v-for="s in socials"
+            :key="s.key"
+            :href="s.url"
+            :aria-label="s.key"
+            target="_blank"
+            rel="noopener"
+          >
+            <i :class="['icon', `icon-${s.key}`]"></i>
+          </a>
+        </div>
+
+        <!-- 會員中心 -->
+        <NuxtLink
+          v-if="navtool.isEnabled('member')"
+          class="member_btn"
+          to="/member"
+          :style="{ order: navtool.orderOf('member') }"
+          aria-label="會員中心"
+        >
+          <i class="icon icon-member"></i>
+        </NuxtLink>
+
         <!-- 購物車 -->
-        <NuxtLink v-if="enableShop" class="cart_btn" to="/shop/cart" aria-label="購物車">
-          <ShopcartIcon />
+        <NuxtLink
+          v-if="navtool.isEnabled('cart')"
+          class="cart_btn"
+          to="/shop/cart"
+          :style="{ order: navtool.orderOf('cart') }"
+          aria-label="購物車"
+        >
+          <i class="icon icon-shopcart"></i>
           <p v-if="cart.count">{{ cart.count }}</p>
         </NuxtLink>
 
-        <!-- 搜尋 -->
-        <div v-if="!isMinimal" class="search_btn">
-          <SearchIcon />
-          <form @submit.prevent="onSearch">
-            <div class="search_box">
-              <input
-                v-model="keyword"
-                type="text"
-                autocomplete="off"
-                placeholder="網站搜尋..."
-                aria-label="網站搜尋"
-              />
-              <button type="submit" aria-label="搜尋"><SearchIcon /></button>
-            </div>
-          </form>
-        </div>
+        <!-- 我的最愛 -->
+        <NuxtLink
+          v-if="navtool.isEnabled('favorite')"
+          class="favorite_btn"
+          to="/shop/favorite"
+          :style="{ order: navtool.orderOf('favorite') }"
+          aria-label="我的最愛"
+        >
+          <i class="icon icon-like"></i>
+        </NuxtLink>
 
         <!-- 行動版漢堡 -->
         <button
@@ -369,7 +424,7 @@ onBeforeUnmount(() => {
     &:hover,
     > a.router-link-active {
       > a {
-        color: $web_header_1;
+        color: #e70000;
         background-size: 75% 1px;
       }
     }
@@ -633,21 +688,17 @@ onBeforeUnmount(() => {
       &:not(.cart_btn):not(.mbPanel_btn) { display: none; }
     }
 
-    svg {
-      display: block;
-      width: 18px;
-      height: 18px;
-      fill: #fff;
+    color: #fff;
+
+    .icon {
+      font-size: 18px;
       flex-shrink: 0;
-      transition: all 0.3s;
     }
 
     &:hover {
       color: #9a9a9a;
       background-size: 100% 1px;
       transition: all 0.3s;
-
-      svg { fill: #9a9a9a; }
 
       ul,
       form {
@@ -661,6 +712,11 @@ onBeforeUnmount(() => {
 
 .lang_toggle {
   span { margin-left: 6px; }
+
+  // hover 時把下拉 translate 歸位（滑入動畫）
+  &:hover ul {
+    transform: translateX(-50%) translateY(0);
+  }
 
   // 下拉樣式對齊 navmenu_sub（白底 + 主色字 hover）
   ul {
@@ -726,6 +782,11 @@ onBeforeUnmount(() => {
 
 // search 下拉樣式對齊 navmenu_sub（白底 + 主色字 hover）
 .search_btn {
+  // hover 時把下拉 translate 歸位（滑入動畫）
+  &:hover form {
+    transform: translateY(0);
+  }
+
   form {
     position: absolute;
     top: 100%;
@@ -771,19 +832,14 @@ onBeforeUnmount(() => {
       padding: 4px;
       flex-shrink: 0;
       border-radius: 6px;
-      transition: background 0.3s;
+      color: $web_font_color;
+      transition: background 0.3s, color 0.3s;
 
-      svg {
-        display: block;
-        width: 18px;
-        height: 18px;
-        fill: $web_font_color;
-        transition: fill 0.3s;
-      }
+      .icon { font-size: 18px; }
 
       &:hover {
         background: var(--color-surface);
-        svg { fill: $web_header_1; }
+        color: $web_header_1;
       }
     }
   }

@@ -3,6 +3,9 @@
    SCSS 變數 / mixin 由 nuxt.config.js additionalData 自動注入（_variables.scss）
    ============================================================ */
 
+/* Icon 字型（mask 法）：全站 <i class="icon icon-XXX"></i> 用法 */
+@use 'icons';
+
 /* ---- 主題 token（預設：模組件套版）---- */
 :root {
   --color-primary: #4fc08d;
@@ -219,5 +222,42 @@ h4 {
   }
   .section-title__main {
     font-size: 24px;
+  }
+}
+
+/* ============================================================
+   navtool 社群區塊 — 全 Header 共用樣式
+   沿用原 master_dev `_header02.scss` 的 .social_media 風格：
+   圓形 35×35 深底白 icon、hover 換主色、響應式 gap、1200↓ 隱藏
+   各 Header 想覆寫 → scoped style 內加更具體 selector
+   ============================================================ */
+.navtool_social {
+  display: flex;
+  align-items: center;
+  gap: 0 13px;
+  transition: all 0.3s;
+
+  @include rwd-1440 { gap: 0 10px; }
+  @include rwd-1280 { gap: 0 7px; }
+  @include rwd-1200 { display: none; }
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background: $web_font_color;
+    border-radius: 50%;
+    color: #fff;
+    transition: all 0.3s;
+
+    .icon {
+      font-size: 21px;
+    }
+
+    &:hover {
+      background: $web_header_1;
+    }
   }
 }

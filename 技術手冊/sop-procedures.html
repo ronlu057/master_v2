@@ -149,7 +149,7 @@ body{
 cd my-new-site
 npm install
 </code></pre>
-<p><code>npm install</code> 約 30 秒完成（含 Nuxt、Pinia、Lenis、GSAP、Vite-SVG-Loader、Sass）。</p>
+<p><code>npm install</code> 約 30 秒完成（含 Nuxt、Pinia、Lenis、GSAP、Sass）。</p>
 <h3 id="13-選擇專案類型">1.3 選擇專案類型</h3>
 <p>編輯 <a href="../.env"><code>.env</code></a>，依需求選一：</p>
 <pre data-lang="BASH"><code class="language-bash"># module       模組件套版（首頁 + 內頁皆用 block 模組組裝）
@@ -179,21 +179,17 @@ NUXT_PUBLIC_BLOCK_BANNER=BlockBanner01
 <p>瀏覽 <code>http://localhost:3000</code>。</p>
 <h3 id="16-替換-logo">1.6 替換 Logo</h3>
 <ol>
-<li>把客戶 Logo 放到 <code>assets/icon/logo-AD.svg</code>（純向量），或 <code>public/img/logo/logo-AD.svg</code>（如果含 base64 嵌入圖）</li>
-<li>改 <a href="../components/headers/Header01.vue"><code>components/headers/Header01.vue</code></a> line 內的 <code>&lt;img src=&quot;...&quot;&gt;</code></li>
-<li>若是純向量，建議改為 <code>?component</code> import：</li>
+<li>把客戶 Logo 放到 <code>public/img/logo/logo-AD.svg</code>（Logo 通常含品牌色或 base64 嵌入圖，必須用 <code>&lt;img&gt;</code> 載入，不能 mask 化）</li>
+<li>改 <a href="../components/headers/Header01.vue"><code>components/headers/Header01.vue</code></a> 內 <code>&lt;img src=&quot;/img/logo/logo-AD.svg&quot;&gt;</code></li>
 </ol>
-<pre data-lang="VUE"><code class="language-vue">&lt;script setup&gt;
-import LogoAD from &#39;~/assets/icon/logo-AD.svg?component&#39;
-&lt;/script&gt;
-&lt;template&gt;
+<pre data-lang="VUE"><code class="language-vue">&lt;template&gt;
   &lt;NuxtLink class=&quot;logo&quot; to=&quot;/&quot; title=&quot;回首頁&quot;&gt;
-    &lt;LogoAD /&gt;
+    &lt;img src=&quot;/img/logo/logo-AD.svg&quot; alt=&quot;Logo&quot; /&gt;
   &lt;/NuxtLink&gt;
 &lt;/template&gt;
 </code></pre>
 <blockquote>
-<p>詳見白皮書 <a href="master-project-whitepaper.html#94-%E6%A8%A3%E5%BC%8F%E8%88%87%E4%B8%BB%E9%A1%8C">§9.10 SVG 引入</a>（SVG 引入規則）。</p>
+<p>⚠️ <strong>不要</strong>用 <code>?component</code> 把 Logo 變 Vue 元件 — 全站 icon 走 <a href="development-conventions.html#6-svg--%E5%9C%96%E7%89%87--%E5%AD%97%E9%AB%94%E8%A6%8F%E7%AF%84"><code>.icon</code> 字型法</a>，但 Logo 屬於含圖型 SVG，必須 <code>&lt;img&gt;</code>。</p>
 </blockquote>
 <h3 id="17-客製化-mock-資料">1.7 客製化 mock 資料</h3>
 <p>修改 <a href="../server/mock/data/"><code>server/mock/data/</code></a> 內的 JSON 檔（前端開發階段用）：</p>
@@ -634,13 +630,27 @@ npm run dev
 <p>✅ 同樣<strong>重啟 dev server</strong>。</p>
 <h3 id="43-改了-mock-json-但沒生效">4.3 改了 mock JSON 但沒生效</h3>
 <p>✅ 同樣<strong>重啟 dev server</strong>。Mock JSON 由 <a href="../server/mock/db.js"><code>server/mock/db.js</code></a> 在 server 首次載入時讀檔，不會 watch JSON 檔。</p>
-<h3 id="44-svg-引入後顏色不對--hover-不變色">4.4 SVG 引入後顏色不對 / hover 不變色</h3>
-<p><strong>症狀</strong>：SVG 顯示原本顏色，CSS 的 <code>fill: $web_font_color</code> 沒效。</p>
-<p><strong>原因</strong>：SVG 內含 <code>&lt;defs&gt;&lt;style&gt;.st0 { fill: #xxx }&lt;/style&gt;&lt;/defs&gt;</code> —— 內部 style 優先級高於外部 CSS。</p>
-<p><strong>解法</strong>：清掉 <code>&lt;defs&gt;</code> 區塊與 path 的 <code>class=&quot;st0&quot;</code>，讓外部 CSS 接管。可用以下 Node 腳本批次處理（路徑與檔名請依需求修改）：</p>
-<pre data-lang="BASH"><code class="language-bash">node -e &quot;const fs=require(&#39;fs&#39;);const files=[&#39;search_icon&#39;,&#39;language_icon&#39;,&#39;shopcart_icon&#39;];for(const n of files){const f=&#39;assets/icon/&#39;+n+&#39;.svg&#39;;let c=fs.readFileSync(f,&#39;utf8&#39;);c=c.replace(/\s*&lt;defs&gt;[\s\S]*?&lt;\/defs&gt;/g,&#39;&#39;).replace(/\s*class=\&quot;st0\&quot;/g,&#39;&#39;);fs.writeFileSync(f,c);}&quot;
+<h3 id="44-icon-顏色不對--hover-不變色">4.4 icon 顏色不對 / hover 不變色</h3>
+<p><strong>症狀</strong>：icon 不接受 CSS <code>color</code>，hover 也不變色。</p>
+<p><strong>原因</strong>：可能寫成了舊的 <code>&lt;XxxIcon /&gt;</code> Vue 元件用法，或漏寫 <code>.icon</code> class。</p>
+<p><strong>解法</strong>：全站 icon <strong>一律</strong>用 <code>.icon</code> 字型法（mask-image，<code>color</code> 即為顏色）：</p>
+<pre data-lang="HTML"><code class="language-html">&lt;!-- ✅ 正確 --&gt;
+&lt;i class=&quot;icon icon-search&quot;&gt;&lt;/i&gt;
+
+&lt;!-- ❌ 舊寫法（vite-svg-loader 已從專案移除） --&gt;
+&lt;SearchIcon /&gt;
 </code></pre>
-<blockquote class="callout callout--caution"><p>含品牌色的 SVG（如 LINE logo <code>#BF3131</code>）<strong>不要清</strong> —— 那是必須保留的品牌色，清掉就不對了。</p>
+<p>對應 CSS：</p>
+<pre data-lang="SCSS"><code class="language-scss">.search_btn {
+  color: $web_font_color;            // ← 控 icon 顏色
+  &amp;:hover { color: $web_header_1; }   // ← hover 變色
+
+  .icon { font-size: 20px; }          // ← 控 icon 大小（預設 1em）
+}
+</code></pre>
+<blockquote>
+<p>詳見 <a href="development-conventions.html#6-svg--%E5%9C%96%E7%89%87--%E5%AD%97%E9%AB%94%E8%A6%8F%E7%AF%84">製作規範 §6</a> 與 <a href="../assets/styles/icons.scss"><code>assets/styles/icons.scss</code></a> 的 icon 清單。
+新增 icon：把 SVG 放 <code>assets/icon/</code>，然後在 <code>icons.scss</code> 加一條 <code>.icon-XXX { mask-image: url(&#39;../icon/檔名.svg&#39;); }</code>（記得加 <code>-webkit-</code> 前綴版本）。</p>
 </blockquote>
 <h3 id="45-scss-變數編譯失敗undefined-variable">4.5 SCSS 變數編譯失敗（Undefined variable）</h3>
 <p><strong>症狀</strong>：頁面跑出 <code>Undefined variable: $web_font_color</code>。</p>

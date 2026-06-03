@@ -21,6 +21,11 @@
     "cancel": "キャンセル",
     "contact_us": "お問い合わせ"
   },
+  "cta": {
+    "view_menu": "メニューを見る",
+    "order_online": "オンライン注文",
+    "book_appointment": "今すぐ予約"
+  },
   "msg": {
     "loading": "読み込み中…",
     "empty": "データがありません",

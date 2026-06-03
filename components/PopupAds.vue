@@ -7,7 +7,8 @@ const current = ref(null)
 const STORAGE = 'popup_dismissed'
 
 onMounted(() => {
-  if (isMinimal) return
+  // useProject 改為 ComputedRef 後 script 內讀值要 .value
+  if (isMinimal.value) return
   let dismissed = []
   try {
     dismissed = JSON.parse(localStorage.getItem(STORAGE) || '[]')

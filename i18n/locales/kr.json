@@ -21,6 +21,11 @@
     "cancel": "취소",
     "contact_us": "문의하기"
   },
+  "cta": {
+    "view_menu": "메뉴 보기",
+    "order_online": "온라인 주문",
+    "book_appointment": "지금 예약"
+  },
   "msg": {
     "loading": "로딩 중…",
     "empty": "데이터가 없습니다",

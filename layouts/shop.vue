@@ -28,6 +28,9 @@ const cart = useCartStore()
 
     <AppFooter />
     <PopupAds />
+    <ClientOnly>
+      <AdminPreviewBar />
+    </ClientOnly>
   </div>
 </template>
 

@@ -683,7 +683,30 @@ enableShop: !!pub.enableShop,
 </blockquote>
 <hr>
 <h2 id="6-svg--圖片--字體規範">6. SVG / 圖片 / 字體規範</h2>
-<h3 id="61-svg-放哪">6.1 SVG 放哪</h3>
+<h3 id="61-全站-icon-走-icon-字型法強制">6.1 全站 icon 走 <code>.icon</code> 字型法（強制）</h3>
+<p>全站 icon <strong>一律</strong>用 <code>.icon</code> + <code>.icon-XXX</code> mask-image 寫法（啟發自使用者自製的「覺醒設計 · 前端 CSS 輔助器 V1.5 / Icon 字型工坊」）。</p>
+<pre data-lang="HTML"><code class="language-html">&lt;i class=&quot;icon icon-search&quot;&gt;&lt;/i&gt;
+&lt;i class=&quot;icon icon-shopcart&quot;&gt;&lt;/i&gt;
+</code></pre>
+<ul>
+<li><strong>顏色</strong>：用 CSS <code>color</code> 控（icon 自動套 <code>currentColor</code>）</li>
+<li><strong>大小</strong>：用 <code>font-size</code> 控（預設 1em × 1em；對齊文字基線）</li>
+<li>定義集中在 <a href="../assets/styles/icons.scss">assets/styles/icons.scss</a>，由 <a href="../assets/styles/main.scss">main.scss</a> 全域 <code>@use &#39;icons&#39;</code></li>
+</ul>
+<h4 id="新增-icon">新增 icon</h4>
+<ol>
+<li>SVG 放 <code>assets/icon/</code></li>
+<li>在 <code>assets/styles/icons.scss</code> 新增條目：<pre data-lang="SCSS"><code class="language-scss">.icon-foo {
+  -webkit-mask-image: url(&#39;../icon/foo.svg&#39;);
+  mask-image: url(&#39;../icon/foo.svg&#39;);
+}
+</code></pre>
+</li>
+<li>模板用 <code>&lt;i class=&quot;icon icon-foo&quot;&gt;&lt;/i&gt;</code></li>
+</ol>
+<p>❌ <strong>不要</strong>再用 <code>import Foo from &#39;...?component&#39;</code> → <code>&lt;Foo /&gt;</code> 寫法（<code>vite-svg-loader</code> 已從專案移除）。</p>
+<h3 id="62-圖片型-svg含-base64-嵌入圖">6.2 圖片型 SVG（含 base64 嵌入圖）</h3>
+<p>含 <code>&lt;image xlink:href=&quot;data:image/...;base64,...&quot;&gt;</code> 的 SVG（如品牌 Logo）<strong>不能用 .icon 法</strong> — mask 只取形狀當遮罩，會丟失嵌入點陣圖。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -693,28 +716,17 @@ enableShop: !!pub.enableShop,
 </tr>
 </thead>
 <tbody><tr>
-<td>元件內用、要 CSS 控 fill（純向量）</td>
-<td><code>assets/icon/</code></td>
-<td><code>import Xxx from &#39;...?component&#39;</code> → <code>&lt;Xxx /&gt;</code></td>
+<td>品牌 Logo / 含圖型 SVG</td>
+<td><code>public/img/</code></td>
+<td><code>&lt;img src=&quot;/img/...&quot;&gt;</code></td>
 </tr>
 <tr>
-<td>含 base64 嵌入圖（假 SVG）</td>
-<td><code>assets/icon/</code> 或 <code>public/img/</code></td>
-<td><code>?url</code> 或 <code>&lt;img src=&quot;...&quot;&gt;</code></td>
-</tr>
-<tr>
-<td>需要固定 URL 對外（favicon、OG 圖）</td>
+<td>對外固定 URL（favicon、OG 圖）</td>
 <td><code>public/</code></td>
 <td><code>&lt;img src=&quot;/img/...&quot;&gt;</code></td>
 </tr>
 </tbody></table></div>
-<h3 id="62-svg-清理">6.2 SVG 清理</h3>
-<p>✅ Adobe Illustrator 匯出的 SVG 通常含 <code>&lt;defs&gt;&lt;style&gt;.st0 { fill: #xxx }&lt;/style&gt;&lt;/defs&gt;</code>，這會<strong>鎖死</strong> fill 顏色。匯入專案後請清掉這段：</p>
-<pre data-lang="BASH"><code class="language-bash"># 批次清理腳本（不會動含品牌色的 SVG，自己列檔名）
-node -e &quot;...&quot;
-</code></pre>
-<p>❌ <strong>不要清</strong>含品牌色的 SVG（LINE logo、Facebook 等），它們的顏色就是品牌規範。</p>
-<p>詳見白皮書 <a href="master-project-whitepaper.html#94-%E6%A8%A3%E5%BC%8F%E8%88%87%E4%B8%BB%E9%A1%8C">§9.4</a>。</p>
+<p>判斷小撇步：用 <code>grep -l &quot;&lt;image&quot; assets/icon/*.svg</code> 列出所有「圖片型」SVG，這些不能 mask 化。</p>
 <h3 id="63-字體">6.3 字體</h3>
 <p>✅ 從 <a href="https://fonts.google.com">Google Fonts</a> 透過 <a href="../nuxt.config.js"><code>nuxt.config.js</code></a> 的 <code>app.head.link</code> 載入。</p>
 <p>❌ <strong>不要</strong>在元件 / SCSS 內 <code>@import url(fonts.googleapis.com/...)</code>。</p>

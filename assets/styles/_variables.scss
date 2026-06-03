@@ -72,3 +72,15 @@ $z_header: 50;
 $z_popup: 80;
 $z_mobile_menu: 60;
 $z_loading: 100;
+$z_mbPanel_btn: 70;
+$z_mbPanel_95: 95;
+
+
+/* ---- 動畫曲線（cubic-bezier）---- */
+$ani_bezier_1: cubic-bezier(0.25, 0.1, 0.25, 1);   // ease（標準）
+$ani_bezier_2: cubic-bezier(0.55, 0.085, 0.68, 0.53); // easeInQuad
+$ani_bezier_3: cubic-bezier(0.25, 0.46, 0.45, 0.94); // easeOutQuad
+$ani_bezier_4: cubic-bezier(0.455, 0.03, 0.515, 0.955); // easeInOutQuad
+$ani_bezier_5: cubic-bezier(0.55, 0.055, 0.675, 0.19); // easeInCubic
+$ani_bezier_6: cubic-bezier(0.215, 0.61, 0.355, 1); // easeOutCubic
+$ani_bezier_7: cubic-bezier(0.645, 0.045, 0.355, 1); // easeInOutCubic（柔順）

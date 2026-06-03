@@ -35,6 +35,20 @@ npm run docs    # 由 .md 重新產生白皮書 HTML
 
 改 `.env` 後需重啟 dev server。
 
+## 整合設定後台 `/admin`（dev mode only）
+
+開 `npm run dev` 後可訪問 `http://localhost:3000/admin`，內含三個 tab：
+
+| Tab | 用途 |
+|---|---|
+| **設定中心** | 視覺化切換 Header / Banner / 專案類型 / API base 等；改值先進 localStorage 即時預覽（dispatcher 走 `useEffectiveSettings()` reactive 切版），按「提交」才寫回 `.env` |
+| **Mock 資料** | 編輯 `server/mock/data/*.json`，含 JSON 語法即時檢查；寫回後需重啟 dev server |
+| **檔案生成** | 一鍵 scaffold 新 Header / Banner / Mock JSON（從既有檔複製為起點） |
+
+- 全部端點放 `/_admin/*`（避開 `/api/*` mock catch-all）
+- 所有 server route 開頭 `assertDev(event)` 守門 — `NODE_ENV=production` 直接 404
+- 預覽機制：站台底部會出現「預覽模式」浮條（`AdminPreviewBar`），點「清除預覽」即清掉 localStorage 還原
+
 ## 在另一台電腦接手
 
 1. 安裝 Claude Code（IDE 擴充／CLI／桌面版），登入 Anthropic 帳號。

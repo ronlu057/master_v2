@@ -20,7 +20,15 @@
     },
     "footer": {
       "title2": "專業前端網站開發 · Nuxt 4 母版"
-    }
+    },
+    "cta_menu": "https://example.com/menu.pdf",
+    "cta_order": "https://example.com/order",
+    "exam_countdown": [
+      { "label": "會考", "year": 115, "days": 168 },
+      { "label": "學測", "year": 115, "days": 82 },
+      { "label": "分科", "year": 115, "days": 220 }
+    ],
+    "cta_appointment": "https://example.com/appointment"
   },
   "rules": [
     {

@@ -1,0 +1,92 @@
+/* ============================================================
+   Icon 字型樣式 — 啟發自「覺醒設計 · 前端 CSS 輔助器 V1.5 · Icon 字型工坊」
+   全站 icon 一律以 .icon + .icon-XXX 套用，用 color / font-size 控制
+   用法：<i class="icon icon-search"></i>
+
+   原理：mask-image 取 SVG 形狀當遮罩，background-color: currentColor 上色
+   優點：1) color 即可控色（不必 fill）
+         2) font-size 控大小（自動對齊行內文字 baseline）
+         3) 一份 SVG 全站重用，無需 ?component import
+   新增 icon：把 SVG 放進 assets/icon/，在下方新增一條 .icon-XXX 區塊即可
+
+   ⚠ 例外：含 base64 嵌入圖的「圖片型」SVG（如 Logo.svg）不能 mask，
+         請改用 <img src="...">；公開圖（如 logo）放 public/img/ 並直接 <img>。
+   ============================================================ */
+
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  vertical-align: -0.125em;
+}
+
+/* ---- 個別 icon mask 來源（依檔名命名） ---- */
+/* 路徑：相對於此檔（assets/styles/icons.scss → ../icon/*.svg）
+   Vite 會自動解析；小檔會 inline 為 data URL，大檔走 hash 資產 */
+
+.icon-search {
+  -webkit-mask-image: url('../icon/search_icon.svg');
+  mask-image: url('../icon/search_icon.svg');
+}
+
+.icon-language {
+  -webkit-mask-image: url('../icon/language_icon.svg');
+  mask-image: url('../icon/language_icon.svg');
+}
+
+.icon-language2 {
+  -webkit-mask-image: url('../icon/language_icon2.svg');
+  mask-image: url('../icon/language_icon2.svg');
+}
+
+.icon-shopcart {
+  -webkit-mask-image: url('../icon/shopcart_icon.svg');
+  mask-image: url('../icon/shopcart_icon.svg');
+}
+
+.icon-like {
+  -webkit-mask-image: url('../icon/like_icon.svg');
+  mask-image: url('../icon/like_icon.svg');
+}
+
+.icon-member {
+  -webkit-mask-image: url('../icon/memder_icon.svg');
+  mask-image: url('../icon/memder_icon.svg');
+}
+
+.icon-line {
+  -webkit-mask-image: url('../icon/line_icon.svg');
+  mask-image: url('../icon/line_icon.svg');
+}
+
+.icon-arrow {
+  -webkit-mask-image: url('../icon/Arrow.svg');
+  mask-image: url('../icon/Arrow.svg');
+}
+
+.icon-facebook {
+  -webkit-mask-image: url('../icon/facebook_icon.svg');
+  mask-image: url('../icon/facebook_icon.svg');
+}
+
+.icon-youtube {
+  -webkit-mask-image: url('../icon/youtube_icon.svg');
+  mask-image: url('../icon/youtube_icon.svg');
+}
+
+.icon-instagram {
+  -webkit-mask-image: url('../icon/instagram_icon.svg');
+  mask-image: url('../icon/instagram_icon.svg');
+}
+
+.icon-twitter {
+  -webkit-mask-image: url('../icon/twitter_icon.svg');
+  mask-image: url('../icon/twitter_icon.svg');
+}

@@ -1,0 +1,671 @@
+<script setup>
+// 頁首版型 14 — 中央圓形 Logo 對稱型
+// 結構：左選單 ‖ 中間圓形 Logo（浮起 130px 圓圈）‖ 右選單 + 工具列
+// 特色：首頁透明（cover banner 區），其他頁 / 捲動後加陰影；選單自動切左右半
+//
+// 原始檔：D:\www\master_dev\template\module\header\header14.{php,js}
+//        D:\www\master_dev\template\css\scss\module\header\_header14.scss
+// icon 全站走 .icon 字型法（assets/styles/icons.scss）：<i class="icon icon-XXX"></i>
+
+const { isMinimal, enableShop } = useProject()
+const ui = useUiStore()
+const cart = useCartStore()
+const { data: menuData } = useSiteMenu()
+const { data: firmData } = useSiteFirm()
+const navtool = useNavtoolConfig()
+
+// i18n
+const { locale, locales, setLocale } = useI18n()
+const languages = computed(() =>
+  locales.value.map((l) => ({ code: l.code, label: l.name })),
+)
+
+const socials = useSocials()
+
+// 把主選單對半分為左/右（仿原 PHP：count/2 上取整作為左半）
+const leftMenu = computed(() => {
+  const list = menuData.value?.header || []
+  const half = Math.ceil(list.length / 2)
+  return list.slice(0, half)
+})
+const rightMenu = computed(() => {
+  const list = menuData.value?.header || []
+  const half = Math.ceil(list.length / 2)
+  return list.slice(half)
+})
+
+// 搜尋（點擊跳轉 /search）
+const onSearchClick = () => navigateTo('/search')
+
+// 捲動偵測（仿原 JS：scrollTop ≥ headerH 加 .scroll）
+const headerEl = ref(null)
+const isScrolled = ref(false)
+const updateScrollState = () => {
+  if (!headerEl.value) return
+  const headerH = headerEl.value.offsetHeight
+  isScrolled.value = window.scrollY >= headerH
+}
+onMounted(() => {
+  updateScrollState()
+  window.addEventListener('scroll', updateScrollState, { passive: true })
+  window.addEventListener('resize', updateScrollState)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', updateScrollState)
+  window.removeEventListener('resize', updateScrollState)
+})
+</script>
+
+<template>
+  <header ref="headerEl" :class="['header14', { scroll: isScrolled }]">
+    <div class="navbar">
+      <!-- 左選單 -->
+      <div v-if="!isMinimal" class="left">
+        <ul itemscope itemtype="https://www.schema.org/SiteNavigationElement" class="navmenu">
+          <li v-for="item in leftMenu" :key="item.url" itemprop="name">
+            <NuxtLink :to="item.url" itemprop="url">{{ item.title }}</NuxtLink>
+            <div v-if="item.children?.length" class="navmenu_sub">
+              <NuxtLink
+                v-for="child in item.children"
+                :key="child.url"
+                :to="child.url"
+                itemprop="url"
+              >
+                {{ child.title }}
+              </NuxtLink>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 中間圓形 Logo -->
+      <div class="mid">
+        <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
+          <img src="/img/logo/logo-AD.svg" alt="Logo" />
+        </NuxtLink>
+      </div>
+
+      <!-- 右選單 + 工具列 -->
+      <div class="right">
+        <ul
+          v-if="!isMinimal"
+          itemscope
+          itemtype="https://www.schema.org/SiteNavigationElement"
+          class="navmenu"
+        >
+          <li v-for="item in rightMenu" :key="item.url" itemprop="name">
+            <NuxtLink :to="item.url" itemprop="url">{{ item.title }}</NuxtLink>
+            <div v-if="item.children?.length" class="navmenu_sub">
+              <NuxtLink
+                v-for="child in item.children"
+                :key="child.url"
+                :to="child.url"
+                itemprop="url"
+              >
+                {{ child.title }}
+              </NuxtLink>
+            </div>
+          </li>
+        </ul>
+
+        <div v-if="!isMinimal" class="navtool">
+          <!-- 搜尋 -->
+          <a
+            v-if="navtool.isEnabled('search')"
+            href="javascript:;"
+            class="search_btn"
+            :style="{ order: navtool.orderOf('search') }"
+            :aria-label="$t('aria.search')"
+            @click.prevent="onSearchClick"
+          >
+            <i class="icon icon-search"></i>
+          </a>
+
+          <!-- 語系 -->
+          <div
+            v-if="navtool.isEnabled('language') && languages.length > 1"
+            class="lang_toggle"
+            :style="{ order: navtool.orderOf('language') }"
+          >
+            <i class="icon icon-language"></i>
+            <ul>
+              <li v-for="lang in languages" :key="lang.code">
+                <a
+                  href="javascript:;"
+                  :class="{ active: lang.code === locale }"
+                  @click.prevent="setLocale(lang.code)"
+                >
+                  {{ lang.label }}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 社群 -->
+          <div
+            v-if="navtool.isEnabled('social') && socials.length"
+            class="navtool_social"
+            :style="{ order: navtool.orderOf('social') }"
+          >
+            <a
+              v-for="s in socials"
+              :key="s.key"
+              :href="s.url"
+              :aria-label="s.key"
+              target="_blank"
+              rel="noopener"
+            >
+              <i :class="['icon', `icon-${s.key}`]"></i>
+            </a>
+          </div>
+
+          <!-- 會員 -->
+          <NuxtLink
+            v-if="navtool.isEnabled('member')"
+            to="/member"
+            class="member_btn"
+            :style="{ order: navtool.orderOf('member') }"
+            aria-label="會員中心"
+          >
+            <i class="icon icon-member"></i>
+          </NuxtLink>
+
+          <!-- 購物車 -->
+          <NuxtLink
+            v-if="navtool.isEnabled('cart')"
+            class="cart_btn"
+            to="/shop/cart"
+            :style="{ order: navtool.orderOf('cart') }"
+            :aria-label="$t('aria.cart')"
+          >
+            <i class="icon icon-shopcart"></i>
+            <p v-if="cart.count">{{ cart.count }}</p>
+          </NuxtLink>
+
+          <!-- 我的最愛 -->
+          <NuxtLink
+            v-if="navtool.isEnabled('favorite')"
+            class="favorite_btn"
+            to="/shop/favorite"
+            :style="{ order: navtool.orderOf('favorite') }"
+            :aria-label="$t('aria.favorite')"
+          >
+            <i class="icon icon-like"></i>
+          </NuxtLink>
+
+          <!-- 漢堡 -->
+          <button
+            type="button"
+            class="mbPanel_btn"
+            :class="{ active: ui.menuOpen }"
+            :aria-label="$t('aria.menu')"
+            @click="ui.toggleMenu"
+          >
+            <span class="bars">
+              <span class="bar bar1"></span>
+              <span class="bar bar2"></span>
+              <span class="bar bar3"></span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 行動版下拉選單 -->
+  <transition name="drop">
+    <nav v-if="ui.menuOpen && !isMinimal" class="header14_mobile">
+      <div class="mb_navmenu">
+        <div v-for="item in menuData.mobile" :key="item.url" class="mb_navmenu_item">
+          <NuxtLink :to="item.url" class="mb_navmenu_link" @click="ui.closeMenu">
+            {{ item.title }}
+          </NuxtLink>
+          <div v-if="item.children?.length" class="mb_navmenu_sub">
+            <NuxtLink
+              v-for="child in item.children"
+              :key="child.url"
+              :to="child.url"
+              @click="ui.closeMenu"
+            >
+              {{ child.title }}
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </transition>
+</template>
+
+<style lang="scss" scoped>
+// ── 首頁透明效果（cover banner 區）─────────────────────────
+body[data-page="index"] {
+  .header14:not(.scroll) {
+    @media (min-width: 1201px) {
+      background: transparent;
+
+      .navbar .navmenu > li {
+        > a {
+          color: #fff;
+          text-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        &:hover > a,
+        > a.router-link-active {
+          color: $web_header_1;
+          text-shadow: none;
+        }
+      }
+
+      .navbar .mid {
+        &::before {
+          opacity: 0;
+          transform: translateY(5px);
+          transition: all 0.3s, opacity 0s 0s;
+        }
+        &::after {
+          opacity: 0;
+          transition: opacity 0s 0s;
+        }
+
+        .logo {
+          background: transparent;
+          transform: translateY(5px);
+
+          img {
+            filter: brightness(0) invert(1);
+          }
+        }
+      }
+
+      .right .navtool > div,
+      .right .navtool > a {
+        color: #fff;
+        filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.1));
+
+        &:hover {
+          color: $web_header_1;
+          filter: none;
+        }
+      }
+    }
+  }
+}
+
+// ── 主結構 ──────────────────────────────────────────────
+.header14 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  z-index: $z_header;
+  transition: all 0.3s;
+
+  &.scroll {
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
+
+    .navbar .mid {
+      @media (min-width: 1201px) {
+        &::before {
+          box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+  }
+}
+
+.navbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0 calc(80 / 19.2 * 1vw);
+
+  @include rwd-1200 { justify-content: space-between; }
+}
+
+// ── 主選單（共用樣式給左右） ───────────────────────────────
+.navmenu {
+  display: flex;
+  gap: 0 calc(50 / 19.2 * 1vw);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @include rwd-1200 { display: none; }
+
+  > li {
+    position: relative;
+
+    > a {
+      display: block;
+      color: $web_font_color;
+      font-size: 16px;
+      line-height: 1.5;
+      padding: 23px 0;
+      transition: all 0.3s;
+    }
+
+    &:hover > a,
+    > a.router-link-active {
+      color: $web_header_1;
+    }
+
+    ul {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      width: max-content;
+      min-width: 142px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 0);
+      transition: all 0.3s;
+
+      li {
+        position: relative;
+
+        & + li { border-top: 1px solid #e9e9e9; }
+
+        a {
+          display: block;
+          color: $web_font_color;
+          font-size: 14px;
+          text-align: center;
+          padding: 10px 20px;
+          background: #fff;
+          transition: all 0.3s;
+        }
+
+        &:hover > a,
+        > a.router-link-active {
+          color: #fff;
+          background: $web_header_1;
+        }
+      }
+    }
+
+    &:hover > ul {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+// ── 左 ──────────────────────────────────────────────────
+.left {
+  width: calc(50% - 65px);
+
+  @include rwd-1200 { display: none; }
+
+  .navmenu { justify-content: flex-end; }
+}
+
+// ── 中（圓形 Logo） ─────────────────────────────────────
+.mid {
+  height: 70px;
+
+  @media (min-width: 1201px) {
+    position: relative;
+    flex-shrink: 0;
+    width: 130px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 130px;
+      border-radius: 50%;
+      z-index: 1;
+      transition: all 0.3s, opacity 0.3s 0.3s;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -15px;
+      width: calc(100% + 30px);
+      height: 100%;
+      background: #fff;
+      z-index: 1;
+      transition: opacity 0s 0.3s;
+    }
+  }
+
+  @include rwd-1200 {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+  }
+
+  .logo {
+    transition: all 0.3s;
+
+    @media (min-width: 1201px) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 130px;
+      background: #fff;
+      border-radius: 50%;
+      isolation: isolate;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    img {
+      transition: all 0.3s;
+      max-height: 80px;
+
+      @include rwd-1200 { max-height: 60px; }
+    }
+  }
+}
+
+// ── 右 ──────────────────────────────────────────────────
+.right {
+  display: flex;
+  align-items: center;
+  gap: 0 calc(50 / 19.2 * 1vw);
+  width: calc(50% - 65px);
+
+  @include rwd-1200 { width: auto; }
+}
+
+// ── 工具列 ──────────────────────────────────────────────
+.navtool {
+  display: flex;
+  align-items: center;
+  gap: 0 30px;
+
+  @include rwd-1200 { gap: 0 20px; }
+
+  > div,
+  > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 70px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    @include rwd-1200 {
+      &:not(.cart_btn):not(.mbPanel_btn) { display: none; }
+    }
+
+    color: $web_font_color;
+    transition: all 0.3s;
+
+    > .icon { font-size: 20px; }
+
+    ul {
+      position: absolute;
+      top: 100%;
+      right: 50%;
+      width: max-content;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(50%, 0);
+      transition: all 0.3s;
+
+      li {
+        & + li { border-top: 1px solid #e9e9e9; }
+
+        a {
+          display: block;
+          color: $web_font_color;
+          font-size: 14px;
+          text-align: center;
+          padding: 10px 20px;
+          background: #fff;
+          transition: all 0.3s;
+
+          &:hover,
+          &.active {
+            color: #fff;
+            background: $web_header_1;
+          }
+        }
+      }
+    }
+
+    &:hover {
+      @media (min-width: 1201px) {
+        color: $web_header_1;
+      }
+
+      ul {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+  }
+
+  .cart_btn {
+    p {
+      position: absolute;
+      top: 16px;
+      right: -8px;
+      width: 15px;
+      line-height: 15px;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      text-align: center;
+      background: $web_header_1;
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+
+    &:hover {
+      @media (min-width: 1201px) {
+        p { background: $web_font_color; }
+      }
+    }
+  }
+}
+
+// ── 漢堡 ────────────────────────────────────────────────
+.mbPanel_btn {
+  padding: 0 20px;
+  background: $web_header_1 !important;
+
+  @media (min-width: 1201px) { display: none !important; }
+
+  .bars {
+    position: relative;
+    width: 30px;
+    height: 2px;
+
+    .bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 10px;
+
+      &.bar1 {
+        top: -8px;
+        transition: top 0.3s 0.5s, transform 0.3s;
+      }
+      &.bar2 {
+        opacity: 1;
+        transition: opacity 0s 0.3s;
+      }
+      &.bar3 {
+        top: 8px;
+        transition: top 0.3s 0.5s, transform 0.3s;
+      }
+    }
+  }
+
+  &.active .bars .bar {
+    &.bar1 {
+      top: 0;
+      transform: rotate(45deg);
+      transition: top 0.3s, transform 0.3s 0.5s;
+    }
+    &.bar2 { opacity: 0; }
+    &.bar3 {
+      top: 0;
+      transform: rotate(-45deg);
+      transition: top 0.3s, transform 0.3s 0.5s;
+    }
+  }
+}
+
+// ── 行動版下拉選單 ───────────────────────────────────────
+.header14_mobile {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid var(--color-border);
+  padding: 8px 20px 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  z-index: $z_mobile_menu;
+}
+
+.mb_navmenu_link {
+  display: block;
+  padding: 12px 4px;
+  font-size: 18px;
+  font-weight: 600;
+  color: $web_font_color;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mb_navmenu_sub {
+  padding: 0 0 0 16px;
+
+  a {
+    display: block;
+    padding: 8px 4px;
+    font-size: 14px;
+    color: $web_font_color;
+  }
+}
+
+.drop-enter-active,
+.drop-leave-active { transition: opacity 0.2s ease; }
+.drop-enter-from,
+.drop-leave-to { opacity: 0; }
+</style>

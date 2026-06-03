@@ -21,6 +21,11 @@
     "cancel": "取消",
     "contact_us": "聯絡我們"
   },
+  "cta": {
+    "view_menu": "觀看菜單",
+    "order_online": "線上點餐",
+    "book_appointment": "立即預約諮詢"
+  },
   "msg": {
     "loading": "載入中…",
     "empty": "目前沒有資料",
