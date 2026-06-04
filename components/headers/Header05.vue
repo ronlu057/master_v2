@@ -19,9 +19,7 @@ const navtool = useNavtoolConfig()
 const socials = useSocials()
 
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 
 // CTA：立即預約諮詢（從 firm.cta_appointment 取）
 const ctaLink = computed(() => firmData.value?.firm?.cta_appointment || '')
@@ -69,7 +67,7 @@ onBeforeUnmount(() => {
 <template>
   <header ref="headerEl" :class="['header05', { scroll: isScrolled }]">
     <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
-      <img src="/img/logo/logo-AD.svg" alt="Logo" />
+      <SiteLogo alt="Logo" />
     </NuxtLink>
 
     <div class="navbar">
@@ -103,45 +101,48 @@ onBeforeUnmount(() => {
       </ul>
 
       <div v-if="!isMinimal" class="navtool">
-        <!-- 搜尋 -->
+        <!-- 搜尋（hover 下拉，樣式同 Header01） -->
         <div
           v-if="navtool.isEnabled('search')"
           class="search_btn"
           :style="{ order: navtool.orderOf('search') }"
         >
-          <i class="icon icon-search"></i>
-          <form class="search_form" @submit.prevent="onSearch">
-            <input
-              v-model="keyword"
-              type="text"
-              autocomplete="off"
-              :placeholder="$t('site.search_placeholder')"
-              :aria-label="$t('aria.search')"
-            />
-            <button type="submit" :aria-label="$t('btn.search')">
-              <i class="icon icon-search"></i>
-            </button>
-          </form>
+          <i class="icon icon-search" :aria-label="$t('aria.search')"></i>
+          <div class="search_box">
+            <form class="search_form" @submit.prevent="onSearch">
+              <input
+                v-model="keyword"
+                type="text"
+                autocomplete="off"
+                :placeholder="$t('site.search_placeholder')"
+                :aria-label="$t('aria.search')"
+              />
+              <button type="submit" :aria-label="$t('btn.search')">
+                <i class="icon icon-search" aria-hidden="true"></i>
+              </button>
+            </form>
+          </div>
         </div>
 
-        <!-- 語系 -->
+        <!-- 語系（參考 Header01：.lang_box + button.lang_item，不用 ul/li） -->
         <div
           v-if="navtool.isEnabled('language') && languages.length > 1"
           class="lang_toggle"
           :style="{ order: navtool.orderOf('language') }"
         >
-          <i class="icon icon-language"></i>
-          <ul>
-            <li v-for="lang in languages" :key="lang.code">
-              <a
-                href="javascript:;"
-                :class="{ active: lang.code === locale }"
-                @click.prevent="setLocale(lang.code)"
-              >
-                {{ lang.label }}
-              </a>
-            </li>
-          </ul>
+          <i class="icon icon-language" :aria-label="$t('aria.language')"></i>
+          <div class="lang_box">
+            <button
+              v-for="lang in languages"
+              :key="lang.code"
+              type="button"
+              class="lang_item"
+              :class="{ 'is-active': lang.code === locale }"
+              @click="setLocale(lang.code)"
+            >
+              {{ lang.label }}
+            </button>
+          </div>
         </div>
 
         <!-- 社群 -->
@@ -260,6 +261,7 @@ onBeforeUnmount(() => {
   left: 0;
   right: 0;
   padding: 0 calc(75 / 19.2 * 1vw);
+  height: 70px;
   background: #fff;
   z-index: $z_header;
   transition: all 0.3s;
@@ -277,10 +279,7 @@ onBeforeUnmount(() => {
       left: calc(75 / 19.2 * 1vw);
       right: calc(75 / 19.2 * 1vw);
       padding: 0 30px;
-    }
-
-    .navmenu > li > a {
-      padding: 30px 25px;
+      border-radius: 999px;
     }
   }
 }
@@ -310,16 +309,19 @@ onBeforeUnmount(() => {
   @include rwd-1200 { display: none; }
 
   > li {
+    display: flex;
+    align-items: center;
     position: relative;
+    height: 70px;
 
     > a {
       display: block;
       color: $web_font_color;
       font-size: 16px;
-      padding: 40px 25px;
+      padding: 0 25px;
       transition: all 0.3s;
 
-      @include rwd-1440 { padding: 23px 15px; }
+      @include rwd-1440 { padding: 0 15px; }
     }
 
     &:hover > a,
@@ -327,46 +329,41 @@ onBeforeUnmount(() => {
       color: $web_header_1;
     }
 
-    ul {
+    .navmenu_sub {
       position: absolute;
       top: 100%;
-      left: 50%;
-      width: max-content;
-      min-width: 142px;
-      list-style: none;
-      margin: 0;
-      padding: 0;
+      left: 0;
+      min-width: 160px;
+      padding: 6px;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
       opacity: 0;
-      pointer-events: none;
-      transform: translate(-50%, 0);
-      transition: all 0.3s;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: all var(--transition);
 
-      li {
-        position: relative;
+      a {
+        display: block;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 6px;
+        color: $web_font_color;
+        transition: all var(--transition);
 
-        & + li { border-top: 1px solid #e9e9e9; }
-
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 20px;
-          background: #fff;
-          transition: all 0.3s;
-        }
-
-        &:hover > a,
-        > a.router-link-active {
-          color: #fff;
-          background: $web_header_1;
+        &:hover,
+        &.router-link-active {
+          background: var(--color-surface);
+          color: var(--color-primary);
         }
       }
     }
 
-    &:hover > ul {
+    &:hover > .navmenu_sub {
       opacity: 1;
-      pointer-events: auto;
+      visibility: visible;
+      transform: translateY(0);
     }
   }
 }
@@ -399,90 +396,111 @@ onBeforeUnmount(() => {
     }
 
     color: $web_font_color;
-    transition: all 0.3s;
 
     > .icon { font-size: 20px; }
+
+    &:hover { color: $web_header_1; }
+  }
+
+  // 搜尋下拉 — 樣式與 Header01 統一
+  .search_btn .search_box {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 280px;
+    padding: 10px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all var(--transition);
+    z-index: 60;
 
     .search_form {
       display: flex;
       align-items: center;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      width: fit-content;
-      padding: 15px;
-      background: $web_header_1;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s;
+      gap: 6px;
 
       input {
-        padding: 6px 10px;
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: #fff;
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
         font-size: 14px;
-
-        &::placeholder { color: rgba(255, 255, 255, 0.6); }
       }
 
       button {
         background: none;
         border: none;
         cursor: pointer;
-        margin-left: 13px;
+        padding: 4px;
+        display: flex;
+        color: $web_font_color;
+        transition: color 0.3s;
 
-        color: #fff;
+        .icon { font-size: 18px; }
 
-        .icon {
-          font-size: 18px;
-        }
+        &:hover { color: var(--color-primary); }
       }
     }
+  }
 
-    ul {
-      position: absolute;
-      top: 100%;
-      right: 50%;
-      width: max-content;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      opacity: 0;
-      pointer-events: none;
-      transform: translate(50%, 0);
-      transition: all 0.3s;
+  .search_btn:hover .search_box,
+  .search_btn:focus-within .search_box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
 
-      li {
-        & + li { border-top: 1px solid #e9e9e9; }
+  // 語系下拉 — 樣式與 Header01 統一
+  .lang_toggle .lang_box {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all var(--transition);
+    z-index: 60;
 
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 20px;
-          background: #fff;
-          transition: all 0.3s;
+    .lang_item {
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 6px;
+      color: $web_font_color;
+      transition: all var(--transition);
 
-          &:hover,
-          &.active {
-            color: #fff;
-            background: $web_header_1;
-          }
-        }
+      &:hover {
+        background: var(--color-surface);
+        color: var(--color-primary);
+      }
+
+      &.is-active {
+        color: var(--color-primary);
+        font-weight: 600;
       }
     }
+  }
 
-    &:hover {
-      color: $web_header_1;
-
-      .search_form,
-      ul {
-        opacity: 1;
-        pointer-events: auto;
-      }
-    }
+  .lang_toggle:hover .lang_box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
 
   // CTA「立即預約諮詢」
@@ -495,6 +513,7 @@ onBeforeUnmount(() => {
     margin-left: 10px;
     background: $web_header_2;
     border: 1px solid $web_header_2;
+    border-radius: 999px;
     padding: 0;
     transition: all 0.3s;
 

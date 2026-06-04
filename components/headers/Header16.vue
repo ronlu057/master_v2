@@ -18,9 +18,7 @@ const navtool = useNavtoolConfig()
 const socials = useSocials()
 
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 
 // 自家面板開關（不重用 ui.menuOpen，避免和其他 header 行動版選單衝突）
 const panelOpen = ref(false)
@@ -59,7 +57,7 @@ onBeforeUnmount(() => {
 <template>
   <header ref="headerEl" :class="['header16', { scroll: isScrolled }]">
     <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
-      <img src="/img/logo/logo-AD.svg" alt="Logo" />
+      <SiteLogo alt="Logo" />
     </NuxtLink>
 
     <div class="navbar">
@@ -202,7 +200,7 @@ onBeforeUnmount(() => {
         <div class="row_by_gap no_gutter">
           <div class="left">
             <NuxtLink class="logo" to="/" @click="closePanel">
-              <img src="/img/logo/logo-AD.svg" alt="Logo" />
+              <SiteLogo alt="Logo" />
             </NuxtLink>
           </div>
           <div class="right">
@@ -260,7 +258,6 @@ onBeforeUnmount(() => {
 
   @media (min-width: 1201px) { flex-shrink: 0; }
 
-  img { max-height: 60px; }
 }
 
 .navbar {
@@ -547,7 +544,6 @@ onBeforeUnmount(() => {
       display: block;
       width: fit-content;
 
-      img { max-height: 80px; }
     }
   }
 

@@ -20,9 +20,7 @@ const socials = useSocials()
 
 // i18n
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 
 // 搜尋
 const keyword = ref('')
@@ -62,7 +60,7 @@ onBeforeUnmount(() => {
   <!-- 主 header（首頁桌面預設隱藏；scroll 後出現） -->
   <header ref="headerEl" :class="['header08', { scroll: isScrolled }]">
     <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
-      <img src="/img/logo/logo-AD.svg" alt="Logo" />
+      <SiteLogo alt="Logo" />
     </NuxtLink>
 
     <div class="navbar">
@@ -207,7 +205,7 @@ onBeforeUnmount(() => {
     :style="{ top: spTop + 'px' }"
   >
     <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
-      <img src="/img/logo/logo-AD.svg" alt="Logo" />
+      <SiteLogo alt="Logo" />
     </NuxtLink>
 
     <ul itemscope itemtype="https://www.schema.org/SiteNavigationElement" class="navmenu">
@@ -291,7 +289,6 @@ body[data-page="index"] {
 
   @include rwd-1200 { margin-right: 15px; }
 
-  img { max-height: 60px; }
 }
 
 .navbar {
@@ -567,7 +564,6 @@ body[data-page="index"] {
   .logo {
     margin-bottom: calc(30 / 19.2 * 1vw);
 
-    img { max-height: 60px; }
   }
 
   .navmenu {

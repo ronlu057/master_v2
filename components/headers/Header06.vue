@@ -17,9 +17,7 @@ const navtool = useNavtoolConfig()
 const socials = useSocials()
 
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 
 const onSearchClick = () => navigateTo('/search')
 
@@ -48,7 +46,7 @@ onBeforeUnmount(() => {
     <!-- 左 -->
     <div class="left_area">
       <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
-        <img src="/img/logo/logo-AD.svg" alt="Logo" />
+        <SiteLogo alt="Logo" />
       </NuxtLink>
     </div>
 
@@ -247,7 +245,6 @@ onBeforeUnmount(() => {
 .logo {
   display: block;
 
-  img { max-height: 60px; }
 }
 
 .navbar {

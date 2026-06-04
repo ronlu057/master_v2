@@ -16,9 +16,7 @@ const navtool = useNavtoolConfig()
 
 // i18n
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 
 const socials = useSocials()
 
@@ -71,7 +69,7 @@ onBeforeUnmount(() => {
   >
     <div class="navbar">
       <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
-        <img src="/img/logo/logo-AD.svg" alt="Logo" />
+        <SiteLogo alt="Logo" />
       </NuxtLink>
 
       <!-- 搜尋表單（active 時浮入取代 logo 位置） -->
@@ -297,7 +295,6 @@ onBeforeUnmount(() => {
     display: block;
     transition: all 0.3s;
 
-    img { max-height: 60px; }
   }
 
   .search_form {

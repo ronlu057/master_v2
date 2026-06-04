@@ -17,6 +17,10 @@ const ALLOWED_KEYS = [
   'apiBase',
   'defaultLang',
   'enableShop',
+  'logo',
+  'logoMaxHeight',
+  'customCss',
+  'langLabels',
 ]
 const ALLOWED_PROJECT_TYPES = ['module', 'custom-home', 'full-custom', 'shop', 'temp']
 
@@ -29,6 +33,8 @@ const ENV_MAP = {
   apiBase: 'NUXT_PUBLIC_API_BASE',
   defaultLang: 'NUXT_PUBLIC_DEFAULT_LANG',
   enableShop: 'NUXT_PUBLIC_ENABLE_SHOP',
+  logo: 'NUXT_PUBLIC_LOGO',
+  logoMaxHeight: 'NUXT_PUBLIC_LOGO_MAX_HEIGHT',
 }
 
 export default defineEventHandler(async (event) => {

@@ -3,7 +3,7 @@
    SCSS 變數 / mixin 由 nuxt.config.js additionalData 自動注入（_variables.scss）
    ============================================================ */
 
-/* Icon 字型（mask 法）：全站 <i class="icon icon-XXX"></i> 用法 */
+/* Icon 字型（mask 法）：全站 i.icon.icon-XXX 用法 */
 @use 'icons';
 
 /* ---- 主題 token（預設：模組件套版）---- */

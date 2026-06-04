@@ -36,9 +36,7 @@ const onSearch = () => {
 // 接 @nuxtjs/i18n 模組：清單來自 nuxt.config.js 的 i18n.locales（單一來源）
 // 切換語系呼叫 setLocale(code) — 全站翻譯字串 / locale 同步更新
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 const currentLang = computed(() => locale.value)
 const switchLang = (code) => setLocale(code)
 
@@ -71,7 +69,7 @@ onBeforeUnmount(() => {
     <div class="navbar">
       <!-- Logo -->
       <NuxtLink class="logo" to="/" title="回首頁">
-        <img src="/img/logo/logo-AD.svg" alt="Logo" />
+        <SiteLogo alt="Logo" />
       </NuxtLink>
 
       <div class="navright">
@@ -283,7 +281,6 @@ body[data-page="index"] {
 
     .logo {
       display: block;
-      img { max-height: 60px; }
     }
 
     .navright {

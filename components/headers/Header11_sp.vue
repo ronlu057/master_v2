@@ -17,9 +17,7 @@ const { $lenis } = useNuxtApp()
 
 // i18n
 const { t, locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 
 // 搜尋
 const keyword = ref('')
@@ -197,7 +195,7 @@ onBeforeUnmount(() => {
     <div class="left">
       <div class="top">
         <NuxtLink class="logo" to="/" :title="$t('site.back_home')" @click="ui.closeMenu">
-          <img src="/img/logo/logo-AD.svg" alt="Logo" />
+          <SiteLogo alt="Logo" />
         </NuxtLink>
       </div>
 
@@ -589,7 +587,7 @@ onBeforeUnmount(() => {
 
   p:nth-child(2) {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     width: fit-content;
     padding-right: 15px;
     padding-bottom: 10px;
@@ -601,11 +599,13 @@ onBeforeUnmount(() => {
 
     a {
       display: block;
+      flex-shrink: 0;
       position: relative;
       color: #fff;
       font-size: 13px;
-      letter-spacing: 1px;
-      padding: 1px 15px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      padding: 1px 10px;
       transition: all 0.3s;
 
       &.active { font-weight: 700; }

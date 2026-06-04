@@ -14,6 +14,10 @@ const DEFAULTS = {
   apiBase: '',
   defaultLang: 'tw',
   enableShop: false,
+  logo: '',
+  logoMaxHeight: 66,
+  customCss: '',
+  langLabels: {},
 }
 
 export default defineEventHandler((event) => {

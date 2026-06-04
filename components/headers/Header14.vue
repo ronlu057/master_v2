@@ -16,9 +16,7 @@ const navtool = useNavtoolConfig()
 
 // i18n
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 
 const socials = useSocials()
 
@@ -81,7 +79,7 @@ onBeforeUnmount(() => {
       <!-- 中間圓形 Logo -->
       <div class="mid">
         <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
-          <img src="/img/logo/logo-AD.svg" alt="Logo" />
+          <SiteLogo alt="Logo" />
         </NuxtLink>
       </div>
 

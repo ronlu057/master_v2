@@ -2,6 +2,16 @@
 // 依專案類型在 <html> 標上 data-project，驅動 CSS 變數主題切換
 const { type } = useProject()
 
+// 站台設定 — LOGO 高度走 CSS variable、自訂 CSS 注入 <head>
+const { state: siteState } = useEffectiveSettings()
+
+// 動態組成 <style> 內容：(1) :root CSS variable 給 SiteLogo 用 (2) 後台自訂 CSS
+const siteStyleContent = computed(() => {
+  const cssVars = `:root { --site-logo-h: ${siteState.logoMaxHeight || 66}px; }`
+  const customCss = siteState.customCss || ''
+  return `${cssVars}\n${customCss}`
+})
+
 // i18n（useI18n / useLocaleHead 必須在 setup 頂層呼叫，不能進 computed / function 內）
 const { locales } = useI18n()
 const head = useLocaleHead()
@@ -30,6 +40,13 @@ useHead({
   bodyAttrs: { 'data-page': dataPage },
   link: () => head.value.link,
   meta: () => head.value.meta,
+  // 全域 <style> 注入：CSS 變數（logo 高度等）+ 後台自訂 CSS
+  style: () => [
+    {
+      id: 'site-runtime-style',
+      innerHTML: siteStyleContent.value,
+    },
+  ],
 })
 </script>
 

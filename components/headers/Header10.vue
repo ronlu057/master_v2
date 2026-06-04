@@ -18,9 +18,7 @@ const { data: firmData } = useSiteFirm()
 const navtool = useNavtoolConfig()
 
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 
 const socials = useSocials()
 
@@ -50,7 +48,7 @@ onBeforeUnmount(() => {
 <template>
   <header ref="headerEl" :class="['header10', { scroll: isScrolled }]">
     <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
-      <img src="/img/logo/logo-AD.svg" alt="Logo" />
+      <SiteLogo alt="Logo" />
     </NuxtLink>
 
     <div class="navbar">
@@ -256,7 +254,6 @@ body:not([data-page="index"]) {
 .logo {
   display: block;
 
-  img { max-height: 50px; }
 }
 
 .navbar {

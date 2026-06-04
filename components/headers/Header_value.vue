@@ -12,9 +12,7 @@ const navtool = useNavtoolConfig()
 // 語系切換（@nuxtjs/i18n）— 清單來自 nuxt.config.js i18n.locales
 // 此版型用「點 button 開合」風格（其他 header 用 hover），故保留 langOpen 狀態
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 const currentLang = computed(
   () => languages.value.find((l) => l.code === locale.value)?.label || locale.value,
 )
@@ -33,7 +31,7 @@ const socials = useSocials()
       <div class="header-value__bar">
         <!-- Logo -->
         <NuxtLink to="/" class="header-value__logo">
-          <img src="/img/icon/Logo.svg" alt="佳質食品" />
+          <SiteLogo alt="佳質食品" />
         </NuxtLink>
 
         <!-- 右側功能區 -->

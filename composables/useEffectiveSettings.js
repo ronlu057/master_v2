@@ -25,6 +25,14 @@ export function useEffectiveSettings() {
       apiBase: pub.apiBase || '',
       defaultLang: pub.defaultLang || 'tw',
       enableShop: !!pub.enableShop && String(pub.enableShop).toLowerCase() === 'true',
+      // LOGO 圖片：空字串 → fallback 到預設 /img/logo/logo-AD.svg
+      logo: pub.logo || '',
+      // LOGO 最大高度（寬度自動）
+      logoMaxHeight: Number(pub.logoMaxHeight) || 66,
+      // 後台自訂 CSS — 全域注入到 <head>，可覆寫 .site-logo / 各 .headerXX 等
+      customCss: pub.customCss || '',
+      // 語系顯示文字覆寫 { tw, en, jp, kr }；留空欄位 → 各 header 走自身預設（見 useLangLabels）
+      langLabels: {},
       isPreviewing: false,
     })
   })

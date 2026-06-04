@@ -1,7 +1,7 @@
 /* ============================================================
    Icon 字型樣式 — 啟發自「覺醒設計 · 前端 CSS 輔助器 V1.5 · Icon 字型工坊」
    全站 icon 一律以 .icon + .icon-XXX 套用，用 color / font-size 控制
-   用法：<i class="icon icon-search"></i>
+   用法：i.icon.icon-search
 
    原理：mask-image 取 SVG 形狀當遮罩，background-color: currentColor 上色
    優點：1) color 即可控色（不必 fill）
@@ -9,8 +9,8 @@
          3) 一份 SVG 全站重用，無需 ?component import
    新增 icon：把 SVG 放進 assets/icon/，在下方新增一條 .icon-XXX 區塊即可
 
-   ⚠ 例外：含 base64 嵌入圖的「圖片型」SVG（如 Logo.svg）不能 mask，
-         請改用 <img src="...">；公開圖（如 logo）放 public/img/ 並直接 <img>。
+   注意：含 base64 嵌入圖的「圖片型」SVG（如 Logo.svg）不能 mask；
+         請改用 img 標籤；公開圖（如 logo）放 public/img/ 並直接 img。
    ============================================================ */
 
 .icon {

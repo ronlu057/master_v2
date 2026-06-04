@@ -1,0 +1,132 @@
+// admin 子頁面共用樣式（scoped 內 @use 引入）— 黑底亮綠強調色
+.page {
+  &__title {
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: #e6e9ef;
+  }
+  &__desc {
+    color: #7a8896;
+    font-size: 13px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  &__section {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #232a38;
+  }
+  &__section-title {
+    font-size: 15px;
+    color: #c8cfdb;
+    margin-bottom: 14px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px 24px;
+  margin-bottom: 24px;
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__label {
+    font-size: 13px;
+    color: #c8cfdb;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  &__live {
+    font-style: normal;
+    font-size: 10px;
+    color: #4fc08d;
+    background: rgba(79, 192, 141, 0.1);
+    padding: 1px 8px;
+    border-radius: 99px;
+  }
+  &__hint {
+    font-size: 11px;
+    color: #6a7382;
+  }
+
+  select,
+  input[type='text'],
+  input[type='number'] {
+    padding: 9px 12px;
+    background: #1a1f2a;
+    color: #e6e9ef;
+    border: 1px solid #2a3242;
+    border-radius: 6px;
+    font: inherit;
+
+    &:focus {
+      outline: 1px solid #4fc08d;
+      border-color: #4fc08d;
+    }
+  }
+
+  &--checkbox {
+    flex-direction: row;
+    align-items: center;
+    grid-column: 1 / -1;
+    font-size: 13px;
+    color: #c8cfdb;
+  }
+
+  &--full { grid-column: 1 / -1; }
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid #232a38;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 22px;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  background: transparent;
+  color: #c8cfdb;
+
+  &--primary {
+    background: #4fc08d;
+    color: #0f1218;
+    font-weight: 600;
+
+    &:hover:not(:disabled) { background: #6dd6a3; }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+  &--ghost {
+    border-color: #2a3242;
+    &:hover { background: #1f2532; }
+  }
+  &--sm {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+.msg {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+
+  &--success { background: rgba(79, 192, 141, 0.12); color: #6dd6a3; }
+  &--error { background: rgba(255, 132, 120, 0.12); color: #ff8478; }
+}

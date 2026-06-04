@@ -16,9 +16,7 @@ const { data: firmData } = useSiteFirm()
 const navtool = useNavtoolConfig()
 
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 
 const socials = useSocials()
 
@@ -53,8 +51,8 @@ onBeforeUnmount(() => {
     <div class="navbar">
       <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
         <!-- 雙 logo：≥1025 顯示第一張、≤1024 顯示第二張（mock 暫用同檔） -->
-        <img src="/img/logo/logo-AD.svg" alt="Logo" />
-        <img src="/img/logo/logo-AD.svg" alt="Logo" />
+        <SiteLogo alt="Logo" />
+        <SiteLogo alt="Logo" />
       </NuxtLink>
 
       <!-- 主選單 -->

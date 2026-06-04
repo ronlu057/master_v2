@@ -17,14 +17,16 @@ const navtool = useNavtoolConfig()
 
 // i18n
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 
 const socials = useSocials()
 
-// 搜尋
-const onSearchClick = () => navigateTo('/search')
+// 搜尋（hover 下拉表單，同 Header01）
+const keyword = ref('')
+const onSearch = () => {
+  if (!keyword.value.trim()) return
+  navigateTo({ path: '/search', query: { keyword: keyword.value.trim() } })
+}
 
 // 捲動偵測
 const headerEl = ref(null)
@@ -55,7 +57,7 @@ onBeforeUnmount(() => {
     :class="['header11', { scroll: isScrolled }]"
   >
     <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
-      <img src="/img/logo/logo-AD.svg" alt="Logo" />
+      <SiteLogo alt="Logo" />
     </NuxtLink>
 
     <div class="navbar">
@@ -83,38 +85,48 @@ onBeforeUnmount(() => {
 
       <!-- 工具列 -->
       <div v-if="!isMinimal" class="navtool">
-        <!-- 搜尋 -->
-        <a
+        <!-- 搜尋（hover 下拉表單，樣式同 Header01） -->
+        <div
           v-if="navtool.isEnabled('search')"
-          href="javascript:;"
           class="search_btn"
           :style="{ order: navtool.orderOf('search') }"
-          :aria-label="$t('aria.search')"
-          @click.prevent="onSearchClick"
         >
-          <i class="icon icon-search"></i>
-        </a>
+          <i class="icon icon-search" :aria-label="$t('aria.search')"></i>
+          <div class="search_box">
+            <form class="search_form" @submit.prevent="onSearch">
+              <input
+                v-model="keyword"
+                type="text"
+                autocomplete="off"
+                :placeholder="$t('site.search_placeholder')"
+                :aria-label="$t('aria.search')"
+              />
+              <button type="submit" :aria-label="$t('btn.search')">
+                <i class="icon icon-search" aria-hidden="true"></i>
+              </button>
+            </form>
+          </div>
+        </div>
 
-        <!-- 語系 -->
+        <!-- 語系（參考 Header01：.lang_box + button.lang_item，div 結構不用 ul/li） -->
         <div
           v-if="navtool.isEnabled('language') && languages.length > 1"
           class="lang_toggle"
           :style="{ order: navtool.orderOf('language') }"
         >
-          <a href="javascript:;" :aria-label="$t('aria.language')">
-            <i class="icon icon-language"></i>
-          </a>
-          <ul>
-            <li v-for="lang in languages" :key="lang.code">
-              <a
-                href="javascript:;"
-                :class="{ active: lang.code === locale }"
-                @click.prevent="setLocale(lang.code)"
-              >
-                {{ lang.label }}
-              </a>
-            </li>
-          </ul>
+          <i class="icon icon-language" :aria-label="$t('aria.language')"></i>
+          <div class="lang_box">
+            <button
+              v-for="lang in languages"
+              :key="lang.code"
+              type="button"
+              class="lang_item"
+              :class="{ 'is-active': lang.code === locale }"
+              @click="setLocale(lang.code)"
+            >
+              {{ lang.label }}
+            </button>
+          </div>
         </div>
 
         <!-- 社群 -->
@@ -226,7 +238,6 @@ onBeforeUnmount(() => {
 .logo {
   display: block;
 
-  img { max-height: 60px; }
 }
 
 .navbar {
@@ -274,64 +285,66 @@ onBeforeUnmount(() => {
       background-size: 100% 2px;
     }
 
-    > ul {
+    > .navmenu_sub {
       position: absolute;
       top: 100%;
-      left: 50%;
-      width: max-content;
-      list-style: none;
-      margin: 0;
-      padding: 0;
+      left: 0;
+      min-width: 160px;
+      padding: 6px;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
       opacity: 0;
-      pointer-events: none;
-      transform: translate(-50%, 0);
-      transition: all 0.3s;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: all var(--transition);
 
-      li {
-        position: relative;
+      a {
+        display: block;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 6px;
+        color: $web_font_color;
+        transition: all var(--transition);
 
-        & + li { border-top: 1px solid #d9e2e2; }
-
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 38px;
-          background: #fff;
-          transition: all 0.3s;
-        }
-
-        &:hover > a,
-        > a.router-link-active {
-          color: #fff;
-          background: $web_header_2;
+        &:hover,
+        &.router-link-active {
+          background: var(--color-surface);
+          color: var(--color-primary);
         }
       }
     }
 
-    &:hover > ul {
+    &:hover > .navmenu_sub {
       opacity: 1;
-      pointer-events: auto;
+      visibility: visible;
+      transform: translateY(0);
     }
   }
 }
 
 .navtool {
   display: flex;
-  list-style: none;
+  align-items: center;
   margin-left: 25px;
-  padding: 0;
 
   @include rwd-1200 { display: none; }
 
-  > li {
+  // 每個工具項（搜尋 / 語系 / 社群 / 會員 / 購物車 / 最愛）— 直接子元素，不用 li
+  > * {
     display: flex;
     align-items: center;
     position: relative;
     height: 70px;
+    color: $web_font_color;
+    cursor: pointer;
+    transition: all 0.3s;
 
-    & + li {
+    .icon { font-size: 18px; }
+
+    // 項目間距 + 分隔線
+    & + * {
       margin-left: 30px;
 
       &::before {
@@ -346,57 +359,138 @@ onBeforeUnmount(() => {
       }
     }
 
-    > a {
-      display: block;
+    &:hover { color: $web_header_2; }
+  }
 
+  // 社群一排平鋪
+  .navtool_social {
+    gap: 0 14px;
+
+    a {
       color: $web_font_color;
       transition: all 0.3s;
 
-      .icon { font-size: 18px; }
+      &:hover { color: $web_header_2; }
     }
+  }
 
-    &:hover > a {
-      color: $web_header_2;
-    }
+  // 搜尋下拉 — 樣式與 Header01 統一
+  .search_btn .search_box {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 280px;
+    padding: 10px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all var(--transition);
+    z-index: 60;
 
-    ul {
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      width: max-content;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      opacity: 0;
-      pointer-events: none;
-      transform: translate(-50%, 0);
-      transition: all 0.3s;
+    .search_form {
+      display: flex;
+      align-items: center;
+      gap: 6px;
 
-      li {
-        & + li { border-top: 1px solid #d9e2e2; }
+      input {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        font-size: 14px;
+      }
 
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 15px;
-          background: #fff;
-          transition: all 0.3s;
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        color: $web_font_color;
+        transition: color 0.3s;
 
-          &:hover,
-          &.active {
-            color: #fff;
-            background: $web_header_2;
-          }
-        }
+        .icon { font-size: 18px; }
+
+        &:hover { color: var(--color-primary); }
       }
     }
+  }
 
-    &:hover ul {
-      opacity: 1;
-      pointer-events: auto;
+  .search_btn:hover .search_box,
+  .search_btn:focus-within .search_box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  // 語系下拉 — 樣式與 Header01 統一
+  .lang_toggle .lang_box {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all var(--transition);
+    z-index: 60;
+
+    .lang_item {
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 6px;
+      color: $web_font_color;
+      transition: all var(--transition);
+
+      &:hover {
+        background: var(--color-surface);
+        color: var(--color-primary);
+      }
+
+      &.is-active {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
     }
+  }
+
+  .lang_toggle:hover .lang_box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  // 購物車徽章
+  .cart_btn p {
+    position: absolute;
+    top: 16px;
+    right: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    color: #fff;
+    font-size: 11px;
+    line-height: 1;
+    background: $web_header_2;
+    border-radius: 8px;
   }
 }
 

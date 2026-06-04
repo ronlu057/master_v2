@@ -15,9 +15,9 @@ const { data: menuData } = useSiteMenu()
 const { data: firmData } = useSiteFirm()
 
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+// 語系縮寫顯示（繁體中文→TW、英文→EN、日本→JP、韓文→KR）；後台語系文字留空時用此預設
+const LANG_ABBR = { tw: 'TW', en: 'EN', jp: 'JP', kr: 'KR' }
+const languages = useLangLabels((l) => LANG_ABBR[l.code] || l.code.toUpperCase())
 
 const navtool = useNavtoolConfig()
 
@@ -32,6 +32,16 @@ const onSearch = () => {
   keyword.value = ''
   showSearch.value = false
 }
+
+// 子頁判斷（鏡像 app.vue 的 data-page 邏輯）：非首頁 → .subpage 直接套白底 pill
+// 改用 component class，避免 :global(body:not([data-page='index'])) 的巢狀括號被 Vue scoped 解析錯誤而漏到 <body>
+const route = useRoute()
+const isSubpage = computed(() => {
+  if (route.path === '/') return false
+  const codes = locales.value.map((l) => l.code)
+  const segments = route.path.split('/').filter(Boolean)
+  return !!segments.find((s) => !codes.includes(s))
+})
 
 // 捲動偵測：捲過 banner 高 - header 高 → 套上 .scroll
 const headerEl = ref(null)
@@ -55,10 +65,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <header ref="headerEl" :class="['header04', { scroll: isScrolled }]">
+  <header ref="headerEl" :class="['header04', { scroll: isScrolled, subpage: isSubpage }]">
     <div class="nav">
       <NuxtLink class="logo" to="/" :title="$t('site.back_home')">
-        <img src="/img/logo/logo-AD.svg" alt="Logo" />
+        <SiteLogo alt="Logo" />
       </NuxtLink>
 
       <div class="navbar">
@@ -229,8 +239,8 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
-// 子頁直接套上「白底+pill」狀態（原版用 body:not([data-page="index"])）
-:global(body:not([data-page='index'])) .header04 {
+// 子頁直接套上「白底+pill」狀態（.subpage 由 component 計算；不再用 :global(body:not()) 避免漏樣式到 <body>）
+.header04.subpage {
   background: #fff;
 
   .nav { padding: 9px 0; }
@@ -371,47 +381,37 @@ onBeforeUnmount(() => {
       &::after { pointer-events: auto; }
     }
 
-    ul {
+    .navmenu_sub {
       position: absolute;
       top: calc(100% + 10px);
       left: 50%;
       width: max-content;
       min-width: 100%;
-      list-style: none;
-      margin: 0;
-      padding: 0;
       border-radius: 10px;
+      background: #fff;
       box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
+      overflow: hidden;
       opacity: 0;
       filter: blur(5px);
       pointer-events: none;
       transform: translate(-50%, 30px);
       transition: all 0.3s;
 
-      li {
-        padding: 0 17px;
-        background: #fff;
+      a {
+        display: block;
+        color: $web_font_color;
+        font-size: 14px;
+        text-align: center;
+        padding: 10px 20px;
+        transition: all 0.3s;
 
-        &:first-child { border-radius: 10px 10px 0 0; }
-        &:last-child { border-radius: 0 0 10px 10px; }
-        &:only-child { border-radius: 10px; }
+        &:not(:last-child) { border-bottom: 1px solid #e7e7e7; }
 
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 20px;
-          transition: all 0.3s;
-        }
-
-        &:not(:last-child) a { border-bottom: 1px solid #e7e7e7; }
-
-        &:hover > a { color: $web_header_2; }
+        &:hover { color: $web_header_2; }
       }
     }
 
-    &:hover > ul {
+    &:hover > .navmenu_sub {
       opacity: 1;
       filter: blur(0);
       pointer-events: auto;

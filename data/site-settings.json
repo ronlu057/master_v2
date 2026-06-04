@@ -1,9 +1,13 @@
 {
   "projectType": "module",
-  "header": "Header03",
+  "header": "Header05",
   "pageBanner": "PageBanner01",
   "blockBanner": "BlockBanner01",
   "apiBase": "",
   "defaultLang": "tw",
-  "enableShop": false
+  "enableShop": false,
+  "logo": "",
+  "logoMaxHeight": 42,
+  "customCss": "",
+  "langLabels": {}
 }

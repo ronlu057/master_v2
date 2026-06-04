@@ -15,9 +15,7 @@ const socials = useSocials()
 
 // ── i18n ─────────────────────────────────────────────────
 const { locale, locales, setLocale } = useI18n()
-const languages = computed(() =>
-  locales.value.map((l) => ({ code: l.code, label: l.name })),
-)
+const languages = useLangLabels((l) => l.name)
 
 // ── 搜尋表單 ─────────────────────────────────────────────
 const keyword = ref('')
@@ -106,7 +104,7 @@ onBeforeUnmount(() => {
 <template>
   <header ref="headerEl" :class="['header03', { scroll: isScrolled }]">
     <NuxtLink class="logo" to="/" title="回首頁">
-      <img src="/img/logo/logo-AD.svg" alt="Logo" />
+      <SiteLogo alt="Logo" />
     </NuxtLink>
 
     <div class="navbar">
