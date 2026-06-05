@@ -18,6 +18,7 @@ const DEFAULTS = {
   logoMaxHeight: 66,
   customCss: '',
   langLabels: {},
+  navtool: {},
 }
 
 export default defineEventHandler((event) => {

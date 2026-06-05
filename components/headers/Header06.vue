@@ -96,18 +96,19 @@ onBeforeUnmount(() => {
           class="lang_toggle"
           :style="{ order: navtool.orderOf('language') }"
         >
-          <i class="icon icon-language"></i>
-          <ul>
-            <li v-for="lang in languages" :key="lang.code">
-              <a
-                href="javascript:;"
-                :class="{ active: lang.code === locale }"
-                @click.prevent="setLocale(lang.code)"
-              >
-                {{ lang.label }}
-              </a>
-            </li>
-          </ul>
+          <i class="icon icon-language" :aria-label="$t('aria.language')"></i>
+          <div class="lang_box">
+            <button
+              v-for="lang in languages"
+              :key="lang.code"
+              type="button"
+              class="lang_item"
+              :class="{ 'is-active': lang.code === locale }"
+              @click="setLocale(lang.code)"
+            >
+              {{ lang.label }}
+            </button>
+          </div>
         </div>
 
         <!-- 社群 -->
@@ -277,46 +278,42 @@ onBeforeUnmount(() => {
       color: $web_header_1;
     }
 
-    ul {
+    // 下拉子選單 — 樣式參考 Header01（置中對齊 Header06 的 navmenu）
+    .navmenu_sub {
       position: absolute;
       top: 100%;
       left: 50%;
-      width: max-content;
-      min-width: 142px;
-      list-style: none;
-      margin: 0;
-      padding: 0;
+      min-width: 160px;
+      padding: 6px;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
       opacity: 0;
-      pointer-events: none;
-      transform: translate(-50%, 0);
-      transition: all 0.3s;
+      visibility: hidden;
+      transform: translate(-50%, 8px);
+      transition: all var(--transition);
 
-      li {
-        position: relative;
+      a {
+        display: block;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 6px;
+        color: $web_font_color;
+        transition: all var(--transition);
 
-        & + li { border-top: 1px solid #e9e9e9; }
-
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 20px;
-          background: #fff;
-          transition: all 0.3s;
-        }
-
-        &:hover > a,
-        > a.router-link-active {
-          color: #fff;
-          background: $web_header_1;
+        &:hover,
+        &.router-link-active {
+          background: var(--color-surface);
+          color: var(--color-primary);
         }
       }
     }
 
-    &:hover > ul {
+    &:hover > .navmenu_sub {
       opacity: 1;
-      pointer-events: auto;
+      visibility: visible;
+      transform: translate(-50%, 0);
     }
   }
 }
@@ -350,48 +347,55 @@ onBeforeUnmount(() => {
 
     > .icon { font-size: 20px; }
 
-    ul {
-      position: absolute;
-      top: 100%;
-      right: 50%;
-      width: max-content;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      opacity: 0;
-      pointer-events: none;
-      transform: translate(50%, 0);
-      transition: all 0.3s;
+    &:hover { color: $web_header_1; }
+  }
 
-      li {
-        & + li { border-top: 1px solid #e9e9e9; }
+  // 語系下拉 — 樣式與 Header01 統一
+  .lang_toggle .lang_box {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all var(--transition);
+    z-index: 60;
 
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 20px;
-          background: #fff;
-          transition: all 0.3s;
+    .lang_item {
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 6px;
+      color: $web_font_color;
+      transition: all var(--transition);
 
-          &:hover,
-          &.active {
-            color: #fff;
-            background: $web_header_1;
-          }
-        }
+      &:hover {
+        background: var(--color-surface);
+        color: var(--color-primary);
+      }
+
+      &.is-active {
+        color: var(--color-primary);
+        font-weight: 600;
       }
     }
+  }
 
-    &:hover {
-      color: $web_header_1;
-
-      ul {
-        opacity: 1;
-        pointer-events: auto;
-      }
-    }
+  .lang_toggle:hover .lang_box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
 
   .cart_btn {

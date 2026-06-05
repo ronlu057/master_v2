@@ -6,7 +6,7 @@
 //        兩處都寫，確保未來 dev server 重啟後 .env 與 JSON 一致
 import fs from 'node:fs'
 import path from 'node:path'
-import { assertDev, writeEnvUpdates } from '../../admin/utils.js'
+import { assertDev, writeEnvUpdates, readEnv } from '../../admin/utils.js'
 
 const FILE = path.join(process.cwd(), 'data', 'site-settings.json')
 const ALLOWED_KEYS = [
@@ -21,6 +21,7 @@ const ALLOWED_KEYS = [
   'logoMaxHeight',
   'customCss',
   'langLabels',
+  'navtool',
 ]
 const ALLOWED_PROJECT_TYPES = ['module', 'custom-home', 'full-custom', 'shop', 'temp']
 
@@ -64,6 +65,11 @@ export default defineEventHandler(async (event) => {
   fs.writeFileSync(FILE, JSON.stringify(current, null, 2) + '\n', 'utf8')
 
   // 2. 同步寫 .env（持久層；下次 dev server 重啟仍對得上）
+  //    JSON 已是 runtime source of truth（SSR 每次都讀），.env 只是持久備援。
+  //    寫 .env 會被 Nuxt dev watcher 偵測而「重啟 dev server」→ 把本次 POST 的連線重置，
+  //    前端就看到「套用失敗」。因此這裡：
+  //      (a) 只寫「值真的有變」的 key —— 沒變就完全不碰 .env，不會觸發重啟（最常見情境）。
+  //      (b) 有變的 key 延後到「回應已送出後」再寫 —— 即使觸發重啟也不影響本次回應。
   const envUpdates = {}
   for (const k of ALLOWED_KEYS) {
     if (body[k] !== undefined) {
@@ -74,7 +80,20 @@ export default defineEventHandler(async (event) => {
       envUpdates[envKey] = v
     }
   }
-  if (Object.keys(envUpdates).length) writeEnvUpdates(envUpdates)
+  const currentEnv = readEnv()
+  const changedEnv = {}
+  for (const [k, v] of Object.entries(envUpdates)) {
+    if (String(currentEnv[k] ?? '') !== String(v ?? '')) changedEnv[k] = v
+  }
+  if (Object.keys(changedEnv).length) {
+    setTimeout(() => {
+      try {
+        writeEnvUpdates(changedEnv)
+      } catch (e) {
+        console.warn('[site-settings.post] .env write failed:', e.message)
+      }
+    }, 200)
+  }
 
-  return { ok: true, settings: current, envWritten: Object.keys(envUpdates) }
+  return { ok: true, settings: current, envWritten: Object.keys(changedEnv) }
 })

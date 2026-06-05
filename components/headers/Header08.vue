@@ -94,19 +94,21 @@ onBeforeUnmount(() => {
           class="search_btn"
           :style="{ order: navtool.orderOf('search') }"
         >
-          <i class="icon icon-search"></i>
-          <form class="search_form" @submit.prevent="onSearch">
-            <input
-              v-model="keyword"
-              type="text"
-              autocomplete="off"
-              :placeholder="$t('site.search_placeholder')"
-              :aria-label="$t('aria.search')"
-            />
-            <button type="submit" :aria-label="$t('btn.search')">
-              <i class="icon icon-search"></i>
-            </button>
-          </form>
+          <i class="icon icon-search" :aria-label="$t('aria.search')"></i>
+          <div class="search_box">
+            <form class="search_form" @submit.prevent="onSearch">
+              <input
+                v-model="keyword"
+                type="text"
+                autocomplete="off"
+                :placeholder="$t('site.search_placeholder')"
+                :aria-label="$t('aria.search')"
+              />
+              <button type="submit" :aria-label="$t('btn.search')">
+                <i class="icon icon-search" aria-hidden="true"></i>
+              </button>
+            </form>
+          </div>
         </div>
 
         <!-- 語系 -->
@@ -115,18 +117,19 @@ onBeforeUnmount(() => {
           class="lang_toggle"
           :style="{ order: navtool.orderOf('language') }"
         >
-          <i class="icon icon-language"></i>
-          <ul>
-            <li v-for="lang in languages" :key="lang.code">
-              <a
-                href="javascript:;"
-                :class="{ active: lang.code === locale }"
-                @click.prevent="setLocale(lang.code)"
-              >
-                {{ lang.label }}
-              </a>
-            </li>
-          </ul>
+          <i class="icon icon-language" :aria-label="$t('aria.language')"></i>
+          <div class="lang_box">
+            <button
+              v-for="lang in languages"
+              :key="lang.code"
+              type="button"
+              class="lang_item"
+              :class="{ 'is-active': lang.code === locale }"
+              @click="setLocale(lang.code)"
+            >
+              {{ lang.label }}
+            </button>
+          </div>
         </div>
 
         <!-- 社群 -->
@@ -282,6 +285,49 @@ body[data-page="index"] {
   @include rwd-1440 { padding: 0 calc(2.5vw - 15px) 0 2.5vw; }
   @include rwd-1200 { padding: 0 0 0 30px; }
   @include rwd-480  { padding: 0 0 0 15px; }
+
+  &.scroll {
+    .navmenu {
+      > li {
+        .navmenu_sub {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          min-width: 160px;
+          padding: 6px;
+          background: var(--color-bg);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius);
+          box-shadow: var(--shadow-lg);
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(8px);
+          transition: all var(--transition);
+
+          a {
+            display: block;
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 6px;
+            color: $web_font_color;
+            transition: all var(--transition);
+
+            &:hover,
+            &.router-link-active {
+              background: var(--color-surface);
+              color: var(--color-primary);
+            }
+          }
+        }
+
+        &:hover > .navmenu_sub {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+      }
+    }
+  }
 }
 
 .logo {
@@ -322,46 +368,39 @@ body[data-page="index"] {
       color: $web_header_1;
     }
 
-    ul {
+    // 下拉子選單 — 樣式與 Header01 一致
+    .navmenu_sub {
       position: absolute;
       top: 100%;
-      left: 50%;
-      width: max-content;
-      min-width: 142px;
-      list-style: none;
-      margin: 0;
-      padding: 0;
+      left: 0;
+      min-width: 160px;
+      padding: 6px;
+      background: transparent;
       opacity: 0;
-      pointer-events: none;
-      transform: translate(-50%, 0);
-      transition: all 0.3s;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: all var(--transition);
 
-      li {
-        position: relative;
+      a {
+        display: block;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 6px;
+        color: $web_font_color;
+        transition: all var(--transition);
 
-        & + li { border-top: 1px solid #e9e9e9; }
-
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 20px;
-          background: #fff;
-          transition: all 0.3s;
-        }
-
-        &:hover > a,
-        > a.router-link-active {
-          color: #fff;
-          background: $web_header_1;
+        &:hover,
+        &.router-link-active {
+          background: transparent;
+          color: var(--color-primary);
         }
       }
     }
 
-    &:hover > ul {
+    &:hover > .navmenu_sub {
       opacity: 1;
-      pointer-events: auto;
+      visibility: visible;
+      transform: translateY(0);
     }
   }
 }
@@ -398,86 +437,108 @@ body[data-page="index"] {
 
     > .icon { font-size: 20px; }
 
+    &:hover { color: $web_header_1; }
+  }
+
+  // 搜尋下拉 — 樣式與 Header01 一致
+  .search_btn .search_box {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 280px;
+    padding: 10px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all var(--transition);
+    z-index: 60;
+
     .search_form {
       display: flex;
       align-items: center;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      width: fit-content;
-      padding: 15px;
-      background: $web_header_1;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s;
+      gap: 6px;
 
       input {
-        padding: 6px 10px;
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: #fff;
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
         font-size: 14px;
-
-        &::placeholder { color: rgba(255, 255, 255, 0.6); }
       }
 
       button {
         background: none;
         border: none;
         cursor: pointer;
-        margin-left: 13px;
+        padding: 4px;
+        display: flex;
+        color: $web_font_color;
+        transition: color 0.3s;
 
-        color: #fff;
+        .icon { font-size: 18px; }
 
-        .icon {
-          font-size: 18px;
-        }
+        &:hover { color: var(--color-primary); }
       }
     }
+  }
 
-    ul {
-      position: absolute;
-      top: 100%;
-      right: 50%;
-      width: max-content;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      opacity: 0;
-      pointer-events: none;
-      transform: translate(50%, 0);
-      transition: all 0.3s;
+  .search_btn:hover .search_box,
+  .search_btn:focus-within .search_box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
 
-      li {
-        & + li { border-top: 1px solid #e9e9e9; }
+  // 語系下拉 — 樣式與 Header01 一致
+  .lang_toggle .lang_box {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all var(--transition);
+    z-index: 60;
 
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 20px;
-          background: #fff;
-          transition: all 0.3s;
+    .lang_item {
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 6px;
+      color: $web_font_color;
+      transition: all var(--transition);
 
-          &:hover,
-          &.active {
-            color: #fff;
-            background: $web_header_1;
-          }
-        }
+      &:hover {
+        background: var(--color-surface);
+        color: var(--color-primary);
+      }
+
+      &.is-active {
+        color: var(--color-primary);
+        font-weight: 600;
       }
     }
+  }
 
-    &:hover {
-      color: $web_header_1;
-
-      .search_form,
-      ul {
-        opacity: 1;
-        pointer-events: auto;
-      }
-    }
+  .lang_toggle:hover .lang_box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
 
   .cart_btn {
@@ -590,7 +651,7 @@ body[data-page="index"] {
         color: $web_header_1;
       }
 
-      ul {
+      .navmenu_sub {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -600,8 +661,6 @@ body[data-page="index"] {
         left: 50%;
         width: 50vw;
         max-width: 500px;
-        list-style: none;
-        margin: 0;
         padding-top: 25px;
         opacity: 0;
         pointer-events: none;
@@ -610,6 +669,7 @@ body[data-page="index"] {
 
         &::before {
           content: '';
+          display: block;
           position: absolute;
           top: 0;
           width: 1px;
@@ -618,19 +678,17 @@ body[data-page="index"] {
           transition: all 0.3s;
         }
 
-        li {
+        a {
           flex-shrink: 0;
+          display: block;
+          color: #a0a0a0;
+          font-size: 14px;
+          line-height: 1.5;
+          text-align: center;
+          transition: all 0.3s;
 
-          a {
-            display: block;
-            color: #a0a0a0;
-            font-size: 14px;
-            text-align: center;
-            transition: all 0.3s;
-          }
-
-          &:hover > a,
-          > a.router-link-active {
+          &:hover,
+          &.router-link-active {
             color: #fff;
             text-shadow: 0 0 15px rgba(0, 0, 0, 0.45);
           }
@@ -638,7 +696,7 @@ body[data-page="index"] {
       }
     }
 
-    > li:hover > ul {
+    > li:hover > .navmenu_sub {
       opacity: 1;
       pointer-events: auto;
 

@@ -53,6 +53,27 @@ function buildPresetItems(headerKey) {
   }))
 }
 
+// 「已存回 site-settings.json 的 navtool 設定」的即時讀取器
+// 指向 reactive 的 effective.navtool（singleton）；admin 存檔 / 跨 tab refetch 把它替換後，
+// 這裡讀到的永遠是最新值。用 getter 而非複製 → 避免拿到舊副本（前後台不同步的根因）
+let getPersistedNavtool = () => ({})
+
+// 基準 items：先套 PRESET，再用「已存檔」的值覆寫（存檔 > preset）
+// localStorage 預覽再疊在這之上（見 syncStateFromStorage）
+function baseItemsFor(headerKey) {
+  const preset = PRESETS[headerKey] || GENERAL_DEFAULT
+  const saved = getPersistedNavtool()?.[headerKey]?.items
+  return Object.keys(ITEM_LABELS).map((key) => {
+    const f = Array.isArray(saved) ? saved.find((x) => x.key === key) : null
+    return {
+      key,
+      label: ITEM_LABELS[key],
+      enabled: typeof f?.enabled === 'boolean' ? f.enabled : (preset[key]?.enabled ?? false),
+      order: typeof f?.order === 'number' ? f.order : (preset[key]?.order ?? 99),
+    }
+  })
+}
+
 // 全域 state map：每個 Header 一份 reactive state
 // （Map 本身不 reactive，但每個 value 是 reactive 物件）
 const allStates = new Map()
@@ -60,7 +81,7 @@ const allStates = new Map()
 function ensureState(headerKey) {
   if (allStates.has(headerKey)) return allStates.get(headerKey)
 
-  const items = buildPresetItems(headerKey)
+  const items = baseItemsFor(headerKey)
   const state = reactive({ items, isPreviewing: false, headerKey })
   allStates.set(headerKey, state)
 
@@ -76,8 +97,8 @@ function syncStateFromStorage(state) {
   if (!import.meta.client) return
   const raw = localStorage.getItem(KEY_PREFIX + state.headerKey)
   if (!raw) {
-    // localStorage 被清 → 套回 preset，跨 tab 同步「清預覽」
-    const defaults = buildPresetItems(state.headerKey)
+    // localStorage 被清 → 套回「已存檔基準（或 preset）」，跨 tab 同步「清預覽」
+    const defaults = baseItemsFor(state.headerKey)
     state.items.forEach((item) => {
       const def = defaults.find((d) => d.key === item.key)
       if (def) {
@@ -121,6 +142,9 @@ const SHOP_DEPENDENT = ['member', 'cart', 'favorite']
 
 export function useNavtoolConfig() {
   const { state: effective } = useEffectiveSettings()
+
+  // 把「已存檔基準」指向 reactive 的 effective.navtool（live；refetch 後自動跟新值）
+  getPersistedNavtool = () => effective.navtool
 
   // 當前 Header 的 reactive state（computed 跟隨 effective.header 變動）
   const currentState = computed(() => ensureState(effective.header))
@@ -213,6 +237,46 @@ export function useNavtoolConfig() {
     () => [...currentState.value.items].sort((a, b) => a.order - b.order),
   )
 
+  // 收集「所有預覽中（localStorage）+ 已存檔」的 navtool 設定 → 可寫回 JSON 的物件
+  // 給 submit 用：把預覽固化進 site-settings.json
+  const snapshotForSave = () => {
+    const result = { ...(effective.navtool || {}) }
+    if (import.meta.client) {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i)
+        if (!k || !k.startsWith(KEY_PREFIX)) continue
+        const headerKey = k.slice(KEY_PREFIX.length)
+        try {
+          const saved = JSON.parse(localStorage.getItem(k))
+          if (Array.isArray(saved?.items)) {
+            result[headerKey] = {
+              items: saved.items.map((x) => ({
+                key: x.key,
+                enabled: !!x.enabled,
+                order: Number(x.order) || 99,
+              })),
+            }
+          }
+        } catch {}
+      }
+    }
+    return result
+  }
+
+  // 存檔後：把已寫回 JSON 的值設為新基準 + 清掉所有預覽 localStorage + 重建 state（isPreviewing→false）
+  // → 浮條收起、開關維持存檔值（不再彈回 preset）
+  const markSaved = () => {
+    if (import.meta.client) {
+      const keys = []
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i)
+        if (k && k.startsWith(KEY_PREFIX)) keys.push(k)
+      }
+      keys.forEach((k) => localStorage.removeItem(k))
+    }
+    allStates.forEach((s) => syncStateFromStorage(s))
+  }
+
   return {
     // current Header 對應的 state（reactive，admin UI 依此顯示）
     state: currentState,
@@ -228,5 +292,7 @@ export function useNavtoolConfig() {
     reset,
     resetAndReload,
     persist,
+    snapshotForSave,
+    markSaved,
   }
 }

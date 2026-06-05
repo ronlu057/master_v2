@@ -33,6 +33,8 @@ export function useEffectiveSettings() {
       customCss: pub.customCss || '',
       // 語系顯示文字覆寫 { tw, en, jp, kr }；留空欄位 → 各 header 走自身預設（見 useLangLabels）
       langLabels: {},
+      // navtool per-header 設定 { [HeaderName]: { items: [{key,enabled,order}] } }；空 → 走 PRESETS
+      navtool: {},
       isPreviewing: false,
     })
   })

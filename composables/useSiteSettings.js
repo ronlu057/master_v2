@@ -4,6 +4,7 @@
 // 用 useState 跨 nav 共享 options / persisted（避免每次切頁重 fetch）
 export function useSiteSettings() {
   const { state, setPreview, clearPreview } = useEffectiveSettings()
+  const navtoolCfg = useNavtoolConfig()
 
   const options = useState('site-settings-options', () => ({
     projectTypes: ['module', 'custom-home', 'full-custom', 'shop', 'temp'],
@@ -48,9 +49,14 @@ export function useSiteSettings() {
         logoMaxHeight: state.logoMaxHeight,
         customCss: state.customCss,
         langLabels: state.langLabels || {},
+        // navtool per-header 設定：把所有預覽（localStorage）固化進 JSON
+        navtool: navtoolCfg.snapshotForSave(),
       }
       const res = await $fetch('/_admin/site-settings', { method: 'POST', body: payload })
       persisted.value = res.settings || payload
+      // navtool 已寫回 JSON → 同步 state.navtool 並清掉預覽（浮條收起、開關維持存檔值）
+      state.navtool = res.settings?.navtool ?? payload.navtool
+      navtoolCfg.markSaved()
       // 廣播給其他 tab（其他 tab 收 storage event 後 refetch）
       if (import.meta.client) {
         localStorage.setItem('master_v2_settings_broadcast', String(Date.now()))

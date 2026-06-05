@@ -16,16 +16,9 @@ const confirmState = ref(null) // 'success' | 'error' | null
 const onConfirm = async () => {
   const res = await submit()
   if (res.ok) {
-    // 寫回成功 → 清掉 localStorage 預覽（因預覽值已固化到 JSON / .env）
+    // 寫回成功 → 清掉 localStorage 預覽（site-settings + navtool 皆已固化到 JSON）
+    // navtool 的清預覽 + 重建已由 submit() 內的 navtoolCfg.markSaved() 處理
     clearPreview()
-    if (import.meta.client) {
-      const keys = []
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i)
-        if (k && k.startsWith('master_v2_navtool_')) keys.push(k)
-      }
-      keys.forEach((k) => localStorage.removeItem(k))
-    }
     confirmState.value = 'success'
     // 浮條會自然消失（isPreviewing → false），但短暫顯示 ✓ 提示
     setTimeout(() => { confirmState.value = null }, 2000)

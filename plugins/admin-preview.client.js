@@ -41,6 +41,8 @@ export default defineNuxtPlugin(() => {
     }
     if (e.key === SETTINGS_BROADCAST_KEY) {
       await refetchJson()
+      // JSON 內的 navtool 已更新 → 重建 navtool state，讓 admin/其他 tab 跟上新存檔值（前後台同步）
+      syncAllNavtoolFromStorage()
       return
     }
     if (e.key.startsWith(NAVTOOL_PREFIX)) {

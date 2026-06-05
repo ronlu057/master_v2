@@ -96,18 +96,19 @@ onBeforeUnmount(() => {
           class="lang_toggle"
           :style="{ order: navtool.orderOf('language') }"
         >
-          <i class="icon icon-language"></i>
-          <ul>
-            <li v-for="lang in languages" :key="lang.code">
-              <a
-                href="javascript:;"
-                :class="{ active: lang.code === locale }"
-                @click.prevent="setLocale(lang.code)"
-              >
-                {{ lang.label }}
-              </a>
-            </li>
-          </ul>
+          <i class="icon icon-language" :aria-label="$t('aria.language')"></i>
+          <div class="lang_box">
+            <button
+              v-for="lang in languages"
+              :key="lang.code"
+              type="button"
+              class="lang_item"
+              :class="{ 'is-active': lang.code === locale }"
+              @click="setLocale(lang.code)"
+            >
+              {{ lang.label }}
+            </button>
+          </div>
         </div>
 
         <!-- 社群 -->
@@ -287,46 +288,43 @@ onBeforeUnmount(() => {
       color: $web_header_1;
     }
 
-    ul {
+    // 下拉子選單 — 樣式參考 Header02（置中、popup 淡入、hover 主色底）
+    .navmenu_sub {
       position: absolute;
       top: 100%;
       left: 50%;
-      width: max-content;
-      min-width: 142px;
-      list-style: none;
-      margin: 0;
-      padding: 0;
+      min-width: 160px;
+      padding: 6px;
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
       opacity: 0;
-      pointer-events: none;
-      transform: translate(-50%, 0);
-      transition: all 0.3s;
+      visibility: hidden;
+      transform: translateX(-50%) translateY(8px);
+      transition: all var(--transition);
+      z-index: 60;
 
-      li {
-        position: relative;
+      a {
+        display: block;
+        color: $web_font_color;
+        font-size: 14px;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: all 0.3s;
 
-        & + li { border-top: 1px solid #e9e9e9; }
-
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 20px;
-          background: #fff;
-          transition: all 0.3s;
-        }
-
-        &:hover > a,
-        > a.router-link-active {
-          color: #fff;
-          background: $web_header_1;
+        &:hover,
+        &.router-link-active {
+          background: var(--color-surface);
+          color: $web_header_1;
         }
       }
     }
 
-    &:hover > ul {
+    &:hover > .navmenu_sub {
       opacity: 1;
-      pointer-events: auto;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
     }
   }
 }
@@ -363,6 +361,54 @@ onBeforeUnmount(() => {
     &:hover { color: $web_header_1; }
   }
 
+  // 語系下拉 — 樣式參考 Header02
+  .lang_toggle .lang_box {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all var(--transition);
+    z-index: 60;
+
+    .lang_item {
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 6px;
+      color: $web_font_color;
+      transition: all var(--transition);
+
+      &:hover {
+        background: var(--color-surface);
+        color: $web_header_1;
+      }
+
+      &.is-active {
+        color: $web_header_1;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .lang_toggle:hover .lang_box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
   // 三個倒數 box
   .three_box {
     align-items: unset;
@@ -370,6 +416,9 @@ onBeforeUnmount(() => {
     padding: 0;
     margin-left: 10px;
     cursor: unset;
+
+    // 桌面排到 navtool 最右（搜尋等 icon 之後）；手機維持原樣（漢堡在最右）
+    @media (min-width: 1201px) { order: 90; }
 
     @include rwd-1280 { margin-left: 5px; }
 
