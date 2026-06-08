@@ -1,13 +1,13 @@
 {
   "projectType": "module",
-  "header": "Header08",
+  "header": "Header09",
   "pageBanner": "PageBanner01",
   "blockBanner": "BlockBanner01",
   "apiBase": "",
   "defaultLang": "tw",
   "enableShop": false,
   "logo": "",
-  "logoMaxHeight": 48,
+  "logoMaxHeight": 45,
   "customCss": "",
   "langLabels": {},
   "navtool": {
@@ -22,6 +22,40 @@
           "key": "language",
           "enabled": false,
           "order": 2
+        },
+        {
+          "key": "social",
+          "enabled": false,
+          "order": 3
+        },
+        {
+          "key": "member",
+          "enabled": false,
+          "order": 4
+        },
+        {
+          "key": "cart",
+          "enabled": false,
+          "order": 5
+        },
+        {
+          "key": "favorite",
+          "enabled": false,
+          "order": 6
+        }
+      ]
+    },
+    "Header05": {
+      "items": [
+        {
+          "key": "search",
+          "enabled": true,
+          "order": 2
+        },
+        {
+          "key": "language",
+          "enabled": true,
+          "order": 1
         },
         {
           "key": "social",
