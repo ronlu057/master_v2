@@ -315,41 +315,34 @@ body:not([data-page="index"]) {
       opacity: 0.85;
     }
 
-    ul {
+    .navmenu_sub {
       position: absolute;
       top: 100%;
       left: 50%;
       width: max-content;
       min-width: 100%;
-      list-style: none;
-      margin: 0;
-      padding: 0;
       opacity: 0;
       pointer-events: none;
       transform: translate(-50%, 0);
       transition: all 0.5s $ani_bezier_7;
 
-      li {
-        position: relative;
+      a {
+        display: block;
+        color: #fff;
+        font-size: 14px;
+        text-align: center;
+        padding: 10px 20px;
+        background: rgba(0, 0, 0, 0.55);
+        transition: all 0.5s $ani_bezier_7;
 
-        a {
-          display: block;
-          color: #fff;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 20px;
-          background: rgba(0, 0, 0, 0.55);
-          transition: all 0.5s $ani_bezier_7;
-        }
-
-        &:hover > a,
-        > a.router-link-active {
+        &:hover,
+        &.router-link-active {
           background: rgba(0, 0, 0, 0.75);
         }
       }
     }
 
-    &:hover > ul {
+    &:hover > .navmenu_sub {
       opacity: 1;
       pointer-events: auto;
     }

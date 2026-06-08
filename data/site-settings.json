@@ -1,6 +1,6 @@
 {
   "projectType": "module",
-  "header": "Header09",
+  "header": "Header10",
   "pageBanner": "PageBanner01",
   "blockBanner": "BlockBanner01",
   "apiBase": "",
@@ -56,6 +56,40 @@
           "key": "language",
           "enabled": true,
           "order": 1
+        },
+        {
+          "key": "social",
+          "enabled": false,
+          "order": 3
+        },
+        {
+          "key": "member",
+          "enabled": false,
+          "order": 4
+        },
+        {
+          "key": "cart",
+          "enabled": false,
+          "order": 5
+        },
+        {
+          "key": "favorite",
+          "enabled": false,
+          "order": 6
+        }
+      ]
+    },
+    "Header10": {
+      "items": [
+        {
+          "key": "search",
+          "enabled": true,
+          "order": 1
+        },
+        {
+          "key": "language",
+          "enabled": false,
+          "order": 2
         },
         {
           "key": "social",

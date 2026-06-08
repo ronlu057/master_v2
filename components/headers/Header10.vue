@@ -299,44 +299,125 @@ body:not([data-page="index"]) {
       color: $web_header_2;
     }
 
-    ul {
+    .navmenu_sub {
       position: absolute;
       top: 100%;
       left: 50%;
       width: max-content;
-      list-style: none;
-      margin: 0;
-      padding: 0;
       opacity: 0;
       pointer-events: none;
       transform: translate(-50%, 0);
       transition: all 0.3s;
 
-      li {
-        position: relative;
+      a {
+        display: block;
+        color: $web_font_color;
+        font-size: 14px;
+        text-align: center;
+        padding: 10px 40px;
+        background: #fff;
         border-bottom: 1px solid #e6e7e8;
+        transition: all 0.3s;
 
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 40px;
-          background: #fff;
-          transition: all 0.3s;
-        }
-
-        &:hover > a,
-        > a.router-link-active {
+        &:hover,
+        &.router-link-active {
           color: #fff;
           background: $web_header_2;
         }
       }
     }
 
-    &:hover > ul {
+    &:hover > .navmenu_sub {
       opacity: 1;
       pointer-events: auto;
+    }
+  }
+}
+
+// ── 工具列（語系 / 社群 / 會員 / 購物車 / 最愛） ──────────
+.navtool {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: $web_font_color;
+
+  @include rwd-1200 { display: none; }
+
+  > a,
+  > div {
+    color: $web_font_color;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover { color: $web_header_2; }
+  }
+
+  .icon { font-size: 20px; }
+
+  // .navtool_social 樣式走全域 main.scss
+
+  // 語系下拉（預設隱藏，hover 才浮現）
+  .lang_toggle {
+    position: relative;
+
+    ul {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      min-width: 120px;
+      list-style: none;
+      margin: 0;
+      padding: 6px;
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: all 0.3s;
+
+      li a {
+        display: block;
+        color: $web_font_color;
+        font-size: 13px;
+        padding: 6px 10px;
+        text-align: center;
+        border-radius: 6px;
+
+        &:hover,
+        &.active {
+          color: $web_header_2;
+          background: var(--color-surface);
+        }
+      }
+    }
+
+    &:hover ul {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+  }
+
+  // 購物車徽章
+  .cart_btn {
+    p {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 99px;
+      background: $web_header_2;
+      color: #fff;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
     }
   }
 }

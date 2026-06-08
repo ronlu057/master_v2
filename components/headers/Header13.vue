@@ -347,44 +347,37 @@ onBeforeUnmount(() => {
         color: $web_header_1;
       }
 
-      ul {
+      .navmenu_sub {
         position: absolute;
         top: 100%;
         left: 50%;
         width: max-content;
         min-width: 142px;
-        list-style: none;
-        margin: 0;
-        padding: 0;
         opacity: 0;
         pointer-events: none;
         transform: translate(-50%, 0);
         transition: all 0.3s;
 
-        li {
-          position: relative;
+        a {
+          display: block;
+          color: $web_font_color;
+          font-size: 14px;
+          text-align: center;
+          padding: 10px 20px;
+          background: #fff;
+          transition: all 0.3s;
 
-          & + li { border-top: 1px solid #e9e9e9; }
+          & + a { border-top: 1px solid #e9e9e9; }
 
-          a {
-            display: block;
-            color: $web_font_color;
-            font-size: 14px;
-            text-align: center;
-            padding: 10px 20px;
-            background: #fff;
-            transition: all 0.3s;
-          }
-
-          &:hover > a,
-          > a.router-link-active {
+          &:hover,
+          &.router-link-active {
             color: #fff;
             background: $web_header_1;
           }
         }
       }
 
-      &:hover > ul {
+      &:hover > .navmenu_sub {
         opacity: 1;
         pointer-events: auto;
       }

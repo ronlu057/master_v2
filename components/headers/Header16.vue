@@ -295,41 +295,37 @@ onBeforeUnmount(() => {
       color: $web_header_1;
     }
 
-    ul {
+    .navmenu_sub {
       position: absolute;
       top: 100%;
       left: 50%;
       width: max-content;
       min-width: 142px;
-      list-style: none;
-      margin: 0;
-      padding: 0;
       opacity: 0;
       pointer-events: none;
       transform: translate(-50%, 0);
       transition: all 0.3s;
 
-      li {
-        & + li { border-top: 1px solid #e9e9e9; }
+      a {
+        display: block;
+        color: $web_font_color;
+        font-size: 14px;
+        text-align: center;
+        padding: 10px 20px;
+        background: #fff;
+        transition: all 0.3s;
 
-        a {
-          display: block;
-          color: $web_font_color;
-          font-size: 14px;
-          text-align: center;
-          padding: 10px 20px;
-          background: #fff;
-          transition: all 0.3s;
-        }
+        & + a { border-top: 1px solid #e9e9e9; }
 
-        &:hover > a {
+        &:hover,
+        &.router-link-active {
           color: #fff;
           background: $web_header_1;
         }
       }
     }
 
-    &:hover > ul {
+    &:hover > .navmenu_sub {
       opacity: 1;
       pointer-events: auto;
     }

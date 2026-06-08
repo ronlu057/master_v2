@@ -501,26 +501,20 @@ onBeforeUnmount(() => {
       }
     }
 
-    ul {
+    .navmenu_sub {
       display: flex;
       flex-wrap: wrap;
-      list-style: none;
-      margin: 0;
-      padding: 0;
 
-      > li {
+      > a {
+        display: block;
+        color: #fff;
+        font-size: 14px;
         margin-right: 20px;
+        transition: all 0.3s;
 
-        > a {
-          display: block;
-          color: #fff;
-          font-size: 14px;
-          transition: all 0.3s;
-
-          &:hover,
-          &.router-link-active {
-            color: $web_header_2;
-          }
+        &:hover,
+        &.router-link-active {
+          color: $web_header_2;
         }
       }
     }
