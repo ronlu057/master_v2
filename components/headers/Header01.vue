@@ -240,7 +240,9 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .header01 {
-  position: sticky;
+  position: fixed;
+  width: 100%;
+  left: 0;
   top: 0;
   z-index: 50;
   display: flex;

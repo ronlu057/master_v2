@@ -215,6 +215,7 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   gap: 0 10px;
   position: fixed;
+  width: 100%;
   top: 0;
   left: 0;
   right: 0;
@@ -280,45 +281,40 @@ onBeforeUnmount(() => {
 
         > .icon { font-size: 20px; }
 
+        // 下拉（卡片式浮層，樣式參考 header01 .lang_box）
         ul {
           position: absolute;
           top: 100%;
           right: 50%;
           width: max-content;
-          padding-top: 13px;
           list-style: none;
           margin: 0;
+          padding: 6px;
+          background: var(--color-bg);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius);
+          box-shadow: var(--shadow-lg);
           opacity: 0;
+          visibility: hidden;
           pointer-events: none;
-          transform: translate(50%, -40px);
-          transition: all 0.3s;
+          transform: translate(50%, 8px);
+          transition: all var(--transition);
 
           li {
-            & + li { margin-top: 5px; }
-
             a {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 45px;
-              height: 45px;
-              color: #fff;
+              display: block;
+              color: $web_font_color;
               font-size: 14px;
-              background: $web_header_1;
-              border: 1px solid $web_header_1;
-              border-radius: 50%;
+              text-align: center;
+              padding: 8px 12px;
+              border-radius: 6px;
               transition: all 0.3s;
 
-              @include rwd-768 {
-                width: 40px;
-                height: 40px;
+              &:hover,
+              &.active {
+                color: var(--color-primary);
+                background: var(--color-surface);
               }
-            }
-
-            &:hover > a,
-            > a.active {
-              color: $web_header_1;
-              background: #fff;
             }
           }
         }
@@ -330,6 +326,7 @@ onBeforeUnmount(() => {
 
           ul {
             opacity: 1;
+            visibility: visible;
             pointer-events: auto;
             transform: translate(50%, 0);
           }

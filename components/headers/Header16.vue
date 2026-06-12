@@ -233,6 +233,7 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   gap: 0 30px;
   position: fixed;
+  width: 100%;
   top: 0;
   left: 0;
   right: 0;
@@ -295,39 +296,46 @@ onBeforeUnmount(() => {
       color: $web_header_1;
     }
 
+    // 下拉（卡片式浮層，樣式參考 header01 .navmenu__sub）
     .navmenu_sub {
       position: absolute;
       top: 100%;
       left: 50%;
       width: max-content;
       min-width: 142px;
+      padding: 6px;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transform: translate(-50%, 0);
-      transition: all 0.3s;
+      transform: translate(-50%, 8px);
+      transition: all var(--transition);
 
       a {
         display: block;
         color: $web_font_color;
         font-size: 14px;
         text-align: center;
-        padding: 10px 20px;
-        background: #fff;
+        padding: 8px 12px;
+        border-radius: 6px;
         transition: all 0.3s;
-
-        & + a { border-top: 1px solid #e9e9e9; }
 
         &:hover,
         &.router-link-active {
-          color: #fff;
-          background: $web_header_1;
+          color: var(--color-primary);
+          background: var(--color-surface);
         }
       }
     }
 
     &:hover > .navmenu_sub {
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
+      transform: translate(-50%, 0);
     }
   }
 }
@@ -399,6 +407,7 @@ onBeforeUnmount(() => {
       }
     }
 
+    // 下拉（卡片式浮層，樣式參考 header01 .lang_box）
     ul {
       position: absolute;
       top: 100%;
@@ -406,28 +415,31 @@ onBeforeUnmount(() => {
       width: max-content;
       list-style: none;
       margin: 0;
-      padding: 0;
+      padding: 6px;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transform: translate(50%, 0);
-      transition: all 0.3s;
+      transform: translate(50%, 8px);
+      transition: all var(--transition);
 
       li {
-        & + li { border-top: 1px solid #e9e9e9; }
-
         a {
           display: block;
           color: $web_font_color;
           font-size: 14px;
           text-align: center;
-          padding: 10px 20px;
-          background: #fff;
+          padding: 8px 12px;
+          border-radius: 6px;
           transition: all 0.3s;
 
           &:hover,
           &.active {
-            color: #fff;
-            background: $web_header_1;
+            color: var(--color-primary);
+            background: var(--color-surface);
           }
         }
       }
@@ -437,10 +449,15 @@ onBeforeUnmount(() => {
       @media (min-width: 1025px) {
         color: $web_header_1;
       }
-      .search_form,
-      ul {
+      .search_form {
         opacity: 1;
         pointer-events: auto;
+      }
+      ul {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translate(50%, 0);
       }
     }
   }

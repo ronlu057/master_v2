@@ -226,6 +226,7 @@ body:not([data-page="index"]) {
   align-items: center;
   justify-content: space-between;
   position: fixed;
+  width: 100%;
   top: 0;
   left: 0;
   right: 0;
@@ -429,7 +430,8 @@ body:not([data-page="index"]) {
   justify-content: center;
   width: 175px;
   height: 70px;
-  background: $web_header_2;
+  // 後台「Header 背景色」有設時跟著變（含透明）；沒設則用版型預設色
+  background: var(--header-bg-color, #{$web_header_2});
   border: none;
   cursor: pointer;
   transition: all 0.3s;
@@ -480,7 +482,8 @@ body:not([data-page="index"]) {
   right: 0;
   width: 120px;
   height: 70px;
-  background: $web_header_1;
+  // 後台「Header 背景色」有設時跟著變（含透明）；沒設則用版型預設色
+  background: var(--header-bg-color, #{$web_header_1});
   border: none;
   cursor: pointer;
   z-index: $z_mbPanel_btn;

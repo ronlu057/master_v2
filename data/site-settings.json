@@ -1,15 +1,15 @@
 {
   "projectType": "module",
-  "header": "Header10",
+  "header": "Header01",
   "pageBanner": "PageBanner01",
-  "blockBanner": "BlockBanner01",
+  "blockBanner": "BlockBanner10",
   "apiBase": "",
   "defaultLang": "tw",
   "enableShop": false,
   "logo": "",
   "logoMaxHeight": 45,
   "customCss": "",
-  "headerBgColor": "",
+  "headerBgColor": "transparent",
   "langLabels": {},
   "navtool": {
     "Header07": {
