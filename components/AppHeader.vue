@@ -14,5 +14,15 @@ const current = computed(
 </script>
 
 <template>
-  <component :is="current" />
+  <!-- display:contents → 此 div 不產生任何盒子（不影響排版），純粹給後台「Header 背景色」
+       的全域覆寫規則 .app-header header 一個穩定掛點，免去逐一改 16 支版型 -->
+  <div class="app-header">
+    <component :is="current" />
+  </div>
 </template>
+
+<style scoped>
+.app-header {
+  display: contents;
+}
+</style>

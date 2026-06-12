@@ -18,9 +18,59 @@ const onLangLabelInput = (lang, value) => {
   setPreview('langLabels', { ...(state.langLabels || {}), [lang]: value })
 }
 
+// ── Header 背景色 ───────────────────────────────────────────
+// 值的三種型態：''＝版型預設、'transparent'＝透明、'#rrggbb' / 'rgba(r,g,b,a)'＝指定色
+// 強制套用到所有狀態（含捲動後 / 內頁）— 注入邏輯在 app.vue
+const parseColor = (v) => {
+  if (!v || v === 'transparent') return { hex: '#000000', alpha: 100 }
+  const m = v.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\s*\)$/i)
+  if (m) {
+    const hex =
+      '#' + [m[1], m[2], m[3]].map((n) => Number(n).toString(16).padStart(2, '0')).join('')
+    return { hex, alpha: m[4] === undefined ? 100 : Math.round(parseFloat(m[4]) * 100) }
+  }
+  // #rgb → #rrggbb
+  if (/^#[0-9a-f]{3}$/i.test(v)) {
+    return { hex: '#' + v.slice(1).split('').map((c) => c + c).join(''), alpha: 100 }
+  }
+  return { hex: /^#[0-9a-f]{6}$/i.test(v) ? v : '#000000', alpha: 100 }
+}
+const composeColor = (hex, alpha) => {
+  if (alpha >= 100) return hex
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `rgba(${r},${g},${b},${(alpha / 100).toFixed(2)})`
+}
+
+const _init = parseColor(state.headerBgColor)
+const customHex = ref(_init.hex)
+const customAlpha = ref(_init.alpha)
+
+const bgMode = computed(() => {
+  const v = state.headerBgColor || ''
+  if (!v) return 'default'
+  if (v === 'transparent') return 'transparent'
+  return 'custom'
+})
+
+const setBgMode = (mode) => {
+  if (mode === 'default') setPreview('headerBgColor', '')
+  else if (mode === 'transparent') setPreview('headerBgColor', 'transparent')
+  else setPreview('headerBgColor', composeColor(customHex.value, customAlpha.value))
+}
+const onBgColorInput = (hex) => {
+  customHex.value = hex
+  setPreview('headerBgColor', composeColor(hex, customAlpha.value))
+}
+const onBgAlphaInput = (a) => {
+  customAlpha.value = a
+  setPreview('headerBgColor', composeColor(customHex.value, a))
+}
+
 const dirty = computed(
   () =>
-    ['header', 'logo', 'logoMaxHeight', 'customCss'].some(isDirtyKey) ||
+    ['header', 'logo', 'logoMaxHeight', 'customCss', 'headerBgColor'].some(isDirtyKey) ||
     JSON.stringify(state.langLabels || {}) !==
       JSON.stringify(persisted.value.langLabels || {}),
 )
@@ -156,6 +206,67 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
         </div>
         <span class="field__hint">寬度自動；常用 40 ~ 80</span>
       </label>
+
+      <!-- Header 背景色（全站共用，強制套用所有狀態） -->
+      <div class="field field--full">
+        <span class="field__label">Header 背景色 <em class="field__live">即時預覽</em></span>
+        <div class="bg-picker">
+          <div class="bg-picker__modes">
+            <label :class="{ 'is-on': bgMode === 'default' }">
+              <input
+                type="radio"
+                name="bgmode"
+                :checked="bgMode === 'default'"
+                @change="setBgMode('default')"
+              />
+              版型預設
+            </label>
+            <label :class="{ 'is-on': bgMode === 'transparent' }">
+              <input
+                type="radio"
+                name="bgmode"
+                :checked="bgMode === 'transparent'"
+                @change="setBgMode('transparent')"
+              />
+              透明
+            </label>
+            <label :class="{ 'is-on': bgMode === 'custom' }">
+              <input
+                type="radio"
+                name="bgmode"
+                :checked="bgMode === 'custom'"
+                @change="setBgMode('custom')"
+              />
+              指定顏色
+            </label>
+          </div>
+
+          <div v-if="bgMode === 'custom'" class="bg-picker__custom">
+            <input
+              type="color"
+              :value="customHex"
+              @input="onBgColorInput($event.target.value)"
+            />
+            <div class="bg-picker__alpha">
+              <span>不透明度</span>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                :value="customAlpha"
+                @input="onBgAlphaInput(Number($event.target.value))"
+              />
+              <span class="bg-picker__alpha-num">{{ customAlpha }}%</span>
+            </div>
+            <code class="bg-picker__val">{{ state.headerBgColor }}</code>
+          </div>
+        </div>
+        <span class="field__hint">
+          強制套用到所有狀態（含捲動後 / 內頁）。<strong>透明</strong>可讓 header 疊在 banner 上；
+          <strong>版型預設</strong>＝交還給版型自身設計（含原本捲動變色效果）。
+        </span>
+      </div>
     </div>
 
     <div class="actions">
@@ -295,6 +406,109 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
   &:focus {
     outline: 1px solid #4fc08d;
     border-color: #4fc08d;
+  }
+}
+
+.bg-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__modes {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: #1a1f2a;
+      border: 1px solid #2a3242;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #c8cfdb;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &.is-on {
+        border-color: #4fc08d;
+        color: #fff;
+      }
+
+      input { accent-color: #4fc08d; cursor: pointer; }
+    }
+  }
+
+  &__custom {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    background: #1a1f2a;
+    border: 1px solid #2a3242;
+    border-radius: 8px;
+
+    input[type='color'] {
+      width: 48px;
+      height: 36px;
+      padding: 0;
+      background: none;
+      border: 1px solid #2a3242;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  }
+
+  &__alpha {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: #7a8896;
+
+    input[type='range'] {
+      width: 140px;
+      height: 4px;
+      background: #2a3242;
+      border-radius: 4px;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+
+      &::-webkit-slider-thumb {
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #4fc08d;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      &::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        background: #4fc08d;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__alpha-num {
+    min-width: 38px;
+    color: #c8cfdb;
+  }
+
+  &__val {
+    margin-left: auto;
+    padding: 4px 10px;
+    background: #0f1218;
+    color: #6a7382;
+    border-radius: 4px;
+    font-size: 12px;
   }
 }
 

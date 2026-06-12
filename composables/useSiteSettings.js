@@ -48,6 +48,7 @@ export function useSiteSettings() {
         logo: state.logo,
         logoMaxHeight: state.logoMaxHeight,
         customCss: state.customCss,
+        headerBgColor: state.headerBgColor || '',
         langLabels: state.langLabels || {},
         // navtool per-header 設定：把所有預覽（localStorage）固化進 JSON
         navtool: navtoolCfg.snapshotForSave(),

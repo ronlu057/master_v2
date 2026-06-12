@@ -8,8 +8,16 @@ const { state: siteState } = useEffectiveSettings()
 // 動態組成 <style> 內容：(1) :root CSS variable 給 SiteLogo 用 (2) 後台自訂 CSS
 const siteStyleContent = computed(() => {
   const cssVars = `:root { --site-logo-h: ${siteState.logoMaxHeight || 66}px; }`
+  // 後台指定的 Header 背景色 → 強制蓋過所有版型在所有狀態（含 .scroll / 內頁）的背景。
+  // 空字串＝不注入，交還給版型自身設計。值可為 'transparent' / 色碼 / rgba()。
+  // 連 backdrop-filter 一起關掉，確保「透明」是真的透明（不會殘留毛玻璃模糊）。
+  const bg = (siteState.headerBgColor || '').trim()
+  const headerBg = bg
+    ? `:root { --header-bg-color: ${bg}; }
+.app-header header { background: var(--header-bg-color) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }`
+    : ''
   const customCss = siteState.customCss || ''
-  return `${cssVars}\n${customCss}`
+  return `${cssVars}\n${headerBg}\n${customCss}`
 })
 
 // i18n（useI18n / useLocaleHead 必須在 setup 頂層呼叫，不能進 computed / function 內）

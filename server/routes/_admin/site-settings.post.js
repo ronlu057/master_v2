@@ -20,6 +20,7 @@ const ALLOWED_KEYS = [
   'logo',
   'logoMaxHeight',
   'customCss',
+  'headerBgColor',
   'langLabels',
   'navtool',
 ]

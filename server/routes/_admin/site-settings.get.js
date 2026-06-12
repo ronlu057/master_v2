@@ -17,6 +17,7 @@ const DEFAULTS = {
   logo: '',
   logoMaxHeight: 66,
   customCss: '',
+  headerBgColor: '',
   langLabels: {},
   navtool: {},
 }

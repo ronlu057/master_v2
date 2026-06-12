@@ -31,6 +31,9 @@ export function useEffectiveSettings() {
       logoMaxHeight: Number(pub.logoMaxHeight) || 66,
       // 後台自訂 CSS — 全域注入到 <head>，可覆寫 .site-logo / 各 .headerXX 等
       customCss: pub.customCss || '',
+      // Header 背景色（全站共用）：''＝用版型自身預設、'transparent'＝透明、其餘＝色碼/rgba。
+      // 由 app.vue 注入 !important 規則，強制套用到所有狀態（含捲動後 / 內頁）
+      headerBgColor: pub.headerBgColor || '',
       // 語系顯示文字覆寫 { tw, en, jp, kr }；留空欄位 → 各 header 走自身預設（見 useLangLabels）
       langLabels: {},
       // navtool per-header 設定 { [HeaderName]: { items: [{key,enabled,order}] } }；空 → 走 PRESETS
