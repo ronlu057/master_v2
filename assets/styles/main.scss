@@ -20,13 +20,14 @@
   --color-surface: #f6f8f9;
   --color-border: #e3e8ec;
 
-  --container: 1600px;
-  --radius: 8px;
-  --radius-lg: 16px;
+  /* 內容容器：以 1920 設計寬 1600 等比流體；1920 時=1600、1024 時=853、2560 時=2133（全程 calc） */
+  --container: fluid(1600);
+  --radius: fluid(8);
+  --radius-lg: fluid(16);
   --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
   --transition: 0.25s ease;
-  --header-h: 72px;
+  --header-h: fluid(72);
 }
 
 /* ---- 專案類型主題切換（由 app.vue 設定 <html data-project>）---- */
@@ -116,10 +117,21 @@ h4 {
   width: 100%;
   max-width: var(--container);
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 fluid(20);
+}
+/* 全站較寬容器（原 1720）：≤1920 維持 1720；1920→2560 依比例長到 2293（1720×2560/1920）；≥2560 鎖 2293 */
+.wider_container {
+  width: 100%;
+  max-width: fluid(1720);
+  margin: 0 auto;
+  padding: 0 fluid(60);
+  transition: all 0.3s;
+
+  @media (max-width: 768px) { padding: 0 30px; }
+  @media (max-width: 480px) { padding: 0 25px; }
 }
 .section {
-  padding: 64px 0;
+  padding: fluid(64) 0;
 
   &--surface {
     background: var(--color-surface);
@@ -127,7 +139,7 @@ h4 {
 }
 .section-title {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: fluid(40);
 
   &__main {
     font-size: 30px;
@@ -135,7 +147,7 @@ h4 {
   &__sub {
     color: var(--color-text-muted);
     font-size: 15px;
-    margin-top: 6px;
+    margin-top: fluid(6);
   }
 }
 
@@ -144,8 +156,8 @@ h4 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 28px;
+  gap: fluid(8);
+  padding: fluid(12) fluid(28);
   border: 2px solid transparent;
   border-radius: var(--radius);
   font-size: 15px;
@@ -183,7 +195,7 @@ h4 {
 /* ---- grid ---- */
 .grid {
   display: grid;
-  gap: 24px;
+  gap: fluid(24);
 
   &--2 {
     grid-template-columns: repeat(2, 1fr);
@@ -200,10 +212,10 @@ h4 {
 .breadcrumb {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: fluid(6);
   font-size: 13px;
   color: var(--color-text-muted);
-  padding: 16px 0;
+  padding: fluid(16) 0;
 
   a:hover {
     color: var(--color-primary);
@@ -239,7 +251,7 @@ h4 {
 .navtool_social {
   display: flex;
   align-items: center;
-  gap: 0 13px;
+  gap: 0 fluid(13);
   transition: all 0.3s;
 
   @include rwd-1440 { gap: 0 10px; }
@@ -250,8 +262,8 @@ h4 {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 35px;
-    height: 35px;
+    width: fluid(35);
+    height: fluid(35);
     background: $web_font_color;
     border-radius: 50%;
     color: #fff;

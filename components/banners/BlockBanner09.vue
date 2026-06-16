@@ -73,7 +73,7 @@ onBeforeUnmount(() => {
       <!-- 置中標語 -->
       <div class="banner_txt">
         <div class="wider_container">
-          <p>{{ tagline }}</p>
+          <h1>{{ tagline }}</h1>
         </div>
       </div>
     </div>
@@ -143,7 +143,7 @@ onBeforeUnmount(() => {
     transform: translateY(-50%);
     z-index: 2;
 
-    p {
+    > * {
       color: #fff;
       font-size: 18px;
       font-family: $title_font_en;

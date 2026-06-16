@@ -33,7 +33,7 @@ const emit = defineEmits(['navigate'])
 .site-menu {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: fluid(4);
 
   &__item {
     position: relative;
@@ -42,8 +42,8 @@ const emit = defineEmits(['navigate'])
   &__link {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 10px 14px;
+    gap: fluid(4);
+    padding: fluid(10) fluid(14);
     font-size: 18px;
     font-weight: 600;
     border-radius: var(--radius);
@@ -62,12 +62,12 @@ const emit = defineEmits(['navigate'])
     position: absolute;
     top: 100%;
     left: 0;
-    min-width: 160px;
+    min-width: fluid(160);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-lg);
-    padding: 6px;
+    padding: fluid(6);
     opacity: 0;
     visibility: hidden;
     transform: translateY(8px);
@@ -75,9 +75,9 @@ const emit = defineEmits(['navigate'])
 
     a {
       display: block;
-      padding: 8px 12px;
+      padding: fluid(8) fluid(12);
       font-size: 14px;
-      border-radius: 6px;
+      border-radius: fluid(6);
 
       &:hover {
         background: var(--color-surface);
@@ -99,7 +99,7 @@ const emit = defineEmits(['navigate'])
     gap: 0;
 
     .site-menu__link {
-      padding: 12px 4px;
+      padding: fluid(12) fluid(4);
       border-bottom: 1px solid var(--color-border);
     }
 
@@ -110,7 +110,7 @@ const emit = defineEmits(['navigate'])
       transform: none;
       border: none;
       box-shadow: none;
-      padding: 0 0 0 16px;
+      padding: 0 0 0 fluid(16);
     }
   }
 }

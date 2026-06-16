@@ -294,8 +294,8 @@ body[data-page="index"] {
           position: absolute;
           top: 100%;
           left: 0;
-          min-width: 160px;
-          padding: 6px;
+          min-width: fluid(160);
+          padding: fluid(6);
           background: var(--color-bg);
           border: 1px solid var(--color-border);
           border-radius: var(--radius);
@@ -307,9 +307,9 @@ body[data-page="index"] {
 
           a {
             display: block;
-            padding: 8px 12px;
+            padding: fluid(8) fluid(12);
             font-size: 14px;
-            border-radius: 6px;
+            border-radius: fluid(6);
             color: $web_font_color;
             transition: all var(--transition);
 
@@ -345,7 +345,7 @@ body[data-page="index"] {
 .navmenu {
   display: flex;
   list-style: none;
-  margin-left: 15px;
+  margin-left: fluid(15);
   padding: 0;
 
   @include rwd-1200 { display: none; }
@@ -358,7 +358,7 @@ body[data-page="index"] {
       color: $web_font_color;
       font-size: 16px;
       line-height: 1.5;
-      padding: 23px 25px;
+      padding: fluid(23) fluid(25);
       transition: all 0.3s;
 
       @include rwd-1440 { padding: 23px 15px; }
@@ -374,8 +374,8 @@ body[data-page="index"] {
       position: absolute;
       top: 100%;
       left: 0;
-      min-width: 160px;
-      padding: 6px;
+      min-width: fluid(160);
+      padding: fluid(6);
       background: transparent;
       opacity: 0;
       visibility: hidden;
@@ -384,9 +384,9 @@ body[data-page="index"] {
 
       a {
         display: block;
-        padding: 8px 12px;
+        padding: fluid(8) fluid(12);
         font-size: 14px;
-        border-radius: 6px;
+        border-radius: fluid(6);
         color: $web_font_color;
         transition: all var(--transition);
 
@@ -409,7 +409,7 @@ body[data-page="index"] {
 // 工具列
 .navtool {
   display: flex;
-  margin-left: 20px;
+  margin-left: fluid(20);
 
   @include rwd-1280 { margin-left: 0; }
 
@@ -420,8 +420,8 @@ body[data-page="index"] {
     align-items: center;
     justify-content: center;
     position: relative;
-    height: 70px;
-    padding: 0 20px;
+    height: fluid(70);
+    padding: 0 fluid(20);
     background: none;
     border: none;
     cursor: pointer;
@@ -446,8 +446,8 @@ body[data-page="index"] {
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 280px;
-    padding: 10px;
+    min-width: fluid(280);
+    padding: fluid(10);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
@@ -461,11 +461,11 @@ body[data-page="index"] {
     .search_form {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: fluid(6);
 
       input {
         flex: 1;
-        padding: 8px 12px;
+        padding: fluid(8) fluid(12);
         border: 1px solid var(--color-border);
         border-radius: var(--radius);
         font-size: 14px;
@@ -475,7 +475,7 @@ body[data-page="index"] {
         background: none;
         border: none;
         cursor: pointer;
-        padding: 4px;
+        padding: fluid(4);
         display: flex;
         color: $web_font_color;
         transition: color 0.3s;
@@ -499,10 +499,10 @@ body[data-page="index"] {
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 140px;
+    min-width: fluid(140);
     display: flex;
     flex-direction: column;
-    padding: 6px;
+    padding: fluid(6);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
@@ -516,11 +516,11 @@ body[data-page="index"] {
     .lang_item {
       background: none;
       border: none;
-      padding: 8px 12px;
+      padding: fluid(8) fluid(12);
       font-size: 14px;
       text-align: left;
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: fluid(6);
       color: $web_font_color;
       transition: all var(--transition);
 
@@ -545,9 +545,9 @@ body[data-page="index"] {
   .cart_btn {
     p {
       position: absolute;
-      top: 17px;
-      right: 9px;
-      width: 16px;
+      top: fluid(17);
+      right: fluid(9);
+      width: fluid(16);
       line-height: 16px;
       color: #fff;
       font-size: 13px;
@@ -562,14 +562,14 @@ body[data-page="index"] {
   }
 
   .mbPanel_btn {
-    padding: 0 20px;
+    padding: 0 fluid(20);
     background: $web_header_1;
 
     @media (min-width: 1201px) { display: none !important; }
 
     .bars {
       position: relative;
-      width: 30px;
+      width: fluid(30);
       height: 2px;
 
       .bar {
@@ -579,10 +579,10 @@ body[data-page="index"] {
         width: 100%;
         height: 100%;
         background: #fff;
-        border-radius: 10px;
+        border-radius: fluid(10);
 
         &.bar1 {
-          top: -8px;
+          top: fluid(-8);
           transition: top 0.3s 0.5s, transform 0.3s;
         }
         &.bar2 {
@@ -590,7 +590,7 @@ body[data-page="index"] {
           transition: opacity 0s 0.3s;
         }
         &.bar3 {
-          top: 8px;
+          top: fluid(8);
           transition: top 0.3s 0.5s, transform 0.3s;
         }
       }
@@ -643,7 +643,7 @@ body[data-page="index"] {
         color: #fff;
         font-size: 16px;
         text-shadow: 0 0 15px rgba(0, 0, 0, 0.45);
-        padding: 5px 0;
+        padding: fluid(5) 0;
         transition: all 0.3s;
       }
 
@@ -656,13 +656,13 @@ body[data-page="index"] {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 10px 25px;
+        gap: fluid(10) fluid(25);
         position: absolute;
         top: 100%;
         left: 50%;
         width: 50vw;
-        max-width: 500px;
-        padding-top: 25px;
+        max-width: fluid(500);
+        padding-top: fluid(25);
         opacity: 0;
         pointer-events: none;
         transform: translate(-50%, 0);
@@ -709,19 +709,19 @@ body[data-page="index"] {
 // ── 行動版下拉選單 ───────────────────────────────────────
 .header08_panel {
   position: fixed;
-  top: 70px;
+  top: fluid(70);
   left: 0;
   right: 0;
   background: #fff;
   border-top: 1px solid var(--color-border);
-  padding: 8px 20px 16px;
+  padding: fluid(8) fluid(20) fluid(16);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   z-index: $z_mobile_menu;
 }
 
 .mb_navmenu_link {
   display: block;
-  padding: 12px 4px;
+  padding: fluid(12) fluid(4);
   font-size: 18px;
   font-weight: 600;
   color: $web_font_color;
@@ -729,11 +729,11 @@ body[data-page="index"] {
 }
 
 .mb_navmenu_sub {
-  padding: 0 0 0 16px;
+  padding: 0 0 0 fluid(16);
 
   a {
     display: block;
-    padding: 8px 4px;
+    padding: fluid(8) fluid(4);
     font-size: 14px;
     color: $web_font_color;
   }

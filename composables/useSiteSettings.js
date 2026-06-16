@@ -49,6 +49,12 @@ export function useSiteSettings() {
         logoMaxHeight: state.logoMaxHeight,
         customCss: state.customCss,
         headerBgColor: state.headerBgColor || '',
+        headerMenuColor: state.headerMenuColor || '',
+        headerMenuHoverColor: state.headerMenuHoverColor || '',
+        headerDropdownBg: state.headerDropdownBg || '',
+        headerDropdownItemBg: state.headerDropdownItemBg || '',
+        headerDropdownColor: state.headerDropdownColor || '',
+        headerDropdownHoverColor: state.headerDropdownHoverColor || '',
         langLabels: state.langLabels || {},
         // navtool per-header 設定：把所有預覽（localStorage）固化進 JSON
         navtool: navtoolCfg.snapshotForSave(),

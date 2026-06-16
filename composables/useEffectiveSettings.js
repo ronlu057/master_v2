@@ -34,6 +34,14 @@ export function useEffectiveSettings() {
       // Header 背景色（全站共用）：''＝用版型自身預設、'transparent'＝透明、其餘＝色碼/rgba。
       // 由 app.vue 注入 !important 規則，強制套用到所有狀態（含捲動後 / 內頁）
       headerBgColor: pub.headerBgColor || '',
+      // 選單（menu）顏色（全站共用，空＝交還版型預設）：文字色 / 滑鼠滑過色 / 下拉背景色
+      // 由 app.vue 注入 !important 規則，套用到 .app-header nav 連結與下拉子選單
+      headerMenuColor: pub.headerMenuColor || '',
+      headerMenuHoverColor: pub.headerMenuHoverColor || '',
+      headerDropdownBg: pub.headerDropdownBg || '', // 下拉「容器」背景
+      headerDropdownItemBg: pub.headerDropdownItemBg || '', // 下拉「單項」背景
+      headerDropdownColor: pub.headerDropdownColor || '', // 下拉「文字」色（與主選單文字分開）
+      headerDropdownHoverColor: pub.headerDropdownHoverColor || '', // 下拉文字「滑鼠滑過」色
       // 語系顯示文字覆寫 { tw, en, jp, kr }；留空欄位 → 各 header 走自身預設（見 useLangLabels）
       langLabels: {},
       // navtool per-header 設定 { [HeaderName]: { items: [{key,enabled,order}] } }；空 → 走 PRESETS

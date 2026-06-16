@@ -273,7 +273,7 @@ body:not([data-page="index"]) {
   @include rwd-1200 { max-width: calc(100% - 60px); }
 
   img {
-    max-height: 60px;
+    max-height: fluid(60);
     transition: all 0.5s $ani_bezier_7;
 
     // ≥1025 顯示第一張、≤1024 顯示第二張
@@ -306,7 +306,7 @@ body:not([data-page="index"]) {
       display: block;
       color: #fff;
       font-size: 16px;
-      padding: 23px 20px;
+      padding: fluid(23) fluid(20);
       transition: all 0.5s $ani_bezier_7;
     }
 
@@ -332,7 +332,7 @@ body:not([data-page="index"]) {
         color: #fff;
         font-size: 14px;
         text-align: center;
-        padding: 10px 20px;
+        padding: fluid(10) fluid(20);
         background: rgba(0, 0, 0, 0.55);
         transition: all 0.5s $ani_bezier_7;
 
@@ -354,8 +354,8 @@ body:not([data-page="index"]) {
 .navtool {
   display: flex;
   align-items: center;
-  gap: 18px;
-  margin-left: 20px;
+  gap: fluid(18);
+  margin-left: fluid(20);
   opacity: 0;
   pointer-events: none;
   transition: all 0.5s $ani_bezier_7;
@@ -384,12 +384,12 @@ body:not([data-page="index"]) {
       position: absolute;
       top: 100%;
       right: 0;
-      min-width: 100px;
+      min-width: fluid(100);
       list-style: none;
       margin: 0;
-      padding: 6px;
+      padding: fluid(6);
       background: rgba(0, 0, 0, 0.85);
-      border-radius: 4px;
+      border-radius: fluid(4);
       opacity: 0;
       pointer-events: none;
       transform: translateY(8px);
@@ -399,7 +399,7 @@ body:not([data-page="index"]) {
         display: block;
         color: #fff;
         font-size: 13px;
-        padding: 6px 10px;
+        padding: fluid(6) fluid(10);
         text-align: center;
 
         &:hover, &.active { opacity: 1; background: rgba(255, 255, 255, 0.1); }
@@ -417,12 +417,12 @@ body:not([data-page="index"]) {
   .cart_btn {
     p {
       position: absolute;
-      top: -8px;
-      right: -10px;
-      min-width: 16px;
-      height: 16px;
-      padding: 0 4px;
-      border-radius: 99px;
+      top: fluid(-8);
+      right: fluid(-10);
+      min-width: fluid(16);
+      height: fluid(16);
+      padding: 0 fluid(4);
+      border-radius: fluid(99);
       background: $web_header_1;
       color: #fff;
       font-size: 10px;
@@ -444,7 +444,7 @@ body:not([data-page="index"]) .header09 .navtool {
 // ── 浮動漢堡（外層獨立元素） ──────────────────────────────
 .mbPanel_btn09 {
   position: fixed;
-  top: 26px;
+  top: fluid(26);
   right: 4.1667vw;
   background: none;
   border: none;
@@ -460,9 +460,9 @@ body:not([data-page="index"]) .header09 .navtool {
 
   .bars {
     position: relative;
-    width: 34px;
+    width: fluid(34);
     height: 1px;
-    margin: 9px 0;
+    margin: fluid(9) 0;
 
     .bar {
       position: absolute;
@@ -471,18 +471,18 @@ body:not([data-page="index"]) .header09 .navtool {
       width: 100%;
       height: 100%;
       background: #fff;
-      border-radius: 10px;
+      border-radius: fluid(10);
 
       &.bar1 {
-        top: -9px;
-        left: 9px;
-        width: 25px;
+        top: fluid(-9);
+        left: fluid(9);
+        width: fluid(25);
         transform-origin: left top;
         transition: all 0.5s $ani_bezier_7;
       }
       &.bar2 { transition: all 0.5s $ani_bezier_7; }
       &.bar3 {
-        top: 9px;
+        top: fluid(9);
         transform-origin: left bottom;
         transition: all 0.5s $ani_bezier_7;
       }
@@ -497,12 +497,12 @@ body:not([data-page="index"]) .header09 .navtool {
   &.active .bars .bar {
     &.bar1 {
       left: 0;
-      width: 38px;
+      width: fluid(38);
       transform: rotate(27.5deg);
     }
     &.bar2 { opacity: 0; }
     &.bar3 {
-      width: 38px;
+      width: fluid(38);
       transform: rotate(-27.5deg);
     }
   }
@@ -519,12 +519,12 @@ body:not([data-page="index"]) .header09 .navtool {
 // ── 漢堡開啟時的下拉選單 ──────────────────────────────────
 .header09_panel {
   position: fixed;
-  top: 70px;
+  top: fluid(70);
   left: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(4px);
-  padding: 20px 4.1667vw;
+  padding: fluid(20) 4.1667vw;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   z-index: $z_mobile_menu;
   max-height: calc(100vh - 70px);
@@ -536,7 +536,7 @@ body:not([data-page="index"]) .header09 .navtool {
 
 .mb_navmenu_link {
   display: block;
-  padding: 14px 4px;
+  padding: fluid(14) fluid(4);
   font-size: 18px;
   font-weight: 600;
   color: #fff;
@@ -547,11 +547,11 @@ body:not([data-page="index"]) .header09 .navtool {
 }
 
 .mb_navmenu_sub {
-  padding: 0 0 0 16px;
+  padding: 0 0 0 fluid(16);
 
   a {
     display: block;
-    padding: 8px 4px;
+    padding: fluid(8) fluid(4);
     font-size: 14px;
     color: rgba(255, 255, 255, 0.85);
 

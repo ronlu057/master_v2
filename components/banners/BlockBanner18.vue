@@ -61,17 +61,17 @@ const onSlideChange = (s) => {
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
         <!-- p 順序固定（對應原 PHP 四行），讓 nth-child 動畫穩定；空值僅留空段落 -->
         <div class="cover">
-          <p>{{ row.title }}</p>
-          <p v-html="toHtml(row.title2)" />
-          <p class="cover_line"><span></span></p>
-          <p>{{ row.title3 }}</p>
+          <div>{{ row.title }}</div>
+          <component :is="i === 0 ? 'h1' : 'h2'" v-html="toHtml(row.title2)" />
+          <div class="cover_line"><span></span></div>
+          <div>{{ row.title3 }}</div>
 
-          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link">
+          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title2 || 'VIEW MORE'">
             <span>VIEW MORE</span>
           </NuxtLink>
         </div>
@@ -170,11 +170,11 @@ const onSlideChange = (s) => {
       }
 
       // 第一行：英文/標題（bannerTitleSize_en(2)）
-      p:nth-child(1) {
+      > :nth-child(1) {
         color: #fff;
         font-weight: 600;
         font-family: $title_font_cht;
-        font-size: clamp(19px, calc(23 / 19.2 * 1vw), 23px);
+        font-size: clamp(19px, calc(23 / 19.2 * 1vw), calc(23 / 1920 * 2560 * 1px));
         text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
         opacity: 0;
         transform: translate(-40px, 0);
@@ -186,14 +186,14 @@ const onSlideChange = (s) => {
       }
 
       // 第二行：主標（$title_font_en、bannerTitleSize_cht(1)）
-      p:nth-child(2) {
+      > :nth-child(2) {
         position: relative;
         color: #fff;
         font-weight: 500;
         font-family: $title_font_en;
-        font-size: clamp(32px, calc(50 / 19.2 * 1vw), 50px);
+        font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
         text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-        margin: 0 0 15px;
+        margin: 0 0 fluid(15);
         opacity: 0;
         transform: translate(-40px, 0);
         transition: all 0.3s, opacity 1s 0.3s, transform 1s 0.3s;
@@ -236,7 +236,7 @@ const onSlideChange = (s) => {
 
         span {
           display: inline-block;
-          width: 40px;
+          width: fluid(40);
           height: 2px;
           background: $web_color_1;
         }
@@ -249,11 +249,11 @@ const onSlideChange = (s) => {
       }
 
       // 第三行（bannerTitleSize_cht(2)）
-      p:nth-child(4) {
+      > :nth-child(4) {
         color: #fff;
         font-weight: 600;
         font-family: $title_font_cht;
-        font-size: clamp(16px, calc(18 / 19.2 * 1vw), 18px);
+        font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
         text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
         opacity: 0;
         transform: translate(-40px, 0);
@@ -269,12 +269,12 @@ const onSlideChange = (s) => {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 12px 32px;
+        padding: fluid(12) fluid(32);
         border: 1px solid $web_color_1;
         color: $web_color_1;
         font-size: 14px;
         letter-spacing: 2px;
-        margin-top: 55px;
+        margin-top: fluid(55);
         opacity: 0;
         transform: translate(-40px, 0);
         transition: all 0.3s, opacity 1s 0.6s, transform 1s 0.6s;
@@ -308,19 +308,19 @@ const onSlideChange = (s) => {
       }
 
       .cover {
-        p:nth-child(1),
-        p:nth-child(2),
-        p:nth-child(4),
+        > :nth-child(1),
+        > :nth-child(2),
+        > :nth-child(4),
         .cover_line {
           opacity: 1;
           transform: translate(0, 0);
         }
 
-        p:nth-child(1) {
+        > :nth-child(1) {
           transition: all 0.3s, opacity 1s 1.15s, transform 1s 1.15s;
         }
 
-        p:nth-child(2) {
+        > :nth-child(2) {
           transition: all 0.3s, opacity 1s 1.3s, transform 1s 1.3s;
         }
 
@@ -328,7 +328,7 @@ const onSlideChange = (s) => {
           transition: all 0.3s, opacity 1s 1.4s;
         }
 
-        p:nth-child(4) {
+        > :nth-child(4) {
           transition: all 0.3s, opacity 1s 1.45s, transform 1s 1.45s;
         }
 
@@ -375,8 +375,8 @@ const onSlideChange = (s) => {
       display: block;
       position: relative;
       width: 1px;
-      height: 103px;
-      margin: 13px 0 10px;
+      height: fluid(103);
+      margin: fluid(13) 0 fluid(10);
       background: rgba(255, 255, 255, 0.2);
       transition: all 0.3s;
 
@@ -402,8 +402,8 @@ const onSlideChange = (s) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: fluid(30);
+  height: fluid(30);
   background: none;
   border: none;
   cursor: pointer;
@@ -413,8 +413,8 @@ const onSlideChange = (s) => {
   // 邊框畫 V 形箭頭：9px 方塊，border-top + border-right 旋轉
   &::before {
     content: '';
-    width: 9px;
-    height: 9px;
+    width: fluid(9);
+    height: fluid(9);
     border-top: 2px solid currentColor;
     border-right: 2px solid currentColor;
   }
@@ -424,14 +424,14 @@ const onSlideChange = (s) => {
   }
 }
 .banner18_prev {
-  margin-bottom: 28px;
-  &::before { transform: rotate(-45deg); margin-top: 3px; }
+  margin-bottom: fluid(28);
+  &::before { transform: rotate(-45deg); margin-top: fluid(3); }
 
   @media (max-width: 1440px) {
     margin-bottom: 15px;
   }
 }
 .banner18_next {
-  &::before { transform: rotate(135deg); margin-bottom: 3px; }
+  &::before { transform: rotate(135deg); margin-bottom: fluid(3); }
 }
 </style>

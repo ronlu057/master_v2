@@ -27,7 +27,7 @@ const row = computed(() => props.rows[0] || {})
 .intro {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 56px;
+  gap: fluid(56);
   align-items: center;
 
   &__media img {
@@ -40,17 +40,17 @@ const row = computed(() => props.rows[0] || {})
     color: var(--color-primary);
     font-weight: 700;
     letter-spacing: 1px;
-    margin-bottom: 8px;
+    margin-bottom: fluid(8);
   }
 
   &__title {
-    font-size: 32px;
-    margin-bottom: 16px;
+    font-size: fluid(32);
+    margin-bottom: fluid(16);
   }
 
   &__text {
     color: var(--color-text-muted);
-    margin-bottom: 24px;
+    margin-bottom: fluid(24);
   }
 }
 

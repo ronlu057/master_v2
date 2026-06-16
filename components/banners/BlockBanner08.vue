@@ -59,7 +59,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
           <!-- 基本圖（含斜切色塊揭幕） -->
           <picture>
             <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-            <img :src="row.image?.mb || row.image?.pc" alt="" />
+            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
 
           <!-- 右側疊圖（active 時上浮淡入） -->
@@ -205,7 +205,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
             font-family: 'Oswald', sans-serif;
             line-height: 1.2;
             text-transform: uppercase;
-            font-size: clamp(32px, calc(50 / 19.2 * 1vw), 50px);
+            font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 0.5s, transform 0.5s;
 
             @media (min-width: 1201px) { letter-spacing: 2px; }
@@ -217,7 +217,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
             font-family: 'Oswald', sans-serif;
             line-height: 1.2;
             text-transform: uppercase;
-            font-size: clamp(32px, calc(50 / 19.2 * 1vw), 50px);
+            font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;
 
             @media (min-width: 1201px) { letter-spacing: 2px; }
@@ -227,7 +227,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
           &:nth-child(3) {
             font-weight: 500;
             margin-top: 10px;
-            font-size: clamp(30px, calc(45 / 19.2 * 1vw), 45px);
+            font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 0.5s 0.2s, transform 0.5s 0.2s;
 
             @media (max-width: 480px) { font-weight: 400; }
@@ -236,7 +236,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
           // 第四行：標語（moduleTitleSize_en(3)）
           &:nth-child(4) {
             margin-top: 10px;
-            font-size: clamp(17px, calc(20 / 19.2 * 1vw), 20px);
+            font-size: clamp(17px, calc(20 / 19.2 * 1vw), calc(20 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
 
             @media (max-width: 480px) { font-weight: 300; }
@@ -302,8 +302,8 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
     position: relative;
     color: #fff;
     font-size: 14px;
-    width: 30px;
-    height: 30px;
+    width: fluid(30);
+    height: fluid(30);
 
     svg {
       position: absolute;
@@ -335,8 +335,8 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 7px;
-      height: 7px;
+      width: fluid(7);
+      height: fluid(7);
       border-top: 2px solid #fff;
       border-right: 2px solid #fff;
     }
@@ -354,7 +354,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
     color: #fff;
     font-size: 15px;
     font-family: 'Roboto', sans-serif;
-    margin: 0 20px;
+    margin: 0 fluid(20);
 
     @media (max-width: 640px) { display: none; }
   }

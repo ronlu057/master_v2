@@ -262,7 +262,7 @@ onBeforeUnmount(() => {
   left: 0;
   right: 0;
   padding: 0 calc(75 / 19.2 * 1vw);
-  height: 70px;
+  height: fluid(70);
   background: #fff;
   z-index: $z_header;
   transition: all 0.3s;
@@ -291,7 +291,7 @@ onBeforeUnmount(() => {
   @include rwd-1200 { margin-right: 15px; }
 
   img {
-    max-height: 60px;
+    max-height: fluid(60);
 
     @include rwd-1200 { max-height: 40px; }
   }
@@ -304,7 +304,7 @@ onBeforeUnmount(() => {
 .navmenu {
   display: flex;
   list-style: none;
-  margin-left: 15px;
+  margin-left: fluid(15);
   padding: 0;
 
   @include rwd-1200 { display: none; }
@@ -313,13 +313,13 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     position: relative;
-    height: 70px;
+    height: fluid(70);
 
     > a {
       display: block;
       color: $web_font_color;
       font-size: 16px;
-      padding: 0 25px;
+      padding: 0 fluid(25);
       transition: all 0.3s;
 
       @include rwd-1440 { padding: 0 15px; }
@@ -334,8 +334,8 @@ onBeforeUnmount(() => {
       position: absolute;
       top: 100%;
       left: 0;
-      min-width: 160px;
-      padding: 6px;
+      min-width: fluid(160);
+      padding: fluid(6);
       background: var(--color-bg);
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
@@ -347,9 +347,9 @@ onBeforeUnmount(() => {
 
       a {
         display: block;
-        padding: 8px 12px;
+        padding: fluid(8) fluid(12);
         font-size: 14px;
-        border-radius: 6px;
+        border-radius: fluid(6);
         color: $web_font_color;
         transition: all var(--transition);
 
@@ -372,7 +372,7 @@ onBeforeUnmount(() => {
 .navtool {
   display: flex;
   align-items: center;
-  margin-left: 15px;
+  margin-left: fluid(15);
 
   @include rwd-1280 { margin-left: 0; }
 
@@ -383,8 +383,8 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     position: relative;
-    height: 70px;
-    padding: 0 20px;
+    height: fluid(70);
+    padding: 0 fluid(20);
     background: none;
     border: none;
     cursor: pointer;
@@ -408,8 +408,8 @@ onBeforeUnmount(() => {
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 280px;
-    padding: 10px;
+    min-width: fluid(280);
+    padding: fluid(10);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
@@ -423,11 +423,11 @@ onBeforeUnmount(() => {
     .search_form {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: fluid(6);
 
       input {
         flex: 1;
-        padding: 8px 12px;
+        padding: fluid(8) fluid(12);
         border: 1px solid var(--color-border);
         border-radius: var(--radius);
         font-size: 14px;
@@ -437,7 +437,7 @@ onBeforeUnmount(() => {
         background: none;
         border: none;
         cursor: pointer;
-        padding: 4px;
+        padding: fluid(4);
         display: flex;
         color: $web_font_color;
         transition: color 0.3s;
@@ -461,10 +461,10 @@ onBeforeUnmount(() => {
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 140px;
+    min-width: fluid(140);
     display: flex;
     flex-direction: column;
-    padding: 6px;
+    padding: fluid(6);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
@@ -478,11 +478,11 @@ onBeforeUnmount(() => {
     .lang_item {
       background: none;
       border: none;
-      padding: 8px 12px;
+      padding: fluid(8) fluid(12);
       font-size: 14px;
       text-align: left;
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: fluid(6);
       color: $web_font_color;
       transition: all var(--transition);
 
@@ -506,15 +506,15 @@ onBeforeUnmount(() => {
 
   // CTA「立即預約諮詢」
   .sp_link {
-    width: 150px;
-    height: 42px;
+    width: fluid(150);
+    height: fluid(42);
     color: #fff;
     font-size: 16px;
     font-weight: 500;
-    margin-left: 10px;
+    margin-left: fluid(10);
     background: $web_header_2;
     border: 1px solid $web_header_2;
-    border-radius: 999px;
+    border-radius: fluid(999);
     padding: 0;
     transition: all 0.3s;
 
@@ -531,14 +531,14 @@ onBeforeUnmount(() => {
   }
 
   .mbPanel_btn {
-    padding: 0 20px;
+    padding: 0 fluid(20);
     background: $web_header_1;
 
     @media (min-width: 1201px) { display: none !important; }
 
     .bars {
       position: relative;
-      width: 30px;
+      width: fluid(30);
       height: 2px;
 
       .bar {
@@ -548,10 +548,10 @@ onBeforeUnmount(() => {
         width: 100%;
         height: 100%;
         background: #fff;
-        border-radius: 10px;
+        border-radius: fluid(10);
 
         &.bar1 {
-          top: -8px;
+          top: fluid(-8);
           transition: top 0.3s 0.5s, transform 0.3s;
         }
         &.bar2 {
@@ -559,7 +559,7 @@ onBeforeUnmount(() => {
           transition: opacity 0s 0.3s;
         }
         &.bar3 {
-          top: 8px;
+          top: fluid(8);
           transition: top 0.3s 0.5s, transform 0.3s;
         }
       }
@@ -584,19 +584,19 @@ onBeforeUnmount(() => {
 // 行動版下拉選單
 .header05_panel {
   position: fixed;
-  top: 70px;
+  top: fluid(70);
   left: 0;
   right: 0;
   background: #fff;
   border-top: 1px solid var(--color-border);
-  padding: 8px 20px 16px;
+  padding: fluid(8) fluid(20) fluid(16);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   z-index: $z_mobile_menu;
 }
 
 .mb_navmenu_link {
   display: block;
-  padding: 12px 4px;
+  padding: fluid(12) fluid(4);
   font-size: 18px;
   font-weight: 600;
   color: $web_font_color;
@@ -604,11 +604,11 @@ onBeforeUnmount(() => {
 }
 
 .mb_navmenu_sub {
-  padding: 0 0 0 16px;
+  padding: 0 0 0 fluid(16);
 
   a {
     display: block;
-    padding: 8px 4px;
+    padding: fluid(8) fluid(4);
     font-size: 14px;
     color: $web_font_color;
   }

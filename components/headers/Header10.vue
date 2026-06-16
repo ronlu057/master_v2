@@ -230,8 +230,8 @@ body:not([data-page="index"]) {
   top: 0;
   left: 0;
   right: 0;
-  height: 70px;
-  padding: 0 120px 0 4.1667vw;
+  height: fluid(70);
+  padding: 0 fluid(120) 0 4.1667vw;
   z-index: $z_header;
   transition: all 0.3s;
 
@@ -266,7 +266,7 @@ body:not([data-page="index"]) {
 .navmenu {
   display: flex;
   list-style: none;
-  margin: 0 45px;
+  margin: 0 fluid(45);
   padding: 0;
   opacity: 0;
   pointer-events: none;
@@ -285,7 +285,7 @@ body:not([data-page="index"]) {
       display: block;
       color: $web_font_color;
       font-size: 16px;
-      padding: 23px 25px;
+      padding: fluid(23) fluid(25);
       transition: all 0.3s;
 
       @include rwd-1680 { padding: 23px 15px; }
@@ -315,7 +315,7 @@ body:not([data-page="index"]) {
         color: $web_font_color;
         font-size: 14px;
         text-align: center;
-        padding: 10px 40px;
+        padding: fluid(10) fluid(40);
         background: #fff;
         border-bottom: 1px solid #e6e7e8;
         transition: all 0.3s;
@@ -339,7 +339,7 @@ body:not([data-page="index"]) {
 .navtool {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: fluid(18);
   color: $web_font_color;
 
   @include rwd-1200 { display: none; }
@@ -366,10 +366,10 @@ body:not([data-page="index"]) {
       position: absolute;
       top: 100%;
       right: 0;
-      min-width: 120px;
+      min-width: fluid(120);
       list-style: none;
       margin: 0;
-      padding: 6px;
+      padding: fluid(6);
       background: #fff;
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
@@ -383,9 +383,9 @@ body:not([data-page="index"]) {
         display: block;
         color: $web_font_color;
         font-size: 13px;
-        padding: 6px 10px;
+        padding: fluid(6) fluid(10);
         text-align: center;
-        border-radius: 6px;
+        border-radius: fluid(6);
 
         &:hover,
         &.active {
@@ -406,12 +406,12 @@ body:not([data-page="index"]) {
   .cart_btn {
     p {
       position: absolute;
-      top: -8px;
-      right: -10px;
-      min-width: 16px;
-      height: 16px;
-      padding: 0 4px;
-      border-radius: 99px;
+      top: fluid(-8);
+      right: fluid(-10);
+      min-width: fluid(16);
+      height: fluid(16);
+      padding: 0 fluid(4);
+      border-radius: fluid(99);
       background: $web_header_2;
       color: #fff;
       font-size: 10px;
@@ -428,8 +428,8 @@ body:not([data-page="index"]) {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 175px;
-  height: 70px;
+  width: fluid(175);
+  height: fluid(70);
   // 後台「Header 背景色」有設時跟著變（含透明）；沒設則用版型預設色
   background: var(--header-bg-color, #{$web_header_2});
   border: none;
@@ -450,7 +450,7 @@ body:not([data-page="index"]) {
   .icon { font-size: 20px; }
 
   div {
-    margin-left: 15px;
+    margin-left: fluid(15);
 
     @include rwd-1200 { display: none; }
 
@@ -480,8 +480,8 @@ body:not([data-page="index"]) {
   position: fixed;
   top: 0;
   right: 0;
-  width: 120px;
-  height: 70px;
+  width: fluid(120);
+  height: fluid(70);
   // 後台「Header 背景色」有設時跟著變（含透明）；沒設則用版型預設色
   background: var(--header-bg-color, #{$web_header_1});
   border: none;
@@ -495,8 +495,8 @@ body:not([data-page="index"]) {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    width: 30px;
-    height: 18px;
+    width: fluid(30);
+    height: fluid(18);
 
     .bar {
       position: relative;
@@ -521,7 +521,7 @@ body:not([data-page="index"]) {
     font-size: 14px;
     font-family: 'Poppins', sans-serif;
     line-height: 1;
-    margin-top: 3px;
+    margin-top: fluid(3);
   }
 
   &.active .bars .bar {
@@ -539,12 +539,12 @@ body:not([data-page="index"]) {
 // ── 漢堡開啟時的全寬下拉選單 ──────────────────────────────
 .header10_panel {
   position: fixed;
-  top: 70px;
+  top: fluid(70);
   left: 0;
   right: 0;
   background: #fff;
   border-top: 1px solid var(--color-border);
-  padding: 20px 4.1667vw;
+  padding: fluid(20) 4.1667vw;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   z-index: $z_mobile_menu;
   max-height: calc(100vh - 70px);
@@ -556,7 +556,7 @@ body:not([data-page="index"]) {
 
 .mb_navmenu_link {
   display: block;
-  padding: 14px 4px;
+  padding: fluid(14) fluid(4);
   font-size: 18px;
   font-weight: 600;
   color: $web_font_color;
@@ -567,11 +567,11 @@ body:not([data-page="index"]) {
 }
 
 .mb_navmenu_sub {
-  padding: 0 0 0 16px;
+  padding: 0 0 0 fluid(16);
 
   a {
     display: block;
-    padding: 8px 4px;
+    padding: fluid(8) fluid(4);
     font-size: 14px;
     color: $web_font_color;
 

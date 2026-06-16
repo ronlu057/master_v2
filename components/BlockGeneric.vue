@@ -59,7 +59,7 @@ defineProps({
   }
 
   &__body {
-    padding: 20px;
+    padding: fluid(20);
   }
 
   &__title {
@@ -67,7 +67,7 @@ defineProps({
   }
 
   &__text {
-    margin-top: 8px;
+    margin-top: fluid(8);
     font-size: 14px;
     color: var(--color-text-muted);
   }

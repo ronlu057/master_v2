@@ -53,7 +53,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
         <div v-if="row.object" class="object">
@@ -63,7 +63,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         <div class="content">
           <div class="wider_container">
             <div class="info">
-              <p>{{ row.title }}</p>
+              <component :is="i === 0 ? 'h1' : 'h2'">{{ row.title }}</component>
               <p v-if="row.memo" v-html="toHtml(row.memo)" />
 
               <div v-if="row.object" class="object_mb">
@@ -71,7 +71,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
               </div>
 
               <div class="button_set">
-                <NuxtLink v-if="row.link" class="cover_btn" :to="row.link">
+                <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">
                   <span>VIEW MORE</span>
                 </NuxtLink>
                 <a
@@ -167,7 +167,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
     .info {
       width: 100%;
 
-      p {
+      > :nth-child(1),
+      > :nth-child(2) {
         opacity: 0;
         transform: translate(40px, 0);
 
@@ -175,26 +176,26 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           text-align: center;
           transform: translate(0, 40px);
         }
+      }
 
-        // 第一行：主標（主色，bannerTitleSize_en(1)）
-        &:nth-child(1) {
-          color: $web_color_1;
-          font-weight: 700;
-          margin-bottom: 7px;
-          font-size: clamp(38px, calc(50 / 19.2 * 1vw), 50px);
-          transition: all 0.3s, opacity 0.5s, transform 0.5s;
-        }
+      // 第一行：主標（主色，bannerTitleSize_en(1)）
+      > :nth-child(1) {
+        color: $web_color_1;
+        font-weight: 700;
+        margin-bottom: fluid(7);
+        font-size: clamp(38px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
+        transition: all 0.3s, opacity 0.5s, transform 0.5s;
+      }
 
-        // 第二行：說明（白，bannerTitleSize_cht(2)）
-        &:nth-child(2) {
-          color: #fff;
-          line-height: 1.7;
-          font-size: clamp(16px, calc(18 / 19.2 * 1vw), 18px);
-          transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;
+      // 第二行：說明（白，bannerTitleSize_cht(2)）
+      > :nth-child(2) {
+        color: #fff;
+        line-height: 1.7;
+        font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
+        transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;
 
-          @media (max-width: 360px) {
-            display: none;
-          }
+        @media (max-width: 360px) {
+          display: none;
         }
       }
 
@@ -236,17 +237,18 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
     .content {
       .info {
-        p {
+        > :nth-child(1),
+        > :nth-child(2) {
           opacity: 1;
           transform: translate(0, 0);
+        }
 
-          &:nth-child(1) {
-            transition: all 0.3s, opacity 1s 1s, transform 1s 1s;
-          }
+        > :nth-child(1) {
+          transition: all 0.3s, opacity 1s 1s, transform 1s 1s;
+        }
 
-          &:nth-child(2) {
-            transition: all 0.3s, opacity 1s 1.1s, transform 1s 1.1s;
-          }
+        > :nth-child(2) {
+          transition: all 0.3s, opacity 1s 1.1s, transform 1s 1.1s;
         }
 
         .object_mb {
@@ -270,7 +272,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 // 內距容器（對應原 .wider_container）
 .wider_container {
   width: 100%;
-  max-width: 1903px;
+  max-width: fluid(1903);
   padding: 0 calc(156 / 19.2 * 1vw);
   margin: 0 auto;
 
@@ -282,8 +284,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 .button_set {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-top: 30px;
+  gap: fluid(15);
+  margin-top: fluid(30);
 
   @media (max-width: 400px) {
     margin-top: 20px;
@@ -295,7 +297,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
   font-size: 14px;
@@ -326,8 +328,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: rgba(255, 255, 255, 0.85);
   border: none;
   border-radius: 50%;
@@ -351,11 +353,11 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   &:hover { background: #fff; color: $web_color_1; }
 }
 .banner20_prev {
-  left: 20px;
+  left: fluid(20);
   &::before { transform: rotate(-135deg); margin-left: 3px; }
 }
 .banner20_next {
-  right: 20px;
+  right: fluid(20);
   &::before { transform: rotate(45deg); margin-right: 3px; }
 }
 </style>

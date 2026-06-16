@@ -69,18 +69,18 @@ useSeoMeta({ title: '服務據點 — 母版專案' })
 
 <style lang="scss" scoped>
 .loc {
-  padding-bottom: 80px;
+  padding-bottom: fluid(80);
 
   &__cats {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 32px;
+    gap: fluid(10);
+    margin-bottom: fluid(32);
 
     button {
-      padding: 8px 20px;
+      padding: fluid(8) fluid(20);
       border: 1px solid var(--color-border);
-      border-radius: 99px;
+      border-radius: fluid(99);
       background: var(--color-bg);
       font-size: 14px;
 
@@ -105,24 +105,24 @@ useSeoMeta({ title: '服務據點 — 母版專案' })
   }
 
   &__body {
-    padding: 20px;
+    padding: fluid(20);
 
     p {
       font-size: 14px;
       color: var(--color-text-muted);
-      margin-top: 6px;
+      margin-top: fluid(6);
     }
   }
 
   &__name {
     font-size: 18px;
-    margin-bottom: 10px;
+    margin-bottom: fluid(10);
   }
 
   &__btn {
-    margin-top: 16px;
+    margin-top: fluid(16);
     width: 100%;
-    padding: 9px;
+    padding: fluid(9);
     font-size: 14px;
   }
 }

@@ -243,6 +243,22 @@ onBeforeUnmount(() =&gt; {
 })
 </code></pre>
 <p>詳見白皮書 <a href="master-project-whitepaper.html#9116-gsap--scrolltrigger-%E7%94%A8%E6%B3%95">§9.11.6</a>（含 ScrollTrigger 範例）。</p>
+<h3 id="26-語意標籤與-seo標題層級--alt--title">2.6 語意標籤與 SEO（標題層級 / alt / title）</h3>
+<p>✅ <strong>標題層級</strong>：</p>
+<ul>
+<li><strong>每頁唯一 <code>&lt;h1&gt;</code></strong>。模組首頁的 <code>&lt;h1&gt;</code> ＝ Banner <strong>第一則的主標</strong>（<code>BlockBanner</code> 用 <code>&lt;component :is=&quot;i === 0 ? &#39;h1&#39; : &#39;h2&#39;&quot;&gt;</code>）；其餘輪播主標、副標一律 <code>&lt;h2&gt;</code>。</li>
+<li>「只是想要某種字級/樣式」<strong>不要硬塞 <code>&lt;h1&gt;</code>~`<h6>`</strong>；非語意標題用 <code>&lt;div&gt;</code>（樣式照走 class），語意才是選 heading 的依據。</li>
+<li>說明文／內文段落用 <code>&lt;p&gt;</code>。</li>
+</ul>
+<p>✅ <strong>圖片 <code>alt</code></strong>：</p>
+<ul>
+<li><strong>內容圖</strong>一律有意義 <code>alt</code>（Banner 走後台欄位，可 AI 辨識；留空時前台 fallback 用標題）。</li>
+<li><strong>裝飾圖</strong>（背景塊、deco、mask、空 placeholder）用 <code>alt=&quot;&quot;</code>（空字串，不是省略）。</li>
+</ul>
+<p>✅ <strong>連結 <code>title</code></strong>：內容型 CTA 連結（VIEW MORE 等）加描述性 <code>:title</code>（用該區塊主標），利於 SEO 與無障礙；箭頭/分頁/控制鈕等非內容連結不加。</p>
+<blockquote>
+<p>相關：禁用行內 <code>:style</code>（<a href="#312-%E7%A6%81%E7%94%A8%E8%A1%8C%E5%85%A7%E6%A8%A3%E5%BC%8F-style%E7%89%B9%E5%88%A5%E6%B3%A8%E6%84%8F">§3.1.2</a>）同時是 SEO/RWD 考量；版面尺寸走流體 <code>fluid()</code>（<a href="#36-%E5%AD%97%E7%B4%9A%E5%B0%BA%E5%AF%B8%E6%B5%81%E9%AB%94-rwd-%E8%A6%8F%E7%AF%84">§3.6</a>）。</p>
+</blockquote>
 <hr>
 <h2 id="3-樣式scss規範">3. 樣式（SCSS）規範</h2>
 <h3 id="31-全站規範白皮書-94-important">3.1 全站規範（白皮書 §9.4 IMPORTANT）</h3>
@@ -255,9 +271,9 @@ onBeforeUnmount(() =&gt; {
 <p>❌ <strong>嚴禁</strong>：</p>
 <ul>
 <li>純 CSS（無 lang=&quot;scss&quot;）</li>
-<li>元件內 <code>style=&quot;...&quot;</code> 行內樣式</li>
+<li>元件內行內樣式 <code>style=&quot;...&quot;</code> <strong>與 <code>:style=&quot;...&quot;</code> 綁定</strong>（詳見下方 §3.1.2，<strong>特別注意</strong>）</li>
 <li>獨立 <code>.css</code> 檔</li>
-<li>用 <code>!important</code>（除非有極特殊覆寫第三方需求）</li>
+<li>用 <code>!important</code>（<strong>全站不使用，無例外</strong>）</li>
 <li><strong>BEM <code>&amp;__</code> 巢狀寫法</strong>（詳見下方 §3.1.1）</li>
 </ul>
 <h4 id="311-禁用-bem-amp__-巢狀寫法">3.1.1 禁用 BEM <code>&amp;__</code> 巢狀寫法</h4>
@@ -355,7 +371,30 @@ onBeforeUnmount(() =&gt; {
 </code></pre>
 <p><strong>為什麼這樣分</strong>：<code>grep .btn--primary</code> 能直接找到定義 — 但 <code>grep &amp;--primary</code> 找不到（因為實際字串是 <code>&amp;--primary</code>，且不知道 <code>&amp;</code> 是什麼）。「附加既有 class」不會產生這個問題，因為兩個 class（如 <code>.btn</code> 跟 <code>.is-active</code>）都能單獨被 grep 找到。</p>
 </blockquote>
-<h4 id="312-後代選擇器巢狀parent--child---允許">3.1.2 後代選擇器巢狀（<code>.parent { .child {} }</code>）✅ 允許</h4>
+<h4 id="312-禁用行內樣式-style特別注意">3.1.2 禁用行內樣式 <code>:style</code>（特別注意）</h4>
+<p>❌ <strong>嚴禁</strong>用 <code>:style=&quot;...&quot;</code> 綁定樣式（含 <code>style=&quot;...&quot;</code> 靜態行內樣式）：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;!-- 禁 --&gt;
+&lt;div :style=&quot;colorStyle(row.titleColor)&quot; v-html=&quot;row.title&quot; /&gt;
+&lt;div :style=&quot;{ color: &#39;#fff&#39;, fontSize: &#39;24px&#39; }&quot;&gt;...&lt;/div&gt;
+</code></pre>
+<p>✅ <strong>必須</strong>把樣式寫進 <code>&lt;style lang=&quot;scss&quot;&gt;</code>，顏色走 SCSS 變數 / CSS 變數：</p>
+<pre data-lang="VUE"><code class="language-vue">&lt;template&gt;
+  &lt;div class=&quot;cover_title&quot; v-html=&quot;row.title&quot; /&gt;
+&lt;/template&gt;
+
+&lt;style lang=&quot;scss&quot; scoped&gt;
+.cover_title { color: $web_color_3; }
+&lt;/style&gt;
+</code></pre>
+<p><strong>為什麼</strong>（最重要）：</p>
+<ul>
+<li><strong>破壞 RWD</strong>：行內 <code>style</code> 優先級最高，<strong>無法被 media query / <code>@include rwd-XXX</code> 覆寫</strong>，等於把樣式鎖死在單一尺寸，響應式直接失效。</li>
+<li><strong>無法統一管理</strong>：顏色 / 字級散落模板，改主題要逐處找；走 SCSS / CSS 變數一處連動。</li>
+<li><strong>與主題脫鉤</strong>：行內寫死的色不會跟 <code>data-project</code> 主題切換。</li>
+</ul>
+<blockquote class="callout callout--caution"><p><strong>唯一合法例外</strong>：值是「<strong>執行期才算得出、且不屬於該被 RWD 覆寫的樣式屬性</strong>」——例如 Swiper 進度條高度 <code>:style=&quot;{ height: bar + &#39;%&#39; }&quot;</code>、flex 拖拉排序 <code>:style=&quot;{ order: navtool.orderOf(&#39;x&#39;) }&quot;</code>、鏤空字背景圖 <code>:style=&quot;{ &#39;--bg&#39;: url }&quot;</code>。這類「動態幾何 / 執行期變數」可保留。<strong>但凡顏色、字級、間距、定位等本該響應式的靜態樣式，一律進 SCSS。</strong></p>
+</blockquote>
+<h4 id="313-後代選擇器巢狀parent--child---允許">3.1.3 後代選擇器巢狀（<code>.parent { .child {} }</code>）✅ 允許</h4>
 <p><strong>這跟 BEM <code>&amp;__</code> 是不同概念</strong>，編譯結果也不同：</p>
 <div class="table-wrap"><table>
 <thead>
@@ -523,6 +562,98 @@ body[data-page=&quot;news&quot;]  .page-banner__bg { filter: brightness(0.7); }
 </code></pre>
 <p>❌ <strong>不要</strong>自己手動往 <code>&lt;html&gt;</code> / <code>&lt;body&gt;</code> 加 class（一律在 <code>app.vue</code> 集中設定）。</p>
 <p>詳見白皮書 <a href="master-project-whitepaper.html#912-%E5%85%A8%E7%AB%99%E6%A8%A3%E5%BC%8F-hookdata-project--data-page">§9.12</a>。</p>
+<h3 id="36-字級尺寸流體-rwd規範">3.6 字級／尺寸（流體 RWD）規範</h3>
+<p>✅ <strong>桌機（1024–2560）等比流體</strong>：以 <strong>1920 設計稿</strong>為基準，字級、框架寬高等一律等比縮放。
+優先用 <a href="../assets/styles/_variables.scss"><code>_variables.scss</code></a> 的 <strong><code>fluid()</code> 函式</strong>（全程 CSS <code>calc</code>，原始碼看得到比例、不出現算完的數值）：</p>
+<pre data-lang="SCSS"><code class="language-scss">font-size: fluid(56);      // 設計稿 56px → clamp(下限, 比例, 上限) 自動生成
+width:     fluid(300);
+--container: fluid(1600);
+</code></pre>
+<p><code>fluid($target, $min: 1024, $max: 2560)</code> 展開後：</p>
+<pre data-lang="SCSS"><code class="language-scss">clamp(
+  calc(#{$target} / 1920 * 1024 * 1px),   // 下限＝1024 桌機最小（再小就維持，交給手機版型）
+  calc(#{$target} / 19.2 * 1vw),          // 中段＝隨視窗等比；1920(1vw=19.2px) 時剛好 = 設計值
+  calc(#{$target} / 1920 * 2560 * 1px)    // 上限＝2560 等比放大；再大就鎖住
+);
+</code></pre>
+<ul>
+<li><strong>1920 時 = 設計值</strong>（與舊設定一致）；<strong>1024–1920</strong> 與 <strong>1920–2560</strong> 都等比縮放。</li>
+<li>兩端界限都用 <code>calc(... * 1px)</code>，<strong>禁止寫死算完的數值</strong>（例如別寫 <code>75px</code>，要寫 <code>calc(56 / 1920 * 2560 * 1px)</code>）。</li>
+</ul>
+<p>✅ 既有手刻 <code>clamp()</code> 也可（手機最小值想自訂時）：min 保留、上限改成 2560 calc：</p>
+<pre data-lang="SCSS"><code class="language-scss">font-size: clamp(24px, calc(56 / 19.2 * 1vw), calc(56 / 1920 * 2560 * 1px));
+</code></pre>
+<p>❌ <strong>不要</strong>寫死單一 px（不隨視窗縮放）、❌ 不要把上限算成固定數值（<code>56px</code> / <code>75px</code>）。</p>
+<h4 id="套用範圍哪些-px-要-fluid哪些維持固定">套用範圍（哪些 px 要 <code>fluid()</code>、哪些維持固定）</h4>
+<p>✅ <strong>要用 <code>fluid()</code>（屬於「等比版面/視覺」的尺寸）</strong>：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>類別</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>間距</td>
+<td><code>margin</code>、<code>padding</code>、<code>gap</code></td>
+</tr>
+<tr>
+<td>框架寬高</td>
+<td><code>width</code>／<code>height</code>／<code>min-width</code>／<code>max-width</code>／<code>min-height</code>／<code>max-height</code></td>
+</tr>
+<tr>
+<td>定位</td>
+<td><code>top</code>／<code>right</code>／<code>bottom</code>／<code>left</code>／<code>inset</code>（px 值）</td>
+</tr>
+<tr>
+<td>圓角</td>
+<td><code>border-radius</code></td>
+</tr>
+<tr>
+<td><strong>大字級（≥ 20px）</strong></td>
+<td>標題類寫死字級 → <code>fluid(N)</code></td>
+</tr>
+<tr>
+<td>設計用 CSS 變數</td>
+<td><code>--container</code>／<code>--radius</code>／<code>--radius-lg</code>／<code>--header-h</code></td>
+</tr>
+</tbody></table></div>
+<p>❌ <strong>維持固定（縮放反而不利，刻意不動）</strong>：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>類別</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1–2px 細邊</strong>（<code>border</code>／<code>outline</code>／hairline）</td>
+<td>縮成小數 px 會糊</td>
+</tr>
+<tr>
+<td><code>box-shadow</code>／<code>transform</code>／<code>translate</code></td>
+<td>比例影響小、易出錯</td>
+</tr>
+<tr>
+<td><strong>小 UI 字 &lt; 20px</strong>（按鈕/說明/標籤）</td>
+<td><code>fluid()</code> 在 1024 會縮到 7–10px 太小</td>
+</tr>
+<tr>
+<td><code>@media</code> / <code>@include rwd-*</code> 區塊內的 px</td>
+<td>行動版專屬尺寸，自成一套</td>
+</tr>
+<tr>
+<td><code>0</code>、<code>%</code>、<code>vw</code>/<code>vh</code>、<code>rem</code>、已在 <code>calc()</code>/<code>clamp()</code>/<code>fluid()</code> 內的值</td>
+<td>非固定 px / 已是流體</td>
+</tr>
+<tr>
+<td><strong><code>/admin</code> 後台 UI</strong></td>
+<td>固定 px 功能介面，不隨前台縮放</td>
+</tr>
+</tbody></table></div>
+<blockquote class="callout callout--tip"><p>容器走 <code>--container: fluid(1600)</code>；版面範例見 <a href="../components/banners/BlockBanner01.vue">BlockBanner01.vue</a> 的 <code>.cover_txt</code>（<code>max-width: fluid(540)</code>、<code>margin: 0 0 fluid(18)</code>）。
+目標：<strong>2560 與 1920 同比例、位置零落差</strong>（≤1920 行為與舊設定一致）。</p>
+</blockquote>
 <hr>
 <h2 id="4-檔案結構規範">4. 檔案結構規範</h2>
 <h3 id="41-目錄職責">4.1 目錄職責</h3>

@@ -1,30 +1,66 @@
 {
-  "home": [
-    {
-      "title": "一套母版，五種專案類型",
-      "link": "/about/company-intro",
-      "image": {
-        "pc": "https://picsum.photos/seed/banner-1/1600/600",
-        "mb": "https://picsum.photos/seed/banner-1m/800/800"
+  "home": {
+    "videoUrl": "https://www.youtube.com/watch?v=mRC8mVLoqx8",
+    "videoFile": "",
+    "rows": [
+      {
+        "image": {
+          "pc": "/img/tw/banner/banner-1781590344460.png",
+          "mb": "/img/tw/banner/banner-1781590344460.png"
+        },
+        "alt": "黑髮少女與黑貓的特寫",
+        "title": "視覺新境界",
+        "subtitle": "打造您的品牌專屬數位門面",
+        "memo": "從概念到實踐，我們為您設計最佳使用者體驗。",
+        "btnText": "",
+        "link": "/about/company-intro"
+      },
+      {
+        "image": {
+          "pc": "/img/tw/banner/banner-1781590728923.png",
+          "mb": "/img/tw/banner/banner-1781590728923.png"
+        },
+        "alt": "雪中少女，髮絲結冰晶",
+        "title": "覺醒設計，無限可能",
+        "subtitle": "最客製的天馬行空，為您量身打造",
+        "memo": "將您的奇思妙想，化為獨一無二的現實。立即預約，開啟您的專屬設計旅程！",
+        "btnText": "",
+        "link": "/news"
+      },
+      {
+        "image": {
+          "pc": "/img/tw/banner/banner-1781590746681.jpg",
+          "mb": "/img/tw/banner/banner-1781590746681.jpg"
+        },
+        "alt": "一位短髮",
+        "title": "覺醒您的品牌光芒",
+        "subtitle": "最客製的夢幻網頁，為您量身打造",
+        "memo": "釋放獨特潛能，讓您的網站成為眾所矚目的焦點。",
+        "btnText": "",
+        "link": "/shop"
       }
-    },
-    {
-      "title": "模組化 block 快速套版",
-      "link": "/news",
-      "image": {
-        "pc": "https://picsum.photos/seed/banner-2/1600/600",
-        "mb": "https://picsum.photos/seed/banner-2m/800/800"
+    ],
+    "news": [
+      {
+        "title": "母版專案正式上線",
+        "summary": "支援五種專案類型的 Nuxt 4 母版正式對內釋出。",
+        "date": "2026.05.21",
+        "url": "/news/master-launch"
+      },
+      {
+        "title": "2026 夏季活動開跑",
+        "summary": "夏季限定活動正式登場，多項優惠同步開放。",
+        "date": "2026.05.18",
+        "url": "/news/summer-event"
+      },
+      {
+        "title": "新增購物模組功能",
+        "summary": "購物類型專案新增購物車與結帳流程。",
+        "date": "2026.05.12",
+        "url": "/news/shop-module"
       }
-    },
-    {
-      "title": "購物模組一鍵啟用",
-      "link": "/shop",
-      "image": {
-        "pc": "https://picsum.photos/seed/banner-3/1600/600",
-        "mb": "https://picsum.photos/seed/banner-3m/800/800"
-      }
-    }
-  ],
+    ]
+  },
   "page": {
     "news": [
       {

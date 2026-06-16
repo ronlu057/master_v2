@@ -93,7 +93,7 @@ const onReachBeginning = (s) => {
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 721px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.title2 || ''" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title2 || ''" />
         </picture>
       </SwiperSlide>
     </Swiper>
@@ -117,12 +117,12 @@ const onReachBeginning = (s) => {
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <div class="cover">
-          <p v-if="row.title2">{{ row.title2 }}</p>
-          <p v-if="row.title3" v-html="toHtml(row.title3)" />
-          <p v-if="row.title4">{{ row.title4 }}</p>
+          <div v-if="row.title2">{{ row.title2 }}</div>
+          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title3" v-html="toHtml(row.title3)" />
+          <div v-if="row.title4">{{ row.title4 }}</div>
 
           <div v-if="row.link" class="button_set">
-            <NuxtLink class="cover_btn" :to="row.link"><span>VIEW MORE</span></NuxtLink>
+            <NuxtLink class="cover_btn" :to="row.link" :title="row.title3 || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
           </div>
         </div>
       </SwiperSlide>
@@ -137,7 +137,7 @@ const onReachBeginning = (s) => {
 <style lang="scss" scoped>
 .banner05 {
   position: relative;
-  margin-top: 70px;
+  margin-top: fluid(70);
 }
 
 // ── 圖片層 ──────────────────────────────────────────────
@@ -283,19 +283,19 @@ const onReachBeginning = (s) => {
     }
 
     // 第一行：小標（bannerTitleSize_cht(2)）
-    p:nth-child(1) {
+    > :nth-child(1) {
       color: $web_font_color;
-      margin-bottom: 5px;
-      font-size: clamp(16px, calc(18 / 19.2 * 1vw), 18px);
+      margin-bottom: fluid(5);
+      font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
       transition: all 0.3s, opacity 1s 0.6s, transform 1s 0.6s;
     }
 
     // 第二行：主標（moduleTitleSize_cht(1)）
-    p:nth-child(2) {
+    > :nth-child(2) {
       color: $web_font_color;
       font-weight: 700;
       line-height: 1.3;
-      font-size: clamp(30px, calc(45 / 19.2 * 1vw), 45px);
+      font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
       transition: all 0.3s, opacity 1s 0.4s, transform 1s 0.4s;
 
       @media (max-width: 720px) {
@@ -311,11 +311,11 @@ const onReachBeginning = (s) => {
     }
 
     // 第三行：標語（bannerTitleSize_en(2)）
-    p:nth-child(3) {
+    > :nth-child(3) {
       color: $web_font_color;
       font-weight: 500;
-      margin-top: 20px;
-      font-size: clamp(19px, calc(23 / 19.2 * 1vw), 23px);
+      margin-top: fluid(20);
+      font-size: clamp(19px, calc(23 / 19.2 * 1vw), calc(23 / 1920 * 2560 * 1px));
       transition: all 0.3s, opacity 1s 0.2s, transform 1s 0.2s;
 
       @media (max-width: 720px) {
@@ -324,7 +324,7 @@ const onReachBeginning = (s) => {
     }
 
     .button_set {
-      margin-top: 30px;
+      margin-top: fluid(30);
       transition: all 0.3s, opacity 1s, transform 1s;
 
       @media (max-width: 720px) {
@@ -342,9 +342,9 @@ const onReachBeginning = (s) => {
         transform: translate(0, 0);
       }
 
-      p:nth-child(1) { transition: all 0.3s, opacity 1.5s 2s, transform 1.5s 2s; }
-      p:nth-child(2) { transition: all 0.3s, opacity 1.5s 2.2s, transform 1.5s 2.2s; }
-      p:nth-child(3) { transition: all 0.3s, opacity 1.5s 2.4s, transform 1.5s 2.4s; }
+      > :nth-child(1) { transition: all 0.3s, opacity 1.5s 2s, transform 1.5s 2s; }
+      > :nth-child(2) { transition: all 0.3s, opacity 1.5s 2.2s, transform 1.5s 2.2s; }
+      > :nth-child(3) { transition: all 0.3s, opacity 1.5s 2.4s, transform 1.5s 2.4s; }
       .button_set { transition: all 0.3s, opacity 1.5s 2.6s, transform 1.5s 2.6s; }
     }
   }
@@ -355,7 +355,7 @@ const onReachBeginning = (s) => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
   font-size: 14px;
@@ -376,8 +376,8 @@ const onReachBeginning = (s) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: rgba(255, 255, 255, 0.85);
   border: none;
   border-radius: 50%;
@@ -392,8 +392,8 @@ const onReachBeginning = (s) => {
 
   &::before {
     content: '';
-    width: 9px;
-    height: 9px;
+    width: fluid(9);
+    height: fluid(9);
     border-top: 2px solid currentColor;
     border-right: 2px solid currentColor;
   }
@@ -402,11 +402,11 @@ const onReachBeginning = (s) => {
 }
 
 .banner05_prev {
-  left: 20px;
-  &::before { transform: rotate(-135deg); margin-left: 3px; }
+  left: fluid(20);
+  &::before { transform: rotate(-135deg); margin-left: fluid(3); }
 }
 .banner05_next {
-  right: 20px;
-  &::before { transform: rotate(45deg); margin-right: 3px; }
+  right: fluid(20);
+  &::before { transform: rotate(45deg); margin-right: fluid(3); }
 }
 </style>

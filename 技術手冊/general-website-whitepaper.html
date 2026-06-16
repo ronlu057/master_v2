@@ -396,6 +396,34 @@ home.slots.forEach(slot =&gt; {
 <li>下方 list 用 <code>type</code> 切換顯示樣式（新聞顯示日期、商品顯示價格...）</li>
 <li><code>has_detail = false</code> 的項目可能只是分類連結（用 <code>page_button</code> 文字）</li>
 </ul>
+<h3 id="45-輕量--進階端點">4.5 輕量 / 進階端點</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/search/suggest</code></td>
+<td>GET</td>
+<td>搜尋框自動完成 / 推薦。輕量版：只回資料項（標題 + 連結），不算 categories / summary / 分頁，求快（<code>limit</code> 上限 20，預設 10）</td>
+</tr>
+<tr>
+<td><code>/api/search/semantic</code></td>
+<td>GET</td>
+<td>語意搜尋（Stage C）。把使用者口語需求丟 AI 即時抽關鍵詞 → 同義詞展開 → 走跟 suggest 同一套搜尋排序</td>
+</tr>
+</tbody></table></div>
+<p><strong><code>/api/search/suggest</code></strong>：參數同 <code>/api/search</code>（<code>keyword</code> / <code>limit</code> / <code>url</code>），回 <code>{ keyword, terms, suggestions[] }</code>。</p>
+<p><strong><code>/api/search/semantic</code></strong>：參數 <code>q</code>（自然語言，亦接 <code>keyword</code>）/ <code>limit</code> / <code>url</code>。</p>
+<ul>
+<li>公開免 token（同 suggest），但因為會打 AI（有成本）所以：① 每 IP 限流（預設 20 req / 60s，超過回 <code>429</code>）；② 抽字結果做檔案快取（同一句話一天內不重打 AI）</li>
+<li>AI 走 <code>AI_PROVIDER_PRIORITY</code>（gemini → ollama → anthropic）失敗自動遞補；全掛 → 退化成把原句直接當關鍵字搜（不整支死掉）</li>
+<li>回 <code>{ query, extracted[], terms[], suggestions[], provider, cached }</code></li>
+<li>詳細 AI 串接見 <a href="./AI%E4%B8%B2%E6%8E%A5.md">AI 串接文件</a></li>
+</ul>
 <hr>
 <h2 id="5-newsapicontroller--新聞--文章">5. NewsApiController — 新聞 / 文章</h2>
 <blockquote>
@@ -844,6 +872,10 @@ GET /api/contact/unsubscribe?token=xxx
 }
 </code></pre>
 <p>不依賴 DB，讀自 <code>_WebTranslateLangPath</code> 設定的檔案。</p>
+<p>另有取語系清單的端點：</p>
+<pre><code>GET /api/i18n/languages
+</code></pre>
+<p>回本站開啟的全部語系清單，每筆含 <code>lang_type</code> / <code>lang_name</code> / <code>html_tag_lang</code> / <code>currency</code> / <code>currency_symbol</code> / <code>is_default</code> / <code>hide_from_menu</code>，給語系切換選單用。</p>
 <hr>
 <h2 id="10-apibasecontroller-共用機制">10. ApiBaseController 共用機制</h2>
 <blockquote>
@@ -1689,6 +1721,11 @@ acts.items.forEach(a =&gt; {
 </tr>
 </thead>
 <tbody><tr>
+<td>v1.8</td>
+<td>2026-06-05</td>
+<td>補漏端點：§4.5 <code>/api/search/suggest</code>（自動完成）+ <code>/api/search/semantic</code>（AI 語意搜尋）、§9.4 <code>/api/i18n/languages</code>（語系清單）</td>
+</tr>
+<tr>
 <td>v1.7</td>
 <td>2026-05-22</td>
 <td>新增 §13「前端整合範例」— 7 個 JS 範例（通用 list 分頁 / 通用 detail / Contact CSRF / 彈跳廣告 localStorage / 報名業務檢查 / 報修雙因子查詢 / 統一錯誤 wrapper）</td>

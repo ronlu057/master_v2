@@ -54,8 +54,9 @@ export default defineEventHandler((event) => {
       return ok(db.i18n)
 
     // ── Banner ────────────────────────────────────────────
+    // /banner/home 回傳整包首頁 banner（rows + 背景影片 + 跑馬燈新聞）；前台 BlockBanner 直接取此 API
     case 'GET /banner/home':
-      return ok(db.banners.home, { mode: 'home', total: db.banners.home.length })
+      return ok(db.banners.home, { mode: 'home', total: db.banners.home?.rows?.length || 0 })
     case 'GET /banner/page': {
       const list = db.banners.page[q.page] || db.banners.common
       return ok(list, { page: q.page || '', mode: db.banners.page[q.page] ? 'page' : 'common', total: list.length })

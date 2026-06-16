@@ -25,6 +25,6 @@ defineProps({
 <style lang="scss" scoped>
 .block-news__more {
   text-align: center;
-  margin-top: 36px;
+  margin-top: fluid(36);
 }
 </style>

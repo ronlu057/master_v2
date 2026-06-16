@@ -27,6 +27,23 @@ $bp-360: 360px;
 @mixin rwd-360 { @media (max-width: $bp-360) { @content; } }
 
 
+/* ---- 桌機流體尺寸（以 1920 設計稿為基準等比縮放；全程用 CSS calc，不寫死算完的數值）----
+   用法：font-size: fluid(56);  width: fluid(300);  --container: fluid(1600);
+   $target = 1920 設計稿上的 px 數字
+   $min / $max = 夾住縮放的視窗下/上界（預設 1024 ~ 2560）
+     - 中段 calc($target / 19.2 * 1vw)：隨視窗等比，1920(1vw=19.2px) 時剛好 = $target（與原設定一致）
+     - 下限 = $min 視窗時的大小（$target × $min / 1920）；視窗再小就維持此值（桌機止於 1024）
+     - 上限 = $max 視窗時的大小（$target × $max / 1920）；視窗再大就鎖住
+   兩端界限都用 calc(... * 1px) 由瀏覽器運算，原始碼裡看得到比例關係、不出現算完的小數。 */
+@function fluid($target, $min: 1024, $max: 2560) {
+  @return clamp(
+    calc(#{$target} / 1920 * #{$min} * 1px),
+    calc(#{$target} / 19.2 * 1vw),
+    calc(#{$target} / 1920 * #{$max} * 1px)
+  );
+}
+
+
 /* ---- 網站用色設定 ---- */
 $web_header_1: #000;
 $web_header_2: #000;

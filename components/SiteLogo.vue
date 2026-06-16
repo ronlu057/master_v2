@@ -19,7 +19,7 @@ const DEFAULT_LOGO = '/img/logo/logo-AD.svg'
    高度由 CSS 變數 --site-logo-h 控制（app.vue 注入），預設 fallback 66px */
 .site-logo {
   display: block;
-  height: var(--site-logo-h, 66px);
+  height: var(--site-logo-h, fluid(66));
   width: auto;
   max-width: 100%;
 }

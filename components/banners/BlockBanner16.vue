@@ -59,12 +59,13 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
         <component
           :is="row.link ? 'NuxtLink' : 'div'"
           :to="row.link || undefined"
+          :title="row.link ? (row.title || 'VIEW MORE') : undefined"
           class="banner_parallax"
         >
           <div class="layer">
             <picture>
               <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-              <img :src="row.image?.mb || row.image?.pc" alt="" />
+              <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
             </picture>
           </div>
 
@@ -83,8 +84,8 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
           </div>
 
           <div class="cover_txt">
-            <p v-if="row.title" v-html="toHtml(row.title)" />
-            <p v-if="row.title2" v-html="toHtml(row.title2)" />
+            <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
+            <h2 v-if="row.title2" v-html="toHtml(row.title2)" />
           </div>
         </component>
       </SwiperSlide>
@@ -178,7 +179,7 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
         padding: 0 15px;
       }
 
-      p {
+      > * {
         color: #000;
         font-weight: 900;
         font-family: 'Noto Serif TC', serif;
@@ -188,7 +189,7 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
         // 第一行：bannerTitleSize_cht(1)
         &:nth-child(1) {
           transition: all 0.3s, opacity 1s, transform 1s;
-          font-size: clamp(32px, calc(50 / 19.2 * 1vw), 50px);
+          font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
 
           @media (min-width: 1201px) { letter-spacing: 2px; }
 
@@ -204,7 +205,7 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
         // 第二行：bannerTitleSize_cht(2)
         &:nth-child(2) {
           transition: all 0.3s, opacity 1s 0.3s, transform 1s 0.3s;
-          font-size: clamp(16px, calc(18 / 19.2 * 1vw), 18px);
+          font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
         }
 
         :deep(br) {
@@ -217,7 +218,7 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
   }
 
   // 進場：active slide 文字依序淡入
-  .swiper-slide-active .banner_parallax .cover_txt p {
+  .swiper-slide-active .banner_parallax .cover_txt > * {
     opacity: 1;
     transform: translateY(0);
 
@@ -263,8 +264,8 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: none;
   border: none;
   cursor: pointer;
@@ -274,8 +275,8 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
   // 邊框畫 V 形箭頭：置中穩定，不受字型字形影響
   &::before {
     content: '';
-    width: 9px;
-    height: 9px;
+    width: fluid(9);
+    height: fluid(9);
     border-top: 2px solid currentColor;
     border-right: 2px solid currentColor;
   }
@@ -284,14 +285,14 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
 }
 
 .banner16_prev {
-  margin-bottom: 35px;
+  margin-bottom: fluid(35);
 
   @media (max-width: 1200px) { margin-bottom: 20px; }
 
-  &::before { transform: rotate(-135deg); margin-left: 3px; }
+  &::before { transform: rotate(-135deg); margin-left: fluid(3); }
 }
 
 .banner16_next {
-  &::before { transform: rotate(45deg); margin-right: 3px; }
+  &::before { transform: rotate(45deg); margin-right: fluid(3); }
 }
 </style>

@@ -304,7 +304,7 @@ onBeforeUnmount(() => {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 120px;
+  width: fluid(120);
   background: none;
   border: none;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
@@ -318,8 +318,8 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    width: 30px;
-    height: 18px;
+    width: fluid(30);
+    height: fluid(18);
 
     .bar {
       position: relative;
@@ -342,7 +342,7 @@ onBeforeUnmount(() => {
     font-size: 14px;
     font-weight: 600;
     line-height: 1;
-    margin-top: 3px;
+    margin-top: fluid(3);
     transition: all 0.3s;
   }
 
@@ -376,7 +376,7 @@ onBeforeUnmount(() => {
   top: 0;
   right: 0;
   bottom: 0;
-  left: 120px;
+  left: fluid(120);
   background: $web_header_1;
   opacity: 0;
   pointer-events: none;
@@ -418,7 +418,7 @@ onBeforeUnmount(() => {
   .top {
     display: flex;
     align-items: center;
-    height: 100px;
+    height: fluid(100);
     opacity: 0;
     transform: translateX(-40px);
     transition: all 0s 0.3s;
@@ -427,7 +427,7 @@ onBeforeUnmount(() => {
       display: block;
 
       img {
-        max-height: 60px;
+        max-height: fluid(60);
         filter: brightness(0) invert(1);
       }
     }
@@ -437,7 +437,7 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     height: calc(100vh - 100px);
-    padding: 10px 0 40px;
+    padding: fluid(10) 0 fluid(40);
     opacity: 0;
     transform: translateX(-40px);
     transition: all 0s 0.3s;
@@ -469,7 +469,7 @@ onBeforeUnmount(() => {
 
   > li {
     position: relative;
-    padding: 18px 0;
+    padding: fluid(18) 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 
     &:first-child { padding-top: 0; }
@@ -478,11 +478,11 @@ onBeforeUnmount(() => {
       display: flex;
       align-items: flex-end;
       color: #fff;
-      font-size: 30px;
+      font-size: fluid(30);
       line-height: 1;
       letter-spacing: 1px;
       text-transform: uppercase;
-      padding-bottom: 7px;
+      padding-bottom: fluid(7);
       transition: all 0.3s;
 
       @include rwd-1440 { font-size: 26px; }
@@ -492,7 +492,7 @@ onBeforeUnmount(() => {
         top: -1px;
         font-size: 16px;
         letter-spacing: 2px;
-        margin-left: 20px;
+        margin-left: fluid(20);
       }
 
       &:hover,
@@ -509,7 +509,7 @@ onBeforeUnmount(() => {
         display: block;
         color: #fff;
         font-size: 14px;
-        margin-right: 20px;
+        margin-right: fluid(20);
         transition: all 0.3s;
 
         &:hover,
@@ -522,7 +522,7 @@ onBeforeUnmount(() => {
 }
 
 .copyright {
-  margin-top: 20px;
+  margin-top: fluid(20);
 
   p {
     color: #fff;
@@ -541,7 +541,7 @@ onBeforeUnmount(() => {
   align-items: center;
   width: fit-content;
   margin: 0 auto 0 0;
-  padding-bottom: 9px;
+  padding-bottom: fluid(9);
   border-bottom: 1px solid #fff;
 
   button {
@@ -549,7 +549,7 @@ onBeforeUnmount(() => {
     border: none;
     cursor: pointer;
     padding: 0;
-    margin-right: 15px;
+    margin-right: fluid(15);
 
     svg {
       display: block;
@@ -558,10 +558,10 @@ onBeforeUnmount(() => {
   }
 
   input {
-    width: 140px;
+    width: fluid(140);
     color: #fff;
     font-weight: 700;
-    padding: 0 5px 0 0;
+    padding: 0 fluid(5) 0 0;
     background: transparent;
     border: 0;
     transition: all 0.3s;
@@ -576,16 +576,16 @@ onBeforeUnmount(() => {
     color: #fff;
     font-size: 16px;
     font-weight: 700;
-    margin-bottom: 22px;
+    margin-bottom: fluid(22);
   }
 
   p:nth-child(2) {
     display: flex;
     flex-wrap: nowrap;
     width: fit-content;
-    padding-right: 15px;
-    padding-bottom: 10px;
-    margin: 0 -5px;
+    padding-right: fluid(15);
+    padding-bottom: fluid(10);
+    margin: 0 fluid(-5);
     background-image: linear-gradient(to right, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.2) 100%);
     background-size: calc(100% - 10px) 1px;
     background-position: 5px bottom;
@@ -599,7 +599,7 @@ onBeforeUnmount(() => {
       font-size: 13px;
       letter-spacing: 0.5px;
       white-space: nowrap;
-      padding: 1px 10px;
+      padding: 1px fluid(10);
       transition: all 0.3s;
 
       &.active { font-weight: 700; }
@@ -610,7 +610,7 @@ onBeforeUnmount(() => {
         top: 51%;
         left: 0;
         width: 1px;
-        height: 13px;
+        height: fluid(13);
         background: #fff;
         transform: translateY(-50%);
       }
@@ -619,9 +619,9 @@ onBeforeUnmount(() => {
         content: '';
         position: absolute;
         top: 0;
-        right: 5px;
+        right: fluid(5);
         bottom: 0;
-        left: 5px;
+        left: fluid(5);
         background: transparent;
         z-index: -1;
         transition: all 0.3s;
@@ -639,8 +639,8 @@ onBeforeUnmount(() => {
   display: block;
   position: relative;
   width: 100%;
-  max-width: 250px;
-  padding: 10px;
+  max-width: fluid(250);
+  padding: fluid(10);
   overflow: hidden;
 
   &::before {
@@ -661,11 +661,11 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     position: relative;
-    height: 80px;
+    height: fluid(80);
     border: 1px solid rgba(255, 255, 255, 0.2);
 
     div {
-      padding: 10px;
+      padding: fluid(10);
 
       p:nth-child(1) {
         color: #fff;
@@ -682,7 +682,7 @@ onBeforeUnmount(() => {
         svg {
           display: inline-block;
           fill: #fff;
-          margin-left: 20px;
+          margin-left: fluid(20);
         }
       }
     }
@@ -692,20 +692,20 @@ onBeforeUnmount(() => {
 .social_media {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 10px;
+  gap: 0 fluid(10);
 
   a {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 35px;
-    height: 35px;
+    width: fluid(35);
+    height: fluid(35);
     border-radius: 50%;
     transition: all 0.3s;
 
     img {
-      width: 22px;
-      height: 22px;
+      width: fluid(22);
+      height: fluid(22);
       filter: brightness(0) invert(1);
       transition: all 0.3s;
     }

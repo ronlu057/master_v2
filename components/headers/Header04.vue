@@ -284,7 +284,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 0 0;
+  padding: fluid(18) 0 0;
   transition: all 0.3s;
 
   @include rwd-1200 {
@@ -295,12 +295,12 @@ onBeforeUnmount(() => {
 
 .logo {
   display: block;
-  margin-right: 30px;
+  margin-right: fluid(30);
 
   @include rwd-1200 { margin-right: 0; }
 
   img {
-    max-height: 50px;
+    max-height: fluid(50);
     margin: 0 auto;
   }
 }
@@ -316,11 +316,11 @@ onBeforeUnmount(() => {
 .navmenu {
   display: flex;
   list-style: none;
-  padding: 0 25px;
-  margin: 0 28px 0 0;
+  padding: 0 fluid(25);
+  margin: 0 fluid(28) 0 0;
   background: #fff;
   box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 50px;
+  border-radius: fluid(50);
   transition: all 0.3s;
 
   @include rwd-1440 { padding: 0 15px; }
@@ -340,8 +340,8 @@ onBeforeUnmount(() => {
       position: absolute;
       bottom: 0;
       left: 50%;
-      width: 6px;
-      height: 6px;
+      width: fluid(6);
+      height: fluid(6);
       background: $web_font_color;
       border-radius: 50%;
       opacity: 0;
@@ -357,7 +357,7 @@ onBeforeUnmount(() => {
       top: 100%;
       left: 0;
       width: 100%;
-      height: 10px;
+      height: fluid(10);
       pointer-events: none;
       transition: all 0.3s;
     }
@@ -366,7 +366,7 @@ onBeforeUnmount(() => {
       display: block;
       color: $web_font_color;
       font-size: 16px;
-      padding: 14px 25px;
+      padding: fluid(14) fluid(25);
       transition: all 0.3s;
 
       @include rwd-1440 { padding: 14px 15px; }
@@ -388,7 +388,7 @@ onBeforeUnmount(() => {
       left: 50%;
       width: max-content;
       min-width: 100%;
-      border-radius: 10px;
+      border-radius: fluid(10);
       background: #fff;
       box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
       overflow: hidden;
@@ -403,7 +403,7 @@ onBeforeUnmount(() => {
         color: $web_font_color;
         font-size: 14px;
         text-align: center;
-        padding: 10px 20px;
+        padding: fluid(10) fluid(20);
         transition: all 0.3s;
 
         &:not(:last-child) { border-bottom: 1px solid #e7e7e7; }
@@ -434,8 +434,8 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     position: relative;
-    width: 35px;
-    height: 35px;
+    width: fluid(35);
+    height: fluid(35);
     background: #fff;
     border: none;
     border-radius: 50%;
@@ -483,14 +483,14 @@ onBeforeUnmount(() => {
       transition: all 0.3s;
 
       li {
-        padding-top: 10px;
+        padding-top: fluid(10);
 
         a {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 35px;
-          height: 35px;
+          width: fluid(35);
+          height: fluid(35);
           color: $web_font_color;
           font-size: 14px;
           background: #fff;
@@ -523,10 +523,10 @@ onBeforeUnmount(() => {
       align-items: center;
       justify-content: center;
       position: absolute;
-      top: -6px;
-      right: -6px;
-      width: 18px;
-      height: 18px;
+      top: fluid(-6);
+      right: fluid(-6);
+      width: fluid(18);
+      height: fluid(18);
       color: #fff;
       font-size: 12px;
       background: $web_font_color;
@@ -541,7 +541,7 @@ onBeforeUnmount(() => {
 
     .bars {
       position: relative;
-      width: 12px;
+      width: fluid(12);
       height: 1px;
 
       .bar {
@@ -551,10 +551,10 @@ onBeforeUnmount(() => {
         width: 100%;
         height: 100%;
         background: $web_header_2;
-        border-radius: 10px;
+        border-radius: fluid(10);
 
         &.bar1 {
-          top: -4px;
+          top: fluid(-4);
           transition: all 0.3s, top 0.3s 0.3s, transform 0.3s;
         }
         &.bar2 {
@@ -562,7 +562,7 @@ onBeforeUnmount(() => {
           transition: all 0.3s, opacity 0s 0.3s;
         }
         &.bar3 {
-          top: 4px;
+          top: fluid(4);
           transition: all 0.3s, top 0.3s 0.3s, transform 0.3s;
         }
       }
@@ -593,24 +593,24 @@ onBeforeUnmount(() => {
   right: 4.1667vw;
   display: flex;
   align-items: center;
-  padding: 12px;
+  padding: fluid(12);
   background: #fff;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
+  border-radius: fluid(8);
 
   input {
-    padding: 6px 10px;
+    padding: fluid(6) fluid(10);
     border: 1px solid var(--color-border);
     color: $web_font_color;
     font-size: 14px;
-    width: 220px;
+    width: fluid(220);
   }
 
   button {
     background: none;
     border: none;
     cursor: pointer;
-    margin-left: 8px;
+    margin-left: fluid(8);
     color: $web_font_color;
 
     .icon { font-size: 18px; }
@@ -620,19 +620,19 @@ onBeforeUnmount(() => {
 // 行動版下拉選單
 .header04_panel {
   position: fixed;
-  top: 70px;
+  top: fluid(70);
   left: 0;
   right: 0;
   background: #fff;
   border-top: 1px solid var(--color-border);
-  padding: 8px 20px 16px;
+  padding: fluid(8) fluid(20) fluid(16);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   z-index: $z_mobile_menu;
 }
 
 .mb_navmenu_link {
   display: block;
-  padding: 12px 4px;
+  padding: fluid(12) fluid(4);
   font-size: 18px;
   font-weight: 600;
   color: $web_font_color;
@@ -640,11 +640,11 @@ onBeforeUnmount(() => {
 }
 
 .mb_navmenu_sub {
-  padding: 0 0 0 16px;
+  padding: 0 0 0 fluid(16);
 
   a {
     display: block;
-    padding: 8px 4px;
+    padding: fluid(8) fluid(4);
     font-size: 14px;
     color: $web_font_color;
   }

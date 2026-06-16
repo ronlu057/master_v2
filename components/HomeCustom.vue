@@ -1,11 +1,13 @@
 <script setup>
 // 客製首頁 — 手刻版型 + block 模組（custom-home / full-custom / shop 類型使用）
+import BlockRenderer from './BlockRenderer.js'
+
 const { isShop } = useProject()
 const appConfig = useAppConfig()
 
 const { data: banners } = await useApiData('/banner/home', {
   key: 'home-banner',
-  default: () => [],
+  default: () => ({ rows: [] }),
 })
 const { data: newsRes } = await useApiData('/news/list', {
   key: 'home-news',
@@ -23,7 +25,7 @@ const { data: homeView } = await useApiData('/home/view', {
   default: () => ({ slots: [] }),
 })
 
-const hero = computed(() => banners.value?.[0] || {})
+const hero = computed(() => banners.value?.rows?.[0] || {})
 const newsList = computed(() => newsRes.value?.items || [])
 const hotProducts = computed(() => shopRes.value?.items || [])
 
@@ -116,7 +118,7 @@ const features = [
 <style lang="scss" scoped>
 .hero {
   position: relative;
-  min-height: 520px;
+  min-height: fluid(520);
   display: flex;
   align-items: center;
 
@@ -131,7 +133,7 @@ const features = [
   &__overlay {
     position: relative;
     width: 100%;
-    padding: 80px 0;
+    padding: fluid(80) 0;
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.15));
   }
 
@@ -139,36 +141,36 @@ const features = [
     color: #fff;
     opacity: 0.85;
     letter-spacing: 2px;
-    margin-bottom: 12px;
+    margin-bottom: fluid(12);
   }
 
   &__title {
     color: #fff;
-    font-size: 48px;
-    max-width: 620px;
-    margin-bottom: 28px;
+    font-size: fluid(48);
+    max-width: fluid(620);
+    margin-bottom: fluid(28);
   }
 
   &__actions {
     display: flex;
-    gap: 14px;
+    gap: fluid(14);
     flex-wrap: wrap;
   }
 }
 
 .feature {
   text-align: center;
-  padding: 32px 24px;
+  padding: fluid(32) fluid(24);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
 
   &__icon {
-    font-size: 40px;
+    font-size: fluid(40);
   }
 
   &__title {
-    margin: 14px 0 8px;
-    font-size: 20px;
+    margin: fluid(14) 0 fluid(8);
+    font-size: fluid(20);
   }
 
   &__text {
@@ -189,7 +191,7 @@ const features = [
   }
 
   &__name {
-    margin: 10px 0 4px;
+    margin: fluid(10) 0 fluid(4);
     font-size: 15px;
   }
 

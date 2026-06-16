@@ -21,6 +21,12 @@ const ALLOWED_KEYS = [
   'logoMaxHeight',
   'customCss',
   'headerBgColor',
+  'headerMenuColor',
+  'headerMenuHoverColor',
+  'headerDropdownBg',
+  'headerDropdownItemBg',
+  'headerDropdownColor',
+  'headerDropdownHoverColor',
   'langLabels',
   'navtool',
 ]

@@ -47,11 +47,11 @@ useSeoMeta({ title: '線上購物 — 母版專案' })
 
 <style lang="scss" scoped>
 .shop {
-  padding: 40px 20px 80px;
+  padding: fluid(40) fluid(20) fluid(80);
 
   &__title {
-    font-size: 28px;
-    margin-bottom: 28px;
+    font-size: fluid(28);
+    margin-bottom: fluid(28);
   }
 }
 
@@ -72,7 +72,7 @@ useSeoMeta({ title: '線上購物 — 母版專案' })
   }
 
   &__body {
-    padding: 16px;
+    padding: fluid(16);
   }
 
   &__name {
@@ -82,8 +82,8 @@ useSeoMeta({ title: '線上購物 — 母版專案' })
   &__price {
     display: flex;
     align-items: baseline;
-    gap: 8px;
-    margin: 8px 0 12px;
+    gap: fluid(8);
+    margin: fluid(8) 0 fluid(12);
   }
 
   &__now {
@@ -100,7 +100,7 @@ useSeoMeta({ title: '線上購物 — 母版專案' })
 
   &__btn {
     width: 100%;
-    padding: 9px;
+    padding: fluid(9);
     font-size: 14px;
   }
 }

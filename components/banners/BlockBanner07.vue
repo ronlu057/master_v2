@@ -67,7 +67,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
         </NuxtLink>
 
         <div class="editor">
-          <p v-if="title" class="editor_title">{{ title }}</p>
+          <h1 v-if="title" class="editor_title">{{ title }}</h1>
           <p v-if="firstRow.memo" v-html="toHtml(firstRow.memo)" />
         </div>
 
@@ -94,8 +94,8 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
             @slide-change="onProductSlideChange"
           >
             <SwiperSlide v-for="(row, i) in rows" :key="i">
-              <NuxtLink :to="row.link || ''">
-                <img :src="row.image?.pc || row.image?.mb" :alt="row.title || ''" />
+              <NuxtLink :to="row.link || ''" :title="row.name || row.title || 'VIEW MORE'">
+                <img :src="row.image?.pc || row.image?.mb" :alt="row.alt || row.title || ''" />
               </NuxtLink>
               <p>{{ row.name || row.title }}</p>
             </SwiperSlide>
@@ -128,7 +128,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
         <SwiperSlide v-for="(row, i) in rows" :key="i">
           <picture>
             <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-            <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
         </SwiperSlide>
       </Swiper>
@@ -172,7 +172,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
   .top {
     display: flex;
     flex-direction: column;
-    padding: 0 calc(80 / 19.2 * 1vw) 30px;
+    padding: 0 calc(80 / 19.2 * 1vw) fluid(30);
     background: $web_color_2 no-repeat center center / cover;
 
     @media (min-width: 641px) { height: calc(495 / 840 * 100%); }
@@ -182,8 +182,8 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      height: 70px;
-      margin-bottom: 25px;
+      height: fluid(70);
+      margin-bottom: fluid(25);
       visibility: hidden;
 
       @media (max-width: 640px) {
@@ -194,7 +194,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
       }
 
       img {
-        max-height: 60px;
+        max-height: fluid(60);
 
         @media (max-width: 640px) {
           max-height: calc(16 / 16 * 1rem + 24 / 6.4 * 1vw);
@@ -213,14 +213,15 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
 
       .editor_title {
         // bannerTitleSize_cht(2)
-        font-size: clamp(16px, calc(18 / 19.2 * 1vw), 18px);
+        color: inherit;
+        font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
         font-weight: 700;
-        margin-bottom: 10px;
+        margin-bottom: fluid(10);
       }
 
       p {
         // bannerTitleSize_cht(3)
-        font-size: clamp(14px, calc(15 / 19.2 * 1vw), 15px);
+        font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
         line-height: 1.6;
       }
 
@@ -241,8 +242,8 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
 
     .button_set {
       display: flex;
-      gap: 12px;
-      margin-top: 30px;
+      gap: fluid(12);
+      margin-top: fluid(30);
 
       @media (max-width: 640px) { justify-content: center; }
     }
@@ -252,7 +253,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
     display: flex;
     align-items: center;
     position: relative;
-    padding: 30px calc(80 / 19.2 * 1vw) calc(44 / 16 * 1rem + 10 / 19.2 * 1vw);
+    padding: fluid(30) calc(80 / 19.2 * 1vw) calc(44 / 16 * 1rem + 10 / 19.2 * 1vw);
     background: $web_color_2;
 
     @media (min-width: 641px) { height: calc(345 / 840 * 100%); }
@@ -270,7 +271,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
         top: calc(0vw - 20 / 19.2 * 1vw);
         left: 0;
         color: rgba(#fefefe, 0.41);
-        font-size: calc(148 / 19.2 * 1vw);
+        font-size: clamp(59px, calc(148 / 19.2 * 1vw), calc(148 / 1920 * 2560 * 1px));
         font-weight: 900;
         font-family: $title_font_en;
         line-height: 1;
@@ -286,7 +287,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
         top: 100%;
         width: 100%;
         color: #fff;
-        font-size: calc(12 / 16 * 1rem + 12 / 19.2 * 1vw);
+        font-size: clamp(17px, calc(24 / 19.2 * 1vw), calc(24 / 1920 * 2560 * 1px));
         font-weight: 700;
         line-height: 1;
         text-align: right;
@@ -316,14 +317,14 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
             font-size: calc(12 / 16 * 1rem + 12 / 6.4 * 1vw);
             font-weight: 700;
             text-align: center;
-            margin-top: 30px;
+            margin-top: fluid(30);
 
             @media (min-width: 481px) { display: none; }
           }
         }
 
         :deep(.swiper-pagination) {
-          bottom: -30px;
+          bottom: fluid(-30);
           display: none;
 
           @media (max-width: 640px) { display: block; }
@@ -340,10 +341,10 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
 
     .button_set {
       display: flex;
-      gap: 10px;
+      gap: fluid(10);
       position: absolute;
-      bottom: 18px;
-      left: 8px;
+      bottom: fluid(18);
+      left: fluid(8);
       z-index: 1;
 
       @media (max-width: 480px) { display: none; }
@@ -406,8 +407,8 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
         display: block;
         position: relative;
         width: 1px;
-        height: 103px;
-        margin: 13px 0 10px;
+        height: fluid(103);
+        margin: fluid(13) 0 fluid(10);
         background: rgba(#fff, 0.2);
         transition: all 0.3s;
 
@@ -432,8 +433,8 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: none;
   border: none;
   cursor: pointer;
@@ -446,14 +447,14 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
   // 邊框畫 V 形箭頭：置中穩定，不受字型字形影響
   &::before {
     content: '';
-    width: 9px;
-    height: 9px;
+    width: fluid(9);
+    height: fluid(9);
     border-top: 2px solid currentColor;
     border-right: 2px solid currentColor;
   }
 
-  &.prev::before { transform: rotate(-135deg); margin-left: 3px; }
-  &.next::before { transform: rotate(45deg); margin-right: 3px; }
+  &.prev::before { transform: rotate(-135deg); margin-left: fluid(3); }
+  &.next::before { transform: rotate(45deg); margin-right: fluid(3); }
 
   &:hover { color: $web_color_2; }
 }
@@ -466,13 +467,13 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
     color: #fff;
 
     &::before {
-      width: 8px;
-      height: 8px;
+      width: fluid(8);
+      height: fluid(8);
       border-width: 2px;
     }
 
     &.prev {
-      margin-bottom: 28px;
+      margin-bottom: fluid(28);
       @media (max-width: 1440px) { margin-bottom: 15px; }
       &::before { transform: rotate(-45deg); margin-left: 0; }
     }
@@ -487,8 +488,8 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
 
 // 左下產品箭頭
 .bottom .button_set .banner_arrow {
-  width: 25px;
-  height: 45px;
+  width: fluid(25);
+  height: fluid(45);
 }
 
 // VIEW MORE 按鈕（對應原 .button06）
@@ -496,7 +497,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid #fff;
   color: #fff;
   font-size: 14px;

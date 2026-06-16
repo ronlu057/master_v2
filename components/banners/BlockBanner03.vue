@@ -52,7 +52,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 841px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
         <div class="cover_mask_left"></div>
@@ -71,13 +71,13 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
               </div>
 
               <div class="right">
-                <p v-if="row.title" v-html="row.title" />
-                <p v-if="row.slogan" v-html="toHtml(row.slogan)" />
+                <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="row.title" />
+                <div v-if="row.slogan" v-html="toHtml(row.slogan)" />
                 <p v-if="row.desc">{{ row.desc }}</p>
                 <p v-if="row.note">{{ row.note }}</p>
 
                 <div v-if="row.link" class="button_set">
-                  <NuxtLink class="cover_btn" :to="row.link"><span>VIEW MORE</span></NuxtLink>
+                  <NuxtLink class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
                 </div>
               </div>
             </div>
@@ -151,7 +151,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       left: 0;
       width: 100%;
       color: transparent;
-      font-size: calc(250 / 19.2 * 1vw);
+      font-size: clamp(100px, calc(250 / 19.2 * 1vw), calc(250 / 1920 * 2560 * 1px));
       font-family: 'CAMPUS PERSONAL USE';
       line-height: 1.05;
       letter-spacing: 12px;
@@ -189,9 +189,9 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
       .wider_container {
         width: 100%;
-        max-width: 1600px;
+        max-width: fluid(1600);
         margin: 0 auto;
-        padding: 0 15px;
+        padding: 0 fluid(15);
       }
 
       .row {
@@ -246,29 +246,34 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           min-width: unset;
         }
 
-        p {
+        > :nth-child(1),
+        > :nth-child(2),
+        > :nth-child(3),
+        > :nth-child(4) {
           color: #fff;
+        }
 
+        > * {
           // 第一行：主標（bannerTitleSize_cht(1)）
           &:nth-child(1) {
             font-weight: 700;
             line-height: 1;
-            font-size: clamp(32px, calc(50 / 19.2 * 1vw), 50px);
+            font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
 
             @media (min-width: 1201px) { letter-spacing: 2px; }
 
             // ≤480 改用 moduleTitleSize_cht(1)
             @media (max-width: 480px) {
-              font-size: clamp(30px, calc(45 / 19.2 * 1vw), 45px);
+              font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
             }
 
             :deep(span) {
-              font-size: calc(30 / 16 * 1rem + 60 / 19.2 * 1vw); // 90 - 45
+              font-size: clamp(45px, calc(90 / 19.2 * 1vw), calc(90 / 1920 * 2560 * 1px));
             }
           }
 
           &:nth-child(2) {
-            font-size: calc(14 / 16 * 1rem + 8 / 19.2 * 1vw); // 22 - 16
+            font-size: clamp(16px, calc(22 / 19.2 * 1vw), calc(22 / 1920 * 2560 * 1px));
             line-height: 1.3;
             margin-top: calc(23 / 19.2 * 1vw);
 
@@ -279,7 +284,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           }
 
           &:nth-child(3) {
-            font-size: calc(14 / 16 * 1rem + 8 / 19.2 * 1vw); // 22 - 16
+            font-size: clamp(16px, calc(22 / 19.2 * 1vw), calc(22 / 1920 * 2560 * 1px));
             line-height: 1.3;
             margin-top: calc(28 / 19.2 * 1vw);
 
@@ -293,14 +298,14 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           // 第四行：備註（bannerTitleSize_cht(3)）
           &:nth-child(4) {
             margin-top: calc(30 / 19.2 * 1vw);
-            font-size: clamp(14px, calc(15 / 19.2 * 1vw), 15px);
+            font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
 
             @media (max-width: 840px) { display: none; }
           }
         }
 
         .button_set {
-          margin-top: 30px;
+          margin-top: fluid(30);
 
           @media (max-width: 400px) { margin-top: 30px !important; }
         }
@@ -323,7 +328,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   // pagination（桌面隱藏、≤1024 顯示）
   :deep(.swiper-pagination) {
     display: none;
-    bottom: 15px;
+    bottom: fluid(15);
 
     @media (max-width: 1024px) { display: block; }
     @media (max-width: 400px) { bottom: 8px; }
@@ -356,7 +361,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid #fff;
   color: #fff;
   font-size: 14px;
@@ -378,8 +383,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: rgba(255, 255, 255, 0.85);
   border: none;
   border-radius: 50%;
@@ -393,8 +398,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
   &::before {
     content: '';
-    width: 9px;
-    height: 9px;
+    width: fluid(9);
+    height: fluid(9);
     border-top: 2px solid currentColor;
     border-right: 2px solid currentColor;
   }
@@ -402,11 +407,11 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   &:hover { background: #fff; color: $web_color_1; }
 }
 .banner03_prev {
-  left: 20px;
-  &::before { transform: rotate(-135deg); margin-left: 3px; }
+  left: fluid(20);
+  &::before { transform: rotate(-135deg); margin-left: fluid(3); }
 }
 .banner03_next {
-  right: 20px;
-  &::before { transform: rotate(45deg); margin-right: 3px; }
+  right: fluid(20);
+  &::before { transform: rotate(45deg); margin-right: fluid(3); }
 }
 </style>

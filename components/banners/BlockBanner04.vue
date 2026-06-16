@@ -45,14 +45,14 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.title2 || ''" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title2 || ''" />
         </picture>
 
         <div class="cover">
-          <p v-if="row.title2" v-html="toHtml(row.title2)" />
-          <p v-if="row.title3" v-html="toHtml(row.title3)" />
+          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title2" v-html="toHtml(row.title2)" />
+          <h2 v-if="row.title3" v-html="toHtml(row.title3)" />
 
-          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link">
+          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title2 || 'VIEW MORE'">
             <span>{{ $t('btn.more') }}</span>
           </NuxtLink>
         </div>
@@ -64,7 +64,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 <style lang="scss" scoped>
 .banner04 {
   position: relative;
-  margin-top: 100px;
+  margin-top: fluid(100);
 
   @media (min-width: 641px) {
     padding: 0 calc(75 / 19.2 * 1vw);
@@ -107,7 +107,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       left: 0;
       width: 100%;
       text-align: center;
-      padding: 0 15px;
+      padding: 0 fluid(15);
       transform: translateY(-50%);
 
       > * {
@@ -116,10 +116,10 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       }
 
       // 第一行：主標（bannerTitleSize_cht(1)）
-      p:nth-child(1) {
+      > :nth-child(1) {
         color: #fff;
         font-weight: 700;
-        font-size: clamp(32px, calc(50 / 19.2 * 1vw), 50px);
+        font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
         transition: all 0.3s, opacity 0.8s 0.2s, transform 0.8s 0.2s;
 
         @media (min-width: 1201px) { letter-spacing: 2px; }
@@ -134,11 +134,11 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       }
 
       // 第二行：次標
-      p:nth-child(2) {
+      > :nth-child(2) {
         color: #fff;
-        font-size: calc(16 / 16 * 1rem + 8 / 19.2 * 1vw);
+        font-size: clamp(19px, calc(24 / 19.2 * 1vw), calc(24 / 1920 * 2560 * 1px));
         font-weight: 700;
-        margin-top: 20px;
+        margin-top: fluid(20);
         transition: all 0.3s, opacity 0.8s 0.1s, transform 0.8s 0.1s;
 
         br {
@@ -152,7 +152,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
       // 了解更多按鈕（對應原 .button06 center；btnMarginTop(1)）
       .cover_btn {
-        margin-top: 55px;
+        margin-top: fluid(55);
         transition: all 0.3s, opacity 0.8s, transform 0.8s;
 
         @media (max-width: 1200px) { margin-top: 35px; }
@@ -171,10 +171,10 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           transform: translateY(0);
         }
 
-        p:nth-child(1) {
+        > :nth-child(1) {
           transition: all 0.3s, opacity 0.8s 1s, transform 0.8s 1s;
         }
-        p:nth-child(2) {
+        > :nth-child(2) {
           transition: all 0.3s, opacity 0.8s 1.1s, transform 0.8s 1.1s;
         }
         .cover_btn {
@@ -186,8 +186,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
   // 分頁圓點：桌面靠右垂直排列，手機置中底部
   :deep(.swiper-pagination) {
-    bottom: 15px;
-    gap: 10px;
+    bottom: fluid(15);
+    gap: fluid(10);
 
     @media (min-width: 641px) {
       display: flex;
@@ -212,7 +212,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid #fff;
   color: #fff;
   font-size: 14px;

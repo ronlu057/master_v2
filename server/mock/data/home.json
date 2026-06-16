@@ -6,59 +6,7 @@
       "blocks": [
         {
           "type": "banner",
-          "title": "",
-          "item": {
-            "rows": [
-              {
-                "title": "一套母版，五種專案類型",
-                "memo": "模組件套版、客製首頁、全客製<br>購物、臨時站",
-                "link": "/about/company-intro",
-                "image": {
-                  "pc": "https://picsum.photos/seed/banner-1/1600/600",
-                  "mb": "https://picsum.photos/seed/banner-1m/800/800"
-                }
-              },
-              {
-                "title": "模組化 block 快速套版",
-                "memo": "BlockRenderer 自動派發<br>後台可動態調整順序",
-                "link": "/news",
-                "image": {
-                  "pc": "https://picsum.photos/seed/banner-2/1600/600",
-                  "mb": "https://picsum.photos/seed/banner-2m/800/800"
-                }
-              },
-              {
-                "title": "購物模組一鍵啟用",
-                "memo": "NUXT_PUBLIC_ENABLE_SHOP=true<br>即可加掛購物車",
-                "link": "/shop",
-                "image": {
-                  "pc": "https://picsum.photos/seed/banner-3/1600/600",
-                  "mb": "https://picsum.photos/seed/banner-3m/800/800"
-                }
-              }
-            ],
-            "videoUrl": "https://www.youtube.com/watch?v=J9GXBXLR97U",
-            "news": [
-              {
-                "title": "母版專案正式上線",
-                "summary": "支援五種專案類型的 Nuxt 4 母版正式對內釋出。",
-                "date": "2026.05.21",
-                "url": "/news/master-launch"
-              },
-              {
-                "title": "2026 夏季活動開跑",
-                "summary": "夏季限定活動正式登場，多項優惠同步開放。",
-                "date": "2026.05.18",
-                "url": "/news/summer-event"
-              },
-              {
-                "title": "新增購物模組功能",
-                "summary": "購物類型專案新增購物車與結帳流程。",
-                "date": "2026.05.12",
-                "url": "/news/shop-module"
-              }
-            ]
-          }
+          "title": ""
         },
         {
           "type": "intro",

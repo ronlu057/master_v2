@@ -67,19 +67,19 @@ useSeoMeta({ title: '常見問題 — 母版專案' })
 
 <style lang="scss" scoped>
 .faq {
-  padding: 48px 20px 80px;
-  max-width: 820px;
+  padding: fluid(48) fluid(20) fluid(80);
+  max-width: fluid(820);
 
   &__cats {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 28px;
+    gap: fluid(10);
+    margin-bottom: fluid(28);
 
     button {
-      padding: 8px 20px;
+      padding: fluid(8) fluid(20);
       border: 1px solid var(--color-border);
-      border-radius: 99px;
+      border-radius: fluid(99);
       background: var(--color-bg);
       font-size: 14px;
 
@@ -95,7 +95,7 @@ useSeoMeta({ title: '常見問題 — 母版專案' })
 .faq-item {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  margin-bottom: 12px;
+  margin-bottom: fluid(12);
   overflow: hidden;
 
   &.is-open {
@@ -107,7 +107,7 @@ useSeoMeta({ title: '常見問題 — 母版專案' })
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 18px 20px;
+    padding: fluid(18) fluid(20);
     background: var(--color-bg);
     font-size: 16px;
     font-weight: 600;
@@ -116,11 +116,11 @@ useSeoMeta({ title: '常見問題 — 母版專案' })
 
   &__icon {
     color: var(--color-primary);
-    font-size: 22px;
+    font-size: fluid(22);
   }
 
   &__a {
-    padding: 0 20px 18px;
+    padding: 0 fluid(20) fluid(18);
     color: var(--color-text-muted);
     line-height: 1.8;
   }

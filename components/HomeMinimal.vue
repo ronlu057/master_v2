@@ -28,12 +28,12 @@ const { data: firmData } = await useSiteFirm()
   align-items: center;
   justify-content: center;
   min-height: calc(100vh - var(--header-h));
-  padding: 48px 24px;
+  padding: fluid(48) fluid(24);
   background: linear-gradient(135deg, var(--color-surface), #fff);
   text-align: center;
 
   &__inner {
-    max-width: 540px;
+    max-width: fluid(540);
   }
 
   &__eyebrow {
@@ -43,22 +43,22 @@ const { data: firmData } = await useSiteFirm()
   }
 
   &__title {
-    font-size: 44px;
-    margin: 12px 0;
+    font-size: fluid(44);
+    margin: fluid(12) 0;
   }
 
   &__desc {
     color: var(--color-text-muted);
     font-size: 17px;
-    margin-bottom: 28px;
+    margin-bottom: fluid(28);
   }
 
   &__contact {
     display: inline-flex;
     flex-direction: column;
-    gap: 6px;
-    padding: 20px 32px;
-    margin-bottom: 28px;
+    gap: fluid(6);
+    padding: fluid(20) fluid(32);
+    margin-bottom: fluid(28);
     background: #fff;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);

@@ -59,19 +59,19 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" alt="" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title3 || ''" />
         </picture>
 
         <div class="content">
           <div class="wider_container">
             <div class="row no_gutter">
               <div class="info">
-                <p v-if="row.title" v-html="toHtml(row.title)" />
-                <p v-if="row.title3" v-html="toHtml(row.title3)" />
-                <p v-if="row.title4" v-html="toHtml(row.title4)" />
+                <div v-if="row.title" v-html="toHtml(row.title)" />
+                <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title3" v-html="toHtml(row.title3)" />
+                <div v-if="row.title4" v-html="toHtml(row.title4)" />
 
                 <div class="button_set">
-                  <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" target="_blank">
+                  <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title3 || 'VIEW MORE'" target="_blank">
                     <span>VIEW MORE</span>
                   </NuxtLink>
                 </div>
@@ -155,7 +155,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           margin-bottom: 40px;
         }
 
-        p {
+        > * {
           color: #fff;
           opacity: 0;
           transform: translate(40px, 0);
@@ -168,15 +168,15 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           // 第一行：英文/標題（bannerTitleSize_en(3)）
           &:nth-child(1) {
             font-weight: 600;
-            margin-bottom: 3px;
-            font-size: clamp(14px, calc(15 / 19.2 * 1vw), 15px);
+            margin-bottom: fluid(3);
+            font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 0.5s, transform 0.5s;
           }
 
           // 第二行：中文主標（bannerTitleSize_cht(1)）
           &:nth-child(2) {
             font-weight: 700;
-            font-size: clamp(32px, calc(50 / 19.2 * 1vw), 50px);
+            font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;
 
             @media (min-width: 1201px) {
@@ -186,8 +186,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
           // 第三行：標語（bannerTitleSize_cht(2)）
           &:nth-child(3) {
-            margin-top: 8px;
-            font-size: clamp(16px, calc(18 / 19.2 * 1vw), 18px);
+            margin-top: fluid(8);
+            font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 0.5s 0.2s, transform 0.5s 0.2s;
           }
         }
@@ -233,7 +233,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
       .content {
         .info {
-          p {
+          > * {
             opacity: 1;
             transform: translate(0, 0);
 
@@ -269,7 +269,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
   font-size: 14px;
@@ -291,8 +291,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: rgba(255, 255, 255, 0.85);
   border: none;
   border-radius: 50%;
@@ -308,8 +308,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   // 邊框畫 V 形箭頭：置中穩定，不受字型字形影響
   &::before {
     content: '';
-    width: 9px;
-    height: 9px;
+    width: fluid(9);
+    height: fluid(9);
     border-top: 2px solid currentColor;
     border-right: 2px solid currentColor;
   }
@@ -317,18 +317,18 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   &:hover { background: #fff; color: $web_color_1; }
 }
 .banner19_prev {
-  left: 20px;
-  &::before { transform: rotate(-135deg); margin-left: 3px; }
+  left: fluid(20);
+  &::before { transform: rotate(-135deg); margin-left: fluid(3); }
 }
 .banner19_next {
-  right: 20px;
-  &::before { transform: rotate(45deg); margin-right: 3px; }
+  right: fluid(20);
+  &::before { transform: rotate(45deg); margin-right: fluid(3); }
 }
 
 // ── pagination（底部，桌面靠左對齊） ─────────────────────────
 .dots_box {
   position: absolute;
-  bottom: 40px;
+  bottom: fluid(40);
   left: 0;
   width: 100%;
   transition: all 0.3s;

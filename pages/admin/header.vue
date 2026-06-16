@@ -68,9 +68,23 @@ const onBgAlphaInput = (a) => {
   setPreview('headerBgColor', composeColor(customHex.value, a))
 }
 
+// 選單（menu）顏色欄位（全站共用，留空＝版型預設）；def 僅為色票初始顯示值
+const MENU_COLOR_FIELDS = [
+  { key: 'headerMenuColor', name: '主選單文字色', def: '#333333' },
+  { key: 'headerMenuHoverColor', name: '主選單滑過色', def: '#4fc08d' },
+  { key: 'headerDropdownColor', name: '下拉文字色', def: '#333333' },
+  { key: 'headerDropdownHoverColor', name: '下拉文字滑過色', def: '#4fc08d' },
+  { key: 'headerDropdownBg', name: '下拉背景色', def: '#ffffff' },
+  { key: 'headerDropdownItemBg', name: '下拉單項背景色', def: '#f6f8f9' },
+]
+// 任一選單色有設值 → 顯示「全部回到預設」；一鍵把 6 個顏色全清回版型預設
+const hasAnyMenuColor = computed(() => MENU_COLOR_FIELDS.some((f) => state[f.key]))
+const resetMenuColors = () => MENU_COLOR_FIELDS.forEach((f) => setPreview(f.key, ''))
+
 const dirty = computed(
   () =>
     ['header', 'logo', 'logoMaxHeight', 'customCss', 'headerBgColor'].some(isDirtyKey) ||
+    MENU_COLOR_FIELDS.some((f) => isDirtyKey(f.key)) ||
     JSON.stringify(state.langLabels || {}) !==
       JSON.stringify(persisted.value.langLabels || {}),
 )
@@ -267,6 +281,44 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
           <strong>版型預設</strong>＝交還給版型自身設計（含原本捲動變色效果）。
         </span>
       </div>
+
+      <!-- 選單（menu）顏色：文字色 / 滑過色 / 下拉背景色（全站共用，留空＝版型預設） -->
+      <div class="field field--full">
+        <span class="field__label">
+          選單顏色 <em class="field__live">即時預覽</em>
+          <button
+            v-if="hasAnyMenuColor"
+            type="button"
+            class="btn btn--ghost btn--sm"
+            @click="resetMenuColors"
+          >
+            全部回到預設
+          </button>
+        </span>
+        <div class="menu-colors">
+          <div v-for="f in MENU_COLOR_FIELDS" :key="f.key" class="menu-colors__row">
+            <span class="menu-colors__name">{{ f.name }}</span>
+            <input
+              type="color"
+              :value="state[f.key] || f.def"
+              @input="setPreview(f.key, $event.target.value)"
+            />
+            <code>{{ state[f.key] || '版型預設' }}</code>
+            <button
+              v-if="state[f.key]"
+              type="button"
+              class="btn btn--ghost btn--sm"
+              @click="setPreview(f.key, '')"
+            >
+              回到預設
+            </button>
+          </div>
+        </div>
+        <span class="field__hint">
+          套用到所有版型的選單連結與下拉子選單；留空＝交還版型自身配色。
+          下拉文字色與主選單文字色分開控制。
+        </span>
+      </div>
     </div>
 
     <div class="actions">
@@ -406,6 +458,45 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
   &:focus {
     outline: 1px solid #4fc08d;
     border-color: #4fc08d;
+  }
+}
+
+.menu-colors {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #1a1f2a;
+  border: 1px solid #2a3242;
+  border-radius: 8px;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  &__name {
+    min-width: 80px;
+    font-size: 13px;
+    color: #c8cfdb;
+  }
+
+  input[type='color'] {
+    width: 48px;
+    height: 32px;
+    padding: 0;
+    background: none;
+    border: 1px solid #2a3242;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  code {
+    min-width: 96px;
+    padding: 3px 8px;
+    background: #0f1218;
+    color: #6a7382;
+    border-radius: 4px;
+    font-size: 12px;
   }
 }
 

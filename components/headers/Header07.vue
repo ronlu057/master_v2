@@ -266,7 +266,7 @@ onBeforeUnmount(() => {
 .navmenu {
   display: flex;
   list-style: none;
-  margin-left: 15px;
+  margin-left: fluid(15);
   padding: 0;
 
   @include rwd-1200 { display: none; }
@@ -278,7 +278,7 @@ onBeforeUnmount(() => {
       display: block;
       color: $web_font_color;
       font-size: 16px;
-      padding: 23px 15px;
+      padding: fluid(23) fluid(15);
       transition: all 0.3s;
 
       @include rwd-1280 { padding: 23px 10px; }
@@ -294,8 +294,8 @@ onBeforeUnmount(() => {
       position: absolute;
       top: 100%;
       left: 50%;
-      min-width: 160px;
-      padding: 6px;
+      min-width: fluid(160);
+      padding: fluid(6);
       background: #fff;
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
@@ -310,8 +310,8 @@ onBeforeUnmount(() => {
         display: block;
         color: $web_font_color;
         font-size: 14px;
-        padding: 8px 12px;
-        border-radius: 6px;
+        padding: fluid(8) fluid(12);
+        border-radius: fluid(6);
         transition: all 0.3s;
 
         &:hover,
@@ -340,8 +340,8 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     position: relative;
-    height: 70px;
-    padding: 0 20px;
+    height: fluid(70);
+    padding: 0 fluid(20);
     background: none;
     border: none;
     cursor: pointer;
@@ -367,10 +367,10 @@ onBeforeUnmount(() => {
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 140px;
+    min-width: fluid(140);
     display: flex;
     flex-direction: column;
-    padding: 6px;
+    padding: fluid(6);
     background: #fff;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
@@ -384,11 +384,11 @@ onBeforeUnmount(() => {
     .lang_item {
       background: none;
       border: none;
-      padding: 8px 12px;
+      padding: fluid(8) fluid(12);
       font-size: 14px;
       text-align: left;
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: fluid(6);
       color: $web_font_color;
       transition: all var(--transition);
 
@@ -415,7 +415,7 @@ onBeforeUnmount(() => {
     align-items: unset;
     width: max-content;
     padding: 0;
-    margin-left: 10px;
+    margin-left: fluid(10);
     cursor: unset;
 
     // 桌面排到 navtool 最右（搜尋等 icon 之後）；手機維持原樣（漢堡在最右）
@@ -436,7 +436,7 @@ onBeforeUnmount(() => {
       // 桌面顯示（每個 exam 一個 box）
       &.pc {
         line-height: 1.2;
-        padding: 0 20px;
+        padding: 0 fluid(20);
 
         @include rwd-1440 {
           line-height: 1.3;
@@ -470,7 +470,7 @@ onBeforeUnmount(() => {
 
           span {
             color: #d62020;
-            font-size: 24px;
+            font-size: fluid(24);
             font-weight: 700;
 
             @include rwd-1440 { font-size: 18px; }
@@ -480,7 +480,7 @@ onBeforeUnmount(() => {
 
       // 行動版顯示（合併在單一 box 內列出全部 exam）
       &.mb {
-        padding: 0 10px;
+        padding: 0 fluid(10);
 
         @media (min-width: 481px) { display: none; }
 
@@ -502,14 +502,14 @@ onBeforeUnmount(() => {
 
   // 漢堡
   .mbPanel_btn {
-    padding: 0 20px;
+    padding: 0 fluid(20);
     background: $web_header_1;
 
     @media (min-width: 1201px) { display: none !important; }
 
     .bars {
       position: relative;
-      width: 30px;
+      width: fluid(30);
       height: 2px;
 
       .bar {
@@ -519,10 +519,10 @@ onBeforeUnmount(() => {
         width: 100%;
         height: 100%;
         background: #fff;
-        border-radius: 10px;
+        border-radius: fluid(10);
 
         &.bar1 {
-          top: -8px;
+          top: fluid(-8);
           transition: top 0.3s 0.5s, transform 0.3s;
         }
         &.bar2 {
@@ -530,7 +530,7 @@ onBeforeUnmount(() => {
           transition: opacity 0s 0.3s;
         }
         &.bar3 {
-          top: 8px;
+          top: fluid(8);
           transition: top 0.3s 0.5s, transform 0.3s;
         }
       }
@@ -555,19 +555,19 @@ onBeforeUnmount(() => {
 // 行動版下拉選單
 .header07_panel {
   position: fixed;
-  top: 70px;
+  top: fluid(70);
   left: 0;
   right: 0;
   background: #fff;
   border-top: 1px solid var(--color-border);
-  padding: 8px 20px 16px;
+  padding: fluid(8) fluid(20) fluid(16);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   z-index: $z_mobile_menu;
 }
 
 .mb_navmenu_link {
   display: block;
-  padding: 12px 4px;
+  padding: fluid(12) fluid(4);
   font-size: 18px;
   font-weight: 600;
   color: $web_font_color;
@@ -575,11 +575,11 @@ onBeforeUnmount(() => {
 }
 
 .mb_navmenu_sub {
-  padding: 0 0 0 16px;
+  padding: 0 0 0 fluid(16);
 
   a {
     display: block;
-    padding: 8px 4px;
+    padding: fluid(8) fluid(4);
     font-size: 14px;
     color: $web_font_color;
   }

@@ -63,21 +63,21 @@ const link = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: fluid(24);
   background: rgba(0, 0, 0, 0.6);
 
   &__box {
     position: relative;
-    max-width: 420px;
+    max-width: fluid(420);
     width: 100%;
   }
 
   &__close {
     position: absolute;
-    top: -14px;
-    right: -14px;
-    width: 36px;
-    height: 36px;
+    top: fluid(-14);
+    right: fluid(-14);
+    width: fluid(36);
+    height: fluid(36);
     border-radius: 50%;
     border: none;
     background: #fff;

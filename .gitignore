@@ -3,3 +3,6 @@ node_modules
 .output
 .data
 dist
+
+# 私密設定（API 金鑰等，不納版控）
+.env.local

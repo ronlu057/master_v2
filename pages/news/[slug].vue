@@ -56,15 +56,15 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .art {
-  max-width: 820px;
-  padding-bottom: 64px;
+  max-width: fluid(820);
+  padding-bottom: fluid(64);
 
   &__meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: fluid(12);
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: fluid(24);
     color: var(--color-text-muted);
     font-size: 14px;
   }
@@ -77,18 +77,18 @@ onMounted(() => {
     line-height: 1.9;
 
     :deep(h3) {
-      margin: 24px 0 12px;
+      margin: fluid(24) 0 fluid(12);
     }
     :deep(p) {
-      margin-bottom: 14px;
+      margin-bottom: fluid(14);
     }
   }
 
   &__photos {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin: 32px 0;
+    gap: fluid(16);
+    margin: fluid(32) 0;
 
     img {
       width: 100%;
@@ -96,14 +96,14 @@ onMounted(() => {
     }
 
     figcaption {
-      margin-top: 6px;
+      margin-top: fluid(6);
       font-size: 13px;
       color: var(--color-text-muted);
     }
   }
 
   &__foot {
-    margin-top: 32px;
+    margin-top: fluid(32);
   }
 }
 

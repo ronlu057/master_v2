@@ -257,7 +257,7 @@ onBeforeUnmount(() => mq?.removeEventListener('change', ...))
 |---|---|
 | ① | 在 `components/` 新增 `BlockPartners.vue`（檔名前綴須為 `Block`） |
 | ② | 宣告 `defineProps({ title, item })`，`item.rows` 為資料陣列 |
-| ③ | 開 [`components/BlockRenderer.vue`](../components/BlockRenderer.vue) 加進對照表 |
+| ③ | 開 [`components/BlockRenderer.js`](../components/BlockRenderer.js) 加進對照表 |
 | ④ | 後端 / mock 在首頁 slot 內加 `{ type: 'partners', title: '...', item: { rows: [...] } }` |
 
 > [!IMPORTANT]

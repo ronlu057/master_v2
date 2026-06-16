@@ -86,16 +86,16 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
         <div class="slide_inner">
           <picture>
             <source media="(min-width: 721px)" :srcset="row.image?.pc" />
-            <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
 
           <!-- 手機版文字（桌面隱藏，桌面改由左側 text_banner 顯示） -->
           <div class="cover_txt mb_only">
-            <p v-if="row.title" v-html="toHtml(row.title)" />
-            <p v-if="row.title2" v-html="toHtml(row.title2)" />
-            <p v-if="row.slogan" v-html="toHtml(row.slogan)" />
+            <div v-if="row.title" v-html="toHtml(row.title)" />
+            <div v-if="row.title2" v-html="toHtml(row.title2)" />
+            <div v-if="row.slogan" v-html="toHtml(row.slogan)" />
 
-            <NuxtLink v-if="row.link" class="cover_btn center" :to="row.link">
+            <NuxtLink v-if="row.link" class="cover_btn center" :to="row.link" :title="row.title || 'VIEW MORE'">
               <span>VIEW MORE</span>
             </NuxtLink>
           </div>
@@ -120,11 +120,11 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <div class="cover_txt">
-          <p v-if="row.title" v-html="toHtml(row.title)" />
-          <p v-if="row.title2" v-html="toHtml(row.title2)" />
-          <p v-if="row.slogan" v-html="toHtml(row.slogan)" />
+          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
+          <h2 v-if="row.title2" v-html="toHtml(row.title2)" />
+          <div v-if="row.slogan" v-html="toHtml(row.slogan)" />
 
-          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link">
+          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">
             <span>VIEW MORE</span>
           </NuxtLink>
         </div>
@@ -185,19 +185,19 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
     left: 0;
     width: 100%;
     text-align: center;
-    padding: 0 25px;
+    padding: 0 fluid(25);
     transform: translateY(-50%);
 
     @media (min-width: 721px) { display: none; }
 
-    p { color: #fff; }
+    > div { color: #fff; }
   }
 
   // 手機版進場動畫（active slide 內各元素依序上浮淡入）
   :deep(.swiper-slide-active) .cover_txt.mb_only {
-    p:nth-child(1) { animation: banner14_goUp 1s 0.4s forwards; }
-    p:nth-child(2) { animation: banner14_goUp 1s 0.6s forwards; }
-    p:nth-child(3) { animation: banner14_goUp 1s 0.8s forwards; }
+    > :nth-child(1) { animation: banner14_goUp 1s 0.4s forwards; }
+    > :nth-child(2) { animation: banner14_goUp 1s 0.6s forwards; }
+    > :nth-child(3) { animation: banner14_goUp 1s 0.8s forwards; }
     .cover_btn     { animation: banner14_goUp 1s 1s forwards; }
   }
 
@@ -205,7 +205,7 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
   :deep(.swiper-pagination) {
     bottom: 3.906vw;
     left: unset;
-    right: 180px;
+    right: fluid(180);
     transform: unset;
     text-align: right;
 
@@ -224,10 +224,10 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
 // ── 共用文字樣式（cover_txt：三行 + 按鈕） ─────────────────
 .cover_txt {
   // 第一行：主標（moduleTitleSize_cht(1) = clamp(30,45/19.2vw,45)）
-  p:nth-child(1) {
+  > :nth-child(1) {
     color: #1a1a1a;
     font-weight: 700;
-    font-size: clamp(30px, calc(45 / 19.2 * 1vw), 45px);
+    font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
 
     span {
       @media (max-width: 720px) { display: none; }
@@ -238,24 +238,24 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
   }
 
   // 第二行：副標
-  p:nth-child(2) {
+  > :nth-child(2) {
     color: #1a1a1a;
-    font-size: calc(14 / 16 * 1rem + 12 / 19.2 * 1vw); // 26 - 17
+    font-size: clamp(17px, calc(26 / 19.2 * 1vw), calc(26 / 1920 * 2560 * 1px));
     font-weight: 700;
-    margin-top: 23px;
+    margin-top: fluid(23);
   }
 
   // 第三行：標語（主色，moduleTitleSize_cht(3) = clamp(15,18/19.2vw,18)）
-  p:nth-child(3) {
+  > :nth-child(3) {
     color: $web_color_1;
     font-weight: 500;
-    margin-top: 13px;
-    font-size: clamp(15px, calc(18 / 19.2 * 1vw), 18px);
+    margin-top: fluid(13);
+    font-size: clamp(15px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
   }
 
   // VIEW MORE 按鈕（對應原 .button06 → .cover_btn，btnMarginTop(1)）
   .cover_btn {
-    margin-top: 55px;
+    margin-top: fluid(55);
 
     @media (max-width: 1200px) { margin-top: 35px; }
   }
@@ -266,7 +266,7 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
   font-size: 14px;
@@ -314,9 +314,9 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
 
   // 進場：active slide 內文字與按鈕依序自左淡入
   :deep(.swiper-slide-active) .cover_txt {
-    p:nth-child(1) { animation: banner14_goLeft 1s 0.4s forwards; }
-    p:nth-child(2) { animation: banner14_goLeft 1s 0.6s forwards; }
-    p:nth-child(3) { animation: banner14_goLeft 1s 0.8s forwards; }
+    > :nth-child(1) { animation: banner14_goLeft 1s 0.4s forwards; }
+    > :nth-child(2) { animation: banner14_goLeft 1s 0.6s forwards; }
+    > :nth-child(3) { animation: banner14_goLeft 1s 0.8s forwards; }
     .cover_btn     { animation: banner14_goLeft 1s 1s forwards; }
   }
 }
@@ -325,7 +325,7 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
 .tool_btn {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: fluid(15);
   position: absolute;
   bottom: 0;
   left: calc(160 / 1920 * 100%);
@@ -344,8 +344,8 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: none;
   border: none;
   cursor: pointer;

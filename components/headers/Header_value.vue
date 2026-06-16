@@ -150,21 +150,21 @@ $red: #bf3131;
 
 .header-value {
   width: 100%;
-  height: 80px;
+  height: fluid(80);
   position: fixed;
-  top: 23px;
+  top: fluid(23);
   z-index: 50;
 
   &__bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 28px;
+    gap: fluid(28);
     background: #fff;
-    border-radius: 999px;
+    border-radius: fluid(999);
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
-    padding: 0 50px;
-    min-height: 80px;
+    padding: 0 fluid(50);
+    min-height: fluid(80);
   }
 
   &__logo {
@@ -172,7 +172,7 @@ $red: #bf3131;
     display: block;
 
     img {
-      height: 64px;
+      height: fluid(64);
       width: auto;
       display: block;
     }
@@ -185,7 +185,7 @@ $red: #bf3131;
   &__right {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: fluid(12);
     flex-shrink: 0;
   }
 
@@ -196,15 +196,15 @@ $red: #bf3131;
 
   &__lang-btn {
     width: auto;
-    height: 32px;
+    height: fluid(32);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: fluid(8);
     background: #BF3131;
     color: #fff;
     border: none;
-    border-radius: 999px;
-    padding: 0 16px;
+    border-radius: fluid(999);
+    padding: 0 fluid(16);
     font-size: 16px;
     font-weight: 500;
   }
@@ -222,17 +222,17 @@ $red: #bf3131;
     position: absolute;
     top: calc(100% + 8px);
     right: 0;
-    min-width: 120px;
+    min-width: fluid(120);
     background: #fff;
     border: 1px solid var(--color-border);
-    border-radius: 12px;
+    border-radius: fluid(12);
     box-shadow: var(--shadow-lg);
     overflow: hidden;
 
     button {
       display: block;
       width: 100%;
-      padding: 11px 16px;
+      padding: fluid(11) fluid(16);
       background: none;
       border: none;
       text-align: center;
@@ -266,11 +266,11 @@ $red: #bf3131;
 
   &__mobile {
     display: none;
-    margin-top: 10px;
+    margin-top: fluid(10);
     background: #fff;
-    border-radius: 20px;
+    border-radius: fluid(20);
     box-shadow: var(--shadow);
-    padding: 10px 28px;
+    padding: fluid(10) fluid(28);
   }
 }
 

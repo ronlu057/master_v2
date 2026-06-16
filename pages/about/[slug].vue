@@ -39,17 +39,17 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .content-page {
-  max-width: 860px;
-  padding-bottom: 64px;
+  max-width: fluid(860);
+  padding-bottom: fluid(64);
 
   &__body {
     line-height: 1.9;
 
     :deep(h3) {
-      margin: 24px 0 12px;
+      margin: fluid(24) 0 fluid(12);
     }
     :deep(p) {
-      margin-bottom: 14px;
+      margin-bottom: fluid(14);
     }
   }
 }

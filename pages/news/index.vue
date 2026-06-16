@@ -87,13 +87,13 @@ applySeo(seo.value)
 .news-filter {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 32px;
+  gap: fluid(10);
+  margin-bottom: fluid(32);
 
   button {
-    padding: 8px 20px;
+    padding: fluid(8) fluid(20);
     border: 1px solid var(--color-border);
-    border-radius: 99px;
+    border-radius: fluid(99);
     background: var(--color-bg);
     font-size: 14px;
     transition: all var(--transition);
@@ -108,18 +108,18 @@ applySeo(seo.value)
 }
 
 .news-grid {
-  margin-bottom: 40px;
+  margin-bottom: fluid(40);
 }
 
 .pager {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  padding-bottom: 64px;
+  gap: fluid(8);
+  padding-bottom: fluid(64);
 
   button {
-    width: 40px;
-    height: 40px;
+    width: fluid(40);
+    height: fluid(40);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     background: var(--color-bg);

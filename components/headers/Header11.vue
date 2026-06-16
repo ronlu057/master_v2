@@ -210,10 +210,10 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   position: fixed;
   top: 0;
-  left: 120px;
+  left: fluid(120);
   width: calc(100% - 120px);
-  height: 70px;
-  padding: 0 40px;
+  height: fluid(70);
+  padding: 0 fluid(40);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0);
   z-index: $z_header;
   transition: all 0.3s;
@@ -248,7 +248,7 @@ onBeforeUnmount(() => {
 .navmenu {
   display: flex;
   list-style: none;
-  margin-left: 25px;
+  margin-left: fluid(25);
   padding: 0;
 
   @include rwd-1200 { display: none; }
@@ -257,8 +257,8 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     position: relative;
-    height: 70px;
-    padding: 0 25px;
+    height: fluid(70);
+    padding: 0 fluid(25);
     transition: all 0.3s;
 
     @include rwd-1680 { padding: 0 15px; }
@@ -289,8 +289,8 @@ onBeforeUnmount(() => {
       position: absolute;
       top: 100%;
       left: 0;
-      min-width: 160px;
-      padding: 6px;
+      min-width: fluid(160);
+      padding: fluid(6);
       background: var(--color-bg);
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
@@ -302,9 +302,9 @@ onBeforeUnmount(() => {
 
       a {
         display: block;
-        padding: 8px 12px;
+        padding: fluid(8) fluid(12);
         font-size: 14px;
-        border-radius: 6px;
+        border-radius: fluid(6);
         color: $web_font_color;
         transition: all var(--transition);
 
@@ -327,7 +327,7 @@ onBeforeUnmount(() => {
 .navtool {
   display: flex;
   align-items: center;
-  margin-left: 25px;
+  margin-left: fluid(25);
 
   @include rwd-1200 { display: none; }
 
@@ -336,7 +336,7 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     position: relative;
-    height: 70px;
+    height: fluid(70);
     color: $web_font_color;
     cursor: pointer;
     transition: all 0.3s;
@@ -345,15 +345,15 @@ onBeforeUnmount(() => {
 
     // 項目間距 + 分隔線
     & + * {
-      margin-left: 30px;
+      margin-left: fluid(30);
 
       &::before {
         content: '';
         position: absolute;
         top: 50%;
-        left: -16px;
+        left: fluid(-16);
         width: 2px;
-        height: 22px;
+        height: fluid(22);
         background: $web_font_color;
         transform: translateY(-50%);
       }
@@ -364,7 +364,7 @@ onBeforeUnmount(() => {
 
   // 社群一排平鋪
   .navtool_social {
-    gap: 0 14px;
+    gap: 0 fluid(14);
 
     a {
       color: $web_font_color;
@@ -379,8 +379,8 @@ onBeforeUnmount(() => {
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 280px;
-    padding: 10px;
+    min-width: fluid(280);
+    padding: fluid(10);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
@@ -394,11 +394,11 @@ onBeforeUnmount(() => {
     .search_form {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: fluid(6);
 
       input {
         flex: 1;
-        padding: 8px 12px;
+        padding: fluid(8) fluid(12);
         border: 1px solid var(--color-border);
         border-radius: var(--radius);
         font-size: 14px;
@@ -408,7 +408,7 @@ onBeforeUnmount(() => {
         background: none;
         border: none;
         cursor: pointer;
-        padding: 4px;
+        padding: fluid(4);
         display: flex;
         color: $web_font_color;
         transition: color 0.3s;
@@ -432,10 +432,10 @@ onBeforeUnmount(() => {
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 140px;
+    min-width: fluid(140);
     display: flex;
     flex-direction: column;
-    padding: 6px;
+    padding: fluid(6);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
@@ -449,11 +449,11 @@ onBeforeUnmount(() => {
     .lang_item {
       background: none;
       border: none;
-      padding: 8px 12px;
+      padding: fluid(8) fluid(12);
       font-size: 14px;
       text-align: left;
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: fluid(6);
       color: $web_font_color;
       transition: all var(--transition);
 
@@ -478,19 +478,19 @@ onBeforeUnmount(() => {
   // 購物車徽章
   .cart_btn p {
     position: absolute;
-    top: 16px;
-    right: -10px;
+    top: fluid(16);
+    right: fluid(-10);
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 16px;
-    height: 16px;
-    padding: 0 4px;
+    min-width: fluid(16);
+    height: fluid(16);
+    padding: 0 fluid(4);
     color: #fff;
     font-size: 11px;
     line-height: 1;
     background: $web_header_2;
-    border-radius: 8px;
+    border-radius: fluid(8);
   }
 }
 
@@ -502,8 +502,8 @@ onBeforeUnmount(() => {
   position: fixed;
   top: 0;
   right: 0;
-  width: 70px;
-  height: 70px;
+  width: fluid(70);
+  height: fluid(70);
   background: none;
   border: none;
   cursor: pointer;
@@ -516,8 +516,8 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    width: 30px;
-    height: 18px;
+    width: fluid(30);
+    height: fluid(18);
 
     .bar {
       position: relative;
@@ -547,12 +547,12 @@ onBeforeUnmount(() => {
       background 0.3s;
 
     &.bar1 {
-      top: 8px;
+      top: fluid(8);
       transform: rotate(-25deg);
     }
     &.bar2 { width: 0%; }
     &.bar3 {
-      top: -8px;
+      top: fluid(-8);
       transform: rotate(25deg);
     }
   }

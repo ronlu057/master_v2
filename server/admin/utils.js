@@ -49,10 +49,11 @@ export function writeEnvUpdates(updates) {
   fs.writeFileSync(ENV_PATH, raw, 'utf8')
 }
 
-// 安全檔名：只允許英數字 / 底線 / 連字符，避免 ../../ 路徑跳脫
+// 安全檔名：允許英數字 / 底線 / 連字符 / 點（副檔名需要）；
+// 仍濾掉 /、\ 等分隔符 → 無法構成 ../ 路徑跳脫，再加 resolveInDir 的 startsWith 防線雙重保險。
 export function safeFilename(name) {
   if (typeof name !== 'string') return ''
-  return name.replace(/[^A-Za-z0-9_-]/g, '')
+  return name.replace(/[^A-Za-z0-9_.-]/g, '')
 }
 
 // 受控目錄解析：確保最終路徑落在 baseDir 內

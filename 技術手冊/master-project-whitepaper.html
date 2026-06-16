@@ -443,8 +443,11 @@ const res = await $api(&#39;/contact/submit&#39;, { method: &#39;POST&#39;, body
 <pre><code>payload.slots[] → slot.blocks[] → block.item.rows[]
 </code></pre>
 <p>每個 <code>block</code> 帶 <code>type</code>（決定套哪個元件）、<code>title</code>、<code>item.rows</code>（內容固定取此）。</p>
+<blockquote>
+<p>⚠️ <strong>例外：<code>banner</code> block</strong>。模組首頁的 banner 內容<strong>不</strong>內嵌在 <code>/home/view</code> 聚合裡，改由獨立 <strong>Banner API <code>/banner/home</code></strong> 提供 —— <code>BlockBanner</code> 派發器自己 <code>useApiData(&#39;/banner/home&#39;)</code> 取資料（rows + 背景影片 + 跑馬燈 news）。聚合裡的 banner block 只留 <code>{ &quot;type&quot;: &quot;banner&quot; }</code> 當定位。模擬「未來後端會有多支獨立 API（Header / Banner …）」，不是單一大聚合。詳見 §12.3。</p>
+</blockquote>
 <h3 id="82-blockrenderer">8.2 BlockRenderer</h3>
-<p><code>components/BlockRenderer.vue</code> 維護 <code>block.type → 元件</code> 對照表，未知 type 直接 skip：</p>
+<p><code>components/BlockRenderer.js</code>（render function）維護 <code>block.type → 元件</code> 對照表，未知 type 直接 skip：</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -469,10 +472,14 @@ const res = await $api(&#39;/contact/submit&#39;, { method: &#39;POST&#39;, body
 <td><code>BlockGeneric</code>（通用卡片格）</td>
 </tr>
 </tbody></table></div>
-<p>新增 block 樣式：建立 <code>BlockXxx.vue</code>、在 <code>BlockRenderer.vue</code> 的對照表加一筆。</p>
+<p>新增 block 樣式：建立 <code>BlockXxx.vue</code>、在 <code>BlockRenderer.js</code> 的對照表加一筆。</p>
 <blockquote>
 <p>⚠️ Nuxt 自動引入的元件<strong>無法</strong>用 <code>resolveComponent(&#39;字串&#39;)</code> 取得；
-Block 元件須在 <code>BlockRenderer.vue</code> 以 <code>import</code> 明確引入後放入對照表。</p>
+Block 元件須在 <code>BlockRenderer.js</code> 以 <code>import</code> 明確引入後放入對照表。</p>
+<p>💡 <code>BlockRenderer</code> 刻意用 <strong>render function（<code>.js</code> functional component）</strong> 而非 template 的 <code>v-for</code>/<code>v-if</code>：
+後者會被編譯成 Vue Fragment，SSR 時每個 Fragment 都吐出 <code>&lt;!--[--&gt;</code> / <code>&lt;!--]--&gt;</code> 邊界註解。
+render function 直接把 block 掛成 wrapper element 的 children 陣列、無 Fragment，
+<strong>維持 SSR/SEO，但 dispatch 層不再產生 fragment 註解</strong>（這是 §9.1 「元件一律 <code>&lt;script setup&gt;</code>」的刻意例外）。</p>
 </blockquote>
 <hr>
 <h2 id="9-開發與編程規範">9. 開發與編程規範</h2>
@@ -508,7 +515,9 @@ export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
 <blockquote class="callout callout--important"><p><strong>全站樣式規範</strong></p>
 <ul>
 <li>一律使用 Sass：所有 <code>&lt;style&gt;</code> 必須加 <code>lang=&quot;scss&quot;</code>；嚴禁純 CSS、嚴禁無 <code>lang</code> 的 <code>&lt;style&gt;</code>，專案內不得出現獨立 <code>.css</code> 檔。</li>
-<li>嚴禁標籤行內 <code>style=&quot;...&quot;</code>：所有樣式寫進 <code>&lt;style lang=&quot;scss&quot; scoped&gt;</code> 以 class 套用；需動態切換時改用 <code>:class</code>。</li>
+<li>嚴禁標籤行內 <code>style=&quot;...&quot;</code> <strong>與 <code>:style=&quot;...&quot;</code> 綁定</strong>：行內樣式優先級最高、<strong>無法被 media query 覆寫 → 破壞 RWD</strong>。樣式寫進 <code>&lt;style lang=&quot;scss&quot; scoped&gt;</code> 以 class 套用、動態切換用 <code>:class</code>。唯一例外＝執行期才算得出的動態幾何值（Swiper 進度條高度、flex <code>order</code>…）。詳見 <a href="development-conventions.html#312-%E7%A6%81%E7%94%A8%E8%A1%8C%E5%85%A7%E6%A8%A3%E5%BC%8F-style%E7%89%B9%E5%88%A5%E6%B3%A8%E6%84%8F">製作規範 §3.1.2</a>。</li>
+<li>嚴禁 <code>!important</code>（全站不使用，無例外）。</li>
+<li>桌機（1024–2560）的字級／版面尺寸用流體 <code>fluid()</code> 等比縮放（<a href="#951-%E6%B5%81%E9%AB%94%E5%B0%BA%E5%AF%B8-fluid%E6%A1%8C%E6%A9%9F-10242560-%E7%AD%89%E6%AF%94%E7%B8%AE%E6%94%BE">§9.5.1</a>）。</li>
 <li><strong>禁用 BEM <code>&amp;__</code> 巢狀寫法</strong> —— class 必須寫完整名稱（詳見 §9.4.1）。</li>
 </ul>
 </blockquote>
@@ -598,6 +607,23 @@ export const useCartStore = defineStore(&#39;cart&#39;, () =&gt; {
 </ul>
 <p>唯一禁止：用 <code>@media (max-width: 1200px)</code> 這種<strong>剛好等於標準斷點數字</strong>的寫法 —— 改成對應的 <code>@include rwd-1200</code> 才能跟全站同步。</p>
 </blockquote>
+<h4 id="951-流體尺寸-fluid桌機-10242560-等比縮放">9.5.1 流體尺寸 <code>fluid()</code>（桌機 1024–2560 等比縮放）</h4>
+<p>斷點 mixin 之外，桌機區間的「等比縮放」用 <a href="../assets/styles/_variables.scss"><code>_variables.scss</code></a> 的 <strong><code>fluid()</code></strong> 函式：以 <strong>1920 設計稿</strong>為基準，字級／版面寬高／間距／定位等隨視窗等比，全程 CSS <code>calc</code>（不寫死算完的數值）。</p>
+<pre data-lang="SCSS"><code class="language-scss">@function fluid($target, $min: 1024, $max: 2560) {
+  @return clamp(
+    calc(#{$target} / 1920 * 1024 * 1px),   // 下限＝1024 時的值
+    calc(#{$target} / 19.2 * 1vw),          // 中段＝隨視窗等比；1920 時 = $target
+    calc(#{$target} / 1920 * 2560 * 1px)    // 上限＝2560 時的值
+  );
+}
+// 用法
+font-size: fluid(56);
+--container: fluid(1600);
+</code></pre>
+<ul>
+<li><strong>1920 時 = 設計值</strong>（與舊設定一致）；<strong>1024–1920</strong>、<strong>1920–2560</strong> 都等比；≤1024 維持 1024 值（交給手機版型）、≥2560 鎖住。</li>
+<li>目標：<strong>2560 與 1920 同比例、位置零落差</strong>。哪些 px 要 <code>fluid()</code>、哪些維持固定（1–2px 細邊、小 UI 字 &lt;20px、<code>box-shadow</code>、<code>@media</code> 區塊、<code>/admin</code> 後台…）詳見 <a href="development-conventions.html#36-%E5%AD%97%E7%B4%9A%E5%B0%BA%E5%AF%B8%E6%B5%81%E9%AB%94-rwd-%E8%A6%8F%E7%AF%84">製作規範 §3.6</a>。</li>
+</ul>
 <h3 id="96-路由中介層middleware">9.6 路由中介層（middleware）</h3>
 <p><code>middleware/</code> 放路由中介層 —— 進入頁面前執行的攔截 / 守衛邏輯（登入驗證、轉址、權限檢查等）。</p>
 <ul>
@@ -1279,6 +1305,20 @@ const current =
 </blockquote>
 <h3 id="114-新增版型">11.4 新增版型</h3>
 <p>在 <code>headers/</code> 放一個 <code>.vue</code>（檔名自取）即可，再把 <code>NUXT_PUBLIC_HEADER</code> 設成該檔名；<code>AppHeader.vue</code> 不需修改。各版型<strong>共用同一套資料 composable</strong>（<code>useSiteMenu</code> / <code>useProject</code> / <code>useUiStore</code>），只有版面與樣式不同 —— 資料層不重複撰寫。</p>
+<h3 id="115-後台-header-設定adminheader全版型共用">11.5 後台 Header 設定（<code>/admin/header</code>，全版型共用）</h3>
+<p><code>/admin/header</code> 可視覺化調整以下項目，值存 <code>data/site-settings.json</code>，由 <a href="../app.vue"><code>app.vue</code></a> 依設定<strong>注入 <code>&lt;style&gt;</code> 的 <code>!important</code> 規則</strong>（不寫行內 <code>:style</code>），<strong>全版型通用</strong>（targeting <code>.app-header header</code> / <code>.app-header nav …</code>）：</p>
+<ul>
+<li><strong>Header 背景色</strong>：版型預設 / 透明 / 指定色。</li>
+<li><strong>選單顏色（6 色）</strong>：主選單文字 / 滑過、下拉文字 / 滑過、下拉背景 / 下拉單項背景。<ul>
+<li>下拉用更深的選擇器（<code>nav [class*=&quot;__sub&quot;] a</code>）→ <strong>與主選單文字分開</strong>：設了就覆寫、留空沿用主選單／版型預設。</li>
+<li>每色可「回到預設」，另有「全部回到預設」。</li>
+</ul>
+</li>
+<li>LOGO 上傳 + 最大高度、自訂 CSS（注入 <code>&lt;head&gt;</code>）、語系顯示文字、navtool 6 icon 配置（per-Header）。</li>
+</ul>
+<blockquote>
+<p>設定鍵見 <code>useEffectiveSettings</code>（state）、<code>site-settings.get/post</code>（白名單）、<code>useSiteSettings</code>（submit）。新增一個可調色＝這四處＋ <code>app.vue</code> 注入各加一筆。</p>
+</blockquote>
 <hr>
 <h2 id="12-banner-版型切換">12. Banner 版型切換</h2>
 <p>Banner 支援多版型（首頁輪播、內頁 hero），透過設定切換，不需改動頁面程式碼。機制與 <a href="#11-header-%E7%89%88%E5%9E%8B%E5%88%87%E6%8F%9B">§11 Header 版型切換</a> 一致。</p>
@@ -1309,7 +1349,7 @@ const current =
 <tr>
 <td><code>&lt;BlockBanner&gt;</code></td>
 <td>首頁輪播 block</td>
-<td>由 <a href="../components/BlockRenderer.vue"><code>BlockRenderer.vue</code></a> 在首頁派發</td>
+<td>由 <a href="../components/BlockRenderer.js"><code>BlockRenderer.js</code></a> 在首頁派發</td>
 </tr>
 </tbody></table></div>
 <h3 id="122-設定與切換">12.2 設定與切換</h3>
@@ -1336,6 +1376,9 @@ const current =
 &lt;/template&gt;
 </code></pre>
 <blockquote class="callout callout--important"><p><strong><code>defineOptions({ inheritAttrs: false })</code> + <code>v-bind=&quot;$attrs&quot;</code></strong> 是關鍵 —— 讓所有 props（如 <code>page</code>、<code>title</code>、<code>subtitle</code>、<code>rows</code>）自動透傳給子版型。新增版型時派發器無需修改，只要子版型 <code>defineProps</code> 宣告對應參數即可接到值。</p>
+</blockquote>
+<blockquote>
+<p>💡 <strong><code>BlockBanner</code> 例外：派發器自己取資料</strong>。首頁 banner 內容走獨立 Banner API，<code>BlockBanner.vue</code> 在派發器內 <code>await useApiData(&#39;/banner/home&#39;)</code> 取整包（<code>rows</code> + 背景影片 <code>videoUrl</code>/<code>videoFile</code> + 跑馬燈 <code>news</code>）再傳給選定版型，不依賴 <code>/home/view</code> 聚合內嵌（見 <a href="#81-%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B">§8.1</a>）。</p>
 </blockquote>
 <h3 id="124-新增版型">12.4 新增版型</h3>
 <p>在 <code>banners/</code> 放一個 <code>&lt;PageBanner|BlockBanner&gt;XX.vue</code>（XX 自取），檔名前綴須為 <code>PageBanner</code> 或 <code>BlockBanner</code>，再把對應的 <code>.env</code> 變數設成該檔名即可。各版型<strong>共用同一份 API 來源</strong>（<code>/banner/page</code>、<code>/banner/home</code>），只有版面與動畫不同 —— 資料層不重複撰寫。</p>
@@ -1366,6 +1409,15 @@ const bg = computed(() =&gt; banners.value?.[0]?.image?.pc || &#39;&#39;)
   &lt;/section&gt;
 &lt;/template&gt;
 </code></pre>
+<h3 id="125-後台編輯adminbannerdev-mode">12.5 後台編輯（<code>/admin/banner</code>，dev mode）</h3>
+<p>首頁輪播（BlockBanner01）內容可在 <code>/admin/banner</code> 視覺化編輯，送出寫回 <code>banners.json</code>（即 <code>/banner/home</code>）：</p>
+<ul>
+<li><strong>多則 slide</strong>：新增 / 刪除 / 排序；標題（第一則 <code>&lt;h1&gt;</code>、其餘 <code>&lt;h2&gt;</code>）/ 副標 / 說明文，可換行、可 <strong>AI 生成</strong>文案。</li>
+<li><strong>背景圖上傳</strong>：選圖跳出<strong>互動裁切器</strong>（拖曳 / 縮放、比例固定），輸出固定 <strong>2560 × 按比例高</strong>，存到 <code>public/img/tw/banner/</code>。</li>
+<li><strong>圖片 <code>alt</code>（SEO）</strong>：可手填，或 <strong>AI 辨識</strong>（Gemini Vision 看圖產生繁中替代文字）；前台空值會 fallback 用標題。</li>
+<li><strong>背景影片</strong>：填 <strong>YouTube 連結</strong>；YT 留空時改<strong>上傳影片檔</strong>（HTML5、靜音循環、<code>playsinline</code>，<strong>含 iOS 自動播放</strong>），存 <code>public/video/banner/</code>。</li>
+<li>AI 功能需 <code>.env.local</code> 的 <code>NUXT_GEMINI_KEY</code>；端點 <code>/_admin/*</code> 由 <code>assertDev</code> 守門，<code>NODE_ENV=production</code> 直接 404。</li>
+</ul>
 <p><code>.env</code> 改 <code>NUXT_PUBLIC_PAGE_BANNER=PageBanner02</code> 並重啟 dev server，全站內頁 banner 立即套新版型。</p>
 <h4 id="1241-用-swiper-做輪播版型">12.4.1 用 Swiper 做輪播版型</h4>
 <p>複雜輪播（fade / slide / 雙 swiper 同步 / 含 YouTube 影片背景等）請看：</p>

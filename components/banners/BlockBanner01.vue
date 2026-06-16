@@ -2,7 +2,10 @@
 // 首頁 Banner block — 版型 01（複合型：主圖 + 文字 cover 同步 + YouTube 背景 + 新聞跑馬燈）
 //
 // rows 結構（每筆）：
-//   { image: { pc, mb }, link, title, memo }
+//   { image: { pc, mb }, title, subtitle, memo, btnText, link }
+//     title=標題、subtitle=副標、memo=說明文（HTML）、btnText=按鈕文字（預設 VIEW MORE）、link=按鈕連結
+//     文字顏色一律由 SCSS 控制（見 .cover_txt）；禁用行內 :style（會破壞 RWD）
+//     文字欄位（title/subtitle/memo/link）全部為空 → 整個 cover 文字框不出現
 // props.videoUrl：YouTube 連結（桌面背景影片，可選）
 // props.news：新聞陣列 [{ title, summary, date, url }]（可選）
 import { Swiper, SwiperSlide } from 'swiper/vue'
@@ -16,6 +19,7 @@ const props = defineProps({
   title: { type: String, default: '' },
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
+  videoFile: { type: String, default: '' }, // YT 連結為空時，改播此上傳影片（HTML5）
   news: { type: Array, default: () => [] },
 })
 
@@ -47,18 +51,44 @@ const videoEmbedUrl = computed(() => {
   return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0&playsinline=1`
 })
 
-// ── 影片開關：桌面預設開、手機關（< 1024 不顯示影片）
+// ── 背景影片來源優先序：YouTube 連結 > 上傳影片檔（HTML5）
+const useFileVideo = computed(() => !videoEmbedUrl.value && !!props.videoFile)
+const hasVideo = computed(() => !!videoEmbedUrl.value || useFileVideo.value)
+
+// 影片開關（使用者可關閉）；YT 僅桌面播放，上傳影片檔含手機/iOS 自動播放
 const videoOn = ref(true)
 const isMobile = ref(false)
 let mq = null
 const updateBreakpoint = () => {
   isMobile.value = mq.matches
-  if (isMobile.value) videoOn.value = false
 }
+
+// 實際是否顯示影片：YT → 桌面才播；HTML5 檔 → 任何裝置（muted+playsinline，iOS 也自動播）
+const videoActive = computed(() => {
+  if (!videoOn.value) return false
+  if (videoEmbedUrl.value) return !isMobile.value
+  return useFileVideo.value
+})
+
+// HTML5 <video>：除了 muted 屬性，再以 property 設 muted 並主動 play（iOS 自動播放必要條件）
+const videoEl = ref(null)
+const tryPlayFile = () => {
+  const el = videoEl.value
+  if (!el) return
+  el.muted = true
+  el.defaultMuted = true
+  const p = el.play?.()
+  if (p && typeof p.catch === 'function') p.catch(() => {})
+}
+watch([videoActive, () => props.videoFile], () => {
+  if (videoActive.value && useFileVideo.value) nextTick(tryPlayFile)
+})
+
 onMounted(() => {
   mq = window.matchMedia('(max-width: 1024px)')
   updateBreakpoint()
   mq.addEventListener('change', updateBreakpoint)
+  if (videoActive.value && useFileVideo.value) nextTick(tryPlayFile)
 })
 onBeforeUnmount(() => {
   if (mq) mq.removeEventListener('change', updateBreakpoint)
@@ -71,6 +101,9 @@ const scrollDown = () => {
   if ($lenis) $lenis.scrollTo(target, { duration: 1.2 })
   else window.scrollTo({ top: target, behavior: 'smooth' })
 }
+
+// cover 文字框：title / subtitle / memo / link 全空則整個不渲染
+const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
 </script>
 
 <template>
@@ -94,19 +127,32 @@ const scrollDown = () => {
         <SwiperSlide v-for="(row, i) in rows" :key="i">
           <picture>
             <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-            <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
         </SwiperSlide>
       </Swiper>
 
-      <!-- YouTube 背景影片（桌面才掛 iframe，避免手機載入） -->
-      <div v-if="videoEmbedUrl" class="video_banner" :class="{ show: videoOn && !isMobile }">
+      <!-- 背景影片：YouTube（桌面）優先；YT 連結為空時改播上傳影片檔（HTML5，含 iOS 自動播放） -->
+      <div v-if="hasVideo" class="video_banner" :class="{ show: videoActive }">
         <iframe
-          v-if="videoOn && !isMobile"
+          v-if="videoEmbedUrl && videoActive"
           :src="videoEmbedUrl"
           frameborder="0"
           allow="autoplay; encrypted-media"
           allowfullscreen
+        />
+        <video
+          v-else-if="useFileVideo && videoActive"
+          ref="videoEl"
+          class="video_el"
+          :src="videoFile"
+          autoplay
+          muted
+          loop
+          playsinline
+          webkit-playsinline
+          preload="auto"
+          disablepictureinpicture
         />
       </div>
 
@@ -123,18 +169,25 @@ const scrollDown = () => {
         @swiper="onCoverReady"
       >
         <SwiperSlide v-for="(row, i) in rows" :key="i">
-          <div class="cover_txt">
-            <p v-if="row.title" class="cover_title">{{ row.title }}</p>
+          <div v-if="hasCover(row)" class="cover_txt">
+            <!-- 第一則：主標 h1（全頁唯一）、副標 h2；第二則起主標 h2、副標 h2；說明文維持 p -->
+            <component
+              :is="i === 0 ? 'h1' : 'h2'"
+              v-if="row.title"
+              class="cover_title"
+              v-html="row.title"
+            />
+            <h2 v-if="row.subtitle" class="cover_subtitle" v-html="row.subtitle" />
             <p v-if="row.memo" v-html="row.memo" />
-            <NuxtLink v-if="row.link" :to="row.link" class="cover_btn">
-              <span>VIEW MORE</span>
+            <NuxtLink v-if="row.link" :to="row.link" class="cover_btn" :title="row.title || row.btnText || 'VIEW MORE'">
+              <span>{{ row.btnText || 'VIEW MORE' }}</span>
             </NuxtLink>
           </div>
         </SwiperSlide>
       </Swiper>
 
       <!-- 影片開關（桌面才出現） -->
-      <div v-if="videoEmbedUrl && !isMobile" class="video_control">
+      <div v-if="hasVideo && !isMobile" class="video_control">
         <button v-if="videoOn" class="stop" aria-label="關閉影片" @click="videoOn = false">×</button>
         <button v-else class="play" aria-label="播放影片" @click="videoOn = true">
           <svg viewBox="0 0 8.23 10.96" width="14" height="18" aria-hidden="true">
@@ -170,7 +223,7 @@ const scrollDown = () => {
           <p class="news_date">{{ $t('nav.news') }}<span>{{ item.date }}</span></p>
           <p class="news_title">{{ item.title }}</p>
           <p class="news_desc">{{ item.summary }}</p>
-          <NuxtLink v-if="item.url" :to="item.url" class="cover_btn small">
+          <NuxtLink v-if="item.url" :to="item.url" class="cover_btn small" :title="item.title || 'VIEW MORE'">
             <span>VIEW MORE</span>
           </NuxtLink>
         </SwiperSlide>
@@ -273,6 +326,16 @@ const scrollDown = () => {
   border: 0;
   pointer-events: none;
 }
+// 上傳影片檔（HTML5）：直接 object-fit cover 填滿
+.video_banner video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+  pointer-events: none;
+}
 
 .index_banner_cover {
   position: absolute;
@@ -292,9 +355,9 @@ const scrollDown = () => {
   top: 50%;
   left: 8.333vw;
   transform: translateY(-50%);
-  color: #fff;
+  color: $web_color_3; // 文字色統一走 SCSS 變數（禁行內 :style）
   pointer-events: auto;
-  max-width: 540px;
+  max-width: fluid(540);
 
   @include rwd-768 {
     top: 47%;
@@ -305,7 +368,9 @@ const scrollDown = () => {
   }
 }
 
-.cover_txt p {
+// 進場初始狀態：cover 內的標題(h1/h2)、說明文(p) 皆隱藏（按鈕另有規則）
+.cover_txt > :is(h1, h2, h3, p) {
+  color: inherit; // 蓋掉全站 h1~h4 標題色，改吃 .cover_txt 的白字
   opacity: 0;
   transform: translate(-20px, 0);
   transition: opacity 0.3s ease, transform 0.3s ease;
@@ -316,21 +381,27 @@ const scrollDown = () => {
 }
 
 .cover_title {
-  font-size: clamp(24px, 4vw, 56px);
+  font-size: clamp(24px, calc(56 / 19.2 * 1vw), calc(56 / 1920 * 2560 * 1px));
   font-weight: 900;
-  margin-bottom: 18px;
+  margin: 0 0 fluid(18); // 改用 h1/h2 後清掉瀏覽器預設 margin
+}
+
+.cover_subtitle {
+  font-size: clamp(16px, calc(24 / 19.2 * 1vw), calc(24 / 1920 * 2560 * 1px));
+  font-weight: 500;
+  margin: 0 0 fluid(12);
 }
 
 .cover_btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid #fff;
   color: #fff;
   font-size: 14px;
   letter-spacing: 2px;
-  margin-top: 24px;
+  margin-top: fluid(24);
   opacity: 0;
   transform: translate(-20px, 0);
   transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease, color 0.3s ease;
@@ -346,14 +417,14 @@ const scrollDown = () => {
 }
 
 // 進場動畫：active slide 內各元素依序淡入
-.index_banner_cover .swiper-slide-active .cover_txt p,
+.index_banner_cover .swiper-slide-active .cover_txt > :is(h1, h2, h3, p),
 .index_banner_cover .swiper-slide-active .cover_txt .cover_btn {
   opacity: 1;
   transform: translate(0, 0);
 }
-.index_banner_cover .swiper-slide-active .cover_txt p:nth-child(1)  { transition-delay: 0.5s; }
-.index_banner_cover .swiper-slide-active .cover_txt p:nth-child(2)  { transition-delay: 0.7s; }
-.index_banner_cover .swiper-slide-active .cover_txt p:nth-child(3)  { transition-delay: 0.9s; }
+.index_banner_cover .swiper-slide-active .cover_txt > *:nth-child(1) { transition-delay: 0.5s; }
+.index_banner_cover .swiper-slide-active .cover_txt > *:nth-child(2) { transition-delay: 0.7s; }
+.index_banner_cover .swiper-slide-active .cover_txt > *:nth-child(3) { transition-delay: 0.9s; }
 .index_banner_cover .swiper-slide-active .cover_txt .cover_btn      { transition-delay: 1.1s; }
 
 .video_control {
@@ -367,19 +438,19 @@ const scrollDown = () => {
 // 向下捲動指示（fullscreen banner 必備 — 告訴使用者下面還有內容）
 .scroll_hint {
   position: absolute;
-  bottom: 40px;
+  bottom: fluid(40);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: fluid(12);
   background: none;
   border: none;
   cursor: pointer;
   color: #fff;
   z-index: 3;
-  padding: 8px 16px;
+  padding: fluid(8) fluid(16);
 
   @include rwd-768 {
     bottom: 20px;
@@ -397,7 +468,7 @@ const scrollDown = () => {
 .scroll_hint_line {
   display: block;
   width: 1px;
-  height: 50px;
+  height: fluid(50);
   background: rgba(255, 255, 255, 0.25);
   position: relative;
   overflow: hidden;
@@ -419,8 +490,8 @@ const scrollDown = () => {
   100% { top: 100%; }
 }
 .video_control button {
-  width: 50px;
-  height: 50px;
+  width: fluid(50);
+  height: fluid(50);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -441,8 +512,8 @@ const scrollDown = () => {
   bottom: 0;
   right: 0;
   width: 100%;
-  max-width: 790px;
-  padding: 35px 3.6vw 45px;
+  max-width: fluid(790);
+  padding: fluid(35) 3.6vw fluid(45);
   background: #fff;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
   z-index: 2;
@@ -471,7 +542,7 @@ const scrollDown = () => {
 }
 .news_date span {
   font-weight: 500;
-  padding-left: 15px;
+  padding-left: fluid(15);
 }
 
 .news_title {
@@ -479,7 +550,7 @@ const scrollDown = () => {
   font-size: 18px;
   font-weight: 700;
   line-height: 1.5;
-  margin-top: 5px;
+  margin-top: fluid(5);
   display: -webkit-box;
   -webkit-line-clamp: 1;
   line-clamp: 1;
@@ -489,7 +560,7 @@ const scrollDown = () => {
 
 .news_desc {
   line-height: 1.5;
-  margin-top: 8px;
+  margin-top: fluid(8);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -498,8 +569,8 @@ const scrollDown = () => {
 }
 
 .cover_btn.small {
-  margin-top: 24px;
-  padding: 8px 20px;
+  margin-top: fluid(24);
+  padding: fluid(8) fluid(20);
   border-color: var(--color-heading);
   color: var(--color-heading);
 
@@ -512,9 +583,9 @@ const scrollDown = () => {
 .news_prev,
 .news_next {
   position: absolute;
-  bottom: 16px;
-  width: 28px;
-  height: 28px;
+  bottom: fluid(16);
+  width: fluid(28);
+  height: fluid(28);
   background: none;
   border: none;
   cursor: pointer;
@@ -524,15 +595,15 @@ const scrollDown = () => {
 
   &:hover { color: var(--color-primary); }
 }
-.news_prev { right: 40px; }
-.news_next { right: 4px; }
+.news_prev { right: fluid(40); }
+.news_next { right: fluid(4); }
 .news_next::before {
   content: '';
   position: absolute;
   top: 50%;
-  left: -10px;
+  left: fluid(-10);
   width: 1px;
-  height: 11px;
+  height: fluid(11);
   background: #dededf;
   transform: translateY(-50%);
 }

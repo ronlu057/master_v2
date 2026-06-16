@@ -231,7 +231,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0 30px;
+  gap: 0 fluid(30);
   position: fixed;
   width: 100%;
   top: 0;
@@ -263,7 +263,7 @@ onBeforeUnmount(() => {
 
 .navbar {
   display: flex;
-  gap: 0 30px;
+  gap: 0 fluid(30);
 
   @media (min-width: 1201px) { width: 100%; }
 }
@@ -285,7 +285,7 @@ onBeforeUnmount(() => {
       display: block;
       color: $web_font_color;
       font-size: 16px;
-      padding: 23px 25px;
+      padding: fluid(23) fluid(25);
       transition: all 0.3s;
 
       @include rwd-1440 { padding: 23px 15px; }
@@ -302,8 +302,8 @@ onBeforeUnmount(() => {
       top: 100%;
       left: 50%;
       width: max-content;
-      min-width: 142px;
-      padding: 6px;
+      min-width: fluid(142);
+      padding: fluid(6);
       background: var(--color-bg);
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
@@ -319,8 +319,8 @@ onBeforeUnmount(() => {
         color: $web_font_color;
         font-size: 14px;
         text-align: center;
-        padding: 8px 12px;
-        border-radius: 6px;
+        padding: fluid(8) fluid(12);
+        border-radius: fluid(6);
         transition: all 0.3s;
 
         &:hover,
@@ -342,7 +342,7 @@ onBeforeUnmount(() => {
 
 .navtool {
   display: flex;
-  gap: 0 30px;
+  gap: 0 fluid(30);
 
   @include rwd-1440 { gap: 0 20px; }
   @include rwd-1200 { gap: 0 30px; }
@@ -355,7 +355,7 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     position: relative;
-    height: 70px;
+    height: fluid(70);
     background: none;
     border: none;
     cursor: pointer;
@@ -377,7 +377,7 @@ onBeforeUnmount(() => {
       top: 100%;
       right: 0;
       width: fit-content;
-      padding: 15px;
+      padding: fluid(15);
       background: #fff;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
       opacity: 0;
@@ -385,17 +385,17 @@ onBeforeUnmount(() => {
       transition: all 0.3s;
 
       input {
-        padding: 6px 10px;
+        padding: fluid(6) fluid(10);
         border: 1px solid var(--color-border);
         color: $web_font_color;
         font-size: 14px;
-        width: 200px;
+        width: fluid(200);
       }
 
       button {
         background: none;
         border: none;
-        margin-left: 13px;
+        margin-left: fluid(13);
         cursor: pointer;
 
         color: $web_font_color;
@@ -415,7 +415,7 @@ onBeforeUnmount(() => {
       width: max-content;
       list-style: none;
       margin: 0;
-      padding: 6px;
+      padding: fluid(6);
       background: var(--color-bg);
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
@@ -432,8 +432,8 @@ onBeforeUnmount(() => {
           color: $web_font_color;
           font-size: 14px;
           text-align: center;
-          padding: 8px 12px;
-          border-radius: 6px;
+          padding: fluid(8) fluid(12);
+          border-radius: fluid(6);
           transition: all 0.3s;
 
           &:hover,
@@ -465,9 +465,9 @@ onBeforeUnmount(() => {
   .cart_btn {
     p {
       position: absolute;
-      top: 17px;
-      right: 9px;
-      width: 16px;
+      top: fluid(17);
+      right: fluid(9);
+      width: fluid(16);
       line-height: 16px;
       color: #fff;
       font-size: 14px;
@@ -490,13 +490,13 @@ onBeforeUnmount(() => {
     .bars {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      width: 30px;
-      height: 30px;
+      gap: fluid(6);
+      width: fluid(30);
+      height: fluid(30);
 
       .bar {
-        width: 6px;
-        height: 6px;
+        width: fluid(6);
+        height: fluid(6);
         transition: background 0.4s ease;
 
         &:nth-child(odd) { background: $web_font_color; }
@@ -523,11 +523,11 @@ onBeforeUnmount(() => {
 .mbPanel16_sp {
   display: flex;
   position: fixed;
-  top: 70px;
+  top: fluid(70);
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 70px 0;
+  padding: fluid(70) 0;
   background: #fff;
   background-position: left bottom;
   background-size: calc(562 / 19.2 * 1vw) calc(406 / 19.2 * 1vw);
@@ -539,7 +539,7 @@ onBeforeUnmount(() => {
 
   .wider_container {
     width: 100%;
-    max-width: 1600px;
+    max-width: fluid(1600);
     margin: 0 auto;
     padding: 0 calc(80 / 19.2 * 1vw);
   }
@@ -567,7 +567,7 @@ onBeforeUnmount(() => {
     gap: calc(50 / 19.2 * 1vw) calc(130 / 19.2 * 1vw);
     width: calc(1000 / 1600 * 100%);
     max-height: calc(100vh - 210px);
-    padding-right: 22px;
+    padding-right: fluid(22);
     overflow-y: auto;
 
     &::-webkit-scrollbar { width: 2px; }
@@ -582,7 +582,7 @@ onBeforeUnmount(() => {
         display: block;
         position: relative;
         color: $web_font_color;
-        font-size: 24px;
+        font-size: fluid(24);
         font-weight: 500;
         transition: all 0.3s;
 
@@ -590,9 +590,9 @@ onBeforeUnmount(() => {
           content: '';
           display: block;
           width: 100%;
-          height: 7px;
-          padding: 3px 0;
-          margin-bottom: 7px;
+          height: fluid(7);
+          padding: fluid(3) 0;
+          margin-bottom: fluid(7);
           background-image: linear-gradient(to right, #e8e8e6, #e8e8e6);
           background-size: 100% 1px;
           background-position: left center;
@@ -605,10 +605,10 @@ onBeforeUnmount(() => {
           position: absolute;
           top: 0;
           left: 0;
-          width: 6px;
-          height: 6px;
+          width: fluid(6);
+          height: fluid(6);
           background: $web_header_1;
-          border-radius: 20px;
+          border-radius: fluid(20);
           transition: width 0.5s ease-in-out;
         }
 
@@ -623,8 +623,8 @@ onBeforeUnmount(() => {
       > ul {
         display: flex;
         flex-wrap: wrap;
-        gap: 11px 19px;
-        margin-top: 21px;
+        gap: fluid(11) fluid(19);
+        margin-top: fluid(21);
         list-style: none;
         padding: 0;
 
@@ -636,7 +636,7 @@ onBeforeUnmount(() => {
               content: '';
               position: absolute;
               top: 0;
-              right: -10px;
+              right: fluid(-10);
               width: 1px;
               height: 80%;
               background: #acacac;

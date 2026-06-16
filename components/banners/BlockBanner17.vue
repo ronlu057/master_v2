@@ -52,14 +52,14 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 721px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
         <div class="cover">
-          <p v-if="row.title" v-html="toHtml(row.title)" />
-          <p v-if="row.title2" v-html="toHtml(row.title2)" />
+          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
+          <h2 v-if="row.title2" v-html="toHtml(row.title2)" />
 
-          <NuxtLink v-if="row.link" class="cover_btn center" :to="row.link">
+          <NuxtLink v-if="row.link" class="cover_btn center" :to="row.link" :title="row.title || 'VIEW MORE'">
             <span>VIEW MORE</span>
           </NuxtLink>
         </div>
@@ -109,7 +109,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       width: max-content;
       max-width: 100%;
       text-align: center;
-      padding: 0 25px;
+      padding: 0 fluid(25);
       transform: translate(-50%, 0%);
 
       @media (max-width: 1024px) {
@@ -122,7 +122,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       }
 
       // 第一行：中文標題（bannerTitleSize_cht(1)）
-      p:nth-child(1) {
+      > :nth-child(1) {
         color: #fff;
         font-weight: 500;
         font-family: $title_font_cht;
@@ -130,13 +130,13 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         opacity: 0;
         transform: translateX(-40px);
         transition: all 0.3s, opacity 1s, transform 1s;
-        font-size: clamp(32px, calc(50 / 19.2 * 1vw), 50px);
+        font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
 
         @media (min-width: 1201px) { letter-spacing: 2px; }
       }
 
       // 第二行：英文標題（bannerTitleSize_en(1)）
-      p:nth-child(2) {
+      > :nth-child(2) {
         color: #fff;
         font-weight: 700;
         font-family: $title_font_en;
@@ -144,7 +144,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         opacity: 0;
         transform: translateX(40px);
         transition: all 0.3s, opacity 1s, transform 1s;
-        font-size: clamp(38px, calc(50 / 19.2 * 1vw), 50px);
+        font-size: clamp(38px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
       }
 
       // VIEW MORE 按鈕（btnMarginTop(1)）
@@ -152,7 +152,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         opacity: 0;
         transform: translateY(40px);
         transition: all 0.3s, opacity 1s, transform 1s;
-        margin-top: 55px;
+        margin-top: fluid(55);
 
         @media (max-width: 1200px) { margin-top: 35px; }
       }
@@ -165,8 +165,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       }
 
       .cover {
-        p:nth-child(1),
-        p:nth-child(2) {
+        > :nth-child(1),
+        > :nth-child(2) {
           opacity: 1;
           transform: translateX(0);
           transition: all 0.3s, opacity 1s 1s, transform 1s 1s;
@@ -200,7 +200,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
   font-size: 14px;
@@ -223,8 +223,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: rgba(255, 255, 255, 0.85);
   border: none;
   border-radius: 50%;
@@ -249,11 +249,11 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   &:hover { background: #fff; color: $web_color_1; }
 }
 .banner17_prev {
-  left: 20px;
+  left: fluid(20);
   &::before { transform: rotate(-135deg); margin-left: 3px; }
 }
 .banner17_next {
-  right: 20px;
+  right: fluid(20);
   &::before { transform: rotate(45deg); margin-right: 3px; }
 }
 </style>

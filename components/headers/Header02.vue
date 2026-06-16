@@ -264,7 +264,7 @@ body[data-page="index"] {
   top: 0;
   left: 0;
   right: 0;
-  height: 70px;
+  height: fluid(70);
   padding: 0 4.1667vw;
   background: #fff;
   z-index: $z_header;
@@ -296,7 +296,7 @@ body[data-page="index"] {
       .navmenu {
         display: flex;
         list-style: none;
-        margin: 0 25px 0 0;
+        margin: 0 fluid(25) 0 0;
         padding: 0;
         transition: all 0.3s;
 
@@ -318,7 +318,7 @@ body[data-page="index"] {
             color: $web_font_color;
             font-size: 16px;
             line-height: 1.5;
-            padding: 23px 25px;
+            padding: fluid(23) fluid(25);
             transition: all 0.3s;
 
             @include rwd-1680 { padding: 23px 20px; }
@@ -342,8 +342,8 @@ body[data-page="index"] {
             position: absolute;
             top: 100%;
             left: 50%;
-            min-width: 160px;
-            padding: 6px;
+            min-width: fluid(160);
+            padding: fluid(6);
             background: #fff;
             border: 1px solid var(--color-border);
             border-radius: var(--radius);
@@ -358,8 +358,8 @@ body[data-page="index"] {
               display: block;
               color: $web_font_color;
               font-size: 14px;
-              padding: 8px 12px;
-              border-radius: 6px;
+              padding: fluid(8) fluid(12);
+              border-radius: fluid(6);
               transition: all 0.3s;
 
               &:hover,
@@ -382,9 +382,9 @@ body[data-page="index"] {
       .navtool {
         display: flex;
         align-items: center;
-        gap: 26px;
+        gap: fluid(26);
         font-size: 18px;
-        margin-right: 25px;
+        margin-right: fluid(25);
 
         @include rwd-1200 { display: none; }
 
@@ -407,7 +407,7 @@ body[data-page="index"] {
             position: absolute;
             top: 100%;
             right: 0;
-            padding: 10px;
+            padding: fluid(10);
             background: #fff;
             border: 1px solid var(--color-border);
             border-radius: var(--radius);
@@ -417,14 +417,14 @@ body[data-page="index"] {
             transform: translateY(8px);
             transition: all var(--transition);
             z-index: 60;
-            margin-top: 26px;
+            margin-top: fluid(26);
           }
           .search_box { min-width: 280px; }
           .lang_box {
-            min-width: 140px;
+            min-width: fluid(140);
             display: flex;
             flex-direction: column;
-            padding: 6px;
+            padding: fluid(6);
           }
 
           &:hover .search_box,
@@ -440,11 +440,11 @@ body[data-page="index"] {
           .lang_item {
             background: none;
             border: none;
-            padding: 8px 12px;
+            padding: fluid(8) fluid(12);
             font-size: 14px;
             text-align: left;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: fluid(6);
             color: inherit;
 
             &:hover {
@@ -462,11 +462,11 @@ body[data-page="index"] {
         .search_form {
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: fluid(6);
 
           input {
             flex: 1;
-            padding: 8px 12px;
+            padding: fluid(8) fluid(12);
             border: 1px solid var(--color-border);
             border-radius: var(--radius);
             font-size: 14px;
@@ -476,7 +476,7 @@ body[data-page="index"] {
             background: none;
             border: none;
             cursor: pointer;
-            padding: 4px;
+            padding: fluid(4);
             display: flex;
             color: $web_font_color;
             transition: color 0.3s;
@@ -493,12 +493,12 @@ body[data-page="index"] {
 
           .quantity_item {
             position: absolute;
-            top: -6px;
-            right: -10px;
-            min-width: 18px;
-            height: 18px;
-            padding: 0 4px;
-            border-radius: 99px;
+            top: fluid(-6);
+            right: fluid(-10);
+            min-width: fluid(18);
+            height: fluid(18);
+            padding: 0 fluid(4);
+            border-radius: fluid(99);
             background: $web_header_1;
             color: #fff;
             font-size: 11px;
@@ -515,7 +515,7 @@ body[data-page="index"] {
   }
 
   .mbPanel_btn {
-    padding: 20px 13px;
+    padding: fluid(20) fluid(13);
     background: $web_header_1;
     border: none;
     border-radius: 50%;
@@ -526,7 +526,7 @@ body[data-page="index"] {
 
     .bars {
       position: relative;
-      width: 15px;
+      width: fluid(15);
       height: 1px;
 
       .bar {
@@ -536,10 +536,10 @@ body[data-page="index"] {
         width: 100%;
         height: 100%;
         background: #fff;
-        border-radius: 10px;
+        border-radius: fluid(10);
 
         &.bar1 {
-          top: -5px;
+          top: fluid(-5);
           transform: rotate(0deg);
           transition: all 0.3s, top 0.3s 0.5s, transform 0.3s;
         }
@@ -548,7 +548,7 @@ body[data-page="index"] {
           transition: all 0.3s, opacity 0s 0.3s;
         }
         &.bar3 {
-          top: 5px;
+          top: fluid(5);
           transform: rotate(0deg);
           transition: all 0.3s, top 0.3s 0.5s, transform 0.3s;
         }
@@ -580,30 +580,30 @@ body[data-page="index"] {
 // 行動版下拉選單
 .mb_panel {
   position: fixed;
-  top: 70px;
+  top: fluid(70);
   left: 0;
   right: 0;
   background: #fff;
   border-top: 1px solid var(--color-border);
-  padding: 8px 20px 16px;
+  padding: fluid(8) fluid(20) fluid(16);
   z-index: $z_mobile_menu;
 }
 
 .mb_navmenu {
   &__link {
     display: block;
-    padding: 12px 4px;
+    padding: fluid(12) fluid(4);
     font-size: 18px;
     font-weight: 600;
     border-bottom: 1px solid var(--color-border);
   }
 
   &__sub {
-    padding: 0 0 0 16px;
+    padding: 0 0 0 fluid(16);
 
     a {
       display: block;
-      padding: 8px 4px;
+      padding: fluid(8) fluid(4);
       font-size: 14px;
     }
   }

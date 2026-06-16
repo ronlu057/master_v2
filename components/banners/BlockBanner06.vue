@@ -70,7 +70,7 @@ const onCoverReady = (s) => {
           <div class="content">
             <picture>
               <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-              <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+              <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
             </picture>
           </div>
         </div>
@@ -95,12 +95,12 @@ const onCoverReady = (s) => {
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <div class="wider_container">
           <ul>
-            <li><p>{{ row.title }}</p></li>
-            <li><p>{{ row.title2 }}</p></li>
-            <li><p v-html="toHtml(row.slogan)" /></li>
+            <li><div>{{ row.title }}</div></li>
+            <li><component :is="i === 0 ? 'h1' : 'h2'">{{ row.title2 }}</component></li>
+            <li><div v-html="toHtml(row.slogan)" /></li>
           </ul>
 
-          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link">
+          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title2 || 'VIEW MORE'">
             <span>VIEW MORE</span>
           </NuxtLink>
         </div>
@@ -120,7 +120,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
 
 .banner06 {
   position: relative;
-  margin-top: 70px;
+  margin-top: fluid(70);
 }
 
 // ── 主圖 swiper（高度扣掉上方 70px header 區） ──────────────
@@ -291,7 +291,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
         transform: translate(0, 40px);
       }
 
-      p {
+      > * {
         display: inline-block;
         position: relative;
         white-space: nowrap;
@@ -328,13 +328,13 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
           transition: opacity 0.5s, transform 0.5s;
         }
 
-        p {
+        > div {
           color: $web_color_1;
           font-weight: 700;
           font-family: $title_font_en;
           text-transform: uppercase;
           text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-          font-size: clamp(19px, calc(23 / 19.2 * 1vw), 23px);
+          font-size: clamp(19px, calc(23 / 19.2 * 1vw), calc(23 / 1920 * 2560 * 1px));
 
           @media (max-width: 640px) {
             color: #fff;
@@ -350,14 +350,14 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
           transition: opacity 0.5s 0.1s, transform 0.5s 0.1s;
         }
 
-        p {
+        > * {
           color: $web_color_1;
           font-weight: 700;
           font-family: $title_font_en;
           line-height: 1.2;
           text-transform: uppercase;
           text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-          font-size: clamp(38px, calc(50 / 19.2 * 1vw), 50px);
+          font-size: clamp(38px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
 
           @media (max-width: 640px) {
             color: #fff;
@@ -373,13 +373,13 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
           transition: opacity 0.5s 0.2s, transform 0.5s 0.2s;
         }
 
-        p {
+        > div {
           color: #000;
           font-weight: 500;
           font-family: $title_font_en;
           text-transform: uppercase;
           text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-          font-size: clamp(14px, calc(15 / 19.2 * 1vw), 15px);
+          font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
 
           @media (max-width: 640px) {
             color: #fff;
@@ -400,12 +400,12 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 12px 32px;
+      padding: fluid(12) fluid(32);
       border: 1px solid $web_color_1;
       color: $web_color_1;
       font-size: 14px;
       letter-spacing: 2px;
-      margin-top: 55px;
+      margin-top: fluid(55);
       opacity: 0;
       transform: translate(-40px, 0);
       transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
@@ -430,7 +430,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
         transform: translate(0, 0);
       }
 
-      p::after {
+      > *::after {
         transform: translateX(101%);
         transition: transform 0.8s $banner06_block;
       }
@@ -438,19 +438,19 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
       &:nth-child(1) {
         transition: width 0.8s $banner06_text 1.7s;
         @media (max-width: 640px) { transition: opacity 1s 1s, transform 1s 1s; }
-        p::after { transition-delay: 2.1s; }
+        > div::after { transition-delay: 2.1s; }
       }
 
       &:nth-child(2) {
         transition: width 0.8s $banner06_text 1.8s;
         @media (max-width: 640px) { transition: opacity 1s 1.1s, transform 1s 1.1s; }
-        p::after { transition-delay: 2.2s; }
+        > *::after { transition-delay: 2.2s; }
       }
 
       &:nth-child(3) {
         transition: width 0.8s $banner06_text 1.9s;
         @media (max-width: 640px) { transition: opacity 1s 1.2s, transform 1s 1.2s; }
-        p::after { transition-delay: 2.3s; }
+        > div::after { transition-delay: 2.3s; }
       }
     }
 
@@ -468,7 +468,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
   // pagination：僅手機顯示（桌面藏起）
   :deep(.swiper-pagination) {
     display: none;
-    bottom: 20px;
+    bottom: fluid(20);
 
     @media (max-width: 640px) {
       display: block;
@@ -484,8 +484,8 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: rgba(255, 255, 255, 0.85);
   border: none;
   border-radius: 50%;
@@ -501,8 +501,8 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
   // 邊框畫 V 形箭頭：置中穩定，不受字型字形影響
   &::before {
     content: '';
-    width: 9px;
-    height: 9px;
+    width: fluid(9);
+    height: fluid(9);
     border-top: 2px solid currentColor;
     border-right: 2px solid currentColor;
   }
@@ -510,11 +510,11 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
   &:hover { background: #fff; color: $web_color_1; }
 }
 .banner06_prev {
-  left: 20px;
-  &::before { transform: rotate(-135deg); margin-left: 3px; }
+  left: fluid(20);
+  &::before { transform: rotate(-135deg); margin-left: fluid(3); }
 }
 .banner06_next {
-  right: 20px;
-  &::before { transform: rotate(45deg); margin-right: 3px; }
+  right: fluid(20);
+  &::before { transform: rotate(45deg); margin-right: fluid(3); }
 }
 </style>

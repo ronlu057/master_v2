@@ -18,6 +18,12 @@ const DEFAULTS = {
   logoMaxHeight: 66,
   customCss: '',
   headerBgColor: '',
+  headerMenuColor: '',
+  headerMenuHoverColor: '',
+  headerDropdownBg: '',
+  headerDropdownItemBg: '',
+  headerDropdownColor: '',
+  headerDropdownHoverColor: '',
   langLabels: {},
   navtool: {},
 }

@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: fluid(20);
   position: fixed;
   width: 100%;
   top: 0;
@@ -268,7 +268,7 @@ onBeforeUnmount(() => {
       color: $web_font_color;
       font-size: 16px;
       line-height: 1.5;
-      padding: 23px 25px;
+      padding: fluid(23) fluid(25);
       transition: all 0.3s;
 
       @include rwd-1440 { padding: 23px 15px; }
@@ -284,8 +284,8 @@ onBeforeUnmount(() => {
       position: absolute;
       top: 100%;
       left: 50%;
-      min-width: 160px;
-      padding: 6px;
+      min-width: fluid(160);
+      padding: fluid(6);
       background: var(--color-bg);
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
@@ -297,9 +297,9 @@ onBeforeUnmount(() => {
 
       a {
         display: block;
-        padding: 8px 12px;
+        padding: fluid(8) fluid(12);
         font-size: 14px;
-        border-radius: 6px;
+        border-radius: fluid(6);
         color: $web_font_color;
         transition: all var(--transition);
 
@@ -330,8 +330,8 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     position: relative;
-    height: 70px;
-    padding: 0 20px;
+    height: fluid(70);
+    padding: 0 fluid(20);
     background: none;
     border: none;
     cursor: pointer;
@@ -356,10 +356,10 @@ onBeforeUnmount(() => {
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 140px;
+    min-width: fluid(140);
     display: flex;
     flex-direction: column;
-    padding: 6px;
+    padding: fluid(6);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
@@ -373,11 +373,11 @@ onBeforeUnmount(() => {
     .lang_item {
       background: none;
       border: none;
-      padding: 8px 12px;
+      padding: fluid(8) fluid(12);
       font-size: 14px;
       text-align: left;
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: fluid(6);
       color: $web_font_color;
       transition: all var(--transition);
 
@@ -402,9 +402,9 @@ onBeforeUnmount(() => {
   .cart_btn {
     p {
       position: absolute;
-      top: 17px;
-      right: 9px;
-      width: 16px;
+      top: fluid(17);
+      right: fluid(9);
+      width: fluid(16);
       line-height: 16px;
       color: #fff;
       font-size: 13px;
@@ -423,8 +423,8 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    width: 70px;
-    height: 70px;
+    width: fluid(70);
+    height: fluid(70);
     padding: 0;
     background: $web_header_1;
 
@@ -434,8 +434,8 @@ onBeforeUnmount(() => {
       display: flex;
       justify-content: space-between;
       flex-direction: column;
-      width: 30px;
-      height: 18px;
+      width: fluid(30);
+      height: fluid(18);
 
       .bar {
         position: relative;
@@ -460,7 +460,7 @@ onBeforeUnmount(() => {
       font-size: 14px;
       font-family: 'Poppins', sans-serif;
       line-height: 1;
-      margin-top: 3px;
+      margin-top: fluid(3);
     }
 
     &.active .bars .bar {
@@ -479,19 +479,19 @@ onBeforeUnmount(() => {
 // 行動版下拉選單
 .header06_panel {
   position: fixed;
-  top: 70px;
+  top: fluid(70);
   left: 0;
   right: 0;
   background: #fff;
   border-top: 1px solid var(--color-border);
-  padding: 8px 20px 16px;
+  padding: fluid(8) fluid(20) fluid(16);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   z-index: $z_mobile_menu;
 }
 
 .mb_navmenu_link {
   display: block;
-  padding: 12px 4px;
+  padding: fluid(12) fluid(4);
   font-size: 18px;
   font-weight: 600;
   color: $web_font_color;
@@ -499,11 +499,11 @@ onBeforeUnmount(() => {
 }
 
 .mb_navmenu_sub {
-  padding: 0 0 0 16px;
+  padding: 0 0 0 fluid(16);
 
   a {
     display: block;
-    padding: 8px 4px;
+    padding: fluid(8) fluid(4);
     font-size: 14px;
     color: $web_font_color;
   }

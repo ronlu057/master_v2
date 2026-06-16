@@ -64,36 +64,36 @@ const year = new Date().getFullYear()
   &__main {
     display: grid;
     grid-template-columns: 1.5fr 1fr 1.4fr;
-    gap: 40px;
-    padding: 56px 20px 32px;
+    gap: fluid(40);
+    padding: fluid(56) fluid(20) fluid(32);
   }
 
   &__name {
-    font-size: 20px;
+    font-size: fluid(20);
     font-weight: 800;
     color: #fff;
   }
 
   &__slogan {
-    margin-top: 6px;
+    margin-top: fluid(6);
     font-size: 14px;
   }
 
   &__title {
     color: #fff;
     font-weight: 700;
-    margin-bottom: 14px;
+    margin-bottom: fluid(14);
   }
 
   &__col ul li {
-    margin-bottom: 8px;
+    margin-bottom: fluid(8);
     font-size: 14px;
   }
 
   &__social {
     display: flex;
-    gap: 16px;
-    margin-top: 16px;
+    gap: fluid(16);
+    margin-top: fluid(16);
     font-size: 14px;
   }
 
@@ -101,15 +101,15 @@ const year = new Date().getFullYear()
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    padding: 18px 20px;
+    gap: fluid(16);
+    padding: fluid(18) fluid(20);
     border-top: 1px solid rgba(255, 255, 255, 0.12);
     font-size: 13px;
   }
 
   &__rules {
     display: flex;
-    gap: 16px;
+    gap: fluid(16);
   }
 }
 

@@ -68,16 +68,16 @@ const onSlideChange = (s) => {
         <div class="slide_media">
           <picture>
             <source media="(min-width: 721px)" :srcset="row.image?.pc" />
-            <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
 
           <div class="cover_txt">
-            <p v-if="row.title">{{ row.title }}</p>
-            <p v-if="row.title2">{{ row.title2 }}</p>
-            <p v-if="row.slogan" v-html="toHtml(row.slogan)" />
+            <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title">{{ row.title }}</component>
+            <div v-if="row.title2">{{ row.title2 }}</div>
+            <div v-if="row.slogan" v-html="toHtml(row.slogan)" />
 
             <div class="button_set">
-              <NuxtLink v-if="row.link" class="cover_btn" :to="row.link">
+              <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">
                 <span>VIEW MORE</span>
               </NuxtLink>
             </div>
@@ -192,7 +192,7 @@ const onSlideChange = (s) => {
     transform: translate(0, 0);
   }
 
-  p {
+  > * {
     color: #000;
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     opacity: 0;
@@ -200,20 +200,20 @@ const onSlideChange = (s) => {
     // 第一行：主標（moduleTitleSize_cht(1)）
     &:nth-child(1) {
       font-weight: 700;
-      margin-bottom: 10px;
-      font-size: clamp(30px, calc(45 / 19.2 * 1vw), 45px);
+      margin-bottom: fluid(10);
+      font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
     }
 
     // 第二行（moduleTitleSize_en(2)）
     &:nth-child(2) {
       font-weight: 700;
-      font-size: clamp(24px, calc(36 / 19.2 * 1vw), 36px);
+      font-size: clamp(24px, calc(36 / 19.2 * 1vw), calc(36 / 1920 * 2560 * 1px));
     }
 
     // 第三行：標語（bannerTitleSize_cht(2)）
     &:nth-child(3) {
-      margin-top: 25px;
-      font-size: clamp(16px, calc(18 / 19.2 * 1vw), 18px);
+      margin-top: fluid(25);
+      font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
     }
 
     :deep(br) {
@@ -231,7 +231,7 @@ const onSlideChange = (s) => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
   font-size: 14px;
@@ -246,7 +246,7 @@ const onSlideChange = (s) => {
 
 // 進場：active slide 文字與按鈕依序淡入（對應原 goRight 動畫序列）
 .index_banner .swiper-slide-active .cover_txt {
-  p {
+  > * {
     animation: banner15_goRight 1.6s forwards;
 
     &:nth-child(1) { animation-delay: 1s; }
@@ -279,8 +279,8 @@ const onSlideChange = (s) => {
 .banner_video {
   display: block;
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: fluid(120);
+  height: fluid(120);
   border: 1px solid rgba($web_color_1, 0.25);
   border-radius: 50%;
   cursor: pointer;
@@ -295,8 +295,8 @@ const onSlideChange = (s) => {
     content: '';
     display: block;
     position: absolute;
-    top: 5px;
-    left: 5px;
+    top: fluid(5);
+    left: fluid(5);
     width: calc(100% - 10px);
     height: calc(100% - 10px);
     border: 1px solid $web_color_1;
@@ -359,15 +359,15 @@ const onSlideChange = (s) => {
   font-size: 18px;
   font-family: $title_font_en;
   letter-spacing: 0;
-  margin-right: 30px;
+  margin-right: fluid(30);
 
   // 進度條軌道
   > span:nth-child(2) {
     display: block;
     position: relative;
-    width: 300px;
+    width: fluid(300);
     height: 2px;
-    margin: 0 10px;
+    margin: 0 fluid(10);
     background: $web_color_1;
     transition: all 0.3s;
 
@@ -393,8 +393,8 @@ const onSlideChange = (s) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: rgba(255, 255, 255, 0.85);
   border: none;
   border-radius: 50%;
@@ -408,8 +408,8 @@ const onSlideChange = (s) => {
   // 邊框畫 V 形箭頭：置中穩定，不受字型字形影響
   &::before {
     content: '';
-    width: 9px;
-    height: 9px;
+    width: fluid(9);
+    height: fluid(9);
     border-top: 2px solid currentColor;
     border-right: 2px solid currentColor;
   }
@@ -418,10 +418,10 @@ const onSlideChange = (s) => {
 }
 
 .banner15_prev {
-  margin-right: 15px;
-  &::before { transform: rotate(-135deg); margin-left: 3px; }
+  margin-right: fluid(15);
+  &::before { transform: rotate(-135deg); margin-left: fluid(3); }
 }
 .banner15_next {
-  &::before { transform: rotate(45deg); margin-right: 3px; }
+  &::before { transform: rotate(45deg); margin-right: fluid(3); }
 }
 </style>

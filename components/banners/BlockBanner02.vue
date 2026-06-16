@@ -48,16 +48,16 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
         <div class="cover_txt">
-          <p v-if="row.title">{{ row.title }}</p>
-          <p v-if="row.title2">{{ row.title2 }}</p>
-          <p v-if="row.slogan" v-html="toHtml(row.slogan)" />
+          <div v-if="row.title">{{ row.title }}</div>
+          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title2">{{ row.title2 }}</component>
+          <div v-if="row.slogan" v-html="toHtml(row.slogan)" />
 
           <div v-if="row.link" class="button_set">
-            <NuxtLink class="cover_btn" :to="row.link"><span>VIEW MORE</span></NuxtLink>
+            <NuxtLink class="cover_btn" :to="row.link" :title="row.title2 || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
           </div>
         </div>
       </SwiperSlide>
@@ -94,7 +94,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 <style lang="scss" scoped>
 .banner02 {
   position: relative;
-  padding-bottom: 50px;
+  padding-bottom: fluid(50);
   transition: all 0.3s;
 
   @media (max-width: 1200px) { padding-bottom: 80px; }
@@ -146,7 +146,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
     bottom: calc(19.2 / 4.8 * 1vw);
   }
 
-  p {
+  > :not(.button_set) {
     color: #fff;
     opacity: 0;
     transform: translate(40px, 0);
@@ -158,8 +158,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
     // 第一行：英文/標題（bannerTitleSize_en(2)）
     &:nth-child(1) {
-      font-size: clamp(19px, calc(23 / 19.2 * 1vw), 23px);
-      margin-bottom: 20px;
+      font-size: clamp(19px, calc(23 / 19.2 * 1vw), calc(23 / 1920 * 2560 * 1px));
+      margin-bottom: fluid(20);
       transition: all 0.3s, opacity 0.5s, transform 0.5s;
 
       @media (max-width: 1200px) { margin-bottom: 15px; }
@@ -177,8 +177,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       font-family: $title_font_en;
       line-height: 1.2;
       text-transform: uppercase;
-      margin-bottom: 12px;
-      font-size: clamp(32px, calc(50 / 19.2 * 1vw), 50px);
+      margin-bottom: fluid(12);
+      font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
       transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;
 
       @media (min-width: 1201px) { letter-spacing: 2px; }
@@ -188,7 +188,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
     // 第三行：標語（bannerTitleSize_cht(3)）
     &:nth-child(3) {
       color: $web_font_color;
-      font-size: clamp(14px, calc(15 / 19.2 * 1vw), 15px);
+      font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
       transition: all 0.3s, opacity 0.5s 0.2s, transform 0.5s 0.2s;
 
       @media (max-width: 400px) { display: none; }
@@ -196,7 +196,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   }
 
   .button_set {
-    margin-top: 30px;
+    margin-top: fluid(30);
     opacity: 0;
     transform: translate(40px, 0);
     transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
@@ -215,7 +215,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
   font-size: 14px;
@@ -230,7 +230,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
 // 進場：active slide 內文字與按鈕依序淡入（對應原 swiper-slide-active 動畫）
 .index_banner .swiper-slide-active .cover_txt {
-  p {
+  > :not(.button_set) {
     opacity: 1;
     transform: translate(0, 0);
 
@@ -254,8 +254,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: rgba(255, 255, 255, 0.85);
   border: none;
   border-radius: 50%;
@@ -279,11 +279,11 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   &:hover { background: #fff; color: $web_color_1; }
 }
 .banner02_prev {
-  left: 20px;
+  left: fluid(20);
   &::before { transform: rotate(-135deg); margin-left: 3px; }
 }
 .banner02_next {
-  right: 20px;
+  right: fluid(20);
   &::before { transform: rotate(45deg); margin-right: 3px; }
 }
 
@@ -293,8 +293,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   bottom: 0;
   left: calc(156 / 19.2 * 1vw);
   width: 100%;
-  max-width: 586px;
-  padding: 0 30px 20px 0;
+  max-width: fluid(586);
+  padding: 0 fluid(30) fluid(20) 0;
   background: rgba(#6d6e71, 0.8);
   transition: all 0.3s;
   z-index: 1;
@@ -311,7 +311,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 .news_swiper {
   position: relative;
   overflow: hidden;
-  padding-bottom: 50px;
+  padding-bottom: fluid(50);
   transition: all 0.3s;
 
   @media (max-width: 1366px) { padding-bottom: 30px; }
@@ -323,8 +323,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
     text-align: right;
 
     .swiper-pagination-bullet {
-      width: 8px;
-      height: 8px;
+      width: fluid(8);
+      height: fluid(8);
       background: #6d6e71;
       opacity: 1;
 
@@ -337,7 +337,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   .news_link {
     display: flex;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: fluid(16);
 
     .news_date {
       flex-shrink: 0;
@@ -348,7 +348,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       line-height: 1.2;
       letter-spacing: 1px;
       text-align: center;
-      padding: 8px 32px;
+      padding: fluid(8) fluid(32);
       background: #fff;
       transition: all 0.3s;
 
@@ -366,7 +366,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       color: #fff;
       font-size: 16px;
       letter-spacing: 1px;
-      padding-left: 35px;
+      padding-left: fluid(35);
       transition: all 0.3s;
 
       @media (max-width: 480px) { padding-left: 16px; }
@@ -378,7 +378,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
     font-size: 14px;
     font-weight: 300;
     line-height: 1.6;
-    padding-left: 30px;
+    padding-left: fluid(30);
 
     // text_truncate_h(22.4px, 2)
     display: -webkit-box;

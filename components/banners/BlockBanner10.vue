@@ -68,15 +68,15 @@ const onSlideChange = (s) => {
         <div>
           <picture>
             <source media="(min-width: 721px)" :srcset="row.image?.pc" />
-            <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
 
           <div class="cover_txt">
-            <p v-if="row.title" v-html="toHtml(row.title)" />
-            <p v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
+            <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
+            <h2 v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
 
             <div v-if="row.link" class="button_set">
-              <NuxtLink class="cover_btn" :to="row.link"><span>EXPLORE MORE</span></NuxtLink>
+              <NuxtLink class="cover_btn" :to="row.link" :title="row.title || 'EXPLORE MORE'"><span>EXPLORE MORE</span></NuxtLink>
             </div>
           </div>
         </div>
@@ -141,29 +141,12 @@ const onSlideChange = (s) => {
         max-width: calc(100% - 155 / 19.2 * 2vw);
         transform: translate(0, -50%);
 
-        p {
+        > :nth-child(1),
+        > :nth-child(2),
+        > :nth-child(3):not(.button_set) {
           color: #fff;
           text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
           opacity: 0;
-
-          // 第一行（data_title3）：moduleTitleSize_cht(1)
-          &:nth-child(1) {
-            font-weight: 700;
-            margin-bottom: 10px;
-            font-size: clamp(30px, calc(45 / 19.2 * 1vw), 45px);
-          }
-
-          // 第二行（data_title4）：moduleTitleSize_en(2)
-          &:nth-child(2) {
-            font-weight: 700;
-            font-size: clamp(24px, calc(36 / 19.2 * 1vw), 36px);
-          }
-
-          // 第三行（保留位）：bannerTitleSize_cht(2)
-          &:nth-child(3) {
-            margin-top: 25px;
-            font-size: clamp(16px, calc(18 / 19.2 * 1vw), 18px);
-          }
 
           :deep(br) {
             @media (max-width: 720px) {
@@ -172,11 +155,30 @@ const onSlideChange = (s) => {
           }
         }
 
+        // 第一行（data_title3）：moduleTitleSize_cht(1)
+        > :nth-child(1) {
+          font-weight: 700;
+          margin-bottom: fluid(10);
+          font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
+        }
+
+        // 第二行（data_title4）：moduleTitleSize_en(2)
+        > :nth-child(2) {
+          font-weight: 700;
+          font-size: clamp(24px, calc(36 / 19.2 * 1vw), calc(36 / 1920 * 2560 * 1px));
+        }
+
+        // 第三行（保留位）：bannerTitleSize_cht(2)
+        > :nth-child(3):not(.button_set) {
+          margin-top: fluid(25);
+          font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
+        }
+
         .button_set {
           display: flex;
           align-items: center;
-          gap: 15px;
-          margin-top: 55px;
+          gap: fluid(15);
+          margin-top: fluid(55);
           opacity: 0;
 
           @media (max-width: 1200px) {
@@ -194,9 +196,9 @@ const onSlideChange = (s) => {
         }
 
         .cover_txt {
-          p:nth-child(1) { animation: goUp 1.6s 0.5s forwards; }
-          p:nth-child(2) { animation: goUp 1.6s 0.8s forwards; }
-          p:nth-child(3) { animation: goUp 1.6s 1.1s forwards; }
+          > :nth-child(1) { animation: goUp 1.6s 0.5s forwards; }
+          > :nth-child(2) { animation: goUp 1.6s 0.8s forwards; }
+          > :nth-child(3):not(.button_set) { animation: goUp 1.6s 1.1s forwards; }
 
           .button_set { animation: goUp 1.6s 1.4s forwards; }
         }
@@ -221,7 +223,7 @@ const onSlideChange = (s) => {
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 10px;
+  gap: fluid(10);
   position: absolute;
   top: 50%;
   left: calc(47.5 / 16 * 0.5rem + 47.5 / 19.2 * 0.5vw);
@@ -304,8 +306,8 @@ const onSlideChange = (s) => {
         transition: all 0.2s;
 
         &.swiper-pagination-bullet-active {
-          width: 17px;
-          height: 17px;
+          width: fluid(17);
+          height: fluid(17);
           border: 2px solid $web_color_1;
           background: transparent;
         }
@@ -320,8 +322,8 @@ const onSlideChange = (s) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: fluid(20);
+  height: fluid(20);
   background: none;
   border: none;
   cursor: pointer;
@@ -334,8 +336,8 @@ const onSlideChange = (s) => {
 
   &::before {
     content: '';
-    width: 9px;
-    height: 9px;
+    width: fluid(9);
+    height: fluid(9);
     border-top: 2px solid currentColor;
     border-right: 2px solid currentColor;
   }
@@ -352,7 +354,7 @@ const onSlideChange = (s) => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: #fff;
   background: $web_color_1;

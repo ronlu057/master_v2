@@ -31,7 +31,7 @@ const bg = computed(() => banners.value?.[0]?.image?.pc || '')
 <style lang="scss" scoped>
 .page-banner {
   position: relative;
-  min-height: 240px;
+  min-height: fluid(240);
   display: flex;
   align-items: center;
 
@@ -50,18 +50,18 @@ const bg = computed(() => banners.value?.[0]?.image?.pc || '')
   &__overlay {
     position: relative;
     width: 100%;
-    padding: 60px 0;
+    padding: fluid(60) 0;
     background: rgba(0, 0, 0, 0.4);
   }
 
   &__title {
     color: #fff;
-    font-size: 36px;
+    font-size: fluid(36);
   }
 
   &__sub {
     color: rgba(255, 255, 255, 0.85);
-    margin-top: 8px;
+    margin-top: fluid(8);
   }
 }
 

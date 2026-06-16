@@ -97,19 +97,19 @@ const toggleSound = () => { muted.value = !muted.value }
           <div class="slide_inner">
             <picture>
               <source media="(min-width: 721px)" :srcset="row.image?.pc" />
-              <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+              <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
             </picture>
 
             <div class="cover_txt">
-              <p v-if="row.title">{{ row.title }}</p>
-              <p v-if="row.title2">{{ row.title2 }}</p>
+              <div v-if="row.title">{{ row.title }}</div>
+              <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title2">{{ row.title2 }}</component>
               <p v-if="row.memo" v-html="toHtml(row.memo)" />
 
               <div v-if="videoEmbedUrl" class="play" @click="onPlay">
                 <span class="play_icon" aria-hidden="true"></span>
                 <span>WATCH VIDEO</span>
               </div>
-              <NuxtLink v-else-if="row.link" class="cover_btn" :to="row.link">
+              <NuxtLink v-else-if="row.link" class="cover_btn" :to="row.link" :title="row.title2 || 'VIEW MORE'">
                 <span>VIEW MORE</span>
               </NuxtLink>
             </div>
@@ -202,46 +202,44 @@ const toggleSound = () => { muted.value = !muted.value }
     }
   }
 
-  p {
+  > :nth-child(1) {
     color: $web_font_color;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    transition: all 0.3s, opacity 0.5s, transform 0.5s;
+    // moduleTitleSize_cht(1)
+    font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
+  }
 
-    &:nth-child(1) {
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: 0;
-      text-transform: uppercase;
-      transition: all 0.3s, opacity 0.5s, transform 0.5s;
-      // moduleTitleSize_cht(1)
-      font-size: clamp(30px, calc(45 / 19.2 * 1vw), 45px);
-    }
+  > :nth-child(2) {
+    color: $web_color_1;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;
+    // moduleTitleSize_cht(1)
+    font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
+  }
 
-    &:nth-child(2) {
-      color: $web_color_1;
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: 0;
-      text-transform: uppercase;
-      transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;
-      // moduleTitleSize_cht(1)
-      font-size: clamp(30px, calc(45 / 19.2 * 1vw), 45px);
-    }
+  > :nth-child(3) {
+    color: $web_font_color;
+    margin-top: fluid(15);
+    transition: all 0.3s, opacity 0.5s 0.2s, transform 0.5s 0.2s;
+    // bannerTitleSize_cht(2)
+    font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
 
-    &:nth-child(3) {
-      margin-top: 15px;
-      transition: all 0.3s, opacity 0.5s 0.2s, transform 0.5s 0.2s;
-      // bannerTitleSize_cht(2)
-      font-size: clamp(16px, calc(18 / 19.2 * 1vw), 18px);
-
-      @media (max-width: 540px) {
-        display: none;
-      }
+    @media (max-width: 540px) {
+      display: none;
     }
   }
 
   // VIEW MORE 備援按鈕（原 .button06 → .cover_btn）
   .cover_btn {
     // btnMarginTop(1)
-    margin-top: 55px !important;
+    margin-top: fluid(55) !important;
     transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
 
     @media (max-width: 1200px) { margin-top: 35px !important; }
@@ -253,7 +251,7 @@ const toggleSound = () => { muted.value = !muted.value }
     display: flex;
     align-items: center;
     width: fit-content;
-    margin-top: 30px !important;
+    margin-top: fluid(30) !important;
     cursor: pointer;
     transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
 
@@ -286,7 +284,7 @@ const toggleSound = () => { muted.value = !muted.value }
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 1px;
-      margin-left: 10px;
+      margin-left: fluid(10);
       transition: all 0.3s;
 
       @media (max-width: 640px) {
@@ -310,7 +308,7 @@ const toggleSound = () => { muted.value = !muted.value }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
   font-size: 14px;
@@ -329,9 +327,9 @@ const toggleSound = () => { muted.value = !muted.value }
     transform: translate(0, 0);
   }
 
-  p:nth-child(1) { transition: all 0.3s, opacity 1s 1s, transform 1s 1s; }
-  p:nth-child(2) { transition: all 0.3s, opacity 1s 1.1s, transform 1s 1.1s; }
-  p:nth-child(3) { transition: all 0.3s, opacity 1s 1.2s, transform 1s 1.2s; }
+  > :nth-child(1) { transition: all 0.3s, opacity 1s 1s, transform 1s 1s; }
+  > :nth-child(2) { transition: all 0.3s, opacity 1s 1.1s, transform 1s 1.1s; }
+  > :nth-child(3) { transition: all 0.3s, opacity 1s 1.2s, transform 1s 1.2s; }
   .cover_btn,
   .play { transition: all 0.3s, opacity 1s 1.3s, transform 1s 1.3s; }
 }
@@ -351,11 +349,11 @@ const toggleSound = () => { muted.value = !muted.value }
 
   .swiper-pagination-bullet {
     position: relative;
-    width: 19px;
-    height: 19px;
+    width: fluid(19);
+    height: fluid(19);
     border: 1px solid transparent;
     border-radius: 50%;
-    margin: 0 4px;
+    margin: 0 fluid(4);
     background: transparent;
     opacity: 1;
 
@@ -367,11 +365,11 @@ const toggleSound = () => { muted.value = !muted.value }
     &::after {
       position: absolute;
       content: '';
-      width: 11px;
-      height: 11px;
+      width: fluid(11);
+      height: fluid(11);
       border-radius: 50%;
-      top: 3px;
-      left: 3px;
+      top: fluid(3);
+      left: fluid(3);
       background: $web_color_2;
 
       @media (max-width: 1024px) {
@@ -396,8 +394,8 @@ const toggleSound = () => { muted.value = !muted.value }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: fluid(40);
+  height: fluid(40);
   background: none;
   border: none;
   cursor: pointer;
@@ -410,8 +408,8 @@ const toggleSound = () => { muted.value = !muted.value }
   // 邊框畫 V 形箭頭
   &::before {
     content: '';
-    width: 9px;
-    height: 9px;
+    width: fluid(9);
+    height: fluid(9);
     border-top: 2px solid currentColor;
     border-right: 2px solid currentColor;
   }
@@ -421,11 +419,11 @@ const toggleSound = () => { muted.value = !muted.value }
 // 原版兩顆箭頭上下排列（prev 在上、next 在下）
 .banner13_prev {
   top: calc(50% - 54px);
-  &::before { transform: rotate(-45deg); margin-top: 3px; }
+  &::before { transform: rotate(-45deg); margin-top: fluid(3); }
 }
 .banner13_next {
   top: calc(50% + 54px);
-  &::before { transform: rotate(135deg); margin-bottom: 3px; }
+  &::before { transform: rotate(135deg); margin-bottom: fluid(3); }
 }
 
 // ── YouTube 背景影片浮層 ─────────────────────────────────
@@ -461,7 +459,7 @@ const toggleSound = () => { muted.value = !muted.value }
 
 .vb_btn {
   position: absolute;
-  bottom: 30px;
+  bottom: fluid(30);
   background: none;
   border: none;
   cursor: pointer;

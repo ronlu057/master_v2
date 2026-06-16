@@ -92,7 +92,7 @@ onBeforeUnmount(() => {
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
         <!-- 桌面背景影片（每筆 row.videoUrl 可選） -->
@@ -108,22 +108,22 @@ onBeforeUnmount(() => {
         <div class="content">
           <div class="wider_container">
             <div class="info">
-              <p class="mb">
+              <div class="mb">
                 {{ row.title }}
                 <template v-if="row.title2"><br />{{ row.title2 }}</template>
-              </p>
-              <p v-if="row.slogan" class="mb" v-html="toHtml(row.slogan)" />
+              </div>
+              <div v-if="row.slogan" class="mb" v-html="toHtml(row.slogan)" />
 
               <!-- 桌面主標（對應原 .cus_txt；此版以一般文字呈現，去除滑鼠跟隨 SVG 特效） -->
-              <p class="title_lg">
+              <component :is="i === 0 ? 'h1' : 'h2'" class="title_lg">
                 {{ row.title }}
                 <template v-if="row.title2"><br />{{ row.title2 }}</template>
-              </p>
+              </component>
 
               <div v-if="row.slogan" class="paragraph" v-html="toHtml(row.slogan)" />
 
               <div class="button_set">
-                <NuxtLink v-if="row.link" class="cover_btn" :to="row.link">
+                <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">
                   <span>VIEW MORE</span>
                 </NuxtLink>
               </div>
@@ -207,7 +207,7 @@ onBeforeUnmount(() => {
 
     .wider_container {
       width: 100%;
-      max-width: 1920px;
+      max-width: fluid(1920);
       padding: 0 calc(156 / 19.2 * 1vw);
       margin: 0 auto;
 
@@ -217,7 +217,7 @@ onBeforeUnmount(() => {
     }
 
     .info {
-      > p {
+      > .mb {
         color: #fff;
         text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         opacity: 0;
@@ -239,15 +239,15 @@ onBeforeUnmount(() => {
             text-transform: uppercase;
             transition: opacity 0.5s, transform 0.5s;
             // bannerTitleSize_cht(1)
-            font-size: clamp(32px, calc(50 / 19.2 * 1vw), 50px);
+            font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
 
             @media (min-width: 1201px) { letter-spacing: 2px; }
           }
 
           &:nth-child(2) {
-            font-size: calc(18 / 16 * 1rem + 10 / 19.2 * 1vw);
+            font-size: clamp(22px, calc(28 / 19.2 * 1vw), calc(28 / 1920 * 2560 * 1px));
             font-weight: 500;
-            margin-top: 15px;
+            margin-top: fluid(15);
             transition: opacity 0.5s 0.1s, transform 0.5s 0.1s;
           }
         }
@@ -256,7 +256,7 @@ onBeforeUnmount(() => {
       // 桌面主標（對應原 .cus_txt 文字尺寸）
       .title_lg {
         color: #fff;
-        font-size: calc(21 / 16 * 1rem + 63 / 19.2 * 1vw);
+        font-size: clamp(46px, calc(84 / 19.2 * 1vw), calc(84 / 1920 * 2560 * 1px));
         font-weight: 900;
         line-height: 1.15;
         text-transform: uppercase;
@@ -276,8 +276,8 @@ onBeforeUnmount(() => {
         transform: translate(40px, 0);
         transition: opacity 0.5s 0.1s, transform 0.5s 0.1s;
         // bannerTitleSize_cht(2)
-        font-size: clamp(16px, calc(18 / 19.2 * 1vw), 18px);
-        margin-top: 15px;
+        font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
+        margin-top: fluid(15);
 
         @media (max-width: 640px) {
           display: none;
@@ -287,8 +287,8 @@ onBeforeUnmount(() => {
       .button_set {
         display: flex;
         align-items: center;
-        gap: 15px;
-        margin-top: 30px;
+        gap: fluid(15);
+        margin-top: fluid(30);
         opacity: 0;
         transform: translate(40px, 0);
         transition: opacity 0.5s 0.2s, transform 0.5s 0.2s;
@@ -303,14 +303,14 @@ onBeforeUnmount(() => {
 
   // 進場：active slide 內文字與按鈕依序淡入
   .swiper-slide-active .content .info {
-    > p,
+    > .mb,
     .title_lg {
       opacity: 1;
       transform: translate(0, 0);
     }
 
-    > p.mb:nth-child(1) { transition: opacity 1s 1s, transform 1s 1s; }
-    > p.mb:nth-child(2) { transition: opacity 1s 1.1s, transform 1s 1.1s; }
+    > .mb:nth-child(1) { transition: opacity 1s 1s, transform 1s 1s; }
+    > .mb:nth-child(2) { transition: opacity 1s 1.1s, transform 1s 1.1s; }
     .title_lg { transition: opacity 1s 1s, transform 1s 1s; }
 
     .paragraph {
@@ -365,7 +365,7 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 32px;
+  padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
   font-size: 14px;
@@ -382,7 +382,7 @@ onBeforeUnmount(() => {
 // ── 底部分頁點 ───────────────────────────────────────────
 .dots_box {
   position: absolute;
-  bottom: 40px;
+  bottom: fluid(40);
   left: 0;
   width: 100%;
   z-index: 1;
@@ -393,7 +393,7 @@ onBeforeUnmount(() => {
 
   .wider_container {
     width: 100%;
-    max-width: 1920px;
+    max-width: fluid(1920);
     padding: 0 calc(156 / 19.2 * 1vw);
     margin: 0 auto;
 
@@ -408,11 +408,11 @@ onBeforeUnmount(() => {
     }
 
     .swiper-pagination-bullet {
-      border-radius: 50px;
+      border-radius: fluid(50);
       transition: width 0.3s linear, background 0.3s linear;
 
       &.swiper-pagination-bullet-active {
-        width: 40px;
+        width: fluid(40);
       }
     }
   }
@@ -435,14 +435,14 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     position: relative;
-    width: 42px;
-    height: 42px;
+    width: fluid(42);
+    height: fluid(42);
     border-radius: 50%;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
     cursor: pointer;
 
     & + div {
-      margin-top: 18px;
+      margin-top: fluid(18);
     }
 
     p {

@@ -55,19 +55,19 @@ useSeoMeta({ title: '購物車 — 母版專案' })
 
 <style lang="scss" scoped>
 .cart {
-  padding: 40px 20px 80px;
+  padding: fluid(40) fluid(20) fluid(80);
 
   &__title {
-    font-size: 28px;
-    margin-bottom: 28px;
+    font-size: fluid(28);
+    margin-bottom: fluid(28);
   }
 
   &__empty {
     text-align: center;
-    padding: 64px 0;
+    padding: fluid(64) 0;
 
     p {
-      margin-bottom: 20px;
+      margin-bottom: fluid(20);
       color: var(--color-text-muted);
     }
   }
@@ -75,31 +75,31 @@ useSeoMeta({ title: '購物車 — 母版專案' })
   &__layout {
     display: grid;
     grid-template-columns: 1fr 320px;
-    gap: 32px;
+    gap: fluid(32);
   }
 
   &__summary {
     background: var(--color-surface);
     border-radius: var(--radius-lg);
-    padding: 24px;
+    padding: fluid(24);
     height: fit-content;
 
     h2 {
-      font-size: 20px;
-      margin-bottom: 16px;
+      font-size: fluid(20);
+      margin-bottom: fluid(16);
     }
   }
 
   &__line {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
+    padding: fluid(8) 0;
     font-size: 14px;
 
     &--total {
       border-top: 1px solid var(--color-border);
-      margin-top: 8px;
-      padding-top: 14px;
+      margin-top: fluid(8);
+      padding-top: fluid(14);
       font-size: 18px;
       font-weight: 700;
       color: var(--color-primary);
@@ -108,11 +108,11 @@ useSeoMeta({ title: '購物車 — 母版專案' })
 
   &__checkout {
     width: 100%;
-    margin-top: 16px;
+    margin-top: fluid(16);
   }
 
   &__note {
-    margin-top: 12px;
+    margin-top: fluid(12);
     font-size: 12px;
     color: var(--color-text-muted);
   }
@@ -122,13 +122,13 @@ useSeoMeta({ title: '購物車 — 母版專案' })
   display: grid;
   grid-template-columns: 88px 1fr auto auto auto;
   align-items: center;
-  gap: 16px;
-  padding: 16px 0;
+  gap: fluid(16);
+  padding: fluid(16) 0;
   border-bottom: 1px solid var(--color-border);
 
   &__img {
-    width: 88px;
-    height: 88px;
+    width: fluid(88);
+    height: fluid(88);
     object-fit: cover;
     border-radius: var(--radius);
   }
@@ -149,20 +149,20 @@ useSeoMeta({ title: '購物車 — 母版專案' })
   &__qty {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: fluid(8);
 
     button {
-      width: 30px;
-      height: 30px;
+      width: fluid(30);
+      height: fluid(30);
       border: 1px solid var(--color-border);
-      border-radius: 6px;
+      border-radius: fluid(6);
       background: var(--color-bg);
     }
   }
 
   &__sub {
     font-weight: 700;
-    min-width: 100px;
+    min-width: fluid(100);
     text-align: right;
   }
 

@@ -58,28 +58,43 @@ const beginning = ref(true)
 
 const rootEl = ref(null)
 
-// ── 鏤空字背景定位（忠實對應 banner12.js 的 bg_pos）──────────────
+// ── 鏤空字背景定位（對應 banner12.js 的 bg_pos，支援 100vh + object-fit:cover）──
+// 底圖改為 height:100vh、object-fit:cover 後會等比縮放並置中裁切，
+// 故填圖須依各圖 naturalWidth/Height 重算 cover 後的繪製尺寸（drawW/drawH）
+// 與裁切位移（offsetX/offsetY），鏤空字才會對齊裁切後的底圖。
 const bgPos = () => {
   const root = rootEl.value
   if (!root) return
   const banner = root.querySelector('.index_banner')
   if (!banner) return
 
+  const bannerRect = banner.getBoundingClientRect()
   const bannerW = banner.offsetWidth
-  const bannerTop = banner.getBoundingClientRect().top + window.scrollY
+  const bannerH = banner.offsetHeight
+  const bannerLeft = bannerRect.left + window.scrollX
+  const bannerTop = bannerRect.top + window.scrollY
 
-  // 鏤空填圖 span 的 background-size = banner 寬度（底圖 width:100%，寬度即等比尺寸）
-  root
-    .querySelectorAll('.index_banner .frosted_glass .hollow_txt p span:first-child')
-    .forEach((el) => {
-      el.style.backgroundSize = `${bannerW}px`
+  // 逐 slide 處理：每張底圖原尺寸不同，cover 縮放與裁切位移也各自不同
+  root.querySelectorAll('.index_banner .swiper-slide').forEach((slide) => {
+    const img = slide.querySelector('picture img')
+    const natW = img?.naturalWidth || bannerW
+    const natH = img?.naturalHeight || bannerH
+
+    // object-fit:cover → 取較大縮放使底圖完全覆蓋 banner，多餘部分置中裁切（位移為負）
+    const scale = Math.max(bannerW / natW, bannerH / natH)
+    const drawW = natW * scale
+    const drawH = natH * scale
+    const offsetX = (bannerW - drawW) / 2
+    const offsetY = (bannerH - drawH) / 2
+
+    slide.querySelectorAll('.hollow_1, .hollow_2').forEach((el) => {
+      el.style.backgroundSize = `${drawW}px ${drawH}px`
+      const rect = el.getBoundingClientRect()
+      const elLeft = rect.left + window.scrollX - bannerLeft
+      const elTop = rect.top + window.scrollY - bannerTop
+      el.style.backgroundPositionX = `${offsetX - elLeft}px`
+      el.style.backgroundPositionY = `${offsetY - elTop}px`
     })
-
-  // 各鏤空字依自身在文件中的位置，反推 background-position 對齊 banner 左上角
-  root.querySelectorAll('.index_banner .hollow_1, .index_banner .hollow_2').forEach((el) => {
-    const rect = el.getBoundingClientRect()
-    el.style.backgroundPositionX = `${0 - (rect.left + window.scrollX)}px`
-    el.style.backgroundPositionY = `${0 - (rect.top + window.scrollY) + bannerTop}px`
   })
 }
 
@@ -128,7 +143,7 @@ onBeforeUnmount(() => {
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 721px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" alt="" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
         <div class="frosted_glass">
@@ -163,15 +178,20 @@ onBeforeUnmount(() => {
 .index_banner {
   position: relative;
   z-index: 1;
+  height: 100vh;
 
   .swiper-slide {
     overflow: hidden;
+    height: 100vh;
 
     picture {
       display: block;
+      height: 100%;
 
       img {
         width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     }
 
@@ -214,7 +234,7 @@ onBeforeUnmount(() => {
 
         p {
           position: relative;
-          font-size: calc(162 / 19.2 * 1vw);
+          font-size: clamp(65px, calc(162 / 19.2 * 1vw), calc(162 / 1920 * 2560 * 1px));
           font-weight: 900;
           font-family: 'Roboto', sans-serif;
           line-height: 1;
@@ -262,66 +282,57 @@ onBeforeUnmount(() => {
           padding: 0 15px;
         }
 
-        // memo 第一段（手機標題，桌面隱藏）
-        :deep(p):nth-child(1) {
-          color: #fff;
-          font-size: calc(20 / 16 * 1rem + 20 / 4.8 * 1vw);
-          font-weight: 900;
-          font-family: 'Roboto', sans-serif;
-          line-height: 1;
-          text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-          margin-bottom: 18px;
-          opacity: 0;
-          transform: translate(40px, 0);
-          transition: all 0.3s, opacity 1s, transform 1s;
-
-          @media (min-width: 721px) { display: none; }
-          @media (max-width: 720px) { transform: translate(0, 40px); }
-        }
-
-        // memo 第二段（主標）
-        :deep(p):nth-child(2) {
-          color: #fff;
-          font-size: calc(13 / 16 * 1rem + 15 / 19.2 * 1vw);
-          font-weight: 700;
-          font-family: $title_font_cht;
-          text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-          opacity: 0;
-          transform: translate(40px, 0);
-          transition: all 0.3s, opacity 1s, transform 1s;
-
-          @media (max-width: 720px) { transform: translate(0, 40px); }
-        }
-
-        // memo 第三段（副標）
-        :deep(p):nth-child(3) {
-          color: #fff;
-          font-size: calc(13 / 16 * 1rem + 5 / 19.2 * 1vw);
-          font-family: $title_font_en;
-          text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-          margin-top: 15px;
-          opacity: 0;
-          transform: translate(40px, 0);
-          transition: all 0.3s, opacity 1s, transform 1s;
-
-          @media (max-width: 720px) {
-            margin-top: 24px;
-            transform: translate(0, 40px);
-          }
-        }
-
-        // VIEW MORE 按鈕進場（margin-top 對齊 demo：40px、≤1200 為 35px）
+        // 進場前初始狀態（memo 三段 + 按鈕共用）：右移淡出，手機改下移
+        :deep(p),
         :deep(.cover_btn) {
           opacity: 0;
           transform: translate(40px, 0);
           transition: all 0.3s, opacity 1s, transform 1s;
-          margin-top: 40px !important;
+
+          @media (max-width: 720px) { transform: translate(0, 40px); }
+        }
+
+        // memo 三段共用：白字 + 陰影
+        :deep(p) {
+          color: #fff;
+          text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        // memo 第一段（手機標題，桌面隱藏）
+        :deep(p):nth-child(1) {
+          font-size: clamp(20px, calc(28 / 19.2 * 1vw), calc(28 / 1920 * 2560 * 1px));
+          font-weight: 900;
+          font-family: 'Roboto', sans-serif;
+          line-height: 1;
+          margin-bottom: fluid(18);
+
+          @media (min-width: 721px) { display: none; }
+        }
+
+        // memo 第二段（主標）
+        :deep(p):nth-child(2) {
+          font-size: clamp(20px, calc(28 / 19.2 * 1vw), calc(28 / 1920 * 2560 * 1px));
+          font-weight: 700;
+          font-family: $title_font_cht;
+        }
+
+        // memo 第三段（副標）
+        :deep(p):nth-child(3) {
+          font-size: clamp(14px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
+          font-family: $title_font_en;
+          margin-top: fluid(15);
+
+          @media (max-width: 720px) { margin-top: 24px; }
+        }
+
+        // VIEW MORE 按鈕進場（對齊原始 btnMarginTop(1)：55px、≤1200 為 35px）
+        :deep(.cover_btn) {
+          margin-top: fluid(55) !important;
 
           @media (max-width: 1200px) { margin-top: 35px !important; }
           @media (max-width: 720px) {
             margin: 0 auto;
             margin-top: 35px !important;
-            transform: translate(0, 40px);
           }
         }
       }
@@ -382,7 +393,7 @@ onBeforeUnmount(() => {
 
   // ── 分頁點（右下；手機置中底部）─────────────────────────
   :deep(.swiper-pagination) {
-    gap: 10px;
+    gap: fluid(10);
 
     @media (min-width: 721px) {
       bottom: calc(96 / 19.2 * 1vw);
@@ -399,8 +410,8 @@ onBeforeUnmount(() => {
     }
 
     .swiper-pagination-bullet {
-      width: 48px;
-      height: 8px;
+      width: fluid(48);
+      height: fluid(8);
       background: transparent;
       border: 1px solid #fff;
       border-radius: 0;
@@ -417,9 +428,9 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 180px;
-  height: 45px;
-  padding: 0 15px;
+  width: fluid(180);
+  height: fluid(45);
+  padding: 0 fluid(15);
   background: $web_color_1;
   border: 1px solid $web_color_1;
   transition: all 0.3s;

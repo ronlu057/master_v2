@@ -53,16 +53,16 @@ defineProps({
         <div>
           <picture>
             <source media="(min-width: 601px)" :srcset="row.image?.pc" />
-            <img :src="row.image?.mb || row.image?.pc" :alt="row.title || ''" />
+            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
 
           <div class="cover_txt">
-            <p>{{ row.title }}</p>
-            <p>{{ row.title2 }}</p>
-            <p>{{ row.title3 }}</p>
+            <div>{{ row.title }}</div>
+            <component :is="i === 0 ? 'h1' : 'h2'">{{ row.title2 }}</component>
+            <div>{{ row.title3 }}</div>
 
             <div v-if="row.link" class="button_set">
-              <NuxtLink class="cover_btn" :to="row.link"><span>VIEW MORE</span></NuxtLink>
+              <NuxtLink class="cover_btn" :to="row.link" :title="row.title2 || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ defineProps({
         width: 84%;
         transform: translate(0, -50%);
 
-        p {
+        > * {
           color: #fff;
           opacity: 0;
           transform: translate(40px, 0);
@@ -127,14 +127,14 @@ defineProps({
           // 第一行：moduleTitleSize_cht(1)
           &:nth-child(1) {
             font-weight: 700;
-            font-size: clamp(30px, calc(45 / 19.2 * 1vw), 45px);
+            font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 1s 0.15s, transform 1s 0.15s;
           }
 
           // 第二行：主標 bannerTitleSize_cht(1)
           &:nth-child(2) {
             font-weight: 700;
-            font-size: clamp(32px, calc(50 / 19.2 * 1vw), 50px);
+            font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 1s 0.3s, transform 1s 0.3s;
 
             @media (min-width: 1201px) { letter-spacing: 2px; }
@@ -143,14 +143,14 @@ defineProps({
           // 第三行：bannerTitleSize_en(2)
           &:nth-child(3) {
             font-weight: 600;
-            margin-top: 6px;
-            font-size: clamp(19px, calc(23 / 19.2 * 1vw), 23px);
+            margin-top: fluid(6);
+            font-size: clamp(19px, calc(23 / 19.2 * 1vw), calc(23 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 1s 0.45s, transform 1s 0.45s;
           }
         }
 
         .button_set {
-          margin-top: 30px;
+          margin-top: fluid(30);
           opacity: 0;
           transform: translate(40px, 0);
           transition: all 0.3s, opacity 1s 0.6s, transform 1s 0.6s;
@@ -172,7 +172,7 @@ defineProps({
         }
 
         .cover_txt {
-          p {
+          > * {
             opacity: 1;
             transform: translate(0, 0);
 
@@ -209,8 +209,8 @@ defineProps({
     }
 
     .swiper-pagination-bullet {
-      width: 10px;
-      height: 10px;
+      width: fluid(10);
+      height: fluid(10);
       background: #cfcfcf;
       opacity: 1;
       transition: all 0.3s;
@@ -246,8 +246,8 @@ defineProps({
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 52px;
-  padding: 0 38px;
+  height: fluid(52);
+  padding: 0 fluid(38);
   background: $web_color_1;
   border: 1px solid $web_color_1;
   transition: all 0.3s;

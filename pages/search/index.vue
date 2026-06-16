@@ -72,17 +72,17 @@ useSeoMeta({ title: '搜尋 — 母版專案' })
 
 <style lang="scss" scoped>
 .search {
-  padding: 48px 20px 80px;
+  padding: fluid(48) fluid(20) fluid(80);
 
   &__bar {
     display: flex;
-    gap: 10px;
-    max-width: 620px;
-    margin: 0 auto 32px;
+    gap: fluid(10);
+    max-width: fluid(620);
+    margin: 0 auto fluid(32);
 
     input {
       flex: 1;
-      padding: 12px 16px;
+      padding: fluid(12) fluid(16);
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
 
@@ -94,20 +94,20 @@ useSeoMeta({ title: '搜尋 — 母版專案' })
   }
 
   &__summary {
-    margin-bottom: 16px;
+    margin-bottom: fluid(16);
     color: var(--color-text-muted);
   }
 
   &__chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 24px;
+    gap: fluid(10);
+    margin-bottom: fluid(24);
 
     button {
-      padding: 6px 16px;
+      padding: fluid(6) fluid(16);
       border: 1px solid var(--color-border);
-      border-radius: 99px;
+      border-radius: fluid(99);
       background: var(--color-bg);
       font-size: 13px;
 
@@ -122,18 +122,18 @@ useSeoMeta({ title: '搜尋 — 母版專案' })
   &__hint {
     text-align: center;
     color: var(--color-text-muted);
-    padding: 48px 0;
+    padding: fluid(48) 0;
   }
 }
 
 .result {
-  padding: 20px 0;
+  padding: fluid(20) 0;
   border-bottom: 1px solid var(--color-border);
 
   &__type {
     display: inline-block;
-    padding: 2px 10px;
-    border-radius: 4px;
+    padding: 2px fluid(10);
+    border-radius: fluid(4);
     background: var(--color-surface);
     font-size: 12px;
     color: var(--color-primary);
@@ -143,7 +143,7 @@ useSeoMeta({ title: '搜尋 — 母版專案' })
     display: block;
     font-size: 18px;
     font-weight: 700;
-    margin: 8px 0 4px;
+    margin: fluid(8) 0 fluid(4);
 
     &:hover {
       color: var(--color-primary);

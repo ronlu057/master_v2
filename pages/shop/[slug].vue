@@ -78,12 +78,12 @@ useSeoMeta({ title: `${product.value.title} — 母版專案` })
 
 <style lang="scss" scoped>
 .detail {
-  padding-bottom: 80px;
+  padding-bottom: fluid(80);
 
   &__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 48px;
+    gap: fluid(48);
   }
 
   &__media img {
@@ -92,24 +92,24 @@ useSeoMeta({ title: `${product.value.title} — 母版專案` })
   }
 
   &__name {
-    font-size: 28px;
+    font-size: fluid(28);
   }
 
   &__summary {
     color: var(--color-text-muted);
-    margin: 12px 0 20px;
+    margin: fluid(12) 0 fluid(20);
   }
 
   &__price {
     display: flex;
     align-items: baseline;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: fluid(12);
+    margin-bottom: fluid(24);
   }
 
   &__now {
     color: var(--color-primary);
-    font-size: 28px;
+    font-size: fluid(28);
     font-weight: 800;
   }
 
@@ -121,12 +121,12 @@ useSeoMeta({ title: `${product.value.title} — 母版專案` })
   &__qty {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 24px;
+    gap: fluid(10);
+    margin-bottom: fluid(24);
 
     button {
-      width: 36px;
-      height: 36px;
+      width: fluid(36);
+      height: fluid(36);
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
       background: var(--color-bg);
@@ -134,8 +134,8 @@ useSeoMeta({ title: `${product.value.title} — 母版專案` })
     }
 
     input {
-      width: 64px;
-      height: 36px;
+      width: fluid(64);
+      height: fluid(36);
       text-align: center;
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
@@ -144,11 +144,11 @@ useSeoMeta({ title: `${product.value.title} — 母版專案` })
 
   &__actions {
     display: flex;
-    gap: 12px;
+    gap: fluid(12);
   }
 
   &__added {
-    margin-top: 14px;
+    margin-top: fluid(14);
     color: #1b7f4d;
   }
 }

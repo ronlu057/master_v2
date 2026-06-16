@@ -247,8 +247,8 @@ onBeforeUnmount(() => {
   z-index: 50;
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding: 0 80px;
+  gap: fluid(24);
+  padding: 0 fluid(80);
   height: var(--header-h);
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
@@ -265,14 +265,14 @@ onBeforeUnmount(() => {
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 20px;
+  gap: fluid(10);
+  font-size: fluid(20);
   font-weight: 800;
   color: var(--color-heading);
 
   &__badge {
-    padding: 2px 10px;
-    border-radius: 99px;
+    padding: 2px fluid(10);
+    border-radius: fluid(99);
     background: var(--color-primary);
     color: #fff;
     font-size: 12px;
@@ -283,14 +283,14 @@ onBeforeUnmount(() => {
 .navbar {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: fluid(16);
   margin-left: auto;
 }
 
 .navmenu {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: fluid(4);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -302,8 +302,8 @@ onBeforeUnmount(() => {
   &__link {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 24px 20px;
+    gap: fluid(4);
+    padding: fluid(24) fluid(20);
     font-size: 16px;
     font-weight: 400;
     border-radius: var(--radius);
@@ -322,8 +322,8 @@ onBeforeUnmount(() => {
     position: absolute;
     top: 100%;
     left: 0;
-    min-width: 160px;
-    padding: 6px;
+    min-width: fluid(160);
+    padding: fluid(6);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
@@ -335,9 +335,9 @@ onBeforeUnmount(() => {
 
     a {
       display: block;
-      padding: 8px 12px;
+      padding: fluid(8) fluid(12);
       font-size: 14px;
-      border-radius: 6px;
+      border-radius: fluid(6);
 
       &:hover {
         background: var(--color-surface);
@@ -356,18 +356,18 @@ onBeforeUnmount(() => {
 .mb_navmenu {
   &__link {
     display: block;
-    padding: 12px 4px;
+    padding: fluid(12) fluid(4);
     font-size: 18px;
     font-weight: 600;
     border-bottom: 1px solid var(--color-border);
   }
 
   &__sub {
-    padding: 0 0 0 16px;
+    padding: 0 0 0 fluid(16);
 
     a {
       display: block;
-      padding: 8px 4px;
+      padding: fluid(8) fluid(4);
       font-size: 14px;
     }
   }
@@ -376,7 +376,7 @@ onBeforeUnmount(() => {
 .navtool {
   display: flex;
   align-items: center;
-  gap: 26px;
+  gap: fluid(26);
   font-size: 18px;
 
   // .navtool_social 樣式走全域 main.scss（沿用 _header02.scss 圓形深底白 icon 風格）
@@ -388,7 +388,7 @@ onBeforeUnmount(() => {
     transition: color 0.3s;
 
     > .icon {
-      font-size: 20px;
+      font-size: fluid(20);
     }
 
     &:hover,
@@ -402,7 +402,7 @@ onBeforeUnmount(() => {
       position: absolute;
       top: 100%;
       right: 0;
-      padding: 10px;
+      padding: fluid(10);
       background: var(--color-bg);
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
@@ -412,14 +412,14 @@ onBeforeUnmount(() => {
       transform: translateY(8px);
       transition: all var(--transition);
       z-index: 60;
-      margin-top: 26px;
+      margin-top: fluid(26);
     }
     .search_box { min-width: 280px; }
     .lang_box {
-      min-width: 140px;
+      min-width: fluid(140);
       display: flex;
       flex-direction: column;
-      padding: 6px;
+      padding: fluid(6);
     }
 
     &:hover .search_box,
@@ -435,11 +435,11 @@ onBeforeUnmount(() => {
     .lang_item {
       background: none;
       border: none;
-      padding: 8px 12px;
+      padding: fluid(8) fluid(12);
       font-size: 14px;
       text-align: left;
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: fluid(6);
       color: inherit;
 
       &:hover {
@@ -457,11 +457,11 @@ onBeforeUnmount(() => {
   .search_form {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: fluid(6);
 
     input {
       flex: 1;
-      padding: 8px 12px;
+      padding: fluid(8) fluid(12);
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
       font-size: 14px;
@@ -471,7 +471,7 @@ onBeforeUnmount(() => {
       background: none;
       border: none;
       cursor: pointer;
-      padding: 4px;
+      padding: fluid(4);
       display: flex;
       color: $web_font_color;
       transition: color 0.3s;
@@ -492,12 +492,12 @@ onBeforeUnmount(() => {
   p,
   .quantity_item {
     position: absolute;
-    top: -6px;
-    right: -10px;
-    min-width: 18px;
-    height: 18px;
-    padding: 0 4px;
-    border-radius: 99px;
+    top: fluid(-6);
+    right: fluid(-10);
+    min-width: fluid(18);
+    height: fluid(18);
+    padding: 0 fluid(4);
+    border-radius: fluid(99);
     background: var(--color-primary);
     color: #fff;
     font-size: 11px;
@@ -511,17 +511,17 @@ onBeforeUnmount(() => {
   display: none;
   background: none;
   border: none;
-  padding: 6px;
+  padding: fluid(6);
   cursor: pointer;
 
   .bars {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: fluid(4);
   }
 
   .bar {
-    width: 22px;
+    width: fluid(22);
     height: 2px;
     background: var(--color-heading);
   }
@@ -534,7 +534,7 @@ onBeforeUnmount(() => {
   right: 0;
   background: var(--color-bg);
   border-top: 1px solid var(--color-border);
-  padding: 8px 20px 16px;
+  padding: fluid(8) fluid(20) fluid(16);
 }
 
 .drop-enter-active,
