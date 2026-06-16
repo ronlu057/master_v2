@@ -63,12 +63,12 @@ defineProps({
   }
 
   &__title {
-    font-size: 18px;
+    font-size: fluid-fz(18);
   }
 
   &__text {
     margin-top: fluid(8);
-    font-size: 14px;
+    font-size: fluid-fz(14);
     color: var(--color-text-muted);
   }
 }

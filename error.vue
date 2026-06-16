@@ -38,14 +38,14 @@ const goHome = () => clearError({ redirect: '/' })
   }
 
   &__code {
-    font-size: 96px;
+    font-size: fluid-fz(96);
     font-weight: 800;
     line-height: 1;
     color: var(--color-primary);
   }
 
   &__title {
-    font-size: 28px;
+    font-size: fluid-fz(28);
     margin: 16px 0 8px;
   }
 
@@ -60,7 +60,7 @@ const goHome = () => clearError({ redirect: '/' })
     border-radius: var(--radius);
     background: var(--color-primary);
     color: #fff;
-    font-size: 16px;
+    font-size: fluid-fz(16);
     transition: background var(--transition);
 
     &:hover {

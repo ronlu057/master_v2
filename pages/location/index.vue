@@ -82,7 +82,7 @@ useSeoMeta({ title: '服務據點 — 母版專案' })
       border: 1px solid var(--color-border);
       border-radius: fluid(99);
       background: var(--color-bg);
-      font-size: 14px;
+      font-size: fluid-fz(14);
 
       &.is-active {
         background: var(--color-primary);
@@ -108,14 +108,14 @@ useSeoMeta({ title: '服務據點 — 母版專案' })
     padding: fluid(20);
 
     p {
-      font-size: 14px;
+      font-size: fluid-fz(14);
       color: var(--color-text-muted);
       margin-top: fluid(6);
     }
   }
 
   &__name {
-    font-size: 18px;
+    font-size: fluid-fz(18);
     margin-bottom: fluid(10);
   }
 
@@ -123,7 +123,7 @@ useSeoMeta({ title: '服務據點 — 母版專案' })
     margin-top: fluid(16);
     width: 100%;
     padding: fluid(9);
-    font-size: 14px;
+    font-size: fluid-fz(14);
   }
 }
 </style>

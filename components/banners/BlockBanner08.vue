@@ -301,7 +301,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
     display: block;
     position: relative;
     color: #fff;
-    font-size: 14px;
+    font-size: fluid-fz(14);
     width: fluid(30);
     height: fluid(30);
 
@@ -352,7 +352,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
 
   p {
     color: #fff;
-    font-size: 15px;
+    font-size: fluid-fz(15);
     font-family: 'Roboto', sans-serif;
     margin: 0 fluid(20);
 

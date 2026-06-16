@@ -318,7 +318,7 @@ onBeforeUnmount(() => {
     > a {
       display: block;
       color: $web_font_color;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       padding: 0 fluid(25);
       transition: all 0.3s;
 
@@ -348,7 +348,7 @@ onBeforeUnmount(() => {
       a {
         display: block;
         padding: fluid(8) fluid(12);
-        font-size: 14px;
+        font-size: fluid-fz(14);
         border-radius: fluid(6);
         color: $web_font_color;
         transition: all var(--transition);
@@ -398,7 +398,7 @@ onBeforeUnmount(() => {
 
     color: $web_font_color;
 
-    > .icon { font-size: 20px; }
+    > .icon { font-size: fluid-fz(20); }
 
     &:hover { color: $web_header_1; }
   }
@@ -430,7 +430,7 @@ onBeforeUnmount(() => {
         padding: fluid(8) fluid(12);
         border: 1px solid var(--color-border);
         border-radius: var(--radius);
-        font-size: 14px;
+        font-size: fluid-fz(14);
       }
 
       button {
@@ -442,7 +442,7 @@ onBeforeUnmount(() => {
         color: $web_font_color;
         transition: color 0.3s;
 
-        .icon { font-size: 18px; }
+        .icon { font-size: fluid-fz(18); }
 
         &:hover { color: var(--color-primary); }
       }
@@ -479,7 +479,7 @@ onBeforeUnmount(() => {
       background: none;
       border: none;
       padding: fluid(8) fluid(12);
-      font-size: 14px;
+      font-size: fluid-fz(14);
       text-align: left;
       cursor: pointer;
       border-radius: fluid(6);
@@ -509,7 +509,7 @@ onBeforeUnmount(() => {
     width: fluid(150);
     height: fluid(42);
     color: #fff;
-    font-size: 16px;
+    font-size: fluid-fz(16);
     font-weight: 500;
     margin-left: fluid(10);
     background: $web_header_2;
@@ -534,7 +534,7 @@ onBeforeUnmount(() => {
     padding: 0 fluid(20);
     background: $web_header_1;
 
-    @media (min-width: 1201px) { display: none !important; }
+    @media (min-width: 1201px) { display: none; }
 
     .bars {
       position: relative;

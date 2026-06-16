@@ -239,19 +239,19 @@ const toggleSound = () => { muted.value = !muted.value }
   // VIEW MORE 備援按鈕（原 .button06 → .cover_btn）
   .cover_btn {
     // btnMarginTop(1)
-    margin-top: fluid(55) !important;
+    margin-top: fluid(55);
     transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
 
-    @media (max-width: 1200px) { margin-top: 35px !important; }
+    @media (max-width: 1200px) { margin-top: 35px; }
     @media (max-width: 640px) { margin: 0 auto; }
-    @media (max-width: 400px) { margin-top: 20px !important; }
+    @media (max-width: 400px) { margin-top: 20px; }
   }
 
   .play {
     display: flex;
     align-items: center;
     width: fit-content;
-    margin-top: fluid(30) !important;
+    margin-top: fluid(30);
     cursor: pointer;
     transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
 
@@ -260,7 +260,7 @@ const toggleSound = () => { muted.value = !muted.value }
       margin: 0 auto;
     }
     @media (max-width: 400px) {
-      margin-top: 15px !important;
+      margin-top: 15px;
     }
 
     // 播放三角圖示（原 icon27.svg；以邊框繪製避免外部資源）
@@ -281,7 +281,7 @@ const toggleSound = () => { muted.value = !muted.value }
 
     span {
       color: $web_font_color;
-      font-size: 12px;
+      font-size: fluid-fz(12);
       font-weight: 700;
       letter-spacing: 1px;
       margin-left: fluid(10);
@@ -311,7 +311,7 @@ const toggleSound = () => { muted.value = !muted.value }
   padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
-  font-size: 14px;
+  font-size: fluid-fz(14);
   letter-spacing: 2px;
 
   &:hover {
@@ -403,7 +403,7 @@ const toggleSound = () => { muted.value = !muted.value }
   transition: all 0.3s;
 
   @media (max-width: 1200px) { width: 35px; height: 35px; }
-  @media (max-width: 1024px) { display: none !important; }
+  @media (max-width: 1024px) { display: none; }
 
   // 邊框畫 V 形箭頭
   &::before {

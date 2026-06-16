@@ -62,7 +62,7 @@ defineProps({
   &__meta {
     display: flex;
     gap: fluid(8);
-    font-size: 13px;
+    font-size: fluid-fz(13);
     color: var(--color-text-muted);
   }
 
@@ -72,12 +72,12 @@ defineProps({
   }
 
   &__title {
-    font-size: 18px;
+    font-size: fluid-fz(18);
     margin: fluid(8) 0;
   }
 
   &__summary {
-    font-size: 14px;
+    font-size: fluid-fz(14);
     color: var(--color-text-muted);
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -91,7 +91,7 @@ defineProps({
     flex-wrap: wrap;
     gap: fluid(8);
     margin-top: fluid(12);
-    font-size: 12px;
+    font-size: fluid-fz(12);
     color: var(--color-primary);
   }
 }

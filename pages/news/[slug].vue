@@ -66,7 +66,7 @@ onMounted(() => {
     align-items: center;
     margin-bottom: fluid(24);
     color: var(--color-text-muted);
-    font-size: 14px;
+    font-size: fluid-fz(14);
   }
 
   &__tag {
@@ -97,7 +97,7 @@ onMounted(() => {
 
     figcaption {
       margin-top: fluid(6);
-      font-size: 13px;
+      font-size: fluid-fz(13);
       color: var(--color-text-muted);
     }
   }

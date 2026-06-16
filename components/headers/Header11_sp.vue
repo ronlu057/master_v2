@@ -339,7 +339,7 @@ onBeforeUnmount(() => {
 
   p {
     color: $web_header_2;
-    font-size: 14px;
+    font-size: fluid-fz(14);
     font-weight: 600;
     line-height: 1;
     margin-top: fluid(3);
@@ -478,7 +478,7 @@ onBeforeUnmount(() => {
       display: flex;
       align-items: flex-end;
       color: #fff;
-      font-size: fluid(30);
+      font-size: fluid-fz(30);
       line-height: 1;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -490,7 +490,7 @@ onBeforeUnmount(() => {
       span {
         position: relative;
         top: -1px;
-        font-size: 16px;
+        font-size: fluid-fz(16);
         letter-spacing: 2px;
         margin-left: fluid(20);
       }
@@ -508,7 +508,7 @@ onBeforeUnmount(() => {
       > a {
         display: block;
         color: #fff;
-        font-size: 14px;
+        font-size: fluid-fz(14);
         margin-right: fluid(20);
         transition: all 0.3s;
 
@@ -526,7 +526,7 @@ onBeforeUnmount(() => {
 
   p {
     color: #fff;
-    font-size: 13px;
+    font-size: fluid-fz(13);
   }
 }
 
@@ -574,7 +574,7 @@ onBeforeUnmount(() => {
 .lang_toggle {
   p:nth-child(1) {
     color: #fff;
-    font-size: 16px;
+    font-size: fluid-fz(16);
     font-weight: 700;
     margin-bottom: fluid(22);
   }
@@ -596,7 +596,7 @@ onBeforeUnmount(() => {
       flex-shrink: 0;
       position: relative;
       color: #fff;
-      font-size: 13px;
+      font-size: fluid-fz(13);
       letter-spacing: 0.5px;
       white-space: nowrap;
       padding: 1px fluid(10);
@@ -669,14 +669,14 @@ onBeforeUnmount(() => {
 
       p:nth-child(1) {
         color: #fff;
-        font-size: 18px;
+        font-size: fluid-fz(18);
         text-transform: uppercase;
         letter-spacing: 1px;
       }
 
       p:nth-child(2) {
         color: #fff;
-        font-size: 16px;
+        font-size: fluid-fz(16);
         font-weight: 500;
 
         svg {

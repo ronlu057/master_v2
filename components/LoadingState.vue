@@ -37,7 +37,7 @@ defineProps({
   }
 
   &__empty {
-    font-size: 15px;
+    font-size: fluid-fz(15);
   }
 }
 

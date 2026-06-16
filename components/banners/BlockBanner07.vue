@@ -400,7 +400,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
       align-items: center;
       flex-direction: column;
       color: #fff;
-      font-size: 15px;
+      font-size: fluid-fz(15);
       line-height: 1.2;
 
       .tool_bar {
@@ -500,7 +500,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
   padding: fluid(12) fluid(32);
   border: 1px solid #fff;
   color: #fff;
-  font-size: 14px;
+  font-size: fluid-fz(14);
   letter-spacing: 2px;
   transition: all 0.3s;
 

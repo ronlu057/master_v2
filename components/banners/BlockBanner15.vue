@@ -234,7 +234,7 @@ const onSlideChange = (s) => {
   padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
-  font-size: 14px;
+  font-size: fluid-fz(14);
   letter-spacing: 2px;
   transition: all 0.3s;
 
@@ -356,7 +356,7 @@ const onSlideChange = (s) => {
   display: flex;
   align-items: center;
   color: $web_color_1;
-  font-size: 18px;
+  font-size: fluid-fz(18);
   font-family: $title_font_en;
   letter-spacing: 0;
   margin-right: fluid(30);

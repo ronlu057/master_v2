@@ -308,7 +308,7 @@ body[data-page="index"] {
           a {
             display: block;
             padding: fluid(8) fluid(12);
-            font-size: 14px;
+            font-size: fluid-fz(14);
             border-radius: fluid(6);
             color: $web_font_color;
             transition: all var(--transition);
@@ -356,7 +356,7 @@ body[data-page="index"] {
     > a {
       display: block;
       color: $web_font_color;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       line-height: 1.5;
       padding: fluid(23) fluid(25);
       transition: all 0.3s;
@@ -385,7 +385,7 @@ body[data-page="index"] {
       a {
         display: block;
         padding: fluid(8) fluid(12);
-        font-size: 14px;
+        font-size: fluid-fz(14);
         border-radius: fluid(6);
         color: $web_font_color;
         transition: all var(--transition);
@@ -436,7 +436,7 @@ body[data-page="index"] {
     color: $web_font_color;
     transition: all 0.3s;
 
-    > .icon { font-size: 20px; }
+    > .icon { font-size: fluid-fz(20); }
 
     &:hover { color: $web_header_1; }
   }
@@ -468,7 +468,7 @@ body[data-page="index"] {
         padding: fluid(8) fluid(12);
         border: 1px solid var(--color-border);
         border-radius: var(--radius);
-        font-size: 14px;
+        font-size: fluid-fz(14);
       }
 
       button {
@@ -480,7 +480,7 @@ body[data-page="index"] {
         color: $web_font_color;
         transition: color 0.3s;
 
-        .icon { font-size: 18px; }
+        .icon { font-size: fluid-fz(18); }
 
         &:hover { color: var(--color-primary); }
       }
@@ -517,7 +517,7 @@ body[data-page="index"] {
       background: none;
       border: none;
       padding: fluid(8) fluid(12);
-      font-size: 14px;
+      font-size: fluid-fz(14);
       text-align: left;
       cursor: pointer;
       border-radius: fluid(6);
@@ -550,7 +550,7 @@ body[data-page="index"] {
       width: fluid(16);
       line-height: 16px;
       color: #fff;
-      font-size: 13px;
+      font-size: fluid-fz(13);
       font-weight: 500;
       text-align: center;
       background: #ff0006;
@@ -565,7 +565,7 @@ body[data-page="index"] {
     padding: 0 fluid(20);
     background: $web_header_1;
 
-    @media (min-width: 1201px) { display: none !important; }
+    @media (min-width: 1201px) { display: none; }
 
     .bars {
       position: relative;
@@ -641,7 +641,7 @@ body[data-page="index"] {
       > a {
         display: block;
         color: #fff;
-        font-size: 16px;
+        font-size: fluid-fz(16);
         text-shadow: 0 0 15px rgba(0, 0, 0, 0.45);
         padding: fluid(5) 0;
         transition: all 0.3s;
@@ -683,7 +683,7 @@ body[data-page="index"] {
           flex-shrink: 0;
           display: block;
           color: #a0a0a0;
-          font-size: 14px;
+          font-size: fluid-fz(14);
           line-height: 1.5;
           text-align: center;
           transition: all 0.3s;

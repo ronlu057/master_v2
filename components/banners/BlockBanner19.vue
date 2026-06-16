@@ -272,7 +272,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
-  font-size: 14px;
+  font-size: fluid-fz(14);
   letter-spacing: 2px;
   background: #fff;
   transition: all 0.3s;
@@ -303,7 +303,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
   @media (max-width: 1200px) { width: 35px; height: 35px; }
   @media (max-width: 840px)  { width: 30px; height: 30px; }
-  @media (max-width: 1024px) { display: none !important; }
+  @media (max-width: 1024px) { display: none; }
 
   // 邊框畫 V 形箭頭：置中穩定，不受字型字形影響
   &::before {

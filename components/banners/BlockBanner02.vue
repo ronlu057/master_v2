@@ -218,7 +218,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
-  font-size: 14px;
+  font-size: fluid-fz(14);
   letter-spacing: 2px;
   transition: all 0.3s;
 
@@ -342,7 +342,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
     .news_date {
       flex-shrink: 0;
       color: #000;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       font-weight: 300;
       font-family: 'Poppins', sans-serif;
       line-height: 1.2;
@@ -364,7 +364,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       text-overflow: ellipsis;
       overflow: hidden;
       color: #fff;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       letter-spacing: 1px;
       padding-left: fluid(35);
       transition: all 0.3s;
@@ -375,7 +375,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
   .module_desc {
     color: #fff;
-    font-size: 14px;
+    font-size: fluid-fz(14);
     font-weight: 300;
     line-height: 1.6;
     padding-left: fluid(30);

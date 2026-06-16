@@ -146,7 +146,7 @@ const features = [
 
   &__title {
     color: #fff;
-    font-size: fluid(48);
+    font-size: fluid-fz(48);
     max-width: fluid(620);
     margin-bottom: fluid(28);
   }
@@ -165,17 +165,17 @@ const features = [
   border-radius: var(--radius-lg);
 
   &__icon {
-    font-size: fluid(40);
+    font-size: fluid-fz(40);
   }
 
   &__title {
     margin: fluid(14) 0 fluid(8);
-    font-size: fluid(20);
+    font-size: fluid-fz(20);
   }
 
   &__text {
     color: var(--color-text-muted);
-    font-size: 14px;
+    font-size: fluid-fz(14);
   }
 }
 
@@ -192,7 +192,7 @@ const features = [
 
   &__name {
     margin: fluid(10) 0 fluid(4);
-    font-size: 15px;
+    font-size: fluid-fz(15);
   }
 
   &__price {

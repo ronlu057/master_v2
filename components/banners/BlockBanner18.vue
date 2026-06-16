@@ -105,7 +105,7 @@ const onSlideChange = (s) => {
   z-index: 1;
 
   :deep(.swiper-wrapper) {
-    transition-timing-function: ease-in-out !important;
+    transition-timing-function: ease-in-out;
   }
 
   .swiper-slide {
@@ -272,7 +272,7 @@ const onSlideChange = (s) => {
         padding: fluid(12) fluid(32);
         border: 1px solid $web_color_1;
         color: $web_color_1;
-        font-size: 14px;
+        font-size: fluid-fz(14);
         letter-spacing: 2px;
         margin-top: fluid(55);
         opacity: 0;
@@ -367,7 +367,7 @@ const onSlideChange = (s) => {
     align-items: center;
     flex-direction: column;
     color: #fff;
-    font-size: 15px;
+    font-size: fluid-fz(15);
     line-height: 1.2;
 
     // 直式進度條（背景軌 + 填滿）

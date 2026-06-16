@@ -327,12 +327,12 @@ onBeforeUnmount(() => {
 
         // VIEW MORE 按鈕進場（對齊原始 btnMarginTop(1)：55px、≤1200 為 35px）
         :deep(.cover_btn) {
-          margin-top: fluid(55) !important;
+          margin-top: fluid(55);
 
-          @media (max-width: 1200px) { margin-top: 35px !important; }
+          @media (max-width: 1200px) { margin-top: 35px; }
           @media (max-width: 720px) {
             margin: 0 auto;
-            margin-top: 35px !important;
+            margin-top: 35px;
           }
         }
       }
@@ -443,7 +443,7 @@ onBeforeUnmount(() => {
   span {
     color: #fff;
     font-family: $title_font_cht;
-    font-size: 14px;
+    font-size: fluid-fz(14);
     transition: all 0.3s;
 
     @media (max-width: 1200px) { font-size: 13px; }

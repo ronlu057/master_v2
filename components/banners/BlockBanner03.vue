@@ -307,7 +307,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         .button_set {
           margin-top: fluid(30);
 
-          @media (max-width: 400px) { margin-top: 30px !important; }
+          @media (max-width: 400px) { margin-top: 30px; }
         }
       }
     }
@@ -364,7 +364,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   padding: fluid(12) fluid(32);
   border: 1px solid #fff;
   color: #fff;
-  font-size: 14px;
+  font-size: fluid-fz(14);
   letter-spacing: 2px;
   transition: all 0.3s;
 
@@ -394,7 +394,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   transition: all 0.3s;
 
   @media (max-width: 1200px) { width: 35px; height: 35px; }
-  @media (max-width: 1024px) { display: none !important; }
+  @media (max-width: 1024px) { display: none; }
 
   &::before {
     content: '';

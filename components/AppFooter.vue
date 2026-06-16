@@ -69,14 +69,14 @@ const year = new Date().getFullYear()
   }
 
   &__name {
-    font-size: fluid(20);
+    font-size: fluid-fz(20);
     font-weight: 800;
     color: #fff;
   }
 
   &__slogan {
     margin-top: fluid(6);
-    font-size: 14px;
+    font-size: fluid-fz(14);
   }
 
   &__title {
@@ -87,14 +87,14 @@ const year = new Date().getFullYear()
 
   &__col ul li {
     margin-bottom: fluid(8);
-    font-size: 14px;
+    font-size: fluid-fz(14);
   }
 
   &__social {
     display: flex;
     gap: fluid(16);
     margin-top: fluid(16);
-    font-size: 14px;
+    font-size: fluid-fz(14);
   }
 
   &__bar {
@@ -104,7 +104,7 @@ const year = new Date().getFullYear()
     gap: fluid(16);
     padding: fluid(18) fluid(20);
     border-top: 1px solid rgba(255, 255, 255, 0.12);
-    font-size: 13px;
+    font-size: fluid-fz(13);
   }
 
   &__rules {

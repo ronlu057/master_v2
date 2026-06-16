@@ -244,7 +244,7 @@ onBeforeUnmount(() => {
       .button_set {
         display: flex;
         gap: fluid(12);
-        margin-top: 0 !important;
+        margin-top: 0;
       }
     }
 
@@ -279,7 +279,7 @@ onBeforeUnmount(() => {
         color: #fff;
         transition: all 0.3s;
 
-        > .icon { font-size: 20px; }
+        > .icon { font-size: fluid-fz(20); }
 
         // 下拉（卡片式浮層，樣式參考 header01 .lang_box）
         ul {
@@ -304,7 +304,7 @@ onBeforeUnmount(() => {
             a {
               display: block;
               color: $web_font_color;
-              font-size: 14px;
+              font-size: fluid-fz(14);
               text-align: center;
               padding: fluid(8) fluid(12);
               border-radius: fluid(6);
@@ -341,7 +341,7 @@ onBeforeUnmount(() => {
           width: fluid(16);
           line-height: 14px;
           color: $web_font_color;
-          font-size: 11px;
+          font-size: fluid-fz(11);
           font-weight: 700;
           text-align: center;
           background: #fff;

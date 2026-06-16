@@ -284,7 +284,7 @@ onBeforeUnmount(() => {
     > a {
       display: block;
       color: $web_font_color;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       padding: fluid(23) fluid(25);
       transition: all 0.3s;
 
@@ -317,7 +317,7 @@ onBeforeUnmount(() => {
       a {
         display: block;
         color: $web_font_color;
-        font-size: 14px;
+        font-size: fluid-fz(14);
         text-align: center;
         padding: fluid(8) fluid(12);
         border-radius: fluid(6);
@@ -368,7 +368,7 @@ onBeforeUnmount(() => {
     color: $web_font_color;
     transition: all 0.3s;
 
-    > .icon { font-size: 20px; }
+    > .icon { font-size: fluid-fz(20); }
 
     .search_form {
       display: flex;
@@ -388,7 +388,7 @@ onBeforeUnmount(() => {
         padding: fluid(6) fluid(10);
         border: 1px solid var(--color-border);
         color: $web_font_color;
-        font-size: 14px;
+        font-size: fluid-fz(14);
         width: fluid(200);
       }
 
@@ -401,7 +401,7 @@ onBeforeUnmount(() => {
         color: $web_font_color;
         transition: color 0.3s;
 
-        .icon { font-size: 18px; }
+        .icon { font-size: fluid-fz(18); }
 
         &:hover { color: $web_header_1; }
       }
@@ -430,7 +430,7 @@ onBeforeUnmount(() => {
         a {
           display: block;
           color: $web_font_color;
-          font-size: 14px;
+          font-size: fluid-fz(14);
           text-align: center;
           padding: fluid(8) fluid(12);
           border-radius: fluid(6);
@@ -470,7 +470,7 @@ onBeforeUnmount(() => {
       width: fluid(16);
       line-height: 16px;
       color: #fff;
-      font-size: 14px;
+      font-size: fluid-fz(14);
       font-weight: 500;
       text-align: center;
       background: #ff0006;
@@ -501,7 +501,7 @@ onBeforeUnmount(() => {
 
         &:nth-child(odd) { background: $web_font_color; }
         &:nth-child(even) { background: $web_header_1; }
-        &:nth-child(5) { background: $web_header_1 !important; }
+        &:nth-child(5) { background: $web_header_1; }
       }
     }
 
@@ -582,7 +582,7 @@ onBeforeUnmount(() => {
         display: block;
         position: relative;
         color: $web_font_color;
-        font-size: fluid(24);
+        font-size: fluid-fz(24);
         font-weight: 500;
         transition: all 0.3s;
 

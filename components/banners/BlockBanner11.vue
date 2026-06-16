@@ -255,7 +255,7 @@ defineProps({
   span {
     color: #fff;
     font-family: $title_font_en;
-    font-size: 15px;
+    font-size: fluid-fz(15);
     letter-spacing: 1px;
     transition: all 0.3s;
   }

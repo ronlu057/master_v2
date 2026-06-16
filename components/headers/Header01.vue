@@ -266,7 +266,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: fluid(10);
-  font-size: fluid(20);
+  font-size: fluid-fz(20);
   font-weight: 800;
   color: var(--color-heading);
 
@@ -275,7 +275,7 @@ onBeforeUnmount(() => {
     border-radius: fluid(99);
     background: var(--color-primary);
     color: #fff;
-    font-size: 12px;
+    font-size: fluid-fz(12);
     font-weight: 600;
   }
 }
@@ -304,7 +304,7 @@ onBeforeUnmount(() => {
     align-items: center;
     gap: fluid(4);
     padding: fluid(24) fluid(20);
-    font-size: 16px;
+    font-size: fluid-fz(16);
     font-weight: 400;
     border-radius: var(--radius);
 
@@ -315,7 +315,7 @@ onBeforeUnmount(() => {
   }
 
   &__caret {
-    font-size: 10px;
+    font-size: fluid-fz(10);
   }
 
   &__sub {
@@ -336,7 +336,7 @@ onBeforeUnmount(() => {
     a {
       display: block;
       padding: fluid(8) fluid(12);
-      font-size: 14px;
+      font-size: fluid-fz(14);
       border-radius: fluid(6);
 
       &:hover {
@@ -377,7 +377,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: fluid(26);
-  font-size: 18px;
+  font-size: fluid-fz(18);
 
   // .navtool_social 樣式走全域 main.scss（沿用 _header02.scss 圓形深底白 icon 風格）
 
@@ -388,7 +388,7 @@ onBeforeUnmount(() => {
     transition: color 0.3s;
 
     > .icon {
-      font-size: fluid(20);
+      font-size: fluid-fz(20);
     }
 
     &:hover,
@@ -436,7 +436,7 @@ onBeforeUnmount(() => {
       background: none;
       border: none;
       padding: fluid(8) fluid(12);
-      font-size: 14px;
+      font-size: fluid-fz(14);
       text-align: left;
       cursor: pointer;
       border-radius: fluid(6);
@@ -464,7 +464,7 @@ onBeforeUnmount(() => {
       padding: fluid(8) fluid(12);
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
-      font-size: 14px;
+      font-size: fluid-fz(14);
     }
 
     button {
@@ -476,7 +476,7 @@ onBeforeUnmount(() => {
       color: $web_font_color;
       transition: color 0.3s;
 
-      .icon { font-size: 18px; }
+      .icon { font-size: fluid-fz(18); }
 
       &:hover { color: var(--color-primary); }
     }
@@ -500,7 +500,7 @@ onBeforeUnmount(() => {
     border-radius: fluid(99);
     background: var(--color-primary);
     color: #fff;
-    font-size: 11px;
+    font-size: fluid-fz(11);
     display: flex;
     align-items: center;
     justify-content: center;

@@ -44,7 +44,7 @@ const row = computed(() => props.rows[0] || {})
   }
 
   &__title {
-    font-size: fluid(32);
+    font-size: fluid-fz(32);
     margin-bottom: fluid(16);
   }
 

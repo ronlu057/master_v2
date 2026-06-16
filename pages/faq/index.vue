@@ -81,7 +81,7 @@ useSeoMeta({ title: '常見問題 — 母版專案' })
       border: 1px solid var(--color-border);
       border-radius: fluid(99);
       background: var(--color-bg);
-      font-size: 14px;
+      font-size: fluid-fz(14);
 
       &.is-active {
         background: var(--color-primary);
@@ -109,14 +109,14 @@ useSeoMeta({ title: '常見問題 — 母版專案' })
     width: 100%;
     padding: fluid(18) fluid(20);
     background: var(--color-bg);
-    font-size: 16px;
+    font-size: fluid-fz(16);
     font-weight: 600;
     text-align: left;
   }
 
   &__icon {
     color: var(--color-primary);
-    font-size: fluid(22);
+    font-size: fluid-fz(22);
   }
 
   &__a {

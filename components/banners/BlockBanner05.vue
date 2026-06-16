@@ -358,7 +358,7 @@ const onReachBeginning = (s) => {
   padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
-  font-size: 14px;
+  font-size: fluid-fz(14);
   letter-spacing: 2px;
   transition: all 0.3s;
 
@@ -388,7 +388,7 @@ const onReachBeginning = (s) => {
 
   @media (max-width: 1200px) { width: 35px; height: 35px; }
   @media (max-width: 840px) { width: 30px; height: 30px; }
-  @media (max-width: 720px) { display: none !important; }
+  @media (max-width: 720px) { display: none; }
 
   &::before {
     content: '';

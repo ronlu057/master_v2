@@ -145,7 +145,7 @@ onBeforeUnmount(() => {
 
     > * {
       color: #fff;
-      font-size: 18px;
+      font-size: fluid-fz(18);
       font-family: $title_font_en;
       text-align: center;
       text-shadow: 0 0 15px rgba(0, 0, 0, 0.45);

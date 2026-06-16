@@ -316,7 +316,7 @@ body[data-page="index"] {
           > a {
             display: block;
             color: $web_font_color;
-            font-size: 16px;
+            font-size: fluid-fz(16);
             line-height: 1.5;
             padding: fluid(23) fluid(25);
             transition: all 0.3s;
@@ -357,7 +357,7 @@ body[data-page="index"] {
             a {
               display: block;
               color: $web_font_color;
-              font-size: 14px;
+              font-size: fluid-fz(14);
               padding: fluid(8) fluid(12);
               border-radius: fluid(6);
               transition: all 0.3s;
@@ -383,7 +383,7 @@ body[data-page="index"] {
         display: flex;
         align-items: center;
         gap: fluid(26);
-        font-size: 18px;
+        font-size: fluid-fz(18);
         margin-right: fluid(25);
 
         @include rwd-1200 { display: none; }
@@ -394,7 +394,7 @@ body[data-page="index"] {
           color: $web_font_color;
           transition: color 0.3s;
 
-          > .icon { font-size: 20px; }
+          > .icon { font-size: fluid-fz(20); }
 
           &:hover,
           &:focus-within {
@@ -441,7 +441,7 @@ body[data-page="index"] {
             background: none;
             border: none;
             padding: fluid(8) fluid(12);
-            font-size: 14px;
+            font-size: fluid-fz(14);
             text-align: left;
             cursor: pointer;
             border-radius: fluid(6);
@@ -469,7 +469,7 @@ body[data-page="index"] {
             padding: fluid(8) fluid(12);
             border: 1px solid var(--color-border);
             border-radius: var(--radius);
-            font-size: 14px;
+            font-size: fluid-fz(14);
           }
 
           button {
@@ -481,7 +481,7 @@ body[data-page="index"] {
             color: $web_font_color;
             transition: color 0.3s;
 
-            .icon { font-size: 18px; }
+            .icon { font-size: fluid-fz(18); }
 
             &:hover { color: $web_header_1; }
           }
@@ -501,7 +501,7 @@ body[data-page="index"] {
             border-radius: fluid(99);
             background: $web_header_1;
             color: #fff;
-            font-size: 11px;
+            font-size: fluid-fz(11);
             display: flex;
             align-items: center;
             justify-content: center;

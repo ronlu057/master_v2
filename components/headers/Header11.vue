@@ -267,7 +267,7 @@ onBeforeUnmount(() => {
     > a {
       display: block;
       color: $web_font_color;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       font-weight: 500;
       background-image: linear-gradient(to right, $web_header_2 0%, $web_header_2 100%);
       background-size: 0% 2px;
@@ -303,7 +303,7 @@ onBeforeUnmount(() => {
       a {
         display: block;
         padding: fluid(8) fluid(12);
-        font-size: 14px;
+        font-size: fluid-fz(14);
         border-radius: fluid(6);
         color: $web_font_color;
         transition: all var(--transition);
@@ -341,7 +341,7 @@ onBeforeUnmount(() => {
     cursor: pointer;
     transition: all 0.3s;
 
-    .icon { font-size: 18px; }
+    .icon { font-size: fluid-fz(18); }
 
     // 項目間距 + 分隔線
     & + * {
@@ -401,7 +401,7 @@ onBeforeUnmount(() => {
         padding: fluid(8) fluid(12);
         border: 1px solid var(--color-border);
         border-radius: var(--radius);
-        font-size: 14px;
+        font-size: fluid-fz(14);
       }
 
       button {
@@ -413,7 +413,7 @@ onBeforeUnmount(() => {
         color: $web_font_color;
         transition: color 0.3s;
 
-        .icon { font-size: 18px; }
+        .icon { font-size: fluid-fz(18); }
 
         &:hover { color: var(--color-primary); }
       }
@@ -450,7 +450,7 @@ onBeforeUnmount(() => {
       background: none;
       border: none;
       padding: fluid(8) fluid(12);
-      font-size: 14px;
+      font-size: fluid-fz(14);
       text-align: left;
       cursor: pointer;
       border-radius: fluid(6);
@@ -487,7 +487,7 @@ onBeforeUnmount(() => {
     height: fluid(16);
     padding: 0 fluid(4);
     color: #fff;
-    font-size: 11px;
+    font-size: fluid-fz(11);
     line-height: 1;
     background: $web_header_2;
     border-radius: fluid(8);

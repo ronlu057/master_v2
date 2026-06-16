@@ -368,7 +368,7 @@ onBeforeUnmount(() => {
   padding: fluid(12) fluid(32);
   border: 1px solid $web_color_1;
   color: $web_color_1;
-  font-size: 14px;
+  font-size: fluid-fz(14);
   letter-spacing: 2px;
   background: #fff;
   transition: all 0.3s;
@@ -447,7 +447,7 @@ onBeforeUnmount(() => {
 
     p {
       color: #fff;
-      font-size: 14px;
+      font-size: fluid-fz(14);
       font-weight: 500;
     }
 

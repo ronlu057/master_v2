@@ -284,7 +284,7 @@ body:not([data-page="index"]) {
     > a {
       display: block;
       color: $web_font_color;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       padding: fluid(23) fluid(25);
       transition: all 0.3s;
 
@@ -313,7 +313,7 @@ body:not([data-page="index"]) {
       a {
         display: block;
         color: $web_font_color;
-        font-size: 14px;
+        font-size: fluid-fz(14);
         text-align: center;
         padding: fluid(10) fluid(40);
         background: #fff;
@@ -354,7 +354,7 @@ body:not([data-page="index"]) {
     &:hover { color: $web_header_2; }
   }
 
-  .icon { font-size: 20px; }
+  .icon { font-size: fluid-fz(20); }
 
   // .navtool_social 樣式走全域 main.scss
 
@@ -382,7 +382,7 @@ body:not([data-page="index"]) {
       li a {
         display: block;
         color: $web_font_color;
-        font-size: 13px;
+        font-size: fluid-fz(13);
         padding: fluid(6) fluid(10);
         text-align: center;
         border-radius: fluid(6);
@@ -414,7 +414,7 @@ body:not([data-page="index"]) {
       border-radius: fluid(99);
       background: $web_header_2;
       color: #fff;
-      font-size: 10px;
+      font-size: fluid-fz(10);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -447,7 +447,7 @@ body:not([data-page="index"]) {
 
   color: #fff;
 
-  .icon { font-size: 20px; }
+  .icon { font-size: fluid-fz(20); }
 
   div {
     margin-left: fluid(15);
@@ -458,13 +458,13 @@ body:not([data-page="index"]) {
 
     p:nth-child(1) {
       color: #fff;
-      font-size: 13px;
+      font-size: fluid-fz(13);
       letter-spacing: 1px;
     }
 
     p:nth-child(2) {
       color: #fff;
-      font-size: 12px;
+      font-size: fluid-fz(12);
       letter-spacing: 2px;
       opacity: 0.5;
     }
@@ -518,7 +518,7 @@ body:not([data-page="index"]) {
 
   p {
     color: #fff;
-    font-size: 14px;
+    font-size: fluid-fz(14);
     font-family: 'Poppins', sans-serif;
     line-height: 1;
     margin-top: fluid(3);

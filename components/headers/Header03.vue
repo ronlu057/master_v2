@@ -409,7 +409,7 @@ onBeforeUnmount(() => {
       align-items: center;
       height: 100%;        // a 也撐滿，確保整個 li 視覺都是 hover 區
       color: #fff;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       padding: fluid(10) fluid(20);
       background-image: linear-gradient(to right, $web_header_1, $web_header_1);
       background-size: 0 1px;
@@ -460,7 +460,7 @@ onBeforeUnmount(() => {
   a {
     display: block;
     color: $web_font_color;
-    font-size: 14px;
+    font-size: fluid-fz(14);
     padding: fluid(8) fluid(12);
     border-radius: fluid(6);
     transition: all 0.3s;
@@ -508,7 +508,7 @@ onBeforeUnmount(() => {
 
 .overview_title {
   color: $web_header_1;
-  font-size: fluid(32);
+  font-size: fluid-fz(32);
   font-weight: 700;
   padding-bottom: fluid(22);
   border-bottom: 1px solid $web_header_1;
@@ -528,7 +528,7 @@ onBeforeUnmount(() => {
 
   > span:first-child {
     color: $web_font_color;
-    font-size: fluid(20);
+    font-size: fluid-fz(20);
     font-weight: 700;
     padding-right: fluid(30);
     transition: all 0.3s;
@@ -546,7 +546,7 @@ onBeforeUnmount(() => {
     background: #fff;
     border-radius: 50%;
     color: $web_header_1;
-    font-size: 18px;
+    font-size: fluid-fz(18);
     transition: all 0.3s;
   }
 
@@ -648,7 +648,7 @@ onBeforeUnmount(() => {
   padding: fluid(8) fluid(24);
   border: 1px solid $web_header_1;
   color: $web_header_1;
-  font-size: 13px;
+  font-size: fluid-fz(13);
   letter-spacing: 2px;
   transition: all 0.3s;
 
@@ -670,7 +670,7 @@ onBeforeUnmount(() => {
     align-items: center;
     position: relative;
     color: #fff;
-    font-size: 16px;
+    font-size: fluid-fz(16);
     padding: fluid(10) 0;
     background-image: linear-gradient(to right, $web_header_1, $web_header_1);
     background-size: 0 1px;
@@ -690,7 +690,7 @@ onBeforeUnmount(() => {
     color: #fff;
 
     .icon {
-      font-size: 18px;
+      font-size: fluid-fz(18);
       flex-shrink: 0;
     }
 
@@ -741,7 +741,7 @@ onBeforeUnmount(() => {
       display: block;
       width: 100%;
       color: $web_font_color;
-      font-size: 14px;
+      font-size: fluid-fz(14);
       padding: fluid(8) fluid(12);
       background: none;
       border: none;
@@ -772,7 +772,7 @@ onBeforeUnmount(() => {
     border-radius: fluid(99);
     background: $web_header_1;
     color: #fff;
-    font-size: 11px;
+    font-size: fluid-fz(11);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -816,7 +816,7 @@ onBeforeUnmount(() => {
       border-radius: var(--radius);
       background: #fff;
       color: $web_font_color;
-      font-size: 14px;
+      font-size: fluid-fz(14);
 
       &::placeholder { color: var(--color-text-muted); }
     }
@@ -834,7 +834,7 @@ onBeforeUnmount(() => {
       color: $web_font_color;
       transition: background 0.3s, color 0.3s;
 
-      .icon { font-size: 18px; }
+      .icon { font-size: fluid-fz(18); }
 
       &:hover {
         background: var(--color-surface);
@@ -852,7 +852,7 @@ onBeforeUnmount(() => {
   cursor: pointer;
 
   @include rwd-1200 { display: flex; }
-  @media (min-width: 1201px) { display: none !important; }
+  @media (min-width: 1201px) { display: none; }
 
   .bars {
     position: relative;

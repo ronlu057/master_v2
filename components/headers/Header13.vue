@@ -281,7 +281,7 @@ onBeforeUnmount(() => {
       pointer-events: auto;
       transform: translate(0, -50%);
     }
-    .navtool .search_btn_sp { display: flex !important; }
+    .navtool .search_btn_sp { display: flex; }
     .navtool .search_btn    { display: none; }
   }
 }
@@ -314,7 +314,7 @@ onBeforeUnmount(() => {
       border: 0;
       border-bottom: 1px solid var(--color-border);
       color: $web_font_color;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       min-width: fluid(280);
 
       &:focus { outline: none; border-bottom-color: $web_header_1; }
@@ -335,7 +335,7 @@ onBeforeUnmount(() => {
       > a {
         display: block;
         color: $web_font_color;
-        font-size: 16px;
+        font-size: fluid-fz(16);
         line-height: 1.5;
         padding: fluid(23) fluid(25);
         transition: all 0.3s;
@@ -369,7 +369,7 @@ onBeforeUnmount(() => {
         a {
           display: block;
           color: $web_font_color;
-          font-size: 14px;
+          font-size: fluid-fz(14);
           text-align: center;
           padding: fluid(8) fluid(12);
           border-radius: fluid(6);
@@ -423,7 +423,7 @@ onBeforeUnmount(() => {
     color: #fff;
     transition: all 0.3s;
 
-    > .icon { font-size: 20px; }
+    > .icon { font-size: fluid-fz(20); }
 
     // 下拉（卡片式浮層，樣式參考 header01 .lang_box）
     ul {
@@ -448,7 +448,7 @@ onBeforeUnmount(() => {
         a {
           display: block;
           color: $web_font_color;
-          font-size: 14px;
+          font-size: fluid-fz(14);
           text-align: center;
           padding: fluid(8) fluid(12);
           border-radius: fluid(6);
@@ -476,7 +476,7 @@ onBeforeUnmount(() => {
   .mbPanel_btn {
     padding: 0 fluid(20);
 
-    @media (min-width: 1201px) { display: none !important; }
+    @media (min-width: 1201px) { display: none; }
 
     .bars {
       position: relative;

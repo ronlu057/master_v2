@@ -399,7 +399,7 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
   padding: fluid(12) fluid(32);
   border: 1px solid #fff;
   color: #fff;
-  font-size: 14px;
+  font-size: fluid-fz(14);
   letter-spacing: 2px;
   margin-top: fluid(24);
   opacity: 0;
@@ -458,7 +458,7 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
 }
 
 .scroll_hint_label {
-  font-size: 11px;
+  font-size: fluid-fz(11);
   letter-spacing: 3px;
   font-weight: 600;
   writing-mode: vertical-rl;
@@ -499,7 +499,7 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
   border: none;
   cursor: pointer;
   color: var(--color-heading);
-  font-size: 28px;
+  font-size: fluid-fz(28);
   line-height: 1;
 }
 .video_control .play svg {
@@ -537,7 +537,7 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
 
 .news_date {
   color: var(--color-heading);
-  font-size: 15px;
+  font-size: fluid-fz(15);
   font-weight: 700;
 }
 .news_date span {
@@ -547,7 +547,7 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
 
 .news_title {
   color: var(--color-heading);
-  font-size: 18px;
+  font-size: fluid-fz(22);
   font-weight: 700;
   line-height: 1.5;
   margin-top: fluid(5);
@@ -559,6 +559,8 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
 }
 
 .news_desc {
+  font-size: fluid-fz(14);
+  color: var(--color-text-muted);
   line-height: 1.5;
   margin-top: fluid(8);
   display: -webkit-box;
@@ -589,7 +591,7 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 24px;
+  font-size: fluid-fz(24);
   line-height: 1;
   color: var(--color-heading);
 

@@ -56,7 +56,7 @@ const bg = computed(() => banners.value?.[0]?.image?.pc || '')
 
   &__title {
     color: #fff;
-    font-size: fluid(36);
+    font-size: fluid-fz(36);
   }
 
   &__sub {

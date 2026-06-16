@@ -109,7 +109,7 @@ useSeoMeta({ title: '搜尋 — 母版專案' })
       border: 1px solid var(--color-border);
       border-radius: fluid(99);
       background: var(--color-bg);
-      font-size: 13px;
+      font-size: fluid-fz(13);
 
       &.is-active {
         background: var(--color-primary);
@@ -135,13 +135,13 @@ useSeoMeta({ title: '搜尋 — 母版專案' })
     padding: 2px fluid(10);
     border-radius: fluid(4);
     background: var(--color-surface);
-    font-size: 12px;
+    font-size: fluid-fz(12);
     color: var(--color-primary);
   }
 
   &__title {
     display: block;
-    font-size: 18px;
+    font-size: fluid-fz(18);
     font-weight: 700;
     margin: fluid(8) 0 fluid(4);
 
@@ -151,7 +151,7 @@ useSeoMeta({ title: '搜尋 — 母版專案' })
   }
 
   &__summary {
-    font-size: 14px;
+    font-size: fluid-fz(14);
     color: var(--color-text-muted);
   }
 }

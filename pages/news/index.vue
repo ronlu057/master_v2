@@ -95,7 +95,7 @@ applySeo(seo.value)
     border: 1px solid var(--color-border);
     border-radius: fluid(99);
     background: var(--color-bg);
-    font-size: 14px;
+    font-size: fluid-fz(14);
     transition: all var(--transition);
 
     &.is-active,

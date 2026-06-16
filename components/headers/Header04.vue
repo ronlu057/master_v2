@@ -365,7 +365,7 @@ onBeforeUnmount(() => {
     > a {
       display: block;
       color: $web_font_color;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       padding: fluid(14) fluid(25);
       transition: all 0.3s;
 
@@ -401,7 +401,7 @@ onBeforeUnmount(() => {
       a {
         display: block;
         color: $web_font_color;
-        font-size: 14px;
+        font-size: fluid-fz(14);
         text-align: center;
         padding: fluid(10) fluid(20);
         transition: all 0.3s;
@@ -459,7 +459,7 @@ onBeforeUnmount(() => {
 
     color: $web_font_color;
 
-    .icon { font-size: 16px; }
+    .icon { font-size: fluid-fz(16); }
 
     &:hover {
       background: $web_header_2;
@@ -492,7 +492,7 @@ onBeforeUnmount(() => {
           width: fluid(35);
           height: fluid(35);
           color: $web_font_color;
-          font-size: 14px;
+          font-size: fluid-fz(14);
           background: #fff;
           border-radius: 50%;
           box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
@@ -528,7 +528,7 @@ onBeforeUnmount(() => {
       width: fluid(18);
       height: fluid(18);
       color: #fff;
-      font-size: 12px;
+      font-size: fluid-fz(12);
       background: $web_font_color;
       border-radius: 50%;
       transition: all 0.3s;
@@ -537,7 +537,7 @@ onBeforeUnmount(() => {
 
   // 漢堡
   .mbPanel_btn {
-    @media (min-width: 1201px) { display: none !important; }
+    @media (min-width: 1201px) { display: none; }
 
     .bars {
       position: relative;
@@ -602,7 +602,7 @@ onBeforeUnmount(() => {
     padding: fluid(6) fluid(10);
     border: 1px solid var(--color-border);
     color: $web_font_color;
-    font-size: 14px;
+    font-size: fluid-fz(14);
     width: fluid(220);
   }
 
@@ -613,7 +613,7 @@ onBeforeUnmount(() => {
     margin-left: fluid(8);
     color: $web_font_color;
 
-    .icon { font-size: 18px; }
+    .icon { font-size: fluid-fz(18); }
   }
 }
 

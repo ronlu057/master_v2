@@ -205,12 +205,12 @@ $red: #bf3131;
     border: none;
     border-radius: fluid(999);
     padding: 0 fluid(16);
-    font-size: 16px;
+    font-size: fluid-fz(16);
     font-weight: 500;
   }
 
   &__caret {
-    font-size: 12px;
+    font-size: fluid-fz(12);
     transition: transform var(--transition);
   }
 
@@ -236,7 +236,7 @@ $red: #bf3131;
       background: none;
       border: none;
       text-align: center;
-      font-size: 14px;
+      font-size: fluid-fz(14);
 
       &:hover,
       &.is-active {
@@ -252,7 +252,7 @@ $red: #bf3131;
     flex-shrink: 0;
     color: $red;
 
-    .icon { font-size: 38px; }
+    .icon { font-size: fluid-fz(38); }
   }
 
   /* 行動版 */

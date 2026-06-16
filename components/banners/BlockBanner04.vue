@@ -215,7 +215,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   padding: fluid(12) fluid(32);
   border: 1px solid #fff;
   color: #fff;
-  font-size: 14px;
+  font-size: fluid-fz(14);
   letter-spacing: 2px;
   transition: all 0.3s, opacity 0.8s, transform 0.8s;
 

@@ -305,7 +305,7 @@ body:not([data-page="index"]) {
     > a {
       display: block;
       color: #fff;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       padding: fluid(23) fluid(20);
       transition: all 0.5s $ani_bezier_7;
     }
@@ -330,7 +330,7 @@ body:not([data-page="index"]) {
       a {
         display: block;
         color: #fff;
-        font-size: 14px;
+        font-size: fluid-fz(14);
         text-align: center;
         padding: fluid(10) fluid(20);
         background: rgba(0, 0, 0, 0.55);
@@ -372,7 +372,7 @@ body:not([data-page="index"]) {
     &:hover { opacity: 0.85; }
   }
 
-  .icon { font-size: 18px; }
+  .icon { font-size: fluid-fz(18); }
 
   // .navtool_social 樣式走全域 main.scss
 
@@ -398,7 +398,7 @@ body:not([data-page="index"]) {
       li a {
         display: block;
         color: #fff;
-        font-size: 13px;
+        font-size: fluid-fz(13);
         padding: fluid(6) fluid(10);
         text-align: center;
 
@@ -425,7 +425,7 @@ body:not([data-page="index"]) {
       border-radius: fluid(99);
       background: $web_header_1;
       color: #fff;
-      font-size: 10px;
+      font-size: fluid-fz(10);
       display: flex;
       align-items: center;
       justify-content: center;

@@ -43,13 +43,13 @@ const { data: firmData } = await useSiteFirm()
   }
 
   &__title {
-    font-size: fluid(44);
+    font-size: fluid-fz(44);
     margin: fluid(12) 0;
   }
 
   &__desc {
     color: var(--color-text-muted);
-    font-size: 17px;
+    font-size: fluid-fz(17);
     margin-bottom: fluid(28);
   }
 
@@ -62,7 +62,7 @@ const { data: firmData } = await useSiteFirm()
     background: #fff;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    font-size: 15px;
+    font-size: fluid-fz(15);
   }
 }
 

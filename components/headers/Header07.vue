@@ -277,7 +277,7 @@ onBeforeUnmount(() => {
     > a {
       display: block;
       color: $web_font_color;
-      font-size: 16px;
+      font-size: fluid-fz(16);
       padding: fluid(23) fluid(15);
       transition: all 0.3s;
 
@@ -309,7 +309,7 @@ onBeforeUnmount(() => {
       a {
         display: block;
         color: $web_font_color;
-        font-size: 14px;
+        font-size: fluid-fz(14);
         padding: fluid(8) fluid(12);
         border-radius: fluid(6);
         transition: all 0.3s;
@@ -357,7 +357,7 @@ onBeforeUnmount(() => {
     color: $web_font_color;
     transition: all 0.3s;
 
-    > .icon { font-size: 20px; }
+    > .icon { font-size: fluid-fz(20); }
 
     &:hover { color: $web_header_1; }
   }
@@ -385,7 +385,7 @@ onBeforeUnmount(() => {
       background: none;
       border: none;
       padding: fluid(8) fluid(12);
-      font-size: 14px;
+      font-size: fluid-fz(14);
       text-align: left;
       cursor: pointer;
       border-radius: fluid(6);
@@ -451,26 +451,26 @@ onBeforeUnmount(() => {
 
         p:nth-child(odd) {
           color: $web_font_color;
-          font-size: 13px;
+          font-size: fluid-fz(13);
           font-weight: 500;
 
           span {
             color: #d62020;
-            font-size: 15px;
+            font-size: fluid-fz(15);
             font-weight: 700;
           }
         }
 
         p:nth-child(even) {
           color: $web_font_color;
-          font-size: 16px;
+          font-size: fluid-fz(16);
           font-weight: 500;
 
           @include rwd-1440 { font-size: 13px; }
 
           span {
             color: #d62020;
-            font-size: fluid(24);
+            font-size: fluid-fz(24);
             font-weight: 700;
 
             @include rwd-1440 { font-size: 18px; }
@@ -505,7 +505,7 @@ onBeforeUnmount(() => {
     padding: 0 fluid(20);
     background: $web_header_1;
 
-    @media (min-width: 1201px) { display: none !important; }
+    @media (min-width: 1201px) { display: none; }
 
     .bars {
       position: relative;

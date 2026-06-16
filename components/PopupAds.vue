@@ -82,7 +82,7 @@ const link = computed(() => {
     border: none;
     background: #fff;
     box-shadow: var(--shadow);
-    font-size: 16px;
+    font-size: fluid-fz(16);
   }
 
   &__img {

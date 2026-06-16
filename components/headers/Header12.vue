@@ -256,7 +256,7 @@ onBeforeUnmount(() => {
         display: block;
         position: relative;
         color: #fff;
-        font-size: 16px;
+        font-size: fluid-fz(16);
         line-height: 1.5;
         padding: fluid(9) 0;
         transition: all 0.3s;
@@ -317,7 +317,7 @@ onBeforeUnmount(() => {
         a {
           display: block;
           color: $web_font_color;
-          font-size: 14px;
+          font-size: fluid-fz(14);
           text-align: center;
           padding: fluid(8) fluid(12);
           border-radius: fluid(6);
@@ -379,7 +379,7 @@ onBeforeUnmount(() => {
     color: #fff;
     transition: all 0.3s;
 
-    > .icon { font-size: 20px; }
+    > .icon { font-size: fluid-fz(20); }
 
     // 下拉（卡片式浮層，樣式參考 header01 .lang_box）
     ul {
@@ -404,7 +404,7 @@ onBeforeUnmount(() => {
         a {
           display: block;
           color: $web_font_color;
-          font-size: 14px;
+          font-size: fluid-fz(14);
           text-align: center;
           padding: fluid(8) fluid(12);
           border-radius: fluid(6);
@@ -436,7 +436,7 @@ onBeforeUnmount(() => {
     background: $web_header_2;
     padding: 0;
 
-    @media (min-width: 1201px) { display: none !important; }
+    @media (min-width: 1201px) { display: none; }
 
     .bars {
       position: relative;

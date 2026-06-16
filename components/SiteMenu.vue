@@ -44,7 +44,7 @@ const emit = defineEmits(['navigate'])
     align-items: center;
     gap: fluid(4);
     padding: fluid(10) fluid(14);
-    font-size: 18px;
+    font-size: fluid-fz(18);
     font-weight: 600;
     border-radius: var(--radius);
 
@@ -55,7 +55,7 @@ const emit = defineEmits(['navigate'])
   }
 
   &__caret {
-    font-size: 10px;
+    font-size: fluid-fz(10);
   }
 
   &__sub {
@@ -76,7 +76,7 @@ const emit = defineEmits(['navigate'])
     a {
       display: block;
       padding: fluid(8) fluid(12);
-      font-size: 14px;
+      font-size: fluid-fz(14);
       border-radius: fluid(6);
 
       &:hover {

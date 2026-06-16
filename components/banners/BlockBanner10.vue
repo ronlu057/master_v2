@@ -228,7 +228,7 @@ const onSlideChange = (s) => {
   top: 50%;
   left: calc(47.5 / 16 * 0.5rem + 47.5 / 19.2 * 0.5vw);
   color: #fff;
-  font-size: 16px;
+  font-size: fluid-fz(16);
   font-family: 'Outfit', sans-serif;
   letter-spacing: 0;
   transform: translate(-50%, -50%);
@@ -358,7 +358,7 @@ const onSlideChange = (s) => {
   border: 1px solid $web_color_1;
   color: #fff;
   background: $web_color_1;
-  font-size: 14px;
+  font-size: fluid-fz(14);
   letter-spacing: 2px;
   transition: all 0.3s;
 
