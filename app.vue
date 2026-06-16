@@ -7,7 +7,8 @@ const { state: siteState } = useEffectiveSettings()
 
 // 動態組成 <style> 內容：(1) :root CSS variable 給 SiteLogo 用 (2) 後台自訂 CSS
 const siteStyleContent = computed(() => {
-  const cssVars = `:root { --site-logo-h: ${siteState.logoMaxHeight || 66}px; }`
+  // 注入「純數字」當 logo 的 1920 設計高度（不含 px）；實際高度由 SiteLogo 套 fluid 縮放算出
+  const cssVars = `:root { --site-logo-h: ${siteState.logoMaxHeight || 66}; }`
   // 後台指定的 Header 背景色 → 強制蓋過所有版型在所有狀態（含 .scroll / 內頁）的背景。
   // 空字串＝不注入，交還給版型自身設計。值可為 'transparent' / 色碼 / rgba()。
   // 連 backdrop-filter 一起關掉，確保「透明」是真的透明（不會殘留毛玻璃模糊）。
