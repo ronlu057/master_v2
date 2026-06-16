@@ -671,5 +671,11 @@ onBeforeUnmount(() => {
   left: 0;
   transform-origin: top left;
   pointer-events: none;
+
+  // 預覽整體不可互動（避免誤點 banner 連結跳頁）；唯獨放行「影片開關（× / ▶）」，
+  // 方便在後台關掉背景影片看主圖／文字。
+  :deep(.video_control) {
+    pointer-events: auto;
+  }
 }
 </style>
