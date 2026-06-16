@@ -409,6 +409,59 @@ template 內也可直接 `$t('btn.more')` 縮寫。
 
 > 詳見白皮書 [§9.10 多語系](./開發母版專案.md#910-多語系nuxtjsi18n)。
 
+### 3.6 用 `fluid()` 寫桌機等比尺寸（字級 / 版面）
+
+桌機（1024–2560）要「等比縮放、2560 與 1920 同比例零落差」的尺寸，一律用 `fluid()`（全域注入，不需 `@use`）。
+
+| 步驟 | 動作 |
+|---|---|
+| ① | 量設計稿（1920 基準）上的 px 值，例如主標 56px、區塊上下 padding 64px |
+| ② | 直接寫 `fluid(設計px)`：`font-size: fluid(56);`、`padding: fluid(64) 0;`、`--container: fluid(1600);` |
+| ③ | 1920 時剛好＝設計值；1024 / 2560 自動等比（`56 → 1024 時≈30、2560 時≈75`） |
+
+```scss
+.title   { font-size: fluid(56); margin: 0 0 fluid(18); }
+.section { padding: fluid(64) 0; }
+.card    { gap: fluid(24); border-radius: fluid(12); max-width: fluid(540); }
+```
+
+**哪些要 / 不要轉**（詳見 [製作規範 §3.6](./製作規範.md#36-字級尺寸流體-rwd-規範)）：
+
+- ✅ 要：`margin`/`padding`/`gap`、寬高/`max-width`、定位 `top/left…`、`border-radius`、大字級(≥20px)、設計用 CSS 變數。
+- ❌ 不要（維持固定）：1–2px 細邊、`box-shadow`/`transform`、**小 UI 字 <20px**、`@media`/`@include rwd-*` 區塊內、已是 `%`/`vw`/`calc` 的值、`/admin` 後台。
+- ❌ 別寫死「算完的數值」當上限（不要 `clamp(…, 75px)`，要 `fluid()` 或 `calc(56/1920*2560*1px)`）。
+
+> 手機（<1024）尺寸照舊寫在 `@include rwd-768` / `rwd-480` 區塊內，`fluid()` 不影響（下限止於 1024）。
+
+### 3.7 後台調 Header 選單配色（`/admin/header`）
+
+**操作（PM / 設計）**：`/admin/header` →「選單顏色」拉色票即時預覽（主選單文字/滑過、下拉文字/滑過、下拉背景/單項背景）→ 每色可「回到預設」或「全部回到預設」→ 按「提交」寫回 `site-settings.json` 立即生效。游標移到有子選單的項目才看得到下拉色。
+
+**新增「一個可調色」（工程師）** —— 共改 5 處（沿用既有色的機制）：
+
+| 步驟 | 檔案 | 動作 |
+|---|---|---|
+| ① | `composables/useEffectiveSettings.js` | state 加 `headerXxxColor: pub.headerXxxColor \|\| ''` |
+| ② | `server/routes/_admin/site-settings.get.js` | `DEFAULTS` 加 `headerXxxColor: ''` |
+| ③ | `server/routes/_admin/site-settings.post.js` | `ALLOWED_KEYS` 加 `'headerXxxColor'` |
+| ④ | `composables/useSiteSettings.js` | `submit()` payload 加 `headerXxxColor: state.headerXxxColor \|\| ''` |
+| ⑤ | `app.vue` | `siteStyleContent` 內，有值才注入 `!important` 規則到對應 `.app-header …` 選擇器 |
+| ⑥ | `pages/admin/header.vue` | `MENU_COLOR_FIELDS` 陣列加一筆（自動長出色票 + 回到預設 + dirty） |
+
+> 為什麼走注入而非元件改色：全版型通用、且**不寫行內 `:style`**（破壞 RWD）。下拉色用更深選擇器 `nav [class*="__sub"] a` → 與主選單分開。
+
+### 3.8 後台編 Banner 內容（`/admin/banner`）
+
+| 動作 | 步驟 |
+|---|---|
+| **換背景圖** | 「上傳背景圖」選檔 → **裁切器**拖曳/縮放（比例固定）→「套用裁切」→ 自動輸出 **2560×按比例高**、存 `public/img/tw/banner/`、上傳 |
+| **圖片 alt** | 上傳後會**自動 AI 辨識**填入；也可手按「AI 辨識」重跑或手動輸入（留空 → 前台用標題） |
+| **文案** | 標題/副標/說明文可換行；輸入關鍵字按「AI 一鍵生成」產出連貫三欄 |
+| **背景影片** | 填 YouTube 連結即用；**留空**時改「上傳影片檔」（mp4/webm，≤50MB）→ 前台桌機/手機（含 iOS）靜音自動播 |
+| **送出** | 按「送出寫回 banners.json」固化（寫進 `/banner/home`，站台下次請求生效） |
+
+> AI（文案/辨識）需 `.env.local` 設 `NUXT_GEMINI_KEY`；沒設時其餘功能照常。詳見白皮書 [§12.5](./開發母版專案.md#125-後台編輯adminbannerdev-mode)。
+
 ---
 
 ## 4. Debug 與狀況排查

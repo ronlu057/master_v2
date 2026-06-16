@@ -121,7 +121,7 @@ body{
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"></p>
 <p>本文件為<strong>母版專案</strong>的開發指南與規範。此母版以一套程式碼基底，透過設定切換衍生出<strong>五種專案類型</strong>，供開發團隊快速交付不同需求的網站。著手開發前請詳讀本文件。</p>
 <blockquote>
-<p>版本：v2.0　|　更新日期：2026-05-22　|　維護單位：AD-Design 技術部
+<p>版本：v2.1　|　更新日期：2026-06-16　|　維護單位：AD-Design 技術部
 🔗 後端 API 規格請參閱：<a href="general-website-whitepaper.html">一般網站白皮書</a></p>
 </blockquote>
 <hr>
@@ -1439,6 +1439,31 @@ const bg = computed(() =&gt; banners.value?.[0]?.image?.pc || &#39;&#39;)
 </tr>
 </thead>
 <tbody><tr>
+<td>v2.1</td>
+<td>2026-06-16</td>
+<td><strong>流體 RWD 系統（§9.5.1、製作規範 §3.6）</strong>：新增 <code>_variables.scss</code> 的 <code>fluid($target, $min:1024, $max:2560)</code> 函式（全程 CSS <code>calc</code>、不寫死算完的數值）。以 1920 設計稿為基準，桌機 1024–2560 等比縮放；<code>--container</code> / <code>.wider_container</code> 改 <code>fluid()</code>，全站字級 clamp 上限延伸到 2560，版面 px（margin/padding/寬高/定位/gap/border-radius）、大字級(≥20px)、設計用 CSS 變數（<code>--radius</code>/<code>--radius-lg</code>/<code>--header-h</code>）一律 <code>fluid()</code>。<strong>目標：2560 與 1920 同比例、位置零落差；≤1920 行為與舊設定一致</strong>。維持固定：1–2px 細邊、小 UI 字(<20px)、<code>box-shadow</code>/<code>transform</code>、<code>@media</code> 區塊、<code>/admin</code> 後台</td>
+</tr>
+<tr>
+<td>v2.1</td>
+<td>2026-06-16</td>
+<td><strong>Banner 改走獨立 API（§8.1、§12.3）</strong>：首頁 banner 內容由 <code>/home/view</code> 聚合移到獨立 <strong>Banner API <code>/banner/home</code></strong>（<code>banners.json</code> 的 <code>home</code> 改為 <code>{ videoUrl, videoFile, rows, news }</code>）；<code>BlockBanner</code> 派發器自己 <code>useApiData(&#39;/banner/home&#39;)</code>；<code>home.json</code> banner block 瘦身為 <code>{ &quot;type&quot;: &quot;banner&quot; }</code>。<code>BlockRenderer</code> 由 <code>.vue</code> 改 <strong><code>.js</code> render function</strong>（避免 template <code>v-for/v-if</code> 產生 SSR Fragment 註解 <code>&lt;!--[--&gt;</code>，維持 SSR/SEO）</td>
+</tr>
+<tr>
+<td>v2.1</td>
+<td>2026-06-16</td>
+<td><strong>Banner 後台強化（§12.5）</strong>：背景圖<strong>互動裁切器</strong>（拖曳/縮放、比例固定、輸出 2560×按比例高、存 <code>public/img/tw/banner/</code>）；圖片 <code>alt</code> + <strong>AI 辨識</strong>（Gemini Vision）；背景影片支援 <strong>YouTube 連結 / 上傳影片檔</strong>（HTML5、靜音循環、<code>playsinline</code> 含 iOS 自動播放）；標題/副標/說明文 AI 生成；送出寫回 <code>banners.json</code></td>
+</tr>
+<tr>
+<td>v2.1</td>
+<td>2026-06-16</td>
+<td><strong>Header 後台選單配色（§11.5）</strong>：新增 6 色設定（主選單文字/滑過、下拉文字/滑過、下拉背景/下拉單項背景），存 <code>site-settings.json</code>、由 <code>app.vue</code> 注入 <code>!important</code> 規則到 <code>.app-header nav …</code>、<strong>全版型通用</strong>；下拉用更深選擇器與主選單分開；每色「回到預設」＋「全部回到預設」</td>
+</tr>
+<tr>
+<td>v2.1</td>
+<td>2026-06-16</td>
+<td><strong>規範新增/收緊</strong>：禁用行內 <code>:style=&quot;...&quot;</code>（破壞 RWD，製作規範 §3.1.2）；<code>!important</code> 改全站不使用；<strong>語意標籤與 SEO（§2.6）</strong>＝每頁唯一 <code>&lt;h1&gt;</code>（模組首頁＝banner 第一則主標）、非語意標題用 <code>&lt;div&gt;</code>、內容圖 <code>alt</code>（裝飾圖 <code>alt=&quot;&quot;</code>）、內容連結 <code>:title</code>；移除 banner 每列行內色彩改由 SCSS 變數 <code>$web_color_3</code> 控制</td>
+</tr>
+<tr>
 <td>v2.0</td>
 <td>2026-05-22</td>
 <td>調整類型規格：客製首頁／全客製／購物 的首頁改為「手刻 + block 模組組裝」、臨時站首頁定義為「固定模板」；<code>HomeCustom.vue</code> 加入 <code>BlockRenderer</code> 於手刻版型中嵌入 block 模組</td>

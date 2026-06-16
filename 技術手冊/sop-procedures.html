@@ -619,6 +619,118 @@ const { t, locale, locales, setLocale } = useI18n()
 <blockquote>
 <p>詳見白皮書 <a href="master-project-whitepaper.html#910-%E5%A4%9A%E8%AA%9E%E7%B3%BBnuxtjsi18n">§9.10 多語系</a>。</p>
 </blockquote>
+<h3 id="36-用-fluid-寫桌機等比尺寸字級--版面">3.6 用 <code>fluid()</code> 寫桌機等比尺寸（字級 / 版面）</h3>
+<p>桌機（1024–2560）要「等比縮放、2560 與 1920 同比例零落差」的尺寸，一律用 <code>fluid()</code>（全域注入，不需 <code>@use</code>）。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>①</td>
+<td>量設計稿（1920 基準）上的 px 值，例如主標 56px、區塊上下 padding 64px</td>
+</tr>
+<tr>
+<td>②</td>
+<td>直接寫 <code>fluid(設計px)</code>：<code>font-size: fluid(56);</code>、<code>padding: fluid(64) 0;</code>、<code>--container: fluid(1600);</code></td>
+</tr>
+<tr>
+<td>③</td>
+<td>1920 時剛好＝設計值；1024 / 2560 自動等比（<code>56 → 1024 時≈30、2560 時≈75</code>）</td>
+</tr>
+</tbody></table></div>
+<pre data-lang="SCSS"><code class="language-scss">.title   { font-size: fluid(56); margin: 0 0 fluid(18); }
+.section { padding: fluid(64) 0; }
+.card    { gap: fluid(24); border-radius: fluid(12); max-width: fluid(540); }
+</code></pre>
+<p><strong>哪些要 / 不要轉</strong>（詳見 <a href="development-conventions.html#36-%E5%AD%97%E7%B4%9A%E5%B0%BA%E5%AF%B8%E6%B5%81%E9%AB%94-rwd-%E8%A6%8F%E7%AF%84">製作規範 §3.6</a>）：</p>
+<ul>
+<li>✅ 要：<code>margin</code>/<code>padding</code>/<code>gap</code>、寬高/<code>max-width</code>、定位 <code>top/left…</code>、<code>border-radius</code>、大字級(≥20px)、設計用 CSS 變數。</li>
+<li>❌ 不要（維持固定）：1–2px 細邊、<code>box-shadow</code>/<code>transform</code>、<strong>小 UI 字 &lt;20px</strong>、<code>@media</code>/<code>@include rwd-*</code> 區塊內、已是 <code>%</code>/<code>vw</code>/<code>calc</code> 的值、<code>/admin</code> 後台。</li>
+<li>❌ 別寫死「算完的數值」當上限（不要 <code>clamp(…, 75px)</code>，要 <code>fluid()</code> 或 <code>calc(56/1920*2560*1px)</code>）。</li>
+</ul>
+<blockquote>
+<p>手機（&lt;1024）尺寸照舊寫在 <code>@include rwd-768</code> / <code>rwd-480</code> 區塊內，<code>fluid()</code> 不影響（下限止於 1024）。</p>
+</blockquote>
+<h3 id="37-後台調-header-選單配色adminheader">3.7 後台調 Header 選單配色（<code>/admin/header</code>）</h3>
+<p><strong>操作（PM / 設計）</strong>：<code>/admin/header</code> →「選單顏色」拉色票即時預覽（主選單文字/滑過、下拉文字/滑過、下拉背景/單項背景）→ 每色可「回到預設」或「全部回到預設」→ 按「提交」寫回 <code>site-settings.json</code> 立即生效。游標移到有子選單的項目才看得到下拉色。</p>
+<p><strong>新增「一個可調色」（工程師）</strong> —— 共改 5 處（沿用既有色的機制）：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>檔案</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>①</td>
+<td><code>composables/useEffectiveSettings.js</code></td>
+<td>state 加 <code>headerXxxColor: pub.headerXxxColor || &#39;&#39;</code></td>
+</tr>
+<tr>
+<td>②</td>
+<td><code>server/routes/_admin/site-settings.get.js</code></td>
+<td><code>DEFAULTS</code> 加 <code>headerXxxColor: &#39;&#39;</code></td>
+</tr>
+<tr>
+<td>③</td>
+<td><code>server/routes/_admin/site-settings.post.js</code></td>
+<td><code>ALLOWED_KEYS</code> 加 <code>&#39;headerXxxColor&#39;</code></td>
+</tr>
+<tr>
+<td>④</td>
+<td><code>composables/useSiteSettings.js</code></td>
+<td><code>submit()</code> payload 加 <code>headerXxxColor: state.headerXxxColor || &#39;&#39;</code></td>
+</tr>
+<tr>
+<td>⑤</td>
+<td><code>app.vue</code></td>
+<td><code>siteStyleContent</code> 內，有值才注入 <code>!important</code> 規則到對應 <code>.app-header …</code> 選擇器</td>
+</tr>
+<tr>
+<td>⑥</td>
+<td><code>pages/admin/header.vue</code></td>
+<td><code>MENU_COLOR_FIELDS</code> 陣列加一筆（自動長出色票 + 回到預設 + dirty）</td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p>為什麼走注入而非元件改色：全版型通用、且<strong>不寫行內 <code>:style</code></strong>（破壞 RWD）。下拉色用更深選擇器 <code>nav [class*=&quot;__sub&quot;] a</code> → 與主選單分開。</p>
+</blockquote>
+<h3 id="38-後台編-banner-內容adminbanner">3.8 後台編 Banner 內容（<code>/admin/banner</code>）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>動作</th>
+<th>步驟</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>換背景圖</strong></td>
+<td>「上傳背景圖」選檔 → <strong>裁切器</strong>拖曳/縮放（比例固定）→「套用裁切」→ 自動輸出 <strong>2560×按比例高</strong>、存 <code>public/img/tw/banner/</code>、上傳</td>
+</tr>
+<tr>
+<td><strong>圖片 alt</strong></td>
+<td>上傳後會<strong>自動 AI 辨識</strong>填入；也可手按「AI 辨識」重跑或手動輸入（留空 → 前台用標題）</td>
+</tr>
+<tr>
+<td><strong>文案</strong></td>
+<td>標題/副標/說明文可換行；輸入關鍵字按「AI 一鍵生成」產出連貫三欄</td>
+</tr>
+<tr>
+<td><strong>背景影片</strong></td>
+<td>填 YouTube 連結即用；<strong>留空</strong>時改「上傳影片檔」（mp4/webm，≤50MB）→ 前台桌機/手機（含 iOS）靜音自動播</td>
+</tr>
+<tr>
+<td><strong>送出</strong></td>
+<td>按「送出寫回 banners.json」固化（寫進 <code>/banner/home</code>，站台下次請求生效）</td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p>AI（文案/辨識）需 <code>.env.local</code> 設 <code>NUXT_GEMINI_KEY</code>；沒設時其餘功能照常。詳見白皮書 <a href="master-project-whitepaper.html#125-%E5%BE%8C%E5%8F%B0%E7%B7%A8%E8%BC%AFadminbannerdev-mode">§12.5</a>。</p>
+</blockquote>
 <hr>
 <h2 id="4-debug-與狀況排查">4. Debug 與狀況排查</h2>
 <h3 id="41-改了-env-但沒生效">4.1 改了 <code>.env</code> 但沒生效</h3>
