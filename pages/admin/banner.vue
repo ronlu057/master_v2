@@ -21,7 +21,7 @@ const onSubmitVer = async () => {
     : { type: 'error', text: res.message }
 }
 
-// ── 首頁 Banner 內容（home.json → banner block → item.rows）──────────────
+// ── 首頁 Banner 內容（banners.json 的 home → rows）──────────────
 const SAMPLE_IMG = 'https://picsum.photos/seed/banner-new/1920/911'
 
 // <br> ↔ 換行 互轉（編輯時用換行、存檔時用 <br>）
@@ -315,7 +315,7 @@ onBeforeUnmount(() => {
       <h2 class="block__h">首頁 Banner 內容（BlockBanner01）</h2>
       <p class="page__desc">
         可新增多則輪播。圖片建議尺寸 <code>1920 × 911</code>；沒上傳則用範例圖。標題/副標/說明文按 Enter 換行會自動轉
-        <code>&lt;br&gt;</code>；文字全空的那則不顯示文字框。送出後寫回 <code>home.json</code>。
+        <code>&lt;br&gt;</code>；文字全空的那則不顯示文字框。送出後寫回 <code>banners.json</code>。
       </p>
 
       <label class="field field--full">
@@ -455,7 +455,7 @@ onBeforeUnmount(() => {
 
       <div class="actions">
         <button type="button" class="btn btn--primary" :disabled="savingContent || loading" @click="saveContent">
-          {{ savingContent ? '寫入中…' : '送出寫回 home.json' }}
+          {{ savingContent ? '寫入中…' : '送出寫回 banners.json' }}
         </button>
       </div>
       <p v-if="contentMsg" :class="['msg', `msg--${contentMsg.type}`]">{{ contentMsg.text }}</p>
