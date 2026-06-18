@@ -4,12 +4,13 @@
 // 來源：D:\www\master_dev\template\module\banner\banner02.{php,js}
 //       D:\www\master_dev\template\css\scss\module\banner\_banner02.scss
 //
-// rows 結構（每筆）：
-//   { image: { pc, mb }, title, title2, slogan, link }
-//     title  = 第一行（英文/標題，bannerTitleSize_en）
-//     title2 = 主標（主色、$title_font_en、bannerTitleSize_cht(1)）
-//     slogan = 標語（可含換行，bannerTitleSize_cht(3)）
-//     link   = VIEW MORE 連結（可選）
+// rows 結構（每筆，共用 Banner schema，與 BlockBanner01 一致）：
+//   { image: { pc, mb }, title, subtitle, memo, link }
+//   （DOM 由上到下：副標 → 標題 → 說明文）
+//     subtitle = 副標（最上方小字 <h2>，bannerTitleSize_en）
+//     title    = 標題（主視覺，第一則 <h1>、其餘 <h2>，主色、$title_font_en、bannerTitleSize_cht(1)）
+//     memo     = 說明文（<p>，可含換行，bannerTitleSize_cht(3)）
+//     link     = VIEW MORE 連結（可選）
 // news：最新消息陣列 [{ date, title, summary, url }]（可選；空時自動隱藏並收掉間距）
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, EffectFade, Navigation, Pagination } from 'swiper/modules'
@@ -51,13 +52,13 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
-        <div class="cover_txt">
-          <div v-if="row.title">{{ row.title }}</div>
-          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title2">{{ row.title2 }}</component>
-          <div v-if="row.slogan" v-html="toHtml(row.slogan)" />
+        <div class="cover_txt" :class="`js-banner-row-${i}`">
+          <h2 v-if="row.subtitle">{{ row.subtitle }}</h2>
+          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title">{{ row.title }}</component>
+          <p v-if="row.memo" v-html="toHtml(row.memo)" />
 
           <div v-if="row.link" class="button_set">
-            <NuxtLink class="cover_btn" :to="row.link" :title="row.title2 || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
+            <NuxtLink class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
           </div>
         </div>
       </SwiperSlide>
@@ -147,7 +148,9 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   }
 
   > :not(.button_set) {
-    color: #fff;
+    // 基底＝副標(nth-child 1)的色；標題(2)/說明文(3) 各自於下方覆寫。
+    // 後台留空＝用此 fallback（與原設計一致）；有值＝吃 app.vue 注入的 :root 變數。
+    color: var(--banner-subtitle-color, #fff);
     opacity: 0;
     transform: translate(40px, 0);
 
@@ -156,7 +159,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       transform: translate(0, 40px);
     }
 
-    // 第一行：英文/標題（bannerTitleSize_en(2)）
+    // 副標 <h2>：最上方小字（bannerTitleSize_en(2)）
     &:nth-child(1) {
       font-size: clamp(19px, calc(23 / 19.2 * 1vw), calc(23 / 1920 * 2560 * 1px));
       margin-bottom: fluid(20);
@@ -164,15 +167,15 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
       @media (max-width: 1200px) { margin-bottom: 15px; }
       @media (max-width: 640px) {
-        color: $web_font_color;
+        color: var(--banner-subtitle-color, $web_font_color);
         margin-bottom: 10px;
       }
       @media (max-width: 540px) { display: none; }
     }
 
-    // 第二行：主標（主色、英文標題字體，bannerTitleSize_cht(1)）
+    // 標題：主視覺，第一則 <h1>、其餘 <h2>（主色、英文標題字體，bannerTitleSize_cht(1)）
     &:nth-child(2) {
-      color: $web_color_1;
+      color: var(--banner-title-color, $web_color_1);
       font-weight: 700;
       font-family: $title_font_en;
       line-height: 1.2;
@@ -185,9 +188,9 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       @media (max-width: 640px) { margin-bottom: 10px; }
     }
 
-    // 第三行：標語（bannerTitleSize_cht(3)）
+    // 說明文 <p>（bannerTitleSize_cht(3)）
     &:nth-child(3) {
-      color: $web_font_color;
+      color: var(--banner-memo-color, $web_font_color);
       font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
       transition: all 0.3s, opacity 0.5s 0.2s, transform 0.5s 0.2s;
 

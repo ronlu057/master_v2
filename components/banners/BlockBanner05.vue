@@ -116,7 +116,7 @@ const onReachBeginning = (s) => {
       @reach-beginning="onReachBeginning"
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">
-        <div class="cover">
+        <div class="cover" :class="`js-banner-row-${i}`">
           <div v-if="row.title2">{{ row.title2 }}</div>
           <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title3" v-html="toHtml(row.title3)" />
           <div v-if="row.title4">{{ row.title4 }}</div>
@@ -284,7 +284,7 @@ const onReachBeginning = (s) => {
 
     // 第一行：小標（bannerTitleSize_cht(2)）
     > :nth-child(1) {
-      color: $web_font_color;
+      color: var(--banner-subtitle-color, $web_font_color);
       margin-bottom: fluid(5);
       font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
       transition: all 0.3s, opacity 1s 0.6s, transform 1s 0.6s;
@@ -292,7 +292,7 @@ const onReachBeginning = (s) => {
 
     // 第二行：主標（moduleTitleSize_cht(1)）
     > :nth-child(2) {
-      color: $web_font_color;
+      color: var(--banner-title-color, $web_font_color);
       font-weight: 700;
       line-height: 1.3;
       font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
@@ -312,7 +312,7 @@ const onReachBeginning = (s) => {
 
     // 第三行：標語（bannerTitleSize_en(2)）
     > :nth-child(3) {
-      color: $web_font_color;
+      color: var(--banner-memo-color, $web_font_color);
       font-weight: 500;
       margin-top: fluid(20);
       font-size: clamp(19px, calc(23 / 19.2 * 1vw), calc(23 / 1920 * 2560 * 1px));

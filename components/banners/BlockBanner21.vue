@@ -107,7 +107,7 @@ onBeforeUnmount(() => {
 
         <div class="content">
           <div class="wider_container">
-            <div class="info">
+            <div class="info" :class="`js-banner-row-${i}`">
               <div class="mb">
                 {{ row.title }}
                 <template v-if="row.title2"><br />{{ row.title2 }}</template>
@@ -218,7 +218,6 @@ onBeforeUnmount(() => {
 
     .info {
       > .mb {
-        color: #fff;
         text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         opacity: 0;
         transform: translate(40px, 0);
@@ -234,7 +233,9 @@ onBeforeUnmount(() => {
             display: none;
           }
 
+          // 手機主標 → 標題
           &:nth-child(1) {
+            color: var(--banner-title-color, #fff);
             font-weight: 900;
             text-transform: uppercase;
             transition: opacity 0.5s, transform 0.5s;
@@ -244,7 +245,9 @@ onBeforeUnmount(() => {
             @media (min-width: 1201px) { letter-spacing: 2px; }
           }
 
+          // 手機標語 → 說明文
           &:nth-child(2) {
+            color: var(--banner-memo-color, #fff);
             font-size: clamp(22px, calc(28 / 19.2 * 1vw), calc(28 / 1920 * 2560 * 1px));
             font-weight: 500;
             margin-top: fluid(15);
@@ -253,9 +256,9 @@ onBeforeUnmount(() => {
         }
       }
 
-      // 桌面主標（對應原 .cus_txt 文字尺寸）
+      // 桌面主標（對應原 .cus_txt 文字尺寸）→ 標題
       .title_lg {
-        color: #fff;
+        color: var(--banner-title-color, #fff);
         font-size: clamp(46px, calc(84 / 19.2 * 1vw), calc(84 / 1920 * 2560 * 1px));
         font-weight: 900;
         line-height: 1.15;
@@ -271,7 +274,7 @@ onBeforeUnmount(() => {
       }
 
       .paragraph {
-        color: #fff;
+        color: var(--banner-memo-color, #fff);
         opacity: 0;
         transform: translate(40px, 0);
         transition: opacity 0.5s 0.1s, transform 0.5s 0.1s;

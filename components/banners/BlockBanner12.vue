@@ -161,7 +161,7 @@ onBeforeUnmount(() => {
 
         <div class="cover">
           <!-- memo 三段 <p> + VIEW MORE 直接放進 wider_container（對齊 demo 結構） -->
-          <div class="wider_container" v-html="coverHtml(row)" />
+          <div class="wider_container" :class="`js-banner-row-${i}`" v-html="coverHtml(row)" />
         </div>
       </SwiperSlide>
     </Swiper>
@@ -292,14 +292,14 @@ onBeforeUnmount(() => {
           @media (max-width: 720px) { transform: translate(0, 40px); }
         }
 
-        // memo 三段共用：白字 + 陰影
+        // memo 三段共用：陰影（顏色各自吃對應變數）
         :deep(p) {
-          color: #fff;
           text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
         }
 
         // memo 第一段（手機標題，桌面隱藏）
         :deep(p):nth-child(1) {
+          color: var(--banner-title-color, #fff);
           font-size: clamp(20px, calc(28 / 19.2 * 1vw), calc(28 / 1920 * 2560 * 1px));
           font-weight: 900;
           font-family: 'Roboto', sans-serif;
@@ -311,6 +311,7 @@ onBeforeUnmount(() => {
 
         // memo 第二段（主標）
         :deep(p):nth-child(2) {
+          color: var(--banner-title-color, #fff);
           font-size: clamp(20px, calc(28 / 19.2 * 1vw), calc(28 / 1920 * 2560 * 1px));
           font-weight: 700;
           font-family: $title_font_cht;
@@ -318,6 +319,7 @@ onBeforeUnmount(() => {
 
         // memo 第三段（副標）
         :deep(p):nth-child(3) {
+          color: var(--banner-subtitle-color, #fff);
           font-size: clamp(14px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
           font-family: $title_font_en;
           margin-top: fluid(15);

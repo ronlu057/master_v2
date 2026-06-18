@@ -2,7 +2,7 @@
   "projectType": "module",
   "header": "Header01",
   "pageBanner": "PageBanner01",
-  "blockBanner": "BlockBanner01",
+  "blockBanner": "BlockBanner02",
   "apiBase": "",
   "defaultLang": "tw",
   "enableShop": false,
@@ -118,7 +118,7 @@
   "headerMenuColor": "#ffffff",
   "headerMenuHoverColor": "",
   "headerDropdownBg": "",
-  "headerDropdownItemBg": "#e0e4e5",
+  "headerDropdownItemBg": "#ffffff",
   "headerDropdownColor": "#4a4a4a",
   "headerDropdownHoverColor": "",
   "headerIcons": {
@@ -147,5 +147,9 @@
   "headerIconColor": "#ffffff",
   "headerIconHoverColor": "",
   "headerDropdownRadius": 10,
-  "headerDropdownItemRadius": 5
+  "headerDropdownItemRadius": 5,
+  "headerDropdownItemHoverBg": "#d5dbdc",
+  "bannerTitleColor": "#ff004c",
+  "bannerSubtitleColor": "#ffffff",
+  "bannerMemoColor": "#ffffff"
 }

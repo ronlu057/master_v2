@@ -71,7 +71,7 @@ const onSlideChange = (s) => {
             <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
 
-          <div class="cover_txt">
+          <div class="cover_txt" :class="`js-banner-row-${i}`">
             <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
             <h2 v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
 
@@ -144,7 +144,6 @@ const onSlideChange = (s) => {
         > :nth-child(1),
         > :nth-child(2),
         > :nth-child(3):not(.button_set) {
-          color: #fff;
           text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
           opacity: 0;
 
@@ -157,6 +156,7 @@ const onSlideChange = (s) => {
 
         // 第一行（data_title3）：moduleTitleSize_cht(1)
         > :nth-child(1) {
+          color: var(--banner-title-color, #fff);
           font-weight: 700;
           margin-bottom: fluid(10);
           font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
@@ -164,12 +164,14 @@ const onSlideChange = (s) => {
 
         // 第二行（data_title4）：moduleTitleSize_en(2)
         > :nth-child(2) {
+          color: var(--banner-subtitle-color, #fff);
           font-weight: 700;
           font-size: clamp(24px, calc(36 / 19.2 * 1vw), calc(36 / 1920 * 2560 * 1px));
         }
 
         // 第三行（保留位）：bannerTitleSize_cht(2)
         > :nth-child(3):not(.button_set) {
+          color: var(--banner-memo-color, #fff);
           margin-top: fluid(25);
           font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
         }

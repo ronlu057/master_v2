@@ -69,7 +69,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
           </picture>
 
           <!-- 說明文字（memo 內含 4 個 <p>） -->
-          <div class="cover_txt" v-html="row.memo"></div>
+          <div class="cover_txt" :class="`js-banner-row-${i}`" v-html="row.memo"></div>
         </a>
       </SwiperSlide>
     </Swiper>
@@ -213,6 +213,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
 
           // 第二行：實心英文標（bannerTitleSize_cht(1)）
           &:nth-child(2) {
+            color: var(--banner-title-color, #fff);
             font-weight: 500;
             font-family: 'Oswald', sans-serif;
             line-height: 1.2;
@@ -225,6 +226,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
 
           // 第三行：中文主標（moduleTitleSize_cht(1)）
           &:nth-child(3) {
+            color: var(--banner-title-color, #fff);
             font-weight: 500;
             margin-top: 10px;
             font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
@@ -235,6 +237,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
 
           // 第四行：標語（moduleTitleSize_en(3)）
           &:nth-child(4) {
+            color: var(--banner-subtitle-color, #fff);
             margin-top: 10px;
             font-size: clamp(17px, calc(20 / 19.2 * 1vw), calc(20 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;

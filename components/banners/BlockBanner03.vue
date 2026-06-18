@@ -70,7 +70,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
                 </picture>
               </div>
 
-              <div class="right">
+              <div class="right" :class="`js-banner-row-${i}`">
                 <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="row.title" />
                 <div v-if="row.slogan" v-html="toHtml(row.slogan)" />
                 <p v-if="row.desc">{{ row.desc }}</p>
@@ -246,16 +246,10 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           min-width: unset;
         }
 
-        > :nth-child(1),
-        > :nth-child(2),
-        > :nth-child(3),
-        > :nth-child(4) {
-          color: #fff;
-        }
-
         > * {
           // 第一行：主標（bannerTitleSize_cht(1)）
           &:nth-child(1) {
+            color: var(--banner-title-color, #fff);
             font-weight: 700;
             line-height: 1;
             font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
@@ -273,6 +267,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           }
 
           &:nth-child(2) {
+            color: var(--banner-subtitle-color, #fff);
             font-size: clamp(16px, calc(22 / 19.2 * 1vw), calc(22 / 1920 * 2560 * 1px));
             line-height: 1.3;
             margin-top: calc(23 / 19.2 * 1vw);
@@ -284,6 +279,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           }
 
           &:nth-child(3) {
+            color: var(--banner-memo-color, #fff);
             font-size: clamp(16px, calc(22 / 19.2 * 1vw), calc(22 / 1920 * 2560 * 1px));
             line-height: 1.3;
             margin-top: calc(28 / 19.2 * 1vw);
@@ -297,6 +293,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
           // 第四行：備註（bannerTitleSize_cht(3)）
           &:nth-child(4) {
+            color: var(--banner-memo-color, #fff);
             margin-top: calc(30 / 19.2 * 1vw);
             font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
 

@@ -57,7 +57,8 @@ export default defineEventHandler(async (event) => {
 
   // 組 prompt 與 generationConfig：單欄位 vs 一次生成全部（標題+副標+內文，連貫）
   let prompt
-  const genConfig = { temperature: 1.0, maxOutputTokens: 256 }
+  // thinkingBudget:0 關掉 2.5-flash 的思考（文案是簡單任務，否則思考會吃光 token → 回空字串）
+  const genConfig = { temperature: 1.0, maxOutputTokens: 256, thinkingConfig: { thinkingBudget: 0 } }
   if (field === 'all') {
     prompt = [
       '你是網站 banner 文案撰寫助手。請依主題產生「一組」首頁主視覺 banner 文案，三者需互相呼應、連貫。',

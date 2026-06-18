@@ -66,7 +66,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
           <img src="" alt="" />
         </NuxtLink>
 
-        <div class="editor">
+        <div class="editor" :class="'js-banner-row-0'">
           <h1 v-if="title" class="editor_title">{{ title }}</h1>
           <p v-if="firstRow.memo" v-html="toHtml(firstRow.memo)" />
         </div>
@@ -213,7 +213,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
 
       .editor_title {
         // bannerTitleSize_cht(2)
-        color: inherit;
+        color: var(--banner-title-color, #fff);
         font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
         font-weight: 700;
         margin-bottom: fluid(10);
@@ -221,6 +221,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
 
       p {
         // bannerTitleSize_cht(3)
+        color: var(--banner-memo-color, #fff);
         font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
         line-height: 1.6;
       }

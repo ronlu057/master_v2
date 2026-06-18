@@ -65,7 +65,7 @@ const onSlideChange = (s) => {
         </picture>
 
         <!-- p 順序固定（對應原 PHP 四行），讓 nth-child 動畫穩定；空值僅留空段落 -->
-        <div class="cover">
+        <div class="cover" :class="`js-banner-row-${i}`">
           <div>{{ row.title }}</div>
           <component :is="i === 0 ? 'h1' : 'h2'" v-html="toHtml(row.title2)" />
           <div class="cover_line"><span></span></div>
@@ -171,7 +171,7 @@ const onSlideChange = (s) => {
 
       // 第一行：英文/標題（bannerTitleSize_en(2)）
       > :nth-child(1) {
-        color: #fff;
+        color: var(--banner-subtitle-color, #fff);
         font-weight: 600;
         font-family: $title_font_cht;
         font-size: clamp(19px, calc(23 / 19.2 * 1vw), calc(23 / 1920 * 2560 * 1px));
@@ -188,7 +188,7 @@ const onSlideChange = (s) => {
       // 第二行：主標（$title_font_en、bannerTitleSize_cht(1)）
       > :nth-child(2) {
         position: relative;
-        color: #fff;
+        color: var(--banner-title-color, #fff);
         font-weight: 500;
         font-family: $title_font_en;
         font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
@@ -250,7 +250,7 @@ const onSlideChange = (s) => {
 
       // 第三行（bannerTitleSize_cht(2)）
       > :nth-child(4) {
-        color: #fff;
+        color: var(--banner-memo-color, #fff);
         font-weight: 600;
         font-family: $title_font_cht;
         font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));

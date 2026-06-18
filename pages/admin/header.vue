@@ -76,6 +76,7 @@ const MENU_COLOR_FIELDS = [
   { key: 'headerDropdownHoverColor', name: '下拉文字滑過色', def: '#4fc08d' },
   { key: 'headerDropdownBg', name: '下拉背景色', def: '#ffffff' },
   { key: 'headerDropdownItemBg', name: '下拉單項背景色', def: '#f6f8f9' },
+  { key: 'headerDropdownItemHoverBg', name: '下拉單項滑過背景色', def: '#eef2f3' },
   { key: 'headerIconColor', name: '工具列圖示色', def: '#333333' },
   { key: 'headerIconHoverColor', name: '工具列圖示滑過色', def: '#4fc08d' },
 ]

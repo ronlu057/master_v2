@@ -82,7 +82,7 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
       @swiper="onMainReady"
       @slide-change="onSlideChange"
     >
-      <SwiperSlide v-for="(row, i) in rows" :key="i">
+      <SwiperSlide v-for="(row, i) in rows" :key="i" :class="`js-banner-row-${i}`">
         <div class="slide_inner">
           <picture>
             <source media="(min-width: 721px)" :srcset="row.image?.pc" />
@@ -118,7 +118,7 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
       :allow-touch-move="false"
       @swiper="onTextReady"
     >
-      <SwiperSlide v-for="(row, i) in rows" :key="i">
+      <SwiperSlide v-for="(row, i) in rows" :key="i" :class="`js-banner-row-${i}`">
         <div class="cover_txt">
           <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
           <h2 v-if="row.title2" v-html="toHtml(row.title2)" />
@@ -190,7 +190,9 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
 
     @media (min-width: 721px) { display: none; }
 
-    > div { color: #fff; }
+    > :nth-child(1) { color: var(--banner-title-color, #fff); }
+    > :nth-child(2) { color: var(--banner-subtitle-color, #fff); }
+    > :nth-child(3) { color: var(--banner-memo-color, #fff); }
   }
 
   // 手機版進場動畫（active slide 內各元素依序上浮淡入）
@@ -225,7 +227,7 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
 .cover_txt {
   // 第一行：主標（moduleTitleSize_cht(1) = clamp(30,45/19.2vw,45)）
   > :nth-child(1) {
-    color: #1a1a1a;
+    color: var(--banner-title-color, #1a1a1a);
     font-weight: 700;
     font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
 
@@ -239,7 +241,7 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
 
   // 第二行：副標
   > :nth-child(2) {
-    color: #1a1a1a;
+    color: var(--banner-subtitle-color, #1a1a1a);
     font-size: clamp(17px, calc(26 / 19.2 * 1vw), calc(26 / 1920 * 2560 * 1px));
     font-weight: 700;
     margin-top: fluid(23);
@@ -247,7 +249,7 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
 
   // 第三行：標語（主色，moduleTitleSize_cht(3) = clamp(15,18/19.2vw,18)）
   > :nth-child(3) {
-    color: $web_color_1;
+    color: var(--banner-memo-color, $web_color_1);
     font-weight: 500;
     margin-top: fluid(13);
     font-size: clamp(15px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));

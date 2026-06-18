@@ -14,7 +14,7 @@ const ALLOWED_MIMES = {
   'image/webp': '.webp',
   'image/gif': '.gif',
 }
-const MAX_SIZE = 6 * 1024 * 1024 // 6MB（背景大圖）
+const MAX_SIZE = 10 * 1024 * 1024 // 10MB（背景大圖；裁切器輸出 2560px JPEG 通常 ~1MB，此為安全餘裕）
 
 export default defineEventHandler(async (event) => {
   assertDev(event)
@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
   if (file.data.length > MAX_SIZE) {
     throw createError({
       statusCode: 400,
-      message: `檔案過大（${Math.round(file.data.length / 1024)} KB > 6 MB 上限）`,
+      message: `檔案過大（${Math.round(file.data.length / 1024)} KB > ${MAX_SIZE / 1024 / 1024} MB 上限）`,
     })
   }
 

@@ -23,6 +23,13 @@ const { data: banner } = await useApiData('/banner/home', {
   key: 'banner-home',
   default: () => ({ rows: [], news: [], videoUrl: '', videoFile: '' }),
 })
+
+// 每則自訂文字色 → 注入 <head> 的 <style>（用 row-index class 當 hook，不用行內 :style）。
+// 各版型文字容器已掛 `js-banner-row-${i}` class，並以 color: var(--banner-*-color) 取值。
+useHead(() => {
+  const css = bannerRowColorCss(banner.value?.rows)
+  return css ? { style: [{ children: css }] } : {}
+})
 </script>
 
 <template>

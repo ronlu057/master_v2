@@ -40,6 +40,7 @@ export function useEffectiveSettings() {
       headerMenuHoverColor: pub.headerMenuHoverColor || '',
       headerDropdownBg: pub.headerDropdownBg || '', // 下拉「容器」背景
       headerDropdownItemBg: pub.headerDropdownItemBg || '', // 下拉「單項」背景
+      headerDropdownItemHoverBg: pub.headerDropdownItemHoverBg || '', // 下拉「單項」滑鼠滑過背景
       headerDropdownColor: pub.headerDropdownColor || '', // 下拉「文字」色（與主選單文字分開）
       headerDropdownHoverColor: pub.headerDropdownHoverColor || '', // 下拉文字「滑鼠滑過」色
       headerIconColor: pub.headerIconColor || '', // 工具列圖示色（搜尋/語系/社群/會員/購物車…）
@@ -50,6 +51,11 @@ export function useEffectiveSettings() {
       headerIcons: {},
       // 主選單文字大小（px，全站共用，''＝版型預設）
       headerMenuFontSize: pub.headerMenuFontSize ?? '',
+      // Banner 文字色（全站共用，空＝交還版型預設）：標題 / 副標 / 說明文
+      // 由 app.vue 注入 :root --banner-*-color，BlockBanner 以 var() 讀取（免 !important）
+      bannerTitleColor: pub.bannerTitleColor || '',
+      bannerSubtitleColor: pub.bannerSubtitleColor || '',
+      bannerMemoColor: pub.bannerMemoColor || '',
       // 語系顯示文字覆寫 { tw, en, jp, kr }；留空欄位 → 各 header 走自身預設（見 useLangLabels）
       langLabels: {},
       // navtool per-header 設定 { [HeaderName]: { items: [{key,enabled,order}] } }；空 → 走 PRESETS

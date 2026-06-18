@@ -12,7 +12,20 @@ import BlockBanner01 from '~/components/banners/BlockBanner01.vue'
 const { state, options, submitting, load: loadSettings, submit, setPreview, isDirtyKey } =
   useSiteSettings()
 
-const dirtyVer = computed(() => ['pageBanner', 'blockBanner'].some(isDirtyKey))
+// Banner 文字顏色（全站共用，留空＝交還版型預設）；def 僅為色票初始顯示值
+const BANNER_COLOR_FIELDS = [
+  { key: 'bannerTitleColor', name: '標題', def: '#ffffff' },
+  { key: 'bannerSubtitleColor', name: '副標', def: '#ffffff' },
+  { key: 'bannerMemoColor', name: '說明文', def: '#ffffff' },
+]
+const hasAnyBannerColor = computed(() => BANNER_COLOR_FIELDS.some((f) => state[f.key]))
+const resetBannerColors = () => BANNER_COLOR_FIELDS.forEach((f) => setPreview(f.key, ''))
+
+const dirtyVer = computed(
+  () =>
+    ['pageBanner', 'blockBanner'].some(isDirtyKey) ||
+    BANNER_COLOR_FIELDS.some((f) => isDirtyKey(f.key)),
+)
 const verMessage = ref(null)
 const onSubmitVer = async () => {
   const res = await submit()
@@ -60,6 +73,10 @@ const loadContent = async () => {
       title: toEdit(r.title),
       subtitle: toEdit(r.subtitle),
       memo: toEdit(r.memo),
+      // 每則自訂文字色（空＝交還全站後台色／版型預設）
+      titleColor: r.titleColor || '',
+      subtitleColor: r.subtitleColor || '',
+      memoColor: r.memoColor || '',
       btnText: r.btnText || '',
       link: r.link || '',
     }))
@@ -83,6 +100,9 @@ const addRow = () => {
     title: '',
     subtitle: '',
     memo: '',
+    titleColor: '',
+    subtitleColor: '',
+    memoColor: '',
     btnText: '',
     link: '',
   })
@@ -231,10 +251,19 @@ const previewRows = computed(() =>
     title: toStore(r.title),
     subtitle: toStore(r.subtitle),
     memo: toStore(r.memo),
+    titleColor: r.titleColor || '',
+    subtitleColor: r.subtitleColor || '',
+    memoColor: r.memoColor || '',
     btnText: r.btnText,
     link: r.link,
   })),
 )
+
+// 預覽用：把每則自訂色注入 <head>（與站台 BlockBanner 派發器同機制；不用行內 :style）
+useHead(() => {
+  const css = bannerRowColorCss(previewRows.value)
+  return css ? { style: [{ children: css }] } : {}
+})
 
 // 送出：把 rows / 影片設定寫回 banners.json 的 home（保留 news / page / common）
 const saveContent = async () => {
@@ -251,6 +280,10 @@ const saveContent = async () => {
       title: toStore(r.title),
       subtitle: toStore(r.subtitle),
       memo: toStore(r.memo),
+      // 自訂色：有設才寫（空＝不寫，前台交還全站／版型預設）
+      ...(r.titleColor ? { titleColor: r.titleColor } : {}),
+      ...(r.subtitleColor ? { subtitleColor: r.subtitleColor } : {}),
+      ...(r.memoColor ? { memoColor: r.memoColor } : {}),
       btnText: r.btnText || '',
       link: r.link || '',
     }))
@@ -302,6 +335,38 @@ onBeforeUnmount(() => {
           </select>
         </label>
       </div>
+
+      <!-- Banner 文字顏色（全站共用，留空＝交還版型預設）-->
+      <div class="field field--full">
+        <span class="field__label">
+          文字顏色（標題 / 副標 / 說明文） <em class="field__live">即時預覽</em>
+          <button
+            v-if="hasAnyBannerColor"
+            type="button"
+            class="btn btn--ghost btn--sm"
+            @click="resetBannerColors"
+          >
+            全部回到預設
+          </button>
+        </span>
+        <div class="color-rows">
+          <div v-for="f in BANNER_COLOR_FIELDS" :key="f.key" class="color-rows__row">
+            <span class="color-rows__name">{{ f.name }}</span>
+            <input type="color" :value="state[f.key] || f.def" @input="setPreview(f.key, $event.target.value)" />
+            <code>{{ state[f.key] || '版型預設' }}</code>
+            <button
+              v-if="state[f.key]"
+              type="button"
+              class="btn btn--ghost btn--sm"
+              @click="setPreview(f.key, '')"
+            >
+              回到預設
+            </button>
+          </div>
+        </div>
+        <span class="field__hint">套用到所有 BlockBanner 版型的標題 / 副標 / 說明文；留空＝交還版型自身配色。</span>
+      </div>
+
       <div class="actions">
         <button type="button" class="btn btn--primary" :disabled="!dirtyVer || submitting" @click="onSubmitVer">
           {{ submitting ? '寫入中…' : dirtyVer ? '提交版型設定' : '版型無變動' }}
@@ -437,6 +502,30 @@ onBeforeUnmount(() => {
             <textarea v-model="row.memo" rows="3" placeholder="說明文（可換行）"></textarea>
           </div>
 
+          <!-- 此則文字顏色（留空＝用全站後台色／版型預設）-->
+          <div class="field field--full">
+            <span class="field__label">此則文字顏色 <em class="field__live">即時預覽</em></span>
+            <div class="color-rows">
+              <div
+                v-for="c in [
+                  { key: 'titleColor', name: '標題' },
+                  { key: 'subtitleColor', name: '副標' },
+                  { key: 'memoColor', name: '說明文' },
+                ]"
+                :key="c.key"
+                class="color-rows__row"
+              >
+                <span class="color-rows__name">{{ c.name }}</span>
+                <input type="color" :value="row[c.key] || '#ffffff'" @input="row[c.key] = $event.target.value" />
+                <code>{{ row[c.key] || '預設' }}</code>
+                <button v-if="row[c.key]" type="button" class="btn btn--ghost btn--sm" @click="row[c.key] = ''">
+                  回到預設
+                </button>
+              </div>
+            </div>
+            <span class="field__hint">只覆寫「這一則」；留空＝交還版型切換區的全站色，全站也留空才用版型預設。</span>
+          </div>
+
           <!-- 按鈕 -->
           <div class="grid">
             <label class="field">
@@ -497,6 +586,38 @@ onBeforeUnmount(() => {
   font-size: 16px;
   color: #e6ebf2;
   margin-bottom: 12px;
+}
+
+// Banner 文字顏色色票列
+.color-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.color-rows__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  input[type='color'] {
+    width: 40px;
+    height: 28px;
+    padding: 0;
+    background: none;
+    border: 1px solid #2a3242;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  code {
+    min-width: 86px;
+    font-size: 12px;
+    color: #9fc0ff;
+  }
+}
+.color-rows__name {
+  min-width: 56px;
+  font-size: 13px;
+  color: #c8cfdb;
 }
 
 .slides {

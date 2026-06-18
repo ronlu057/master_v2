@@ -25,6 +25,7 @@ const ALLOWED_KEYS = [
   'headerMenuHoverColor',
   'headerDropdownBg',
   'headerDropdownItemBg',
+  'headerDropdownItemHoverBg',
   'headerDropdownColor',
   'headerDropdownHoverColor',
   'headerIconColor',
@@ -33,6 +34,9 @@ const ALLOWED_KEYS = [
   'headerDropdownItemRadius',
   'headerIcons',
   'headerMenuFontSize',
+  'bannerTitleColor',
+  'bannerSubtitleColor',
+  'bannerMemoColor',
   'langLabels',
   'navtool',
 ]

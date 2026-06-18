@@ -56,7 +56,7 @@ defineProps({
             <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
 
-          <div class="cover_txt">
+          <div class="cover_txt" :class="`js-banner-row-${i}`">
             <div>{{ row.title }}</div>
             <component :is="i === 0 ? 'h1' : 'h2'">{{ row.title2 }}</component>
             <div>{{ row.title3 }}</div>
@@ -115,7 +115,6 @@ defineProps({
         transform: translate(0, -50%);
 
         > * {
-          color: #fff;
           opacity: 0;
           transform: translate(40px, 0);
 
@@ -124,8 +123,9 @@ defineProps({
             transform: translate(0, 40px);
           }
 
-          // 第一行：moduleTitleSize_cht(1)
+          // 第一行：moduleTitleSize_cht(1)（副標）
           &:nth-child(1) {
+            color: var(--banner-subtitle-color, #fff);
             font-weight: 700;
             font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 1s 0.15s, transform 1s 0.15s;
@@ -133,6 +133,7 @@ defineProps({
 
           // 第二行：主標 bannerTitleSize_cht(1)
           &:nth-child(2) {
+            color: var(--banner-title-color, #fff);
             font-weight: 700;
             font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 1s 0.3s, transform 1s 0.3s;
@@ -140,8 +141,9 @@ defineProps({
             @media (min-width: 1201px) { letter-spacing: 2px; }
           }
 
-          // 第三行：bannerTitleSize_en(2)
+          // 第三行：bannerTitleSize_en(2)（說明文）
           &:nth-child(3) {
+            color: var(--banner-memo-color, #fff);
             font-weight: 600;
             margin-top: fluid(6);
             font-size: clamp(19px, calc(23 / 19.2 * 1vw), calc(23 / 1920 * 2560 * 1px));

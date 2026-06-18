@@ -26,6 +26,7 @@ const siteStyleContent = computed(() => {
   const menuFz = String(siteState.headerMenuFontSize ?? '').trim() // 主選單文字大小 px
   const dropBg = (siteState.headerDropdownBg || '').trim()
   const dropItemBg = (siteState.headerDropdownItemBg || '').trim()
+  const dropItemHoverBg = (siteState.headerDropdownItemHoverBg || '').trim()
   const dropColor = (siteState.headerDropdownColor || '').trim()
   const dropHover = (siteState.headerDropdownHoverColor || '').trim()
   // 工具列圖示色 / 滑過色（navtool icon 走 .icon mask，color 即換色）
@@ -83,6 +84,7 @@ const siteStyleContent = computed(() => {
     // 下拉文字色 / 滑過色：獨立選擇器，與主選單文字互不干涉（含搜尋 / 語系浮層）
     dropColor && `${sub} { color: ${dropColor} !important; }`,
     dropHover && `${subHover} { color: ${dropHover} !important; }`,
+    dropItemHoverBg && `${subHover} { background: ${dropItemHoverBg} !important; }`,
     iconColor && `.app-header .navtool .icon { color: ${iconColor} !important; }`,
     iconHover &&
       `.app-header .navtool :hover > .icon, .app-header .navtool .icon:hover { color: ${iconHover} !important; }`,
@@ -108,8 +110,22 @@ const siteStyleContent = computed(() => {
     .filter(Boolean)
     .join('\n')
 
+  // 後台指定的 Banner 文字色 → 注入 :root CSS 變數；BlockBanner 的標題/副標/說明文以 var() 讀取。
+  // 留空＝不注入，元件以自身 SCSS 預設色當 fallback。走 CSS 變數故免 !important（符合製作規範 §3.1）。
+  const bannerTitle = (siteState.bannerTitleColor || '').trim()
+  const bannerSubtitle = (siteState.bannerSubtitleColor || '').trim()
+  const bannerMemo = (siteState.bannerMemoColor || '').trim()
+  const bannerVars = [
+    bannerTitle && `--banner-title-color: ${bannerTitle};`,
+    bannerSubtitle && `--banner-subtitle-color: ${bannerSubtitle};`,
+    bannerMemo && `--banner-memo-color: ${bannerMemo};`,
+  ]
+    .filter(Boolean)
+    .join(' ')
+  const bannerCss = bannerVars ? `:root { ${bannerVars} }` : ''
+
   const customCss = siteState.customCss || ''
-  return `${cssVars}\n${headerBg}\n${menuCss}\n${iconCss}\n${customCss}`
+  return `${cssVars}\n${headerBg}\n${menuCss}\n${iconCss}\n${bannerCss}\n${customCss}`
 })
 
 // i18n（useI18n / useLocaleHead 必須在 setup 頂層呼叫，不能進 computed / function 內）

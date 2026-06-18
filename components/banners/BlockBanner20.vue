@@ -62,7 +62,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
         <div class="content">
           <div class="wider_container">
-            <div class="info">
+            <div class="info" :class="`js-banner-row-${i}`">
               <component :is="i === 0 ? 'h1' : 'h2'">{{ row.title }}</component>
               <p v-if="row.memo" v-html="toHtml(row.memo)" />
 
@@ -178,18 +178,18 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         }
       }
 
-      // 第一行：主標（主色，bannerTitleSize_en(1)）
+      // 第一行：主標（主色，bannerTitleSize_en(1)）→ 標題
       > :nth-child(1) {
-        color: $web_color_1;
+        color: var(--banner-title-color, $web_color_1);
         font-weight: 700;
         margin-bottom: fluid(7);
         font-size: clamp(38px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
         transition: all 0.3s, opacity 0.5s, transform 0.5s;
       }
 
-      // 第二行：說明（白，bannerTitleSize_cht(2)）
+      // 第二行：說明（白，bannerTitleSize_cht(2)）→ 說明文
       > :nth-child(2) {
-        color: #fff;
+        color: var(--banner-memo-color, #fff);
         line-height: 1.7;
         font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
         transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;

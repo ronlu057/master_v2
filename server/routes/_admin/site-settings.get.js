@@ -22,6 +22,7 @@ const DEFAULTS = {
   headerMenuHoverColor: '',
   headerDropdownBg: '',
   headerDropdownItemBg: '',
+  headerDropdownItemHoverBg: '',
   headerDropdownColor: '',
   headerDropdownHoverColor: '',
   headerIconColor: '',
@@ -30,6 +31,9 @@ const DEFAULTS = {
   headerDropdownItemRadius: '',
   headerIcons: {},
   headerMenuFontSize: '',
+  bannerTitleColor: '',
+  bannerSubtitleColor: '',
+  bannerMemoColor: '',
   langLabels: {},
   navtool: {},
 }

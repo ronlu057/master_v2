@@ -65,7 +65,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         <div class="content">
           <div class="wider_container">
             <div class="row no_gutter">
-              <div class="info">
+              <div class="info" :class="`js-banner-row-${i}`">
                 <div v-if="row.title" v-html="toHtml(row.title)" />
                 <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title3" v-html="toHtml(row.title3)" />
                 <div v-if="row.title4" v-html="toHtml(row.title4)" />
@@ -156,7 +156,6 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         }
 
         > * {
-          color: #fff;
           opacity: 0;
           transform: translate(40px, 0);
 
@@ -165,16 +164,18 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
             transform: translate(0, 40px);
           }
 
-          // 第一行：英文/標題（bannerTitleSize_en(3)）
+          // 第一行：英文/標題（bannerTitleSize_en(3)）→ 副標
           &:nth-child(1) {
+            color: var(--banner-subtitle-color, #fff);
             font-weight: 600;
             margin-bottom: fluid(3);
             font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 0.5s, transform 0.5s;
           }
 
-          // 第二行：中文主標（bannerTitleSize_cht(1)）
+          // 第二行：中文主標（bannerTitleSize_cht(1)）→ 標題
           &:nth-child(2) {
+            color: var(--banner-title-color, #fff);
             font-weight: 700;
             font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;
@@ -184,8 +185,9 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
             }
           }
 
-          // 第三行：標語（bannerTitleSize_cht(2)）
+          // 第三行：標語（bannerTitleSize_cht(2)）→ 說明文
           &:nth-child(3) {
+            color: var(--banner-memo-color, #fff);
             margin-top: fluid(8);
             font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
             transition: all 0.3s, opacity 0.5s 0.2s, transform 0.5s 0.2s;

@@ -48,7 +48,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title2 || ''" />
         </picture>
 
-        <div class="cover">
+        <div class="cover" :class="`js-banner-row-${i}`">
           <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title2" v-html="toHtml(row.title2)" />
           <h2 v-if="row.title3" v-html="toHtml(row.title3)" />
 
@@ -117,7 +117,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
       // 第一行：主標（bannerTitleSize_cht(1)）
       > :nth-child(1) {
-        color: #fff;
+        color: var(--banner-title-color, #fff);
         font-weight: 700;
         font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
         transition: all 0.3s, opacity 0.8s 0.2s, transform 0.8s 0.2s;
@@ -135,7 +135,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
       // 第二行：次標
       > :nth-child(2) {
-        color: #fff;
+        color: var(--banner-subtitle-color, #fff);
         font-size: clamp(19px, calc(24 / 19.2 * 1vw), calc(24 / 1920 * 2560 * 1px));
         font-weight: 700;
         margin-top: fluid(20);

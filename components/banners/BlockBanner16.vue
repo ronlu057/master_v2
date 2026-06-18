@@ -83,7 +83,7 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
             </div>
           </div>
 
-          <div class="cover_txt">
+          <div class="cover_txt" :class="`js-banner-row-${i}`">
             <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
             <h2 v-if="row.title2" v-html="toHtml(row.title2)" />
           </div>
@@ -188,6 +188,7 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
 
         // 第一行：bannerTitleSize_cht(1)
         &:nth-child(1) {
+          color: var(--banner-title-color, #000);
           transition: all 0.3s, opacity 1s, transform 1s;
           font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
 
@@ -204,6 +205,7 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
 
         // 第二行：bannerTitleSize_cht(2)
         &:nth-child(2) {
+          color: var(--banner-subtitle-color, #000);
           transition: all 0.3s, opacity 1s 0.3s, transform 1s 0.3s;
           font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
         }

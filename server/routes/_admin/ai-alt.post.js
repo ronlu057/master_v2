@@ -79,7 +79,12 @@ export default defineEventHandler(async (event) => {
           contents: [
             { parts: [{ text: prompt }, { inline_data: { mime_type: mime, data: base64 } }] },
           ],
-          generationConfig: { temperature: 0.4, maxOutputTokens: 64 },
+          // thinkingBudget:0 關掉 2.5-flash 的思考（alt 是簡單任務，否則思考會吃光 token → 回空字串）
+          generationConfig: {
+            temperature: 0.4,
+            maxOutputTokens: 256,
+            thinkingConfig: { thinkingBudget: 0 },
+          },
         },
       })
       lastErr = null

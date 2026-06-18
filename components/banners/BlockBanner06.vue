@@ -93,7 +93,7 @@ const onCoverReady = (s) => {
       @swiper="onCoverReady"
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">
-        <div class="wider_container">
+        <div class="wider_container" :class="`js-banner-row-${i}`">
           <ul>
             <li><div>{{ row.title }}</div></li>
             <li><component :is="i === 0 ? 'h1' : 'h2'">{{ row.title2 }}</component></li>
@@ -329,7 +329,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
         }
 
         > div {
-          color: $web_color_1;
+          color: var(--banner-subtitle-color, $web_color_1);
           font-weight: 700;
           font-family: $title_font_en;
           text-transform: uppercase;
@@ -337,7 +337,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
           font-size: clamp(19px, calc(23 / 19.2 * 1vw), calc(23 / 1920 * 2560 * 1px));
 
           @media (max-width: 640px) {
-            color: #fff;
+            color: var(--banner-subtitle-color, #fff);
           }
         }
       }
@@ -351,7 +351,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
         }
 
         > * {
-          color: $web_color_1;
+          color: var(--banner-title-color, $web_color_1);
           font-weight: 700;
           font-family: $title_font_en;
           line-height: 1.2;
@@ -360,7 +360,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
           font-size: clamp(38px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
 
           @media (max-width: 640px) {
-            color: #fff;
+            color: var(--banner-title-color, #fff);
           }
         }
       }
@@ -374,7 +374,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
         }
 
         > div {
-          color: #000;
+          color: var(--banner-memo-color, #000);
           font-weight: 500;
           font-family: $title_font_en;
           text-transform: uppercase;
@@ -382,7 +382,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
           font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
 
           @media (max-width: 640px) {
-            color: #fff;
+            color: var(--banner-memo-color, #fff);
             text-wrap: balance;
           }
 

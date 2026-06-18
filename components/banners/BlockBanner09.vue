@@ -71,7 +71,7 @@ onBeforeUnmount(() => {
       <div class="banner_cover" :class="{ hide: coverHidden }"></div>
 
       <!-- 置中標語 -->
-      <div class="banner_txt">
+      <div class="banner_txt" :class="'js-banner-row-0'">
         <div class="wider_container">
           <h1>{{ tagline }}</h1>
         </div>
@@ -144,7 +144,7 @@ onBeforeUnmount(() => {
     z-index: 2;
 
     > * {
-      color: #fff;
+      color: var(--banner-title-color, #fff);
       font-size: fluid-fz(18);
       font-family: $title_font_en;
       text-align: center;

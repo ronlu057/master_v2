@@ -93,8 +93,8 @@ const apply = () => {
   canvas.width = props.outWidth
   canvas.height = outHeight.value
   canvas.getContext('2d').drawImage(el, sx, sy, sw, sh, 0, 0, props.outWidth, outHeight.value)
-  const mime = props.file.type === 'image/png' ? 'image/png' : 'image/jpeg'
-  canvas.toBlob((blob) => emit('confirm', blob), mime, 0.92)
+  // Banner 背景圖一律輸出 JPEG：全幅照片不需透明，且 2560px PNG 常 >6MB 會觸發上傳上限。
+  canvas.toBlob((blob) => emit('confirm', blob), 'image/jpeg', 0.9)
 }
 </script>
 

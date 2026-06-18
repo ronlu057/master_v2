@@ -100,7 +100,7 @@ const toggleSound = () => { muted.value = !muted.value }
               <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
             </picture>
 
-            <div class="cover_txt">
+            <div class="cover_txt" :class="`js-banner-row-${i}`">
               <div v-if="row.title">{{ row.title }}</div>
               <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title2">{{ row.title2 }}</component>
               <p v-if="row.memo" v-html="toHtml(row.memo)" />
@@ -203,7 +203,7 @@ const toggleSound = () => { muted.value = !muted.value }
   }
 
   > :nth-child(1) {
-    color: $web_font_color;
+    color: var(--banner-subtitle-color, $web_font_color);
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: 0;
@@ -214,7 +214,7 @@ const toggleSound = () => { muted.value = !muted.value }
   }
 
   > :nth-child(2) {
-    color: $web_color_1;
+    color: var(--banner-title-color, $web_color_1);
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: 0;
@@ -225,7 +225,7 @@ const toggleSound = () => { muted.value = !muted.value }
   }
 
   > :nth-child(3) {
-    color: $web_font_color;
+    color: var(--banner-memo-color, $web_font_color);
     margin-top: fluid(15);
     transition: all 0.3s, opacity 0.5s 0.2s, transform 0.5s 0.2s;
     // bannerTitleSize_cht(2)

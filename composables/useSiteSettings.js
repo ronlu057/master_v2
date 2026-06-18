@@ -53,6 +53,7 @@ export function useSiteSettings() {
         headerMenuHoverColor: state.headerMenuHoverColor || '',
         headerDropdownBg: state.headerDropdownBg || '',
         headerDropdownItemBg: state.headerDropdownItemBg || '',
+        headerDropdownItemHoverBg: state.headerDropdownItemHoverBg || '',
         headerDropdownColor: state.headerDropdownColor || '',
         headerDropdownHoverColor: state.headerDropdownHoverColor || '',
         headerIconColor: state.headerIconColor || '',
@@ -61,6 +62,9 @@ export function useSiteSettings() {
         headerDropdownItemRadius: state.headerDropdownItemRadius ?? '',
         headerIcons: state.headerIcons || {},
         headerMenuFontSize: state.headerMenuFontSize ?? '',
+        bannerTitleColor: state.bannerTitleColor || '',
+        bannerSubtitleColor: state.bannerSubtitleColor || '',
+        bannerMemoColor: state.bannerMemoColor || '',
         langLabels: state.langLabels || {},
         // navtool per-header 設定：把所有預覽（localStorage）固化進 JSON
         navtool: navtoolCfg.snapshotForSave(),

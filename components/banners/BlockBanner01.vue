@@ -169,7 +169,7 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
         @swiper="onCoverReady"
       >
         <SwiperSlide v-for="(row, i) in rows" :key="i">
-          <div v-if="hasCover(row)" class="cover_txt">
+          <div v-if="hasCover(row)" class="cover_txt" :class="`js-banner-row-${i}`">
             <!-- 第一則：主標 h1（全頁唯一）、副標 h2；第二則起主標 h2、副標 h2；說明文維持 p -->
             <component
               :is="i === 0 ? 'h1' : 'h2'"
@@ -379,6 +379,13 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
     transform: translate(0, 20px);
   }
 }
+
+// 標題 / 副標 / 說明文 文字色：留空＝繼承 .cover_txt（$web_color_3）；後台可分別覆寫。
+// app.vue 依 site-settings 注入 :root --banner-*-color；用 CSS 變數故免 !important（製作規範 §3.1）。
+// 用後代選擇器拉高權重，蓋過上方 `.cover_txt > :is(h1,h2,h3,p){ color: inherit }`。
+.cover_txt .cover_title { color: var(--banner-title-color, inherit); }
+.cover_txt .cover_subtitle { color: var(--banner-subtitle-color, inherit); }
+.cover_txt p { color: var(--banner-memo-color, inherit); }
 
 .cover_title {
   font-size: clamp(24px, calc(56 / 19.2 * 1vw), calc(56 / 1920 * 2560 * 1px));
