@@ -118,8 +118,8 @@
   "headerMenuColor": "#ffffff",
   "headerMenuHoverColor": "",
   "headerDropdownBg": "",
-  "headerDropdownItemBg": "",
-  "headerDropdownColor": "#5e5e5e",
+  "headerDropdownItemBg": "#e0e4e5",
+  "headerDropdownColor": "#4a4a4a",
   "headerDropdownHoverColor": "",
   "headerIcons": {
     "search": {
@@ -145,5 +145,7 @@
   },
   "headerMenuFontSize": "",
   "headerIconColor": "#ffffff",
-  "headerIconHoverColor": ""
+  "headerIconHoverColor": "",
+  "headerDropdownRadius": 10,
+  "headerDropdownItemRadius": 5
 }
