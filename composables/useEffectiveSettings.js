@@ -42,6 +42,14 @@ export function useEffectiveSettings() {
       headerDropdownItemBg: pub.headerDropdownItemBg || '', // 下拉「單項」背景
       headerDropdownColor: pub.headerDropdownColor || '', // 下拉「文字」色（與主選單文字分開）
       headerDropdownHoverColor: pub.headerDropdownHoverColor || '', // 下拉文字「滑鼠滑過」色
+      headerIconColor: pub.headerIconColor || '', // 工具列圖示色（搜尋/語系/社群/會員/購物車…）
+      headerIconHoverColor: pub.headerIconHoverColor || '', // 工具列圖示滑過色
+      headerDropdownRadius: pub.headerDropdownRadius ?? '', // 下拉「容器」圓角 px（0＝直角，''＝版型預設）
+      headerDropdownItemRadius: pub.headerDropdownItemRadius ?? '', // 下拉「項目」圓角 px
+      // navtool 各 slot 換 icon：{ [slot]: { name, style:'line'|'solid' } }；空＝用 icons.scss 預設 SVG
+      headerIcons: {},
+      // 主選單文字大小（px，全站共用，''＝版型預設）
+      headerMenuFontSize: pub.headerMenuFontSize ?? '',
       // 語系顯示文字覆寫 { tw, en, jp, kr }；留空欄位 → 各 header 走自身預設（見 useLangLabels）
       langLabels: {},
       // navtool per-header 設定 { [HeaderName]: { items: [{key,enabled,order}] } }；空 → 走 PRESETS

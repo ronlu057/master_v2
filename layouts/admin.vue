@@ -14,6 +14,7 @@ const nav = [
     group: '基礎架構模組',
     items: [
       { to: '/admin/header', label: 'Header 模組', desc: '版型 / LOGO / navtool' },
+      { to: '/admin/menu', label: '選單管理', desc: 'header / footer / 行動版選單' },
       { to: '/admin/banner', label: 'Banner 模組', desc: 'PageBanner / BlockBanner' },
       { to: '/admin/footer', label: 'Footer 模組', desc: '頁尾資訊（規劃中）' },
     ],

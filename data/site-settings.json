@@ -119,6 +119,31 @@
   "headerMenuHoverColor": "",
   "headerDropdownBg": "",
   "headerDropdownItemBg": "",
-  "headerDropdownColor": "",
-  "headerDropdownHoverColor": ""
+  "headerDropdownColor": "#5e5e5e",
+  "headerDropdownHoverColor": "",
+  "headerIcons": {
+    "search": {
+      "name": "search",
+      "style": "line"
+    },
+    "language": {
+      "name": "globe",
+      "style": "line"
+    },
+    "member": {
+      "name": "user",
+      "style": "line"
+    },
+    "favorite": {
+      "name": "heart",
+      "style": "line"
+    },
+    "cart": {
+      "name": "cart",
+      "style": "line"
+    }
+  },
+  "headerMenuFontSize": "",
+  "headerIconColor": "#ffffff",
+  "headerIconHoverColor": ""
 }

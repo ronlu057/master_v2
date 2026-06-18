@@ -76,15 +76,45 @@ const MENU_COLOR_FIELDS = [
   { key: 'headerDropdownHoverColor', name: '下拉文字滑過色', def: '#4fc08d' },
   { key: 'headerDropdownBg', name: '下拉背景色', def: '#ffffff' },
   { key: 'headerDropdownItemBg', name: '下拉單項背景色', def: '#f6f8f9' },
+  { key: 'headerIconColor', name: '工具列圖示色', def: '#333333' },
+  { key: 'headerIconHoverColor', name: '工具列圖示滑過色', def: '#4fc08d' },
 ]
 // 任一選單色有設值 → 顯示「全部回到預設」；一鍵把 6 個顏色全清回版型預設
 const hasAnyMenuColor = computed(() => MENU_COLOR_FIELDS.some((f) => state[f.key]))
 const resetMenuColors = () => MENU_COLOR_FIELDS.forEach((f) => setPreview(f.key, ''))
 
+// 下拉圓角欄位（容器 / 項目，全站共用，留空＝版型預設）；def 僅為滑桿在「版型預設」時的顯示位置
+const RADIUS_FIELDS = [
+  { key: 'headerDropdownRadius', name: '下拉容器圓角', def: 8 },
+  { key: 'headerDropdownItemRadius', name: '下拉項目圓角', def: 6 },
+]
+
+// ── navtool 換 icon（line / 實心，全站共用；留空＝icons.scss 預設）────────────
+// HEADER_ICON_SLOTS / headerIconOptions / headerIconSvg / headerIconHasSolid 由 utils/headerIcons 自動 import
+const iconSel = (slot) => state.headerIcons?.[slot] || null
+const setIcon = (slot, name, style) => {
+  setPreview('headerIcons', { ...(state.headerIcons || {}), [slot]: { name, style } })
+}
+const clearIcon = (slot) => {
+  const next = { ...(state.headerIcons || {}) }
+  delete next[slot]
+  setPreview('headerIcons', next)
+}
+// 預覽用 inline SVG（帶 currentColor，給 v-html）
+const iconPreview = (name, style) => headerIconSvg(name, style, 'currentColor')
+// 購物相關 slot：未開購物時標示「⚠ 需開購物」（與 navtool 設定一致）
+const { enableShop } = useProject()
+const SHOP_SLOTS = ['member', 'cart', 'favorite']
+
 const dirty = computed(
   () =>
-    ['header', 'logo', 'logoMaxHeight', 'customCss', 'headerBgColor'].some(isDirtyKey) ||
+    ['header', 'logo', 'logoMaxHeight', 'customCss', 'headerBgColor', 'headerMenuFontSize'].some(
+      isDirtyKey,
+    ) ||
     MENU_COLOR_FIELDS.some((f) => isDirtyKey(f.key)) ||
+    RADIUS_FIELDS.some((f) => isDirtyKey(f.key)) ||
+    JSON.stringify(state.headerIcons || {}) !==
+      JSON.stringify(persisted.value.headerIcons || {}) ||
     JSON.stringify(state.langLabels || {}) !==
       JSON.stringify(persisted.value.langLabels || {}),
 )
@@ -319,6 +349,131 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
           下拉文字色與主選單文字色分開控制。
         </span>
       </div>
+
+      <!-- 下拉圓角：容器 / 項目（全站共用，留空＝版型預設） -->
+      <div class="field field--full">
+        <span class="field__label">下拉圓角（直角 ↔ 圓角）<em class="field__live">即時預覽</em></span>
+        <div class="menu-colors">
+          <div v-for="f in RADIUS_FIELDS" :key="f.key" class="menu-colors__row">
+            <span class="menu-colors__name">{{ f.name }}</span>
+            <input
+              type="range"
+              min="0"
+              max="30"
+              step="1"
+              :value="state[f.key] === '' ? f.def : state[f.key]"
+              @input="setPreview(f.key, Number($event.target.value))"
+            />
+            <code>{{ state[f.key] === '' ? '版型預設' : state[f.key] + 'px' }}</code>
+            <button
+              v-if="state[f.key] !== ''"
+              type="button"
+              class="btn btn--ghost btn--sm"
+              @click="setPreview(f.key, '')"
+            >
+              回到預設
+            </button>
+          </div>
+        </div>
+        <span class="field__hint">
+          0＝直角、數字越大越圓。套用所有版型的下拉容器與項目（含搜尋 / 語系浮層）；留空＝版型預設。
+        </span>
+      </div>
+
+      <!-- navtool 換 icon（line / 實心，全站共用） -->
+      <div class="field field--full">
+        <span class="field__label">工具列圖示（可換、線條 / 實心）<em class="field__live">即時預覽</em></span>
+        <div class="icon-picker">
+          <div v-for="s in HEADER_ICON_SLOTS" :key="s.slot" class="icon-picker__slot">
+            <div class="icon-picker__head">
+              <span class="icon-picker__name">{{ s.label }}</span>
+              <span
+                v-if="SHOP_SLOTS.includes(s.slot)"
+                class="icon-picker__shop"
+                :class="{ 'is-warn': !enableShop }"
+                :title="enableShop ? '購物功能已啟用' : '需先啟用購物功能此圖示才會顯示在站台'"
+              >
+                {{ enableShop ? '購物' : '⚠ 需開購物' }}
+              </span>
+              <div class="icon-picker__style">
+                <button
+                  type="button"
+                  :class="{ on: (iconSel(s.slot)?.style || 'line') === 'line' }"
+                  @click="setIcon(s.slot, iconSel(s.slot)?.name || s.def, 'line')"
+                >
+                  線條
+                </button>
+                <button
+                  type="button"
+                  :class="{ on: iconSel(s.slot)?.style === 'solid' }"
+                  @click="setIcon(s.slot, iconSel(s.slot)?.name || s.def, 'solid')"
+                >
+                  實心
+                </button>
+              </div>
+              <button
+                v-if="iconSel(s.slot)"
+                type="button"
+                class="btn btn--ghost btn--sm"
+                @click="clearIcon(s.slot)"
+              >
+                回到預設
+              </button>
+            </div>
+            <div class="icon-picker__grid">
+              <button
+                v-for="ic in headerIconOptions(s.slot)"
+                :key="ic.name"
+                type="button"
+                class="icon-picker__opt"
+                :class="{ on: iconSel(s.slot)?.name === ic.name }"
+                :title="ic.label + (headerIconHasSolid(ic.name) ? '' : '（無實心版，選實心會退回線條）')"
+                @click="setIcon(s.slot, ic.name, iconSel(s.slot)?.style || 'line')"
+                v-html="iconPreview(ic.name, iconSel(s.slot)?.style || 'line')"
+              ></button>
+            </div>
+          </div>
+        </div>
+        <span class="field__hint">
+          每個工具列圖示可換成庫內任一 icon，並切「線條 / 實心」兩版（部分圖無實心版，選實心會自動退回線條）。
+          留空＝用版型預設圖示；全站 16 版型共用。
+        </span>
+      </div>
+
+      <!-- 主選單文字大小 -->
+      <label class="field field--full">
+        <span class="field__label">主選單文字大小 <em class="field__live">即時預覽</em></span>
+        <div class="height-input">
+          <input
+            type="range"
+            min="12"
+            max="28"
+            step="1"
+            :value="state.headerMenuFontSize || 16"
+            @input="setPreview('headerMenuFontSize', Number($event.target.value))"
+          />
+          <div class="height-input__num">
+            <input
+              type="number"
+              min="10"
+              max="40"
+              :value="state.headerMenuFontSize ?? ''"
+              placeholder="預設"
+              @input="setPreview('headerMenuFontSize', $event.target.value === '' ? '' : Number($event.target.value))"
+            />
+            <span>px</span>
+          </div>
+          <button
+            v-if="state.headerMenuFontSize !== '' && state.headerMenuFontSize != null"
+            type="button"
+            class="btn btn--ghost btn--sm"
+            @click="setPreview('headerMenuFontSize', '')"
+          >
+            回到預設
+          </button>
+        </div>
+        <span class="field__hint">主選單（最上層連結）文字大小；留空＝版型預設。套用所有版型。</span>
+      </label>
     </div>
 
     <div class="actions">
@@ -497,6 +652,109 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
     color: #6a7382;
     border-radius: 4px;
     font-size: 12px;
+  }
+
+  input[type='range'] {
+    flex: 1;
+    cursor: pointer;
+  }
+}
+
+.icon-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #1a1f2a;
+  border: 1px solid #2a3242;
+  border-radius: 8px;
+
+  &__slot {
+    border-bottom: 1px solid #232a38;
+    padding-bottom: 12px;
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  &__name {
+    min-width: 72px;
+    font-size: 13px;
+    color: #c8cfdb;
+  }
+
+  &__shop {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: rgba(79, 192, 141, 0.12);
+    color: #6dd6a3;
+
+    &.is-warn {
+      background: rgba(255, 184, 0, 0.12);
+      color: #d4b170;
+    }
+  }
+
+  &__style {
+    display: inline-flex;
+    border: 1px solid #2a3242;
+    border-radius: 6px;
+    overflow: hidden;
+
+    button {
+      padding: 4px 10px;
+      font-size: 12px;
+      background: #0f1218;
+      color: #8a93a3;
+      border: none;
+      cursor: pointer;
+
+      &.on {
+        background: #4fc08d;
+        color: #0f1218;
+      }
+    }
+  }
+
+  &__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  &__opt {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #0f1218;
+    border: 1px solid #2a3242;
+    border-radius: 6px;
+    color: #c8cfdb;
+    cursor: pointer;
+
+    :deep(svg) {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      border-color: #4fc08d;
+    }
+    &.on {
+      border-color: #4fc08d;
+      color: #4fc08d;
+      background: #14241d;
+    }
   }
 }
 
