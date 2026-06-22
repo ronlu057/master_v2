@@ -25,5 +25,10 @@
   "devDependencies": {
     "marked": "^18.0.4",
     "sass": "^1.100.0"
+  },
+  "overrides": {
+    "vue-i18n": "11.4.4",
+    "esbuild": "0.28.1",
+    "glob": "13.0.6"
   }
 }
