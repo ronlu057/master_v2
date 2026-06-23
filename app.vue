@@ -32,9 +32,47 @@ const siteStyleContent = computed(() => {
   // 工具列圖示色 / 滑過色（navtool icon 走 .icon mask，color 即換色）
   const iconColor = (siteState.headerIconColor || '').trim()
   const iconHover = (siteState.headerIconHoverColor || '').trim()
+  // 工具列圖示「按鈕底」：背景色 / 滑過背景色 / 背景圓角（空＝無底，交還版型）
+  const iconBg = (siteState.headerIconBg || '').trim()
+  const iconHoverBg = (siteState.headerIconHoverBg || '').trim()
+  const iconRadius = String(siteState.headerIconRadius ?? '').trim()
+  // 跨 16 版型通用：每個 navtool 項目 wrapper 都帶行內 style="order: N"（來自 :style order），
+  // 且只有它們有 → 用屬性選擇器精準命中，排除社群容器（社群連結各自有圓底樣式）。
+  const navIcon = '.app-header .navtool [style^="order:"]:not(.navtool_social)'
   // 下拉圓角（容器 / 項目）：純數字 px（0＝直角），空＝交還版型預設
   const dropRadius = String(siteState.headerDropdownRadius ?? '').trim()
   const dropItemRadius = String(siteState.headerDropdownItemRadius ?? '').trim()
+  // 工具列下拉（搜尋/語系浮層）專屬圓角：容器 / 項目；空＝沿用上面的下拉圓角
+  const navDropRadius = String(siteState.headerNavtoolDropdownRadius ?? '').trim()
+  const navDropItemRadius = String(siteState.headerNavtoolDropdownItemRadius ?? '').trim()
+  // 工具列下拉「容器」/「項目」選擇器（dropBoxSel / sub 的 navtool 子集）
+  const navDropBoxSel = [
+    '.app-header .search_box',
+    '.app-header .lang_box',
+    '.app-header .lang_toggle ul',
+    '.app-header .navtool ul',
+    '.app-header [class*="lang-menu"]',
+  ].join(', ')
+  const navDropSubSel = [
+    '.app-header .lang_item',
+    '.app-header .lang_box a',
+    '.app-header .lang_box button',
+    '.app-header .lang_toggle ul a',
+    '.app-header .navtool ul a',
+    '.app-header [class*="lang-menu"] a',
+    '.app-header [class*="lang-menu"] button',
+    '.app-header .search_form input',
+  ].join(', ')
+  // 下拉「容器」內距 / 框線（套用 dropBoxSel）
+  const dropPadY = String(siteState.headerDropdownPaddingY ?? '').trim()
+  const dropPadX = String(siteState.headerDropdownPaddingX ?? '').trim()
+  const dropBorderW = String(siteState.headerDropdownBorderWidth ?? '').trim()
+  const dropBorderColor = (siteState.headerDropdownBorderColor || '').trim()
+  // 下拉「項目」內距 / 框線（套用 sub）
+  const dropItemPadY = String(siteState.headerDropdownItemPaddingY ?? '').trim()
+  const dropItemPadX = String(siteState.headerDropdownItemPaddingX ?? '').trim()
+  const dropItemBorderW = String(siteState.headerDropdownItemBorderWidth ?? '').trim()
+  const dropItemBorderColor = (siteState.headerDropdownItemBorderColor || '').trim()
   // 主選單連結（排除下拉子連結）— 讓「主選單文字色」與「下拉文字色」完全分開、互不影響
   const top = '.app-header nav a:not([class*="__sub"] a):not(ul ul a)'
   // 下拉「容器」：nav 子選單 + navtool 搜尋 / 語系 / ul 卡片浮層（涵蓋三種語系結構）
@@ -85,14 +123,44 @@ const siteStyleContent = computed(() => {
     dropColor && `${sub} { color: ${dropColor} !important; }`,
     dropHover && `${subHover} { color: ${dropHover} !important; }`,
     dropItemHoverBg && `${subHover} { background: ${dropItemHoverBg} !important; }`,
-    iconColor && `.app-header .navtool .icon { color: ${iconColor} !important; }`,
+    // 工具列圖示色：同時套用到 icon 與「顯示文字」span，避免文字維持版型預設色而看不見
+    iconColor &&
+      `.app-header .navtool .icon, .app-header .navtool .navtool_text { color: ${iconColor} !important; }`,
     iconHover &&
-      `.app-header .navtool :hover > .icon, .app-header .navtool .icon:hover { color: ${iconHover} !important; }`,
+      `.app-header .navtool :hover > .icon, .app-header .navtool .icon:hover, .app-header .navtool :hover > .navtool_text { color: ${iconHover} !important; }`,
+    // 工具列圖示「按鈕底」：有背景色才把 navtool_icon 變成置中的 chip（加 padding 讓底色有呼吸空間）
+    iconBg &&
+      `${navIcon} { background: ${iconBg} !important; padding: 0.45em !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; }`,
+    iconHoverBg && `${navIcon}:hover, ${navIcon}:focus-within { background: ${iconHoverBg} !important; }`,
+    iconRadius !== '' && `${navIcon} { border-radius: ${iconRadius}px !important; }`,
     // 下拉容器圓角（含 overflow:hidden 讓項目底色不超出圓角）
     dropRadius !== '' &&
       `${dropBoxSel} { border-radius: ${dropRadius}px !important; overflow: hidden; }`,
     // 下拉項目圓角
     dropItemRadius !== '' && `${sub} { border-radius: ${dropItemRadius}px !important; }`,
+    // 下拉「容器」內距（上下 / 左右）與框線（粗細 / 顏色）
+    dropPadY !== '' &&
+      `${dropBoxSel} { padding-top: ${dropPadY}px !important; padding-bottom: ${dropPadY}px !important; }`,
+    dropPadX !== '' &&
+      `${dropBoxSel} { padding-left: ${dropPadX}px !important; padding-right: ${dropPadX}px !important; }`,
+    dropBorderW !== '' &&
+      `${dropBoxSel} { border-style: solid !important; border-width: ${dropBorderW}px !important; }`,
+    // 設了框線顏色但沒設粗細 → 自動補 solid 1px，確保顏色看得到（版型原本無框時也會顯示）
+    dropBorderColor &&
+      `${dropBoxSel} { border-color: ${dropBorderColor} !important; border-style: solid !important;${dropBorderW === '' ? ' border-width: 1px !important;' : ''} }`,
+    // 下拉「項目」內距（上下 / 左右）與框線（粗細 / 顏色）
+    dropItemPadY !== '' &&
+      `${sub} { padding-top: ${dropItemPadY}px !important; padding-bottom: ${dropItemPadY}px !important; }`,
+    dropItemPadX !== '' &&
+      `${sub} { padding-left: ${dropItemPadX}px !important; padding-right: ${dropItemPadX}px !important; }`,
+    dropItemBorderW !== '' &&
+      `${sub} { border-style: solid !important; border-width: ${dropItemBorderW}px !important; }`,
+    dropItemBorderColor &&
+      `${sub} { border-color: ${dropItemBorderColor} !important; border-style: solid !important;${dropItemBorderW === '' ? ' border-width: 1px !important;' : ''} }`,
+    // 工具列下拉專屬圓角（放在通用規則之後 → 對搜尋/語系浮層覆寫；空＝沿用上面通用值）
+    navDropRadius !== '' &&
+      `${navDropBoxSel} { border-radius: ${navDropRadius}px !important; overflow: hidden; }`,
+    navDropItemRadius !== '' && `${navDropSubSel} { border-radius: ${navDropItemRadius}px !important; }`,
   ]
     .filter(Boolean)
     .join('\n')

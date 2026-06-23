@@ -7,9 +7,9 @@
   "defaultLang": "tw",
   "enableShop": false,
   "logo": "",
-  "logoMaxHeight": 45,
+  "logoMaxHeight": 48,
   "customCss": "",
-  "headerBgColor": "transparent",
+  "headerBgColor": "rgba(242,242,242,0.92)",
   "langLabels": {},
   "navtool": {
     "Header07": {
@@ -113,14 +113,178 @@
           "order": 6
         }
       ]
+    },
+    "Header01": {
+      "items": [
+        {
+          "key": "search",
+          "enabled": true,
+          "order": 1,
+          "text": {
+            "tw": "搜尋",
+            "en": "Search",
+            "jp": "検索",
+            "kr": "검색"
+          },
+          "display": "icon",
+          "textCase": "upper"
+        },
+        {
+          "key": "language",
+          "enabled": true,
+          "order": 2,
+          "text": {
+            "tw": "語系",
+            "en": "Language",
+            "jp": "言語",
+            "kr": "언어"
+          },
+          "display": "icon",
+          "textCase": "none"
+        },
+        {
+          "key": "social",
+          "enabled": false,
+          "order": 3,
+          "text": {
+            "tw": "社群",
+            "en": "Social",
+            "jp": "ソーシャル",
+            "kr": "소셜"
+          },
+          "display": "icon",
+          "textCase": "none"
+        },
+        {
+          "key": "member",
+          "enabled": false,
+          "order": 4,
+          "text": {
+            "tw": "會員中心",
+            "en": "Member",
+            "jp": "会員",
+            "kr": "회원"
+          },
+          "display": "icon",
+          "textCase": "none"
+        },
+        {
+          "key": "cart",
+          "enabled": false,
+          "order": 5,
+          "text": {
+            "tw": "購物車",
+            "en": "Cart",
+            "jp": "カート",
+            "kr": "카트"
+          },
+          "display": "icon",
+          "textCase": "none"
+        },
+        {
+          "key": "favorite",
+          "enabled": false,
+          "order": 6,
+          "text": {
+            "tw": "我的最愛",
+            "en": "Favorites",
+            "jp": "お気に入り",
+            "kr": "즐겨찾기"
+          },
+          "display": "icon",
+          "textCase": "none"
+        }
+      ]
+    },
+    "Header02": {
+      "items": [
+        {
+          "key": "search",
+          "enabled": false,
+          "order": 1,
+          "text": {
+            "tw": "搜尋",
+            "en": "Search",
+            "jp": "検索",
+            "kr": "검색"
+          },
+          "display": "icon",
+          "textCase": "none"
+        },
+        {
+          "key": "language",
+          "enabled": false,
+          "order": 2,
+          "text": {
+            "tw": "語系",
+            "en": "Language",
+            "jp": "言語",
+            "kr": "언어"
+          },
+          "display": "icon",
+          "textCase": "none"
+        },
+        {
+          "key": "social",
+          "enabled": true,
+          "order": 3,
+          "text": {
+            "tw": "社群",
+            "en": "Social",
+            "jp": "ソーシャル",
+            "kr": "소셜"
+          },
+          "display": "icon",
+          "textCase": "upper"
+        },
+        {
+          "key": "member",
+          "enabled": false,
+          "order": 4,
+          "text": {
+            "tw": "會員中心",
+            "en": "Member",
+            "jp": "会員",
+            "kr": "회원"
+          },
+          "display": "icon",
+          "textCase": "none"
+        },
+        {
+          "key": "cart",
+          "enabled": false,
+          "order": 5,
+          "text": {
+            "tw": "購物車",
+            "en": "Cart",
+            "jp": "カート",
+            "kr": "카트"
+          },
+          "display": "icon",
+          "textCase": "none"
+        },
+        {
+          "key": "favorite",
+          "enabled": false,
+          "order": 6,
+          "text": {
+            "tw": "我的最愛",
+            "en": "Favorites",
+            "jp": "お気に入り",
+            "kr": "즐겨찾기"
+          },
+          "display": "icon",
+          "textCase": "none"
+        }
+      ]
     }
   },
-  "headerMenuColor": "#ffffff",
-  "headerMenuHoverColor": "",
-  "headerDropdownBg": "",
+  "headerMenuColor": "#212121",
+  "headerMenuHoverColor": "#4fc08d",
+  "headerDropdownBg": "#f5f5f5",
   "headerDropdownItemBg": "#ffffff",
   "headerDropdownColor": "#4a4a4a",
-  "headerDropdownHoverColor": "",
+  "headerDropdownHoverColor": "#58c694",
   "headerIcons": {
     "search": {
       "name": "search",
@@ -144,12 +308,31 @@
     }
   },
   "headerMenuFontSize": "",
-  "headerIconColor": "#ffffff",
-  "headerIconHoverColor": "",
-  "headerDropdownRadius": 10,
+  "headerIconColor": "#454545",
+  "headerIconHoverColor": "#54c08f",
+  "headerDropdownRadius": 9,
   "headerDropdownItemRadius": 5,
   "headerDropdownItemHoverBg": "#d5dbdc",
   "bannerTitleColor": "#ff004c",
   "bannerSubtitleColor": "#ffffff",
-  "bannerMemoColor": "#ffffff"
+  "bannerMemoColor": "#ffffff",
+  "enabledLangs": [
+    "tw",
+    "en",
+    "jp",
+    "kr"
+  ],
+  "headerIconBg": "",
+  "headerIconHoverBg": "",
+  "headerIconRadius": "",
+  "headerNavtoolDropdownRadius": "",
+  "headerNavtoolDropdownItemRadius": "",
+  "headerDropdownPaddingY": "",
+  "headerDropdownPaddingX": "",
+  "headerDropdownBorderWidth": "",
+  "headerDropdownBorderColor": "",
+  "headerDropdownItemPaddingY": "",
+  "headerDropdownItemBorderWidth": 0,
+  "headerDropdownItemBorderColor": "",
+  "headerDropdownItemPaddingX": 20
 }

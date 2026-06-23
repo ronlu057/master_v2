@@ -47,7 +47,8 @@ const socials = useSocials()
             :style="{ order: navtool.orderOf('search') }"
             aria-label="搜尋"
           >
-            <i class="icon icon-search"></i>
+            <i v-if="navtool.showsIcon('search')" class="icon icon-search"></i>
+            <span v-if="navtool.showsText('search')" class="navtool_text">{{ navtool.textOf('search') }}</span>
           </NuxtLink>
 
           <!-- 語言切換（剩 1 個語系時隱藏） -->
@@ -61,8 +62,9 @@ const socials = useSocials()
               :class="{ 'is-open': langOpen }"
               @click="langOpen = !langOpen"
             >
+              <span v-if="navtool.showsText('language')" class="navtool_text">{{ navtool.textOf('language') }}</span>
               {{ currentLang }}
-              <i class="icon icon-arrow header-value__caret"></i>
+              <i v-if="navtool.showsIcon('language')" class="icon icon-arrow header-value__caret"></i>
             </button>
             <transition name="drop">
               <ul v-show="langOpen" class="header-value__lang-menu">
@@ -84,6 +86,7 @@ const socials = useSocials()
             class="header-value__social"
             :style="{ order: navtool.orderOf('social') }"
           >
+            <span v-if="navtool.showsText('social')" class="navtool_text">{{ navtool.textOf('social') }}</span>
             <a
               v-for="s in socials"
               :key="s.key"
@@ -104,7 +107,8 @@ const socials = useSocials()
             :style="{ order: navtool.orderOf('member') }"
             aria-label="會員中心"
           >
-            <i class="icon icon-member"></i>
+            <i v-if="navtool.showsIcon('member')" class="icon icon-member"></i>
+            <span v-if="navtool.showsText('member')" class="navtool_text">{{ navtool.textOf('member') }}</span>
           </NuxtLink>
 
           <!-- 購物車 -->
@@ -115,7 +119,8 @@ const socials = useSocials()
             :style="{ order: navtool.orderOf('cart') }"
             aria-label="購物車"
           >
-            <i class="icon icon-shopcart"></i>
+            <i v-if="navtool.showsIcon('cart')" class="icon icon-shopcart"></i>
+            <span v-if="navtool.showsText('cart')" class="navtool_text">{{ navtool.textOf('cart') }}</span>
             <span v-if="cart.count" class="header-value__cart-badge">{{ cart.count }}</span>
           </NuxtLink>
 
@@ -127,7 +132,8 @@ const socials = useSocials()
             :style="{ order: navtool.orderOf('favorite') }"
             aria-label="我的最愛"
           >
-            <i class="icon icon-like"></i>
+            <i v-if="navtool.showsIcon('favorite')" class="icon icon-like"></i>
+            <span v-if="navtool.showsText('favorite')" class="navtool_text">{{ navtool.textOf('favorite') }}</span>
           </NuxtLink>
 
           <!-- 行動版選單鈕 -->

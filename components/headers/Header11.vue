@@ -91,7 +91,8 @@ onBeforeUnmount(() => {
           class="search_btn"
           :style="{ order: navtool.orderOf('search') }"
         >
-          <i class="icon icon-search" :aria-label="$t('aria.search')"></i>
+          <i v-if="navtool.showsIcon('search')" class="icon icon-search" :aria-label="$t('aria.search')"></i>
+          <span v-if="navtool.showsText('search')" class="navtool_text">{{ navtool.textOf('search') }}</span>
           <div class="search_box">
             <form class="search_form" @submit.prevent="onSearch">
               <input
@@ -114,7 +115,8 @@ onBeforeUnmount(() => {
           class="lang_toggle"
           :style="{ order: navtool.orderOf('language') }"
         >
-          <i class="icon icon-language" :aria-label="$t('aria.language')"></i>
+          <i v-if="navtool.showsIcon('language')" class="icon icon-language" :aria-label="$t('aria.language')"></i>
+          <span v-if="navtool.showsText('language')" class="navtool_text">{{ navtool.textOf('language') }}</span>
           <div class="lang_box">
             <button
               v-for="lang in languages"
@@ -135,6 +137,7 @@ onBeforeUnmount(() => {
           class="navtool_social"
           :style="{ order: navtool.orderOf('social') }"
         >
+          <span v-if="navtool.showsText('social')" class="navtool_text">{{ navtool.textOf('social') }}</span>
           <a
             v-for="s in socials"
             :key="s.key"
@@ -155,7 +158,8 @@ onBeforeUnmount(() => {
           :style="{ order: navtool.orderOf('member') }"
           aria-label="會員中心"
         >
-          <i class="icon icon-member"></i>
+          <i v-if="navtool.showsIcon('member')" class="icon icon-member"></i>
+          <span v-if="navtool.showsText('member')" class="navtool_text">{{ navtool.textOf('member') }}</span>
         </NuxtLink>
 
         <!-- 購物車 -->
@@ -166,7 +170,8 @@ onBeforeUnmount(() => {
           :style="{ order: navtool.orderOf('cart') }"
           aria-label="購物車"
         >
-          <i class="icon icon-shopcart"></i>
+          <i v-if="navtool.showsIcon('cart')" class="icon icon-shopcart"></i>
+          <span v-if="navtool.showsText('cart')" class="navtool_text">{{ navtool.textOf('cart') }}</span>
           <p v-if="cart.count">{{ cart.count }}</p>
         </NuxtLink>
 
@@ -178,7 +183,8 @@ onBeforeUnmount(() => {
           :style="{ order: navtool.orderOf('favorite') }"
           aria-label="我的最愛"
         >
-          <i class="icon icon-like"></i>
+          <i v-if="navtool.showsIcon('favorite')" class="icon icon-like"></i>
+          <span v-if="navtool.showsText('favorite')" class="navtool_text">{{ navtool.textOf('favorite') }}</span>
         </NuxtLink>
       </div>
     </div>

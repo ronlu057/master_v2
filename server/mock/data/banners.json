@@ -1,17 +1,17 @@
 {
   "home": {
-    "videoUrl": "https://www.youtube.com/watch?v=mRC8mVLoqx8",
+    "videoUrl": "https://www.youtube.com/watch?v=PgUeQjMAsKA",
     "videoFile": "",
     "rows": [
       {
         "image": {
-          "pc": "/img/tw/banner/banner-1782093422505.jpg",
-          "mb": "/img/tw/banner/banner-1782093422505.jpg"
+          "pc": "/img/tw/banner/banner-1782210202107.jpg",
+          "mb": "/img/tw/banner/banner-1782210202107.jpg"
         },
-        "alt": "三杯奶油糖霜杯子蛋糕，背景模糊花圈",
-        "title": "視覺魔力，一觸即發",
-        "subtitle": "打造您的品牌專屬數位門面",
-        "memo": "從概念到實踐，我們為您設計最佳使用者體驗。",
+        "alt": "藍色背景上，發光粒子與曲線構成的抽象圓環",
+        "title": "光環設計，無限可能",
+        "subtitle": "粒子曲線交織，激盪數位新視野",
+        "memo": "從抽象圓環探索網頁設計的精髓與創意，打造獨一無二的視覺體驗。",
         "btnText": "",
         "link": "/about/company-intro"
       },

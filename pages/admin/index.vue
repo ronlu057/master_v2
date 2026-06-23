@@ -5,7 +5,7 @@ definePageMeta({ layout: 'admin' })
 
 if (import.meta.client && !import.meta.dev) navigateTo('/', { replace: true })
 
-const { state, options, submitting, load, submit, setPreview, clearPreview, isDirtyKey } =
+const { state, options, persisted, submitting, load, submit, setPreview, clearPreview, isDirtyKey } =
   useSiteSettings()
 
 const PROJECT_TYPE_LABELS = {
@@ -24,8 +24,35 @@ const LANG_LABELS = {
 
 onMounted(load)
 
-const dirty = computed(() =>
-  ['projectType', 'apiBase', 'defaultLang', 'enableShop'].some(isDirtyKey),
+// ── 啟用語系：站台實際提供哪些語系（空＝全部）──────────────────
+const enabledLangs = computed(() =>
+  Array.isArray(state.enabledLangs) && state.enabledLangs.length
+    ? state.enabledLangs
+    : options.value.langs,
+)
+const isLangOn = (l) => enabledLangs.value.includes(l)
+const toggleLang = (l, on) => {
+  let next = enabledLangs.value.filter((x) => x !== l)
+  if (on) next.push(l)
+  if (!next.length) return // 至少保留一個語系
+  // 依官方語系順序排序，保持穩定
+  next = options.value.langs.filter((x) => next.includes(x))
+  setPreview('enabledLangs', next)
+  // 預設語系若被停用 → 自動改成第一個啟用語系
+  if (!next.includes(state.defaultLang)) setPreview('defaultLang', next[0])
+}
+
+// 語系顯示文字（後台覆寫；留空 → 各版型預設）— 只對啟用語系開放
+const onLangLabelInput = (lang, value) => {
+  setPreview('langLabels', { ...(state.langLabels || {}), [lang]: value })
+}
+
+const dirty = computed(
+  () =>
+    ['projectType', 'apiBase', 'defaultLang', 'enableShop'].some(isDirtyKey) ||
+    JSON.stringify(state.enabledLangs || []) !==
+      JSON.stringify(persisted.value.enabledLangs || []) ||
+    JSON.stringify(state.langLabels || {}) !== JSON.stringify(persisted.value.langLabels || {}),
 )
 
 const message = ref(null)
@@ -64,14 +91,35 @@ const onSubmit = async () => {
         <span class="field__hint">下次 API 請求生效（useApi.js 走 effective.apiBase）</span>
       </label>
 
+      <div class="field field--full">
+        <span class="field__label">啟用語系 <em class="field__live">即時預覽</em></span>
+        <div class="lang-toggles">
+          <label
+            v-for="l in options.langs"
+            :key="l"
+            class="lang-toggle"
+            :class="{ 'is-on': isLangOn(l) }"
+          >
+            <input
+              type="checkbox"
+              :checked="isLangOn(l)"
+              :disabled="isLangOn(l) && enabledLangs.length === 1"
+              @change="toggleLang(l, $event.target.checked)"
+            />
+            {{ l }} - {{ LANG_LABELS[l] || l }}
+          </label>
+        </div>
+        <span class="field__hint">勾選站台實際提供的語系；前台語系切換清單即時跟著變（至少保留一個）。</span>
+      </div>
+
       <label class="field">
         <span class="field__label">預設語系</span>
         <select :value="state.defaultLang" @change="setPreview('defaultLang', $event.target.value)">
-          <option v-for="l in options.langs" :key="l" :value="l">
+          <option v-for="l in enabledLangs" :key="l" :value="l">
             {{ l }} - {{ LANG_LABELS[l] || l }}
           </option>
         </select>
-        <span class="field__hint">i18n 模組預設語系（提交 .env 後仍需重啟才會切換預設）</span>
+        <span class="field__hint">只能從「啟用語系」中選；i18n 模組預設語系（提交 .env 後仍需重啟才會切換預設）</span>
       </label>
 
       <label class="field field--checkbox">
@@ -102,9 +150,56 @@ const onSubmit = async () => {
     >
       {{ message.text }}
     </p>
+
+    <!-- 語系顯示文字 — 只對「啟用語系」開放；全站各 header 共用，留空＝版型預設 -->
+    <section class="page__section">
+      <h2 class="page__section-title">語系顯示文字 <em class="field__live">即時預覽</em></h2>
+      <p class="page__desc" style="margin-bottom: 12px">
+        自訂每個語系在 header 語系切換上顯示的文字（全站所有 header 共用）。
+        <strong>只會列出上方「啟用語系」勾選的語系</strong>；留空＝沿用版型預設 —
+        Header04 顯示縮寫（TW/EN…），其餘版型顯示語系全名。
+      </p>
+      <div class="grid">
+        <label v-for="lang in enabledLangs" :key="lang" class="field">
+          <span class="field__label">{{ LANG_LABELS[lang] || lang }}（{{ lang }}）</span>
+          <input
+            type="text"
+            :value="state.langLabels?.[lang] || ''"
+            placeholder="留空＝版型預設"
+            @input="onLangLabelInput(lang, $event.target.value)"
+          />
+        </label>
+      </div>
+    </section>
   </div>
 </template>
 
 <style lang="scss" scoped>
 @use '~/assets/styles/_admin-page.scss' as *;
+
+.lang-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: #1a1f2a;
+  border: 1px solid #2a3242;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #c8cfdb;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.is-on {
+    border-color: #4fc08d;
+    color: #fff;
+  }
+
+  input { accent-color: #4fc08d; cursor: pointer; }
+}
 </style>

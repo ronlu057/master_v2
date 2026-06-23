@@ -45,8 +45,21 @@ export function useEffectiveSettings() {
       headerDropdownHoverColor: pub.headerDropdownHoverColor || '', // 下拉文字「滑鼠滑過」色
       headerIconColor: pub.headerIconColor || '', // 工具列圖示色（搜尋/語系/社群/會員/購物車…）
       headerIconHoverColor: pub.headerIconHoverColor || '', // 工具列圖示滑過色
+      headerIconBg: pub.headerIconBg || '', // 工具列圖示「背景色」（做成按鈕底；空＝無底）
+      headerIconHoverBg: pub.headerIconHoverBg || '', // 工具列圖示「滑過背景色」
+      headerIconRadius: pub.headerIconRadius ?? '', // 工具列圖示背景圓角 px（0＝直角，''＝無）
       headerDropdownRadius: pub.headerDropdownRadius ?? '', // 下拉「容器」圓角 px（0＝直角，''＝版型預設）
       headerDropdownItemRadius: pub.headerDropdownItemRadius ?? '', // 下拉「項目」圓角 px
+      headerNavtoolDropdownRadius: pub.headerNavtoolDropdownRadius ?? '', // 工具列下拉（搜尋/語系浮層）容器圓角 px；''＝沿用下拉容器圓角
+      headerNavtoolDropdownItemRadius: pub.headerNavtoolDropdownItemRadius ?? '', // 工具列下拉「項目」圓角 px；''＝沿用下拉項目圓角
+      headerDropdownPaddingY: pub.headerDropdownPaddingY ?? '', // 下拉容器內距（上下）px
+      headerDropdownPaddingX: pub.headerDropdownPaddingX ?? '', // 下拉容器內距（左右）px
+      headerDropdownBorderWidth: pub.headerDropdownBorderWidth ?? '', // 下拉容器框線粗細 px（0＝無框）
+      headerDropdownBorderColor: pub.headerDropdownBorderColor || '', // 下拉容器框線顏色
+      headerDropdownItemPaddingY: pub.headerDropdownItemPaddingY ?? '', // 下拉單項內距（上下）px
+      headerDropdownItemPaddingX: pub.headerDropdownItemPaddingX ?? '', // 下拉單項內距（左右）px
+      headerDropdownItemBorderWidth: pub.headerDropdownItemBorderWidth ?? '', // 下拉單項框線粗細 px
+      headerDropdownItemBorderColor: pub.headerDropdownItemBorderColor || '', // 下拉單項框線顏色
       // navtool 各 slot 換 icon：{ [slot]: { name, style:'line'|'solid' } }；空＝用 icons.scss 預設 SVG
       headerIcons: {},
       // 主選單文字大小（px，全站共用，''＝版型預設）
@@ -56,6 +69,9 @@ export function useEffectiveSettings() {
       bannerTitleColor: pub.bannerTitleColor || '',
       bannerSubtitleColor: pub.bannerSubtitleColor || '',
       bannerMemoColor: pub.bannerMemoColor || '',
+      // 啟用語系（站台實際提供的語系碼陣列）；空＝全部啟用（fallback）。
+      // 控制前台語系切換清單 + 後台只對「有啟用的語系」開放文字輸入
+      enabledLangs: Array.isArray(pub.enabledLangs) ? pub.enabledLangs : ['tw', 'en', 'jp', 'kr'],
       // 語系顯示文字覆寫 { tw, en, jp, kr }；留空欄位 → 各 header 走自身預設（見 useLangLabels）
       langLabels: {},
       // navtool per-header 設定 { [HeaderName]: { items: [{key,enabled,order}] } }；空 → 走 PRESETS

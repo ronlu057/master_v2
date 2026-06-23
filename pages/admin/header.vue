@@ -12,12 +12,6 @@ const { state, options, persisted, submitting, load, submit, setPreview, isDirty
 
 onMounted(load)
 
-// 語系顯示文字（後台覆寫；留空 → 各版型預設）
-const LANG_NAMES = { tw: '繁體中文', en: 'English', jp: '日本語', kr: '한국어' }
-const onLangLabelInput = (lang, value) => {
-  setPreview('langLabels', { ...(state.langLabels || {}), [lang]: value })
-}
-
 // ── Header 背景色 ───────────────────────────────────────────
 // 值的三種型態：''＝版型預設、'transparent'＝透明、'#rrggbb' / 'rgba(r,g,b,a)'＝指定色
 // 強制套用到所有狀態（含捲動後 / 內頁）— 注入邏輯在 app.vue
@@ -77,17 +71,39 @@ const MENU_COLOR_FIELDS = [
   { key: 'headerDropdownBg', name: '下拉背景色', def: '#ffffff' },
   { key: 'headerDropdownItemBg', name: '下拉單項背景色', def: '#f6f8f9' },
   { key: 'headerDropdownItemHoverBg', name: '下拉單項滑過背景色', def: '#eef2f3' },
+  { key: 'headerDropdownBorderColor', name: '下拉框線顏色', def: '#e5e7eb' },
+  { key: 'headerDropdownItemBorderColor', name: '下拉單項框線顏色', def: '#e5e7eb' },
   { key: 'headerIconColor', name: '工具列圖示色', def: '#333333' },
   { key: 'headerIconHoverColor', name: '工具列圖示滑過色', def: '#4fc08d' },
+  { key: 'headerIconBg', name: '工具列圖示背景色', def: '#ffffff' },
+  { key: 'headerIconHoverBg', name: '工具列圖示滑過背景色', def: '#eef2f3' },
 ]
 // 任一選單色有設值 → 顯示「全部回到預設」；一鍵把 6 個顏色全清回版型預設
 const hasAnyMenuColor = computed(() => MENU_COLOR_FIELDS.some((f) => state[f.key]))
 const resetMenuColors = () => MENU_COLOR_FIELDS.forEach((f) => setPreview(f.key, ''))
+// 手動輸入 hex：失焦時若是純 hex 數字（漏打 #）自動補上；空＝交還版型預設
+const onHexNormalize = (key, value) => {
+  const v = (value || '').trim()
+  if (v && !v.startsWith('#') && /^[0-9a-fA-F]{3,8}$/.test(v)) setPreview(key, '#' + v)
+}
 
 // 下拉圓角欄位（容器 / 項目，全站共用，留空＝版型預設）；def 僅為滑桿在「版型預設」時的顯示位置
 const RADIUS_FIELDS = [
   { key: 'headerDropdownRadius', name: '下拉容器圓角', def: 8 },
   { key: 'headerDropdownItemRadius', name: '下拉項目圓角', def: 6 },
+  { key: 'headerNavtoolDropdownRadius', name: '工具列下拉容器圓角', def: 8 },
+  { key: 'headerNavtoolDropdownItemRadius', name: '工具列下拉項目圓角', def: 6 },
+  { key: 'headerIconRadius', name: '工具列圖示背景圓角', def: 8 },
+]
+
+// 下拉內距與框線粗細（容器 / 單項，全站共用，留空＝版型預設）
+const DROPDOWN_BOX_FIELDS = [
+  { key: 'headerDropdownPaddingY', name: '下拉內距（上下）', def: 10 },
+  { key: 'headerDropdownPaddingX', name: '下拉內距（左右）', def: 10 },
+  { key: 'headerDropdownBorderWidth', name: '下拉框線粗細', def: 1 },
+  { key: 'headerDropdownItemPaddingY', name: '單項內距（上下）', def: 8 },
+  { key: 'headerDropdownItemPaddingX', name: '單項內距（左右）', def: 12 },
+  { key: 'headerDropdownItemBorderWidth', name: '單項框線粗細', def: 0 },
 ]
 
 // ── navtool 換 icon（line / 實心，全站共用；留空＝icons.scss 預設）────────────
@@ -114,10 +130,9 @@ const dirty = computed(
     ) ||
     MENU_COLOR_FIELDS.some((f) => isDirtyKey(f.key)) ||
     RADIUS_FIELDS.some((f) => isDirtyKey(f.key)) ||
+    DROPDOWN_BOX_FIELDS.some((f) => isDirtyKey(f.key)) ||
     JSON.stringify(state.headerIcons || {}) !==
-      JSON.stringify(persisted.value.headerIcons || {}) ||
-    JSON.stringify(state.langLabels || {}) !==
-      JSON.stringify(persisted.value.langLabels || {}),
+      JSON.stringify(persisted.value.headerIcons || {}),
 )
 
 const message = ref(null)
@@ -157,6 +172,82 @@ const onLogoReset = () => {
   logoMessage.value = { type: 'success', text: '已重置為預設 LOGO' }
 }
 
+// ── Header 即時預覽（iframe 固定桌機寬 + 等比縮放）──────────────────
+// 用 <iframe> 嵌入 /admin/header-preview（只渲染 AppHeader）。iframe 固定 1920×1080，
+// 內部 viewport＝桌機寬 → header 的 RWD 斷點走桌機版（目錄、社群不會被收進漢堡/隱藏），
+// 再用外層 transform 等比縮放塞進預覽框。設定改動由 iframe 內的 storage 監聽即時同步。
+// 市面熱門裝置尺寸（viewport 寬×高）；iframe 寬＝viewport 寬 → header RWD 走該斷點
+const DEVICES = [
+  // 桌機 / 筆電
+  { key: 'pc27', name: '27吋螢幕', type: 'pc', w: 2560, h: 1440 },
+  { key: 'pc', name: '桌機', type: 'pc', w: 1920, h: 1080 },
+  { key: 'laptop', name: '筆電', type: 'pc', w: 1440, h: 900 },
+  { key: 'macair', name: 'Mac Air', type: 'pc', w: 1280, h: 800 },
+  // 平板（可切直/橫）— 尺寸以直式存，橫式自動對調
+  { key: 'ipadPro', name: 'iPad Pro', type: 'tablet', w: 1024, h: 1366 },
+  { key: 'galaxyTabS', name: '三星 Tab S', type: 'tablet', w: 800, h: 1280 },
+  { key: 'ipad', name: 'iPad', type: 'tablet', w: 768, h: 1024 },
+  { key: 'ipadMini', name: 'iPad mini', type: 'tablet', w: 744, h: 1133 },
+  // iPhone 各系列
+  { key: 'iphoneSE', name: 'iPhone SE', type: 'phone', w: 375, h: 667 },
+  { key: 'iphoneMini', name: 'iPhone mini', type: 'phone', w: 375, h: 812 },
+  { key: 'iphone', name: 'iPhone 14/15', type: 'phone', w: 390, h: 844 },
+  { key: 'iphonePro', name: 'iPhone 15 Pro', type: 'phone', w: 393, h: 852 },
+  { key: 'iphoneProMax', name: 'iPhone ProMax', type: 'phone', w: 430, h: 932 },
+  // 三星各系列
+  { key: 'galaxySsmall', name: 'Galaxy S(最小)', type: 'phone', w: 360, h: 640 },
+  { key: 'galaxyS', name: 'Galaxy S', type: 'phone', w: 360, h: 800 },
+  { key: 'galaxyUltra', name: 'Galaxy S Ultra', type: 'phone', w: 412, h: 915 },
+  { key: 'galaxyA', name: 'Galaxy A', type: 'phone', w: 360, h: 780 },
+  { key: 'galaxyFold', name: 'Galaxy Z Fold(折)', type: 'phone', w: 344, h: 882 },
+]
+const deviceKey = ref('pc')
+const device = computed(() => DEVICES.find((d) => d.key === deviceKey.value) || DEVICES[0])
+
+// 方向：true＝橫版（寬高對調）；平板與手機可切，桌機固定橫
+const landscape = ref(false)
+const canRotate = computed(() => device.value.type !== 'pc')
+const effDims = computed(() => {
+  const d = device.value
+  if (canRotate.value && landscape.value) {
+    return { w: Math.max(d.w, d.h), h: Math.min(d.w, d.h) }
+  }
+  return { w: d.w, h: d.h }
+})
+const previewBox = ref(null)
+const boxW = ref(900)
+const calcPreview = () => {
+  if (!import.meta.client || !previewBox.value) return
+  boxW.value = previewBox.value.clientWidth
+}
+// 縮放規則：裝置寬 ≤ 預覽框寬 → 用「實際 1:1 尺寸」（例 744×1133 就照原尺寸、置中）；
+// 比框還寬（桌機 / 27吋 / 平板橫…）才等比縮小塞進框寬。高度一律顯示全高（不裁切）。
+const scale = computed(() => Math.min(1, boxW.value / effDims.value.w))
+const frameLeft = computed(() => Math.max(0, (boxW.value - effDims.value.w * scale.value) / 2))
+
+// 預覽是否可互動（hover 看下拉 / 點擊測試）；預設鎖定，避免誤點 nav 連結讓 iframe 跳頁
+const previewInteractive = ref(false)
+// 強制展開下拉（不用 hover 也能看下拉樣式效果）；切換時改 iframe src 的 ?dropdown 參數
+const previewShowDropdown = ref(false)
+const previewSrc = computed(
+  () => '/admin/header-preview' + (previewShowDropdown.value ? '?dropdown=1' : ''),
+)
+
+const previewBoxStyle = computed(() => ({ height: effDims.value.h * scale.value + 'px' }))
+const previewFrameStyle = computed(() => ({
+  width: effDims.value.w + 'px',
+  height: effDims.value.h + 'px',
+  transform: `scale(${scale.value})`,
+  marginLeft: frameLeft.value + 'px',
+}))
+onMounted(() => {
+  nextTick(calcPreview)
+  if (import.meta.client) window.addEventListener('resize', calcPreview)
+})
+onBeforeUnmount(() => {
+  if (import.meta.client) window.removeEventListener('resize', calcPreview)
+})
+
 const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控） */
 .site-logo { height: 60px; }
 
@@ -174,6 +265,75 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
       切換 Header 版型、上傳 LOGO、配置 navtool 6 個 icon。
       <strong>navtool 設定 per-Header 獨立保存</strong> — 切版型即看到該版的 toggle / 排序。
     </p>
+
+    <!-- Header 即時預覽（縮放實際 AppHeader 派發器） -->
+    <section class="page__section header-preview-section">
+      <h2 class="page__section-title">
+        Header 即時預覽 <em class="field__live">即時預覽</em>
+        <button
+          type="button"
+          class="btn btn--ghost btn--sm"
+          :class="{ 'is-on': previewShowDropdown }"
+          @click="previewShowDropdown = !previewShowDropdown"
+        >
+          {{ previewShowDropdown ? '▾ 下拉展開中' : '▾ 顯示下拉' }}
+        </button>
+        <button
+          type="button"
+          class="btn btn--ghost btn--sm"
+          :class="{ 'is-on': previewInteractive }"
+          @click="previewInteractive = !previewInteractive"
+        >
+          {{ previewInteractive ? '🖱 可互動中（點此鎖定）' : '🔒 已鎖定（點此可互動）' }}
+        </button>
+      </h2>
+      <p class="page__desc" style="margin-bottom: 12px">
+        下方為目前設定的實際 Header（版型 / LOGO / navtool icon・文字 / 顏色），改任何設定即時反映。
+        點「顯示下拉」可一鍵展開所有下拉（搜尋 / 語系 / 子選單）直接看樣式效果；
+        切「可互動」則能在預覽內 hover / 點擊測試（點到 nav 連結會讓預覽跳頁，重整即可）。
+      </p>
+      <div class="device-bar">
+        <button
+          v-for="d in DEVICES"
+          :key="d.key"
+          type="button"
+          class="device-bar__btn"
+          :class="{ 'is-on': deviceKey === d.key }"
+          @click="deviceKey = d.key"
+        >
+          {{ d.name }}<span class="device-bar__dim">{{ d.w }}×{{ d.h }}</span>
+        </button>
+      </div>
+      <div v-if="canRotate" class="device-bar">
+        <button
+          type="button"
+          class="device-bar__btn"
+          :class="{ 'is-on': !landscape }"
+          @click="landscape = false"
+        >
+          直版<span class="device-bar__dim">{{ Math.min(device.w, device.h) }}×{{ Math.max(device.w, device.h) }}</span>
+        </button>
+        <button
+          type="button"
+          class="device-bar__btn"
+          :class="{ 'is-on': landscape }"
+          @click="landscape = true"
+        >
+          橫版<span class="device-bar__dim">{{ Math.max(device.w, device.h) }}×{{ Math.min(device.w, device.h) }}</span>
+        </button>
+      </div>
+      <div ref="previewBox" class="header-preview" :style="previewBoxStyle">
+        <ClientOnly>
+          <iframe
+            class="header-preview__frame"
+            :class="{ 'is-interactive': previewInteractive }"
+            :src="previewSrc"
+            title="Header 即時預覽"
+            :style="previewFrameStyle"
+          ></iframe>
+        </ClientOnly>
+      </div>
+    </section>
 
     <!-- Header 版型 -->
     <div class="grid">
@@ -334,7 +494,16 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
               :value="state[f.key] || f.def"
               @input="setPreview(f.key, $event.target.value)"
             />
-            <code>{{ state[f.key] || '版型預設' }}</code>
+            <input
+              type="text"
+              class="menu-colors__hex"
+              :value="state[f.key]"
+              placeholder="版型預設"
+              spellcheck="false"
+              maxlength="25"
+              @input="setPreview(f.key, $event.target.value)"
+              @change="onHexNormalize(f.key, $event.target.value)"
+            />
             <button
               v-if="state[f.key]"
               type="button"
@@ -365,7 +534,17 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
               :value="state[f.key] === '' ? f.def : state[f.key]"
               @input="setPreview(f.key, Number($event.target.value))"
             />
-            <code>{{ state[f.key] === '' ? '版型預設' : state[f.key] + 'px' }}</code>
+            <div class="menu-colors__num">
+              <input
+                type="number"
+                min="0"
+                max="100"
+                :value="state[f.key] === '' ? '' : state[f.key]"
+                placeholder="預設"
+                @input="setPreview(f.key, $event.target.value === '' ? '' : Number($event.target.value))"
+              />
+              <span>px</span>
+            </div>
             <button
               v-if="state[f.key] !== ''"
               type="button"
@@ -378,6 +557,47 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
         </div>
         <span class="field__hint">
           0＝直角、數字越大越圓。套用所有版型的下拉容器與項目（含搜尋 / 語系浮層）；留空＝版型預設。
+        </span>
+      </div>
+
+      <!-- 下拉內距與框線粗細：容器 / 單項（框線顏色在上方「選單顏色」區） -->
+      <div class="field field--full">
+        <span class="field__label">下拉內距・框線粗細 <em class="field__live">即時預覽</em></span>
+        <div class="menu-colors">
+          <div v-for="f in DROPDOWN_BOX_FIELDS" :key="f.key" class="menu-colors__row">
+            <span class="menu-colors__name">{{ f.name }}</span>
+            <input
+              type="range"
+              min="0"
+              max="40"
+              step="1"
+              :value="state[f.key] === '' ? f.def : state[f.key]"
+              @input="setPreview(f.key, Number($event.target.value))"
+            />
+            <div class="menu-colors__num">
+              <input
+                type="number"
+                min="0"
+                max="100"
+                :value="state[f.key] === '' ? '' : state[f.key]"
+                placeholder="預設"
+                @input="setPreview(f.key, $event.target.value === '' ? '' : Number($event.target.value))"
+              />
+              <span>px</span>
+            </div>
+            <button
+              v-if="state[f.key] !== ''"
+              type="button"
+              class="btn btn--ghost btn--sm"
+              @click="setPreview(f.key, '')"
+            >
+              回到預設
+            </button>
+          </div>
+        </div>
+        <span class="field__hint">
+          下拉「容器」與「單項」的內距（上下 / 左右）與框線粗細；框線「顏色」在上方「選單顏色」區。
+          框線粗細 0＝無框；留空＝版型預設。
         </span>
       </div>
 
@@ -511,26 +731,6 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
       ></textarea>
     </section>
 
-    <!-- 語系顯示文字 — 全站各 header 共用；留空＝版型預設 -->
-    <section class="page__section">
-      <h2 class="page__section-title">語系顯示文字 <em class="field__live">即時預覽</em></h2>
-      <p class="page__desc" style="margin-bottom: 12px">
-        自訂每個語系在 header 語系切換上顯示的文字（全站所有 header 共用）。
-        <strong>留空＝沿用版型預設</strong> — Header04 顯示縮寫（TW/EN…），其餘版型顯示語系全名。
-      </p>
-      <div class="grid">
-        <label v-for="lang in options.langs" :key="lang" class="field">
-          <span class="field__label">{{ LANG_NAMES[lang] || lang }}（{{ lang }}）</span>
-          <input
-            type="text"
-            :value="state.langLabels?.[lang] || ''"
-            placeholder="留空＝版型預設"
-            @input="onLangLabelInput(lang, $event.target.value)"
-          />
-        </label>
-      </div>
-    </section>
-
     <!-- navtool 配置（per-Header） -->
     <section class="page__section">
       <AdminNavtool />
@@ -540,6 +740,66 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
 
 <style lang="scss" scoped>
 @use '~/assets/styles/_admin-page.scss' as *;
+
+// 裝置尺寸切換列
+.device-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.device-bar__btn {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #1a1f2a;
+  color: #c8cfdb;
+  border: 1px solid #2a3242;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover { background: #232a38; }
+  &.is-on {
+    background: #4fc08d;
+    border-color: #4fc08d;
+    color: #0f1218;
+    font-weight: 600;
+  }
+}
+.device-bar__dim {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+// Header 即時預覽框（嵌入裝置尺寸的 iframe 再等比縮放）
+.header-preview {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #2a3242;
+  border-radius: 8px;
+  background: #141a26;
+}
+.header-preview__frame {
+  transform-origin: top left;
+  border: 0;
+  pointer-events: none; // 預設鎖定，避免誤點 nav 連結或觸發下拉
+  background: transparent;
+
+  &.is-interactive {
+    pointer-events: auto; // 切「可互動」後可在預覽內 hover / 點擊
+  }
+}
+
+// 預覽「可互動」切換鈕：開啟時綠底提示
+.page__section-title .btn.is-on {
+  background: #4fc08d;
+  border-color: #4fc08d;
+  color: #0f1218;
+}
 
 .logo-uploader {
   display: flex;
@@ -655,9 +915,56 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
     font-size: 12px;
   }
 
+  &__hex {
+    width: 110px;
+    padding: 5px 8px;
+    background: #0f1218;
+    color: #e6e9ef;
+    border: 1px solid #2a3242;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 12px;
+    text-transform: lowercase;
+
+    &::placeholder { color: #5b6472; text-transform: none; }
+
+    &:focus {
+      outline: 1px solid #4fc08d;
+      border-color: #4fc08d;
+    }
+  }
+
   input[type='range'] {
     flex: 1;
     cursor: pointer;
+  }
+
+  &__num {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 78px;
+    padding: 0 8px 0 4px;
+    background: #0f1218;
+    border: 1px solid #2a3242;
+    border-radius: 4px;
+
+    input[type='number'] {
+      width: 44px;
+      padding: 5px 2px;
+      background: transparent;
+      color: #e6e9ef;
+      border: none;
+      outline: none;
+      font: inherit;
+      font-size: 12px;
+      text-align: right;
+      -moz-appearance: textfield;
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button { appearance: none; margin: 0; }
+    }
+    span { font-size: 11px; color: #6a7382; }
   }
 }
 

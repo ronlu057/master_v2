@@ -278,3 +278,19 @@ h4 {
     }
   }
 }
+
+/* ============================================================
+   navtool 顯示文字 — 全 Header 共用
+   後台 navtool 配置可把每個項目設成「icon＋文字 / 只有文字」（多語系）
+   文字色跟隨工具列圖示色（app.vue 注入 headerIconColor 時一併套用）
+   ============================================================ */
+.navtool_text {
+  font-size: fluid-fz(16);
+  white-space: nowrap;
+  line-height: 1;
+  vertical-align: middle;
+}
+/* icon 後面接文字時補一個間距（text-only 模式無 icon → 不套用） */
+.icon + .navtool_text {
+  margin-left: fluid(6);
+}

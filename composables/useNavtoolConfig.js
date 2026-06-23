@@ -7,7 +7,19 @@
 
 const KEY_PREFIX = 'master_v2_navtool_'
 
-// 標準 6 個 icon 的 label（各 preset 共用）
+// 每個項目的顯示樣式：只有 icon / icon＋文字 / 只有文字
+const DISPLAY_MODES = ['icon', 'both', 'text']
+
+// 文字大小寫：none＝依輸入、upper＝全大寫、capitalize＝第一個字母大寫
+const CASE_MODES = ['none', 'upper', 'capitalize']
+function applyCase(s, mode) {
+  if (!s) return s
+  if (mode === 'upper') return s.toUpperCase()
+  if (mode === 'capitalize') return s.charAt(0).toUpperCase() + s.slice(1)
+  return s
+}
+
+// 標準 6 個 icon 的 label（admin 顯示名稱用）
 const ITEM_LABELS = {
   search: '搜尋',
   language: '語系',
@@ -15,6 +27,31 @@ const ITEM_LABELS = {
   member: '會員中心',
   cart: '購物車',
   favorite: '我的最愛',
+}
+
+// 每個項目的「預設多語系顯示文字」（tw / en / jp / kr）
+// 新項目或未設定的語系，會帶入這些預設翻譯（使用者可在後台逐語系覆寫）
+const ITEM_TEXT_DEFAULTS = {
+  search: { tw: '搜尋', en: 'Search', jp: '検索', kr: '검색' },
+  language: { tw: '語系', en: 'Language', jp: '言語', kr: '언어' },
+  social: { tw: '社群', en: 'Social', jp: 'ソーシャル', kr: '소셜' },
+  member: { tw: '會員中心', en: 'Member', jp: '会員', kr: '회원' },
+  cart: { tw: '購物車', en: 'Cart', jp: 'カート', kr: '카트' },
+  favorite: { tw: '我的最愛', en: 'Favorites', jp: 'お気に入り', kr: '즐겨찾기' },
+}
+
+function defaultText(key) {
+  return { ...(ITEM_TEXT_DEFAULTS[key] || { tw: ITEM_LABELS[key] }) }
+}
+
+// 顯示文字採「多語系物件」{ tw, en, jp, kr... }；舊資料若是字串自動轉成 { tw: 字串 }
+// 一律以「預設翻譯」打底，再用已存值覆寫 → 未設定的語系自動帶入預設翻譯
+// （使用者若把某語系清成空字串會被保留，textOf 再 fallback 到 tw）
+function normalizeText(raw, key) {
+  const def = defaultText(key)
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) return { ...def, ...raw }
+  if (typeof raw === 'string' && raw) return { ...def, tw: raw }
+  return def
 }
 
 // 通用預設（沒在 PRESETS 列出的 Header 都套這個）
@@ -50,6 +87,12 @@ function buildPresetItems(headerKey) {
     label: ITEM_LABELS[key],
     enabled: preset[key]?.enabled ?? false,
     order: preset[key]?.order ?? 99,
+    // 前台顯示文字（可換，多語系）：帶入預設翻譯
+    text: defaultText(key),
+    // 顯示樣式：'icon'＝只有 icon、'both'＝icon＋文字、'text'＝只有文字
+    display: 'icon',
+    // 文字大小寫：'none'＝依輸入、'upper'＝全大寫、'capitalize'＝第一個字母大寫
+    textCase: 'none',
   }))
 }
 
@@ -70,6 +113,9 @@ function baseItemsFor(headerKey) {
       label: ITEM_LABELS[key],
       enabled: typeof f?.enabled === 'boolean' ? f.enabled : (preset[key]?.enabled ?? false),
       order: typeof f?.order === 'number' ? f.order : (preset[key]?.order ?? 99),
+      text: normalizeText(f?.text, key),
+      display: DISPLAY_MODES.includes(f?.display) ? f.display : 'icon',
+      textCase: CASE_MODES.includes(f?.textCase) ? f.textCase : 'none',
     }
   })
 }
@@ -104,6 +150,9 @@ function syncStateFromStorage(state) {
       if (def) {
         item.enabled = def.enabled
         item.order = def.order
+        item.text = def.text
+        item.display = def.display
+        item.textCase = def.textCase
       }
     })
     state.isPreviewing = false
@@ -117,6 +166,9 @@ function syncStateFromStorage(state) {
         if (found) {
           if (typeof found.enabled === 'boolean') item.enabled = found.enabled
           if (typeof found.order === 'number') item.order = found.order
+          if (found.text !== undefined) item.text = normalizeText(found.text, item.key)
+          if (DISPLAY_MODES.includes(found.display)) item.display = found.display
+          if (CASE_MODES.includes(found.textCase)) item.textCase = found.textCase
         }
       })
       state.isPreviewing = true
@@ -142,6 +194,8 @@ const SHOP_DEPENDENT = ['member', 'cart', 'favorite']
 
 export function useNavtoolConfig() {
   const { state: effective } = useEffectiveSettings()
+  // 目前語系（給 textOf 多語系取值用）；i18n 全站皆已就緒
+  const { locale } = useI18n()
 
   // 把「已存檔基準」指向 reactive 的 effective.navtool（live；refetch 後自動跟新值）
   getPersistedNavtool = () => effective.navtool
@@ -165,6 +219,33 @@ export function useNavtoolConfig() {
     const item = currentState.value.items.find((x) => x.key === key)
     if (!item) return
     item.enabled = enabled
+    persist()
+  }
+
+  // 設定單一項目的顯示樣式（'icon' / 'both' / 'text'）
+  const setDisplay = (key, mode) => {
+    if (!DISPLAY_MODES.includes(mode)) return
+    const item = currentState.value.items.find((x) => x.key === key)
+    if (!item) return
+    item.display = mode
+    persist()
+  }
+
+  // 設定單一項目的文字大小寫（'none' / 'upper' / 'capitalize'）
+  const setTextCase = (key, mode) => {
+    if (!CASE_MODES.includes(mode)) return
+    const item = currentState.value.items.find((x) => x.key === key)
+    if (!item) return
+    item.textCase = mode
+    persist()
+  }
+
+  // 更換單一項目某語系的顯示文字
+  const setText = (key, lang, text) => {
+    const item = currentState.value.items.find((x) => x.key === key)
+    if (!item) return
+    if (!item.text || typeof item.text !== 'object') item.text = {}
+    item.text = { ...item.text, [lang]: text }
     persist()
   }
 
@@ -197,6 +278,9 @@ export function useNavtoolConfig() {
       if (def) {
         item.enabled = def.enabled
         item.order = def.order
+        item.text = def.text
+        item.display = def.display
+        item.textCase = def.textCase
       }
     })
     if (import.meta.client) localStorage.removeItem(KEY_PREFIX + s.headerKey)
@@ -231,6 +315,26 @@ export function useNavtoolConfig() {
     const item = currentState.value.items.find((x) => x.key === key)
     return item ? item.order : 99
   }
+  // 該項目是否顯示 icon（Header 版型用）：'text' 模式才隱藏 icon
+  const showsIcon = (key) => {
+    const item = currentState.value.items.find((x) => x.key === key)
+    return item ? item.display !== 'text' : true
+  }
+  // 該項目是否顯示文字（Header 版型用）：'both' / 'text' 模式才顯示
+  const showsText = (key) => {
+    const item = currentState.value.items.find((x) => x.key === key)
+    return !!(item && (item.display === 'both' || item.display === 'text'))
+  }
+  // 該項目的顯示文字（Header 版型用）：依目前語系取值，留空時 fallback 到 tw / 中文 label
+  // 再依 textCase 套用大小寫（非破壞性，存檔仍是原字）
+  const textOf = (key) => {
+    const item = currentState.value.items.find((x) => x.key === key)
+    if (!item) return ''
+    const t = item.text && typeof item.text === 'object' ? item.text : {}
+    const lang = locale?.value || effective.defaultLang || 'tw'
+    const val = t[lang] || t[effective.defaultLang] || t.tw || ITEM_LABELS[key] || ''
+    return applyCase(val, item.textCase)
+  }
 
   // 排好順序的清單（給 admin UI 用）
   const orderedItems = computed(
@@ -254,6 +358,9 @@ export function useNavtoolConfig() {
                 key: x.key,
                 enabled: !!x.enabled,
                 order: Number(x.order) || 99,
+                text: normalizeText(x.text, x.key),
+                display: DISPLAY_MODES.includes(x.display) ? x.display : 'icon',
+                textCase: CASE_MODES.includes(x.textCase) ? x.textCase : 'none',
               })),
             }
           }
@@ -285,8 +392,14 @@ export function useNavtoolConfig() {
     // 查詢（給各 Header 用）
     isEnabled,
     orderOf,
+    showsIcon,
+    showsText,
+    textOf,
     // 操作（admin UI 用）
     toggle,
+    setDisplay,
+    setTextCase,
+    setText,
     moveUp,
     moveDown,
     reset,

@@ -12,10 +12,16 @@
 export function useLangLabels(defaultLabel) {
   const { locales } = useI18n()
   const { state } = useEffectiveSettings()
-  return computed(() =>
-    locales.value.map((l) => {
-      const custom = String(state.langLabels?.[l.code] ?? '').trim()
-      return { code: l.code, label: custom || defaultLabel(l) }
-    }),
-  )
+  return computed(() => {
+    // 只列「有啟用的語系」；enabledLangs 留空 → 視為全部啟用
+    const enabled = Array.isArray(state.enabledLangs) && state.enabledLangs.length
+      ? state.enabledLangs
+      : locales.value.map((l) => l.code)
+    return locales.value
+      .filter((l) => enabled.includes(l.code))
+      .map((l) => {
+        const custom = String(state.langLabels?.[l.code] ?? '').trim()
+        return { code: l.code, label: custom || defaultLabel(l) }
+      })
+  })
 }

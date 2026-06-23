@@ -8,19 +8,29 @@
 definePageMeta({ layout: 'admin' })
 if (import.meta.client && !import.meta.dev) navigateTo('/', { replace: true })
 
-const LOCALES = [
+// 語系設定對照 /admin「啟用語系」（enabledLangs）；只顯示有啟用的語系分頁
+const { state: siteState } = useEffectiveSettings()
+const ALL_LOCALES = [
   { code: 'tw', label: '繁中' },
   { code: 'en', label: 'EN' },
   { code: 'jp', label: '日本語' },
   { code: 'kr', label: '한국어' },
 ]
+const LOCALES = computed(() => {
+  const enabled =
+    Array.isArray(siteState.enabledLangs) && siteState.enabledLangs.length
+      ? siteState.enabledLangs
+      : ALL_LOCALES.map((l) => l.code)
+  return ALL_LOCALES.filter((l) => enabled.includes(l.code))
+})
+// header 主選單支援三層；footer / mobile 為單層
 const LISTS = [
-  { key: 'header', label: 'Header 主選單', children: true },
-  { key: 'footer', label: 'Footer 選單', children: false },
-  { key: 'mobile', label: '行動版選單', children: false },
+  { key: 'header', label: 'Header 主選單（可三層）', depth: 3 },
+  { key: 'footer', label: 'Footer 選單', depth: 1 },
+  { key: 'mobile', label: '行動版選單', depth: 1 },
 ]
 
-const doc = ref(null) // 完整 menu.json（4 語系）
+const doc = ref(null) // 完整 menu.json（各語系）
 const loading = ref(true)
 const saving = ref(false)
 const dirty = ref(false)
@@ -31,10 +41,14 @@ onMounted(async () => {
   try {
     const res = await $fetch('/_admin/mock', { params: { name: 'menu' } })
     doc.value = res.parsed || {}
-    // 補齊各語系 / 各清單結構，避免 undefined
-    for (const { code } of LOCALES) {
+    // 補齊「所有」語系 / 各清單結構（即使停用也保留資料，避免丟失）
+    for (const { code } of ALL_LOCALES) {
       doc.value[code] = doc.value[code] || {}
       for (const { key } of LISTS) doc.value[code][key] = doc.value[code][key] || []
+    }
+    // 目前語系若不在啟用清單 → 切到第一個啟用語系
+    if (!LOCALES.value.find((l) => l.code === locale.value)) {
+      locale.value = LOCALES.value[0]?.code || 'tw'
     }
   } catch (e) {
     message.value = { type: 'error', text: `讀取 menu.json 失敗：${e.statusMessage || e.message}` }
@@ -47,25 +61,6 @@ const list = (listKey) => doc.value?.[locale.value]?.[listKey] || []
 
 const touch = () => {
   dirty.value = true
-}
-const move = (arr, i, dir) => {
-  const j = i + dir
-  if (j < 0 || j >= arr.length) return
-  ;[arr[i], arr[j]] = [arr[j], arr[i]]
-  touch()
-}
-const remove = (arr, i) => {
-  arr.splice(i, 1)
-  touch()
-}
-const addItem = (arr) => {
-  arr.push({ title: '新項目', url: '/', data_type: 'page', children: [] })
-  touch()
-}
-const addChild = (item) => {
-  item.children = item.children || []
-  item.children.push({ title: '新子項目', url: '/', data_type: 'page', children: [] })
-  touch()
 }
 
 const onSave = async () => {
@@ -88,7 +83,8 @@ const onSave = async () => {
     <h1 class="page__title">選單管理</h1>
     <p class="page__desc">
       編輯 <strong>header / footer / 行動版</strong> 選單：改文字、改連結、上下排序、新增 / 刪除。
-      Header 主選單支援第二層子選單。每個語系獨立 — 上方切換語系分別編輯。
+      Header 主選單支援<strong>三層</strong>子選單（每項可「＋子層」往下展開）。
+      語系分頁<strong>對照「共用設定 → 啟用語系」</strong>，只列出有啟用的語系，各自獨立編輯。
     </p>
 
     <div v-if="loading" class="m-state">讀取中…</div>
@@ -107,58 +103,10 @@ const onSave = async () => {
         </button>
       </div>
 
-      <!-- 三種清單 -->
+      <!-- 三種清單（header 可三層；footer / mobile 單層） -->
       <section v-for="lst in LISTS" :key="lst.key" class="m-block">
         <h2 class="m-block__h">{{ lst.label }}</h2>
-
-        <div class="m-list">
-          <div v-for="(item, i) in list(lst.key)" :key="i" class="m-item">
-            <div class="m-row">
-              <div class="m-ord">
-                <button type="button" :disabled="i === 0" @click="move(list(lst.key), i, -1)">▲</button>
-                <button
-                  type="button"
-                  :disabled="i === list(lst.key).length - 1"
-                  @click="move(list(lst.key), i, 1)"
-                >
-                  ▼
-                </button>
-              </div>
-              <input v-model="item.title" class="m-in m-in--title" placeholder="顯示文字" @input="touch" />
-              <input v-model="item.url" class="m-in m-in--url" placeholder="/連結" @input="touch" />
-              <button
-                v-if="lst.children"
-                type="button"
-                class="m-btn m-btn--ghost"
-                @click="addChild(item)"
-              >
-                ＋子項
-              </button>
-              <button type="button" class="m-btn m-btn--del" @click="remove(list(lst.key), i)">刪除</button>
-            </div>
-
-            <!-- 第二層子選單（僅 header） -->
-            <div v-if="lst.children && item.children && item.children.length" class="m-children">
-              <div v-for="(c, j) in item.children" :key="j" class="m-row m-row--child">
-                <div class="m-ord">
-                  <button type="button" :disabled="j === 0" @click="move(item.children, j, -1)">▲</button>
-                  <button
-                    type="button"
-                    :disabled="j === item.children.length - 1"
-                    @click="move(item.children, j, 1)"
-                  >
-                    ▼
-                  </button>
-                </div>
-                <input v-model="c.title" class="m-in m-in--title" placeholder="子選單文字" @input="touch" />
-                <input v-model="c.url" class="m-in m-in--url" placeholder="/連結" @input="touch" />
-                <button type="button" class="m-btn m-btn--del" @click="remove(item.children, j)">刪除</button>
-              </div>
-            </div>
-          </div>
-
-          <button type="button" class="m-add" @click="addItem(list(lst.key))">＋ 新增項目</button>
-        </div>
+        <AdminMenuNode :items="list(lst.key)" :max-depth="lst.depth" @touch="touch" />
       </section>
 
       <div class="m-actions">
