@@ -160,6 +160,35 @@ export const HEADER_ICON_OPTIONS = {
       solid: '<path d="M7 10v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h4zm2 0 4.5-8.1a1 1 0 0 1 1.8.5L14.7 8H21a2 2 0 0 1 2 2.3l-1.4 9a2 2 0 0 1-2 1.7H9z"/>',
     },
   ],
+
+  // 手機版「展開子選單」箭頭（給 HeaderExpandIcon 用；不在 HEADER_ICON_SLOTS，不走 navtool mask）
+  // 預設指向右（▸），HeaderExpandIcon 在展開時用 CSS rotate 90° 變成朝下（▾）
+  expand: [
+    {
+      name: 'chevron',
+      label: '箭頭（細）',
+      line: '<polyline points="9 6 15 12 9 18"/>',
+      solid: '<path d="M8.5 4.5a1.5 1.5 0 0 0 0 2.12L13.88 12l-5.38 5.38a1.5 1.5 0 1 0 2.12 2.12l6.44-6.44a1.5 1.5 0 0 0 0-2.12L10.62 4.5a1.5 1.5 0 0 0-2.12 0z"/>',
+    },
+    {
+      name: 'caret',
+      label: '三角',
+      line: '<path d="M9 5l7 7-7 7z"/>',
+      solid: '<path d="M9 5l7 7-7 7z"/>',
+    },
+    {
+      name: 'arrow',
+      label: '箭號',
+      line: '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
+      solid: '<path d="M4 11h12.17l-3.58-3.59L14 6l6 6-6 6-1.41-1.41L16.17 13H4z"/>',
+    },
+    {
+      name: 'plus',
+      label: '加號',
+      line: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+      solid: '<path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/>',
+    },
+  ],
 }
 
 // 全庫攤平（給 name → icon 查找）

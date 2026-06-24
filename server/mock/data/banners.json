@@ -1,29 +1,59 @@
 {
   "home": {
-    "videoUrl": "https://www.youtube.com/watch?v=PgUeQjMAsKA",
+    "videoUrl": "https://www.youtube.com/watch?v=mRC8mVLoqx8",
     "videoFile": "",
     "rows": [
       {
         "image": {
-          "pc": "/img/tw/banner/banner-1782210202107.jpg",
-          "mb": "/img/tw/banner/banner-1782210202107.jpg"
+          "pc": "/img/tw/banner/banner-1782270997748.jpg",
+          "mb": "/img/tw/banner/banner-1782270997748.jpg"
         },
-        "alt": "藍色背景上，發光粒子與曲線構成的抽象圓環",
-        "title": "光環設計，無限可能",
-        "subtitle": "粒子曲線交織，激盪數位新視野",
-        "memo": "從抽象圓環探索網頁設計的精髓與創意，打造獨一無二的視覺體驗。",
+        "alt": "藍色光纖數據流環繞著發光球體",
+        "title": {
+          "tw": "光速視界，設計未來",
+          "en": "Lightspeed Horizon, Design Future",
+          "jp": "光速の視界、未来をデザイン",
+          "kr": "광속 시야, 미래 디자인"
+        },
+        "subtitle": {
+          "tw": "駕馭藍色光纖，解鎖網頁新紀元。",
+          "en": "Harness blue fiber, unlock a new era of the web.",
+          "jp": "青いファイバーを駆使して、ウェブの新時代を切り開く。",
+          "kr": "블루 파이버를 활용하여 웹의 새로운 시대를 열어보세요."
+        },
+        "memo": {
+          "tw": "數據流動之美，轉化為您的數位門面。開啟極速、創新的網頁體驗。",
+          "en": "The beauty of data flow, transformed into your digital storefront. Unlock a high-speed, innovative web experience.",
+          "jp": "データフローの美しさを、あなたのデジタルファサードに変えます。超高速で革新的なウェブ体験を解き放ちます。",
+          "kr": "데이터 흐름의 아름다움을 당신의 디지털 외관으로 전환하세요. 초고속의 혁신적인 웹 경험을 시작하세요."
+        },
         "btnText": "",
         "link": "/about/company-intro"
       },
       {
         "image": {
-          "pc": "/img/tw/banner/banner-1781590728923.png",
-          "mb": "/img/tw/banner/banner-1781590728923.png"
+          "pc": "/img/tw/banner/banner-1782279459318.jpg",
+          "mb": "/img/tw/banner/banner-1782279459318.jpg"
         },
-        "alt": "雪中少女，髮絲結冰晶",
-        "title": "覺醒設計，無限可能",
-        "subtitle": "最客製的天馬行空，為您量身打造",
-        "memo": "將您的奇思妙想，化為獨一無二的現實。立即預約，開啟您的專屬設計旅程！",
+        "alt": "金黃色液體流動的紋理",
+        "title": {
+          "tw": "覺醒設計，無限可能",
+          "en": "Awakening Design, Infinite Possibilities",
+          "jp": "覚醒デザイン、無限の可能性",
+          "kr": "각성 디자인, 무한한 가능성"
+        },
+        "subtitle": {
+          "tw": "點燃創意思維，釋放你的品牌潛力，一同探索設計的無限邊界。",
+          "en": "Ignite creative thinking, unleash your brand's potential, and explore the infinite boundaries of design together.",
+          "jp": "創造的思考に火をつけ、ブランドの可能性を解き放ち、デザインの無限の境界を共に探求しましょう。",
+          "kr": "창의적 사고에 불을 붙이고, 브랜드의 잠재력을 발휘하며, 디자인의 무한한 경계를 함께 탐험하세요."
+        },
+        "memo": {
+          "tw": "將您的奇思妙想，化為獨一無二的現實。立即預約，開啟您的專屬設計旅程！",
+          "en": "Transform your whimsical ideas into a unique reality. Book now to start your exclusive design journey!",
+          "jp": "あなたの奇抜なアイデアを唯一無二の現実に変えましょう。今すぐ予約して、あなただけのデザインの旅を始めましょう！",
+          "kr": "당신의 기발한 아이디어를 독특한 현실로 바꾸세요. 지금 예약하고 당신만의 특별한 디자인 여정을 시작하세요!"
+        },
         "btnText": "",
         "link": "/news"
       },
@@ -33,9 +63,15 @@
           "mb": "/img/tw/banner/banner-1781778986939.jpg"
         },
         "alt": "深色背景上盛開的粉色、白色和藍色花朵",
-        "title": "品牌光芒，由此覺醒",
-        "subtitle": "釋放品牌潛能，點亮市場視野",
-        "memo": "從策略到設計，全方位打造專屬識別，讓您的品牌故事閃耀。",
+        "title": {
+          "tw": "品牌光芒，由此覺醒"
+        },
+        "subtitle": {
+          "tw": "釋放品牌潛能，點亮市場視野"
+        },
+        "memo": {
+          "tw": "從策略到設計，全方位打造專屬識別，讓您的品牌故事閃耀。"
+        },
         "btnText": "",
         "link": "/shop"
       }

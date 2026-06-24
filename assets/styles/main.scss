@@ -77,6 +77,21 @@ body {
   background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
 }
+// CJK 各語系用各自字型（避免日/韓/簡體漢字被繁中 TC 字形渲染成「怪怪的」）。
+// 繁中(zh-Hant)＝上面 body 的 Noto Sans TC；其餘由 i18n 設定的 html lang 觸發 :lang()。
+// 走純 CSS :lang()（瀏覽器依語系切字型）— 不用 JS 動態改 font-family，避免切換時字重(font-weight)跳動。
+:lang(zh-Hans) {
+  // 簡體中文
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+:lang(ja) {
+  // 日本語
+  font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
+}
+:lang(ko) {
+  // 한국어
+  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+}
 img,
 picture,
 svg,
@@ -293,4 +308,190 @@ h4 {
 /* icon 後面接文字時補一個間距（text-only 模式無 icon → 不套用） */
 .icon + .navtool_text {
   margin-left: fluid(6);
+}
+
+/* ============================================================
+   Banner 輪播「上一則 / 下一則」按鈕 — 全 Banner 版型共用
+   各版型只要在 position:relative 的 banner 容器內放：
+     <button class="banner_nav banner_nav_prev">‹</button>
+     <button class="banner_nav banner_nav_next">›</button>
+   並把該版型主 Swiper 的 :navigation 指向 .banner_nav_prev / .banner_nav_next。
+   顯示與否由後台 bannerNav（傳入版型的 show-nav）控制。
+   ============================================================ */
+.banner_nav {
+  // 大小 / 圓角由 app.vue 依後台 bannerNavSize / bannerNavRadius 注入 :root 變數（免 !important）
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--banner-nav-size, 50px);
+  height: var(--banner-nav-size, 50px);
+  color: var(--banner-nav-color, #fff); // icon 走 currentColor → 跟著此色
+  background: var(--banner-nav-bg, rgba(0, 0, 0, 0.28));
+  border: none;
+  border-radius: var(--banner-nav-radius, 999px);
+  cursor: pointer;
+  transition: filter 0.2s, opacity 0.2s;
+
+  svg {
+    width: var(--banner-nav-icon-size, 56%);
+    height: var(--banner-nav-icon-size, 56%);
+  }
+
+  // hover：用 brightness 提亮，對任何自訂底色 / 透明度都有效
+  &:hover {
+    filter: brightness(1.2);
+  }
+  // Swiper 在頭/尾（非 loop）時加的停用態
+  &.swiper-button-disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+}
+// 上一則：icon 轉 180°（chevron/箭頭預設朝右 → 朝左）
+.banner_nav--prev svg {
+  transform: rotate(180deg);
+}
+// 距邊界距離：左右共用同一變數 → 上一則 / 下一則對稱同步
+.banner_nav_prev {
+  left: var(--banner-nav-gap, #{fluid(24)});
+}
+.banner_nav_next {
+  right: var(--banner-nav-gap, #{fluid(24)});
+}
+
+/* ============================================================
+   Banner 輪播圓點（Swiper pagination dots）— 全 BlockBanner 共用
+   選擇器權重（.block-banner .swiper-pagination-bullet）比 Swiper 預設高 → 免 !important 覆寫。
+   大小 / 背景 / 框線由 app.vue 依後台設定注入 :root 變數，未設則用下方 fallback。
+   ============================================================ */
+// 圓點列：底部、水平置中（全域才吃得到 Swiper JS 動態產生的 .swiper-pagination；scoped 沒 data-v 不生效）
+.block-banner .swiper-pagination {
+  left: 0;
+  right: 0;
+  bottom: 2.45vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: fluid(8);
+}
+.block-banner .swiper-pagination-bullet {
+  flex-shrink: 0;
+  margin: 0; // 用上面的 gap 控間距，清掉 Swiper 預設左右 margin
+  width: var(--banner-dot-w, 10px);
+  height: var(--banner-dot-h, 10px);
+  background: var(--banner-dot-bg, rgba(255, 255, 255, 0.5));
+  border: var(--banner-dot-bw, 0) solid var(--banner-dot-bc, transparent);
+  opacity: 1;
+  transition: width 0.25s, height 0.25s, background 0.25s, border-color 0.25s;
+}
+.block-banner .swiper-pagination-bullet-active {
+  width: var(--banner-dot-active-w, var(--banner-dot-w, 10px));
+  height: var(--banner-dot-active-h, var(--banner-dot-h, 10px));
+  background: var(--banner-dot-active-bg, #fff);
+}
+
+/* ============================================================
+   桌機下拉子選單 .hsub（第二層起，遞迴）— 全 Header 共用（HeaderSubmenu.vue）
+   各版型只需在第二層下拉面板內放 <HeaderSubmenu :items="item.children" />。
+   第二層下拉「面板」外觀（位置 / 背景 / hover 顯示）仍由各版型 __sub scoped 樣式負責；
+   面板「內容」（連結、第三層、展開箭頭）走這裡的全域樣式。
+   呈現方式由 AppHeader 的 .app-header--sub-* class 切換；顏色沿用 app.vue 注入。
+   ============================================================ */
+.app-header {
+  .hsub {
+    display: flex;
+    flex-direction: column;
+  }
+  // 有子層的項目列：相對定位讓展開箭頭可絕對定位其中
+  .hsub__row {
+    position: relative;
+  }
+  // 第二層 / 第三層連結（component 內的 a，吃不到各版型 scoped，故在此給基底外觀）
+  .hsub__link {
+    display: block;
+    padding: fluid(8) fluid(12);
+    font-size: fluid-fz(14);
+    white-space: nowrap;
+    border-radius: fluid(6);
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+  // 展開箭頭按鈕（有子層才出現）— 絕對定位，不擠壓文字；靠左/靠右 + 邊距由 app.vue 注入
+  .hsub__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: fluid(8); // 預設靠右（app.vue 會依設定覆寫 left/right + 邊距）
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fluid(28);
+    height: fluid(28);
+    padding: 0;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: fluid-fz(13);
+    opacity: 0.6;
+    transition: opacity 0.2s, color 0.2s;
+    z-index: 1;
+
+    &:hover {
+      opacity: 1;
+      color: var(--color-primary);
+    }
+  }
+}
+
+/* 向右飛出：第三層（巢狀 .hsub）為浮層，滑到有子層的項目才出現；箭頭僅作指示 */
+.app-header--sub-flyout {
+  .hsub__group {
+    position: relative;
+  }
+  // 巢狀 .hsub（第三層起）→ 浮層，定位在父項右側
+  .hsub .hsub {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    min-width: fluid(160);
+    padding: fluid(6);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(8px);
+    transition: all var(--transition);
+    z-index: 70;
+  }
+  .hsub__group:hover > .hsub,
+  .hsub__group:focus-within > .hsub {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+  // 箭頭純指示，不可點（避免誤觸；展開由 hover 控制）
+  .hsub__arrow {
+    pointer-events: none;
+  }
+}
+
+/* 同框內縮：第三層往內縮排展開（顯示/隱藏由 HeaderSubmenu 的 v-show 控制，點箭頭切換） */
+.app-header--sub-nested {
+  // 巢狀 .hsub（第三層起）→ 往內縮排（不加左側邊線）
+  .hsub .hsub {
+    padding-left: fluid(12);
+    margin-left: fluid(4);
+  }
+  .hsub .hsub .hsub__link {
+    font-size: 0.95em;
+    opacity: 0.9;
+  }
 }

@@ -10,17 +10,33 @@ const isDev = import.meta.dev
 const { state, clearPreview } = useEffectiveSettings()
 const navtool = useNavtoolConfig()
 const { submit, submitting } = useSiteSettings()
+// 首頁 Banner 內容預覽（banners.json 的 home）— 一起納入確認島
+const {
+  isPreviewing: bannerPreviewing,
+  commit: commitBanner,
+  clear: clearBannerPreview,
+} = useBannerPreview()
+const nuxtApp = useNuxtApp()
 
 const confirmState = ref(null) // 'success' | 'error' | null
 
 const onConfirm = async () => {
+  // 1) 設定（site-settings + navtool）寫回
   const res = await submit()
-  if (res.ok) {
-    // 寫回成功 → 清掉 localStorage 預覽（site-settings + navtool 皆已固化到 JSON）
-    // navtool 的清預覽 + 重建已由 submit() 內的 navtoolCfg.markSaved() 處理
+  // 2) Banner 內容預覽寫回 banners.json（若有）→ 重抓前台 banner → 清預覽
+  let bannerOk = true
+  if (bannerPreviewing.value) {
+    const b = await commitBanner()
+    bannerOk = b.ok
+    if (b.ok) {
+      await nuxtApp.runWithContext(() => refreshNuxtData(['banner-home', 'home-banner']))
+      clearBannerPreview()
+    }
+  }
+  if (res.ok && bannerOk) {
+    // 寫回成功 → 清掉 localStorage 預覽（site-settings + navtool 已由 submit() markSaved 處理）
     clearPreview()
     confirmState.value = 'success'
-    // 浮條會自然消失（isPreviewing → false），但短暫顯示 ✓ 提示
     setTimeout(() => { confirmState.value = null }, 2000)
   } else {
     confirmState.value = 'error'
@@ -31,6 +47,7 @@ const onConfirm = async () => {
 const clearAndReload = () => {
   if (!import.meta.client) return
   clearPreview()
+  clearBannerPreview() // 還原 banner 內容預覽（站台回到已存檔）
   const keysToRemove = []
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i)
@@ -40,7 +57,9 @@ const clearAndReload = () => {
   window.location.reload()
 }
 
-const showBar = computed(() => state.isPreviewing || navtool.state.value.isPreviewing)
+const showBar = computed(
+  () => state.isPreviewing || navtool.state.value.isPreviewing || bannerPreviewing.value,
+)
 </script>
 
 <template>

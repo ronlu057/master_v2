@@ -24,21 +24,58 @@ const { data: banner } = await useApiData('/banner/home', {
   default: () => ({ rows: [], news: [], videoUrl: '', videoFile: '' }),
 })
 
+// 後台「即時預覽」覆寫：banner 後台編輯中 → 站台即時套用、免存檔/重整。
+// preview 由 plugins/admin-preview.client.js 於 client 啟動時載入（共用 useState）；
+// 一般使用者無預覽 → preview=null → 用已存檔資料（eff = banner.value）。
+const { preview: bannerPreview } = useBannerPreview()
+const eff = computed(() => {
+  const b = banner.value || {}
+  return bannerPreview.value ? { ...b, ...bannerPreview.value } : b
+})
+
+// 多語系文字解析：title/subtitle/memo 可為字串（舊資料）或多語系物件 { tw,en,jp,kr }。
+// 依目前語系取值，缺則 fallback 預設語系 / tw / 第一個有值的。版型仍收到「字串」，免逐版型改。
+const { locale } = useI18n()
+const pickLang = (v) => {
+  if (v && typeof v === 'object' && !Array.isArray(v)) {
+    return v[locale.value] || v[state.defaultLang] || v.tw || Object.values(v).find(Boolean) || ''
+  }
+  return v || ''
+}
+const resolvedRows = computed(() =>
+  (eff.value.rows || []).map((r) => ({
+    ...r,
+    title: pickLang(r.title),
+    subtitle: pickLang(r.subtitle),
+    memo: pickLang(r.memo),
+  })),
+)
+
 // 每則自訂文字色 → 注入 <head> 的 <style>（用 row-index class 當 hook，不用行內 :style）。
 // 各版型文字容器已掛 `js-banner-row-${i}` class，並以 color: var(--banner-*-color) 取值。
 useHead(() => {
-  const css = bannerRowColorCss(banner.value?.rows)
+  const css = bannerRowColorCss(eff.value?.rows)
   return css ? { style: [{ children: css }] } : {}
 })
 </script>
 
 <template>
-  <component
-    :is="current"
-    v-bind="$attrs"
-    :rows="banner.rows || []"
-    :video-url="banner.videoUrl || ''"
-    :video-file="banner.videoFile || ''"
-    :news="banner.news || []"
-  />
+  <!-- display:contents 包一層當「輪播圓點」樣式的穩定掛點（.block-banner），不影響版型排版 -->
+  <div class="block-banner">
+    <component
+      :is="current"
+      v-bind="$attrs"
+      :rows="resolvedRows"
+      :video-url="eff.videoUrl || ''"
+      :video-file="eff.videoFile || ''"
+      :news="eff.news || []"
+      :show-nav="state.bannerNav"
+    />
+  </div>
 </template>
+
+<style lang="scss" scoped>
+.block-banner {
+  display: contents; // 不產生盒子、不影響版型排版，只當圓點樣式掛點
+}
+</style>

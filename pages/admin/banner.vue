@@ -21,9 +21,44 @@ const BANNER_COLOR_FIELDS = [
 const hasAnyBannerColor = computed(() => BANNER_COLOR_FIELDS.some((f) => state[f.key]))
 const resetBannerColors = () => BANNER_COLOR_FIELDS.forEach((f) => setPreview(f.key, ''))
 
+// 輪播箭頭按鈕：icon（沿用 header 的 expand 箭頭組）/ 線條·實心 / 大小 / 圓角
+const NAV_ICON_OPTIONS = headerIconOptions('expand')
+const navIconName = computed(() => state.bannerNavIcon?.name || 'chevron')
+const navIconStyle = computed(() => state.bannerNavIcon?.style || 'line')
+const setNavIcon = (name, style) => setPreview('bannerNavIcon', { name, style })
+const navIconPreview = (name, style) => headerIconSvg(name, style, 'currentColor')
+
+// 背景色（含透明度）：hex + alpha ↔ rgba
+const parseHexAlpha = (v) => {
+  const m = (v || '').match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\s*\)$/i)
+  if (m) {
+    const hex = '#' + [m[1], m[2], m[3]].map((n) => Number(n).toString(16).padStart(2, '0')).join('')
+    return { hex, alpha: m[4] === undefined ? 100 : Math.round(parseFloat(m[4]) * 100) }
+  }
+  return { hex: /^#[0-9a-f]{6}$/i.test(v) ? v : '#000000', alpha: v ? 100 : 28 }
+}
+const composeRgba = (hex, alpha) => {
+  if (alpha >= 100) return hex
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `rgba(${r},${g},${b},${(alpha / 100).toFixed(2)})`
+}
+const _navBgInit = parseHexAlpha(state.bannerNavBg)
+const navBgHex = ref(_navBgInit.hex)
+const navBgAlpha = ref(_navBgInit.alpha)
+const onNavBgColor = (hex) => {
+  navBgHex.value = hex
+  setPreview('bannerNavBg', composeRgba(hex, navBgAlpha.value))
+}
+const onNavBgAlpha = (a) => {
+  navBgAlpha.value = a
+  setPreview('bannerNavBg', composeRgba(navBgHex.value, a))
+}
+
 const dirtyVer = computed(
   () =>
-    ['pageBanner', 'blockBanner'].some(isDirtyKey) ||
+    ['pageBanner', 'blockBanner', 'bannerNav'].some(isDirtyKey) ||
     BANNER_COLOR_FIELDS.some((f) => isDirtyKey(f.key)),
 )
 const verMessage = ref(null)
@@ -41,10 +76,70 @@ const SAMPLE_IMG = 'https://picsum.photos/seed/banner-new/1920/911'
 const toEdit = (s) => (s || '').replace(/<br\s*\/?>/gi, '\n')
 const toStore = (s) => (s || '').replace(/\n/g, '<br>')
 
+// ── 多語系（標題 / 副標 / 說明文）─────────────────────────────
+// 文字以多語系物件 { tw,en,jp,kr } 存；編輯用語系分頁切換，改繁中（失焦）自動翻譯其餘啟用語系。
+const ALL_LOCALES = [
+  { code: 'tw', label: '繁中' },
+  { code: 'en', label: 'EN' },
+  { code: 'jp', label: '日本語' },
+  { code: 'kr', label: '한국어' },
+]
+const LANGS = ALL_LOCALES.map((l) => l.code)
+const enabledLocales = computed(() => {
+  const en =
+    Array.isArray(state.enabledLangs) && state.enabledLangs.length ? state.enabledLangs : LANGS
+  return ALL_LOCALES.filter((l) => en.includes(l.code))
+})
+// 繁中以外的啟用語系（給「🌐 多語」展開用）
+const otherLangs = computed(() => enabledLocales.value.filter((l) => l.code !== 'tw'))
+// 各欄位「多語」展開狀態（key = `${slideIndex}:${field}`）
+const openFields = reactive(new Set())
+const fieldKey = (i, key) => `${i}:${key}`
+const isFieldOpen = (i, key) => openFields.has(fieldKey(i, key))
+const toggleField = (i, key) => {
+  const k = fieldKey(i, key)
+  openFields.has(k) ? openFields.delete(k) : openFields.add(k)
+}
+// 三個多語系文字欄位（標題/副標/說明文）— 繁中為主，其餘語系展開覆寫
+const TEXT_FIELDS = [
+  { key: 'title', label: '標題', rows: 2, ph: '主標（可換行）' },
+  { key: 'subtitle', label: '副標', rows: 2, ph: '副標（可換行）' },
+  { key: 'memo', label: '說明文', rows: 3, ph: '說明文（可換行）' },
+]
+// 字串(舊資料) / 物件 → 編輯用多語系物件（每語系 <br> 轉換行）
+const toLangEdit = (v) => {
+  const o = {}
+  for (const l of LANGS) o[l] = ''
+  if (v && typeof v === 'object' && !Array.isArray(v)) {
+    for (const l of LANGS) o[l] = toEdit(v[l] || '')
+  } else {
+    o.tw = toEdit(v || '')
+  }
+  return o
+}
+// 編輯用多語系物件 → 存檔（每語系換行轉 <br>；只留有值的語系）
+const toLangStore = (o) => {
+  const r = {}
+  for (const l of LANGS) {
+    const s = toStore(o?.[l] || '')
+    if (s) r[l] = s
+  }
+  return r
+}
+const emptyLang = () => {
+  const o = {}
+  for (const l of LANGS) o[l] = ''
+  return o
+}
+
 // 圖片 alt 的 SEO 判斷（每則）：有填→OK；沒填但有標題→以標題替代；都沒→警告
 const altStatus = (row) => {
   if ((row.alt || '').trim()) return { type: 'ok', text: '✓ 已設定圖片 alt' }
-  if ((row.title || '').trim()) return { type: 'info', text: 'ℹ 未填 alt，前台會以標題作為替代文字' }
+  // title 為多語系物件 { tw,en,jp,kr }（或舊字串）→ 任一語系有值即視為有標題
+  const t = row.title
+  const hasTitle =
+    t && typeof t === 'object' ? Object.values(t).some((v) => (v || '').trim()) : (t || '').trim()
+  if (hasTitle) return { type: 'info', text: 'ℹ 未填 alt，前台會以標題作為替代文字' }
   return { type: 'warn', text: '⚠ 無 alt 也無標題，建議補上（利於圖片 SEO）' }
 }
 
@@ -57,22 +152,29 @@ const loading = ref(true)
 const contentMsg = ref(null)
 const savingContent = ref(false)
 
+// 首頁 Banner 內容即時預覽（編輯中 → 站台即時套用、免存檔/重整；預覽島可「確定/清除」）
+const { set: setBannerPreview, clear: clearBannerPreview, preview: bannerPreview, load: loadBannerPreview } =
+  useBannerPreview()
+const nuxtApp = useNuxtApp()
+
 // 首頁 banner 內容來源 = 獨立 Banner API（banners.json 的 home 物件：rows + videoUrl/videoFile + news）
 const loadContent = async () => {
   loading.value = true
   try {
     const res = await $fetch('/_admin/mock?name=banners')
     bannersDoc.value = res.parsed
-    const h = res.parsed?.home || {}
+    // 若有未確認的預覽 → 以預覽為編輯來源（與站台一致；離開後再回來不會跑掉）
+    loadBannerPreview()
+    const h = bannerPreview.value || res.parsed?.home || {}
     videoUrl.value = h.videoUrl || ''
     videoFile.value = h.videoFile || ''
     rows.value = (h.rows || []).map((r) => ({
       image: { pc: r.image?.pc || '', mb: r.image?.mb || '' },
       alt: r.alt || '', // 圖片替代文字（SEO）
       topic: '', // 每則 AI 關鍵字（僅供生成用，不寫回）
-      title: toEdit(r.title),
-      subtitle: toEdit(r.subtitle),
-      memo: toEdit(r.memo),
+      title: toLangEdit(r.title),
+      subtitle: toLangEdit(r.subtitle),
+      memo: toLangEdit(r.memo),
       // 每則自訂文字色（空＝交還全站後台色／版型預設）
       titleColor: r.titleColor || '',
       subtitleColor: r.subtitleColor || '',
@@ -97,9 +199,9 @@ const addRow = () => {
     image: { pc: SAMPLE_IMG, mb: '' },
     alt: '',
     topic: '',
-    title: '',
-    subtitle: '',
-    memo: '',
+    title: emptyLang(),
+    subtitle: emptyLang(),
+    memo: emptyLang(),
     titleColor: '',
     subtitleColor: '',
     memoColor: '',
@@ -211,9 +313,9 @@ const aiGenAll = async (i) => {
       method: 'POST',
       body: { field: 'all', topic: rows.value[i].topic || topic.value, context: { lang: '繁體中文' } },
     })
-    if (res.title) rows.value[i].title = res.title
-    if (res.subtitle) rows.value[i].subtitle = res.subtitle
-    if (res.memo) rows.value[i].memo = res.memo
+    if (res.title) rows.value[i].title.tw = res.title
+    if (res.subtitle) rows.value[i].subtitle.tw = res.subtitle
+    if (res.memo) rows.value[i].memo.tw = res.memo
   } catch (err) {
     contentMsg.value = { type: 'error', text: `AI 生成失敗：${err.data?.message || err.statusMessage || err.message}` }
   } finally {
@@ -232,10 +334,14 @@ const aiGen = async (i, field) => {
       body: {
         field,
         topic: rows.value[i].topic || topic.value,
-        context: { title: rows.value[i].title, subtitle: rows.value[i].subtitle, lang: '繁體中文' },
+        context: {
+          title: rows.value[i].title.tw,
+          subtitle: rows.value[i].subtitle.tw,
+          lang: '繁體中文',
+        },
       },
     })
-    rows.value[i][field] = res.text
+    rows.value[i][field].tw = res.text
   } catch (err) {
     contentMsg.value = { type: 'error', text: `AI 生成失敗：${err.data?.message || err.statusMessage || err.message}` }
   } finally {
@@ -243,14 +349,51 @@ const aiGen = async (i, field) => {
   }
 }
 
-// 即時預覽用 rows（換行轉 <br>）
+// 繁中 → 其餘啟用語系 自動翻譯（Gemini，dev-only）
+const translatingField = reactive({}) // `${i}:${field}` → bool
+// 核心：把第 i 則的 field（繁中）翻成其餘啟用語系
+const translateOne = async (i, field) => {
+  const row = rows.value[i]
+  const text = (row?.[field]?.tw || '').trim()
+  const targets = enabledLocales.value.map((l) => l.code).filter((c) => c !== 'tw')
+  if (!text || !targets.length) return
+  const tag = `${i}:${field}`
+  translatingField[tag] = true
+  try {
+    const res = await $fetch('/_admin/ai-translate', {
+      method: 'POST',
+      body: { text, source: 'tw', targets },
+    })
+    const tr = res?.translations || {}
+    for (const c of targets) if (tr[c]) row[field][c] = tr[c]
+  } catch (e) {
+    contentMsg.value = {
+      type: 'error',
+      text: `自動翻譯失敗：${e?.data?.message || e?.statusMessage || e?.message || '未知錯誤'}`,
+    }
+  } finally {
+    translatingField[tag] = false
+  }
+}
+// 按鈕觸發：一次翻該則的 標題 + 副標 + 說明文（一律從繁中翻）
+const translatingRow = reactive({}) // i → bool
+const translateRow = async (i) => {
+  translatingRow[i] = true
+  try {
+    await Promise.all(['title', 'subtitle', 'memo'].map((f) => translateOne(i, f)))
+  } finally {
+    translatingRow[i] = false
+  }
+}
+
+// 即時預覽用 rows（取繁中、換行轉 <br>）— 給後台自身 BlockBanner01 預覽框
 const previewRows = computed(() =>
   rows.value.map((r) => ({
     image: r.image?.pc ? r.image : { pc: SAMPLE_IMG, mb: '' },
     alt: r.alt,
-    title: toStore(r.title),
-    subtitle: toStore(r.subtitle),
-    memo: toStore(r.memo),
+    title: toStore(r.title.tw || ''),
+    subtitle: toStore(r.subtitle.tw || ''),
+    memo: toStore(r.memo.tw || ''),
     titleColor: r.titleColor || '',
     subtitleColor: r.subtitleColor || '',
     memoColor: r.memoColor || '',
@@ -259,11 +402,46 @@ const previewRows = computed(() =>
   })),
 )
 
+// 存檔 / 站台預覽用 rows（多語系物件；前台 BlockBanner 依站台語系自行解析）
+const storeRows = computed(() =>
+  rows.value.map((r) => ({
+    image: r.image?.pc ? r.image : { pc: SAMPLE_IMG, mb: '' },
+    alt: (r.alt || '').trim(),
+    title: toLangStore(r.title),
+    subtitle: toLangStore(r.subtitle),
+    memo: toLangStore(r.memo),
+    ...(r.titleColor ? { titleColor: r.titleColor } : {}),
+    ...(r.subtitleColor ? { subtitleColor: r.subtitleColor } : {}),
+    ...(r.memoColor ? { memoColor: r.memoColor } : {}),
+    btnText: r.btnText || '',
+    link: r.link || '',
+  })),
+)
+
 // 預覽用：把每則自訂色注入 <head>（與站台 BlockBanner 派發器同機制；不用行內 :style）
 useHead(() => {
   const css = bannerRowColorCss(previewRows.value)
   return css ? { style: [{ children: css }] } : {}
 })
+
+// 編輯中即時寫入「站台預覽」（debounce）→ 前台 BlockBanner 即時套用、預覽島出現可確定/清除
+let previewTimer = null
+watch(
+  [rows, videoUrl, videoFile],
+  () => {
+    if (loading.value) return // 初次載入不算編輯
+    if (previewTimer) clearTimeout(previewTimer)
+    previewTimer = setTimeout(() => {
+      setBannerPreview({
+        rows: storeRows.value, // 多語系物件，前台依站台語系解析
+        videoUrl: videoUrl.value,
+        videoFile: videoFile.value,
+        news: bannersDoc.value?.home?.news || [],
+      })
+    }, 250)
+  },
+  { deep: true },
+)
 
 // 送出：把 rows / 影片設定寫回 banners.json 的 home（保留 news / page / common）
 const saveContent = async () => {
@@ -274,21 +452,16 @@ const saveContent = async () => {
     doc.home = doc.home || {}
     doc.home.videoUrl = videoUrl.value.trim()
     doc.home.videoFile = videoFile.value.trim()
-    doc.home.rows = rows.value.map((r) => ({
-      image: r.image?.pc ? r.image : { pc: SAMPLE_IMG, mb: '' },
-      alt: (r.alt || '').trim(),
-      title: toStore(r.title),
-      subtitle: toStore(r.subtitle),
-      memo: toStore(r.memo),
-      // 自訂色：有設才寫（空＝不寫，前台交還全站／版型預設）
-      ...(r.titleColor ? { titleColor: r.titleColor } : {}),
-      ...(r.subtitleColor ? { subtitleColor: r.subtitleColor } : {}),
-      ...(r.memoColor ? { memoColor: r.memoColor } : {}),
-      btnText: r.btnText || '',
-      link: r.link || '',
-    }))
+    doc.home.rows = storeRows.value // 多語系物件（title/subtitle/memo = { tw,en,jp,kr }）
     await $fetch('/_admin/mock', { method: 'POST', body: { name: 'banners', content: doc } })
-    contentMsg.value = { type: 'success', text: '已寫回 banners.json（Banner API），站台下次請求即生效。' }
+    // 已固化 → 清掉站台預覽、重抓 banner（refreshNuxtData 需 Nuxt context，await 後已遺失 → runWithContext 包）
+    // 並廣播其他分頁重抓（其預覽也會因清除而落回剛存檔的資料）
+    if (import.meta.client) {
+      clearBannerPreview()
+      await nuxtApp.runWithContext(() => refreshNuxtData(['banner-home', 'home-banner']))
+      localStorage.setItem('master_v2_mock_broadcast', String(Date.now()))
+    }
+    contentMsg.value = { type: 'success', text: '已寫回 banners.json，前台 Banner 已即時更新（含其他分頁）。' }
   } catch (e) {
     contentMsg.value = { type: 'error', text: `寫回失敗：${e.data?.message || e.statusMessage || e.message}` }
   } finally {
@@ -367,6 +540,293 @@ onBeforeUnmount(() => {
         <span class="field__hint">套用到所有 BlockBanner 版型的標題 / 副標 / 說明文；留空＝交還版型自身配色。</span>
       </div>
 
+      <!-- 上一則 / 下一則 箭頭按鈕開關 -->
+      <div class="field field--full">
+        <span class="field__label">輪播箭頭按鈕（上一則 / 下一則）<em class="field__live">即時預覽</em></span>
+        <label class="nav-switch">
+          <input
+            type="checkbox"
+            :checked="state.bannerNav"
+            @change="setPreview('bannerNav', $event.target.checked)"
+          />
+          <span>{{ state.bannerNav ? '顯示' : '隱藏' }}</span>
+        </label>
+        <span class="field__hint">
+          在 Banner 左右顯示可點的上一則 / 下一則箭頭；只有一張時自動不顯示。套用所有 BlockBanner 版型。
+        </span>
+      </div>
+
+      <!-- 箭頭樣式：icon（線條/實心）+ 大小 + 圓角 -->
+      <div v-if="state.bannerNav" class="field field--full">
+        <span class="field__label">箭頭按鈕樣式 <em class="field__live">即時預覽</em></span>
+        <div class="nav-style">
+          <div class="nav-style__seg">
+            <button type="button" :class="{ on: navIconStyle === 'line' }" @click="setNavIcon(navIconName, 'line')">
+              線條
+            </button>
+            <button type="button" :class="{ on: navIconStyle === 'solid' }" @click="setNavIcon(navIconName, 'solid')">
+              實心
+            </button>
+          </div>
+          <div class="nav-style__icons">
+            <button
+              v-for="ic in NAV_ICON_OPTIONS"
+              :key="ic.name"
+              type="button"
+              class="nav-style__opt"
+              :class="{ on: navIconName === ic.name }"
+              :title="ic.label"
+              @click="setNavIcon(ic.name, navIconStyle)"
+              v-html="navIconPreview(ic.name, navIconStyle)"
+            ></button>
+          </div>
+        </div>
+        <div class="nav-range">
+          <span class="nav-range__lbl">大小</span>
+          <input
+            type="range"
+            min="28"
+            max="80"
+            step="1"
+            :value="state.bannerNavSize ?? 50"
+            @input="setPreview('bannerNavSize', Number($event.target.value))"
+          />
+          <input
+            type="number"
+            class="nav-range__num"
+            min="20"
+            max="120"
+            :value="state.bannerNavSize ?? 50"
+            @input="setPreview('bannerNavSize', Number($event.target.value) || 50)"
+          />
+          <span class="nav-range__unit">px</span>
+        </div>
+        <div class="nav-range">
+          <span class="nav-range__lbl">圓角</span>
+          <input
+            type="range"
+            min="0"
+            max="999"
+            step="1"
+            :value="state.bannerNavRadius ?? 999"
+            @input="setPreview('bannerNavRadius', Number($event.target.value))"
+          />
+          <input
+            type="number"
+            class="nav-range__num"
+            min="0"
+            max="999"
+            :value="state.bannerNavRadius ?? 999"
+            @input="setPreview('bannerNavRadius', Number($event.target.value) || 0)"
+          />
+          <span class="nav-range__unit">px</span>
+        </div>
+        <div class="nav-range">
+          <span class="nav-range__lbl">距邊界</span>
+          <input
+            type="range"
+            min="0"
+            max="120"
+            step="1"
+            :value="state.bannerNavGap ?? 24"
+            @input="setPreview('bannerNavGap', Number($event.target.value))"
+          />
+          <input
+            type="number"
+            class="nav-range__num"
+            min="0"
+            max="200"
+            :value="state.bannerNavGap ?? 24"
+            @input="setPreview('bannerNavGap', Number($event.target.value) || 0)"
+          />
+          <span class="nav-range__unit">px</span>
+        </div>
+        <div class="nav-range">
+          <span class="nav-range__lbl">箭頭大小</span>
+          <input
+            type="range"
+            min="20"
+            max="100"
+            step="1"
+            :value="state.bannerNavIconSize ?? 56"
+            @input="setPreview('bannerNavIconSize', Number($event.target.value))"
+          />
+          <input
+            type="number"
+            class="nav-range__num"
+            min="10"
+            max="100"
+            :value="state.bannerNavIconSize ?? 56"
+            @input="setPreview('bannerNavIconSize', Number($event.target.value) || 56)"
+          />
+          <span class="nav-range__unit">%</span>
+        </div>
+        <div class="nav-range">
+          <span class="nav-range__lbl">箭頭色</span>
+          <input
+            type="color"
+            :value="state.bannerNavColor || '#ffffff'"
+            @input="setPreview('bannerNavColor', $event.target.value)"
+          />
+          <button v-if="state.bannerNavColor" type="button" class="mini" @click="setPreview('bannerNavColor', '')">
+            預設
+          </button>
+        </div>
+        <div class="nav-range">
+          <span class="nav-range__lbl">底色</span>
+          <input type="color" :value="navBgHex" @input="onNavBgColor($event.target.value)" />
+          <input
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            :value="navBgAlpha"
+            @input="onNavBgAlpha(Number($event.target.value))"
+          />
+          <input
+            type="number"
+            class="nav-range__num"
+            min="0"
+            max="100"
+            :value="navBgAlpha"
+            @input="onNavBgAlpha(Number($event.target.value) || 0)"
+          />
+          <span class="nav-range__unit">%</span>
+          <button v-if="state.bannerNavBg" type="button" class="mini" @click="setPreview('bannerNavBg', '')">
+            預設
+          </button>
+        </div>
+        <span class="field__hint">
+          箭頭大小最大 100%（相對按鈕）；圓角 0＝方形、拉到底＝圓形；底色可調透明度。箭頭「上一則」自動水平翻轉。套用所有 BlockBanner 版型。
+        </span>
+      </div>
+
+      <!-- 輪播圓點（dots）樣式 -->
+      <div class="field field--full">
+        <span class="field__label">輪播圓點（dots）<em class="field__live">即時預覽</em></span>
+        <label class="nav-switch">
+          <input
+            type="checkbox"
+            :checked="state.bannerDots"
+            @change="setPreview('bannerDots', $event.target.checked)"
+          />
+          <span>{{ state.bannerDots ? '顯示' : '隱藏' }}</span>
+        </label>
+
+        <template v-if="state.bannerDots">
+          <div class="nav-range">
+            <span class="nav-range__lbl">大小</span>
+            <span class="nav-range__unit">寬</span>
+            <input
+              type="number"
+              class="nav-range__num"
+              min="2"
+              max="80"
+              :value="state.bannerDotW ?? 10"
+              @input="setPreview('bannerDotW', Number($event.target.value) || 10)"
+            />
+            <span class="nav-range__unit">高</span>
+            <input
+              type="number"
+              class="nav-range__num"
+              min="2"
+              max="80"
+              :value="state.bannerDotH ?? 10"
+              @input="setPreview('bannerDotH', Number($event.target.value) || 10)"
+            />
+            <span class="nav-range__unit">px</span>
+          </div>
+          <div class="nav-range">
+            <span class="nav-range__lbl">選中大小</span>
+            <span class="nav-range__unit">寬</span>
+            <input
+              type="number"
+              class="nav-range__num"
+              min="2"
+              max="120"
+              :value="state.bannerDotActiveW ?? 12"
+              @input="setPreview('bannerDotActiveW', Number($event.target.value) || 12)"
+            />
+            <span class="nav-range__unit">高</span>
+            <input
+              type="number"
+              class="nav-range__num"
+              min="2"
+              max="120"
+              :value="state.bannerDotActiveH ?? 12"
+              @input="setPreview('bannerDotActiveH', Number($event.target.value) || 12)"
+            />
+            <span class="nav-range__unit">px</span>
+          </div>
+          <div class="nav-range">
+            <span class="nav-range__lbl">框線寬度</span>
+            <input
+              type="range"
+              min="0"
+              max="6"
+              step="1"
+              :value="state.bannerDotBorderWidth ?? 0"
+              @input="setPreview('bannerDotBorderWidth', Number($event.target.value))"
+            />
+            <input
+              type="number"
+              class="nav-range__num"
+              min="0"
+              max="12"
+              :value="state.bannerDotBorderWidth ?? 0"
+              @input="setPreview('bannerDotBorderWidth', Number($event.target.value) || 0)"
+            />
+            <span class="nav-range__unit">px</span>
+          </div>
+          <div class="nav-range">
+            <span class="nav-range__lbl">預設色</span>
+            <input
+              type="color"
+              :value="state.bannerDotBg || '#ffffff'"
+              @input="setPreview('bannerDotBg', $event.target.value)"
+            />
+            <button v-if="state.bannerDotBg" type="button" class="mini" @click="setPreview('bannerDotBg', '')">
+              預設
+            </button>
+          </div>
+          <div class="nav-range">
+            <span class="nav-range__lbl">選中色</span>
+            <input
+              type="color"
+              :value="state.bannerDotActiveBg || '#ffffff'"
+              @input="setPreview('bannerDotActiveBg', $event.target.value)"
+            />
+            <button
+              v-if="state.bannerDotActiveBg"
+              type="button"
+              class="mini"
+              @click="setPreview('bannerDotActiveBg', '')"
+            >
+              預設
+            </button>
+          </div>
+          <div class="nav-range">
+            <span class="nav-range__lbl">框線色</span>
+            <input
+              type="color"
+              :value="state.bannerDotBorderColor || '#ffffff'"
+              @input="setPreview('bannerDotBorderColor', $event.target.value)"
+            />
+            <button
+              v-if="state.bannerDotBorderColor"
+              type="button"
+              class="mini"
+              @click="setPreview('bannerDotBorderColor', '')"
+            >
+              預設
+            </button>
+          </div>
+          <span class="field__hint">
+            大小可分別設定寬 / 高（可做成長條膠囊）；未選中＝預設色（留空＝半透明白）、選中＝選中色（留空＝白）；框線寬度 0＝無框。套用所有有圓點的 BlockBanner 版型。
+          </span>
+        </template>
+      </div>
+
       <div class="actions">
         <button type="button" class="btn btn--primary" :disabled="!dirtyVer || submitting" @click="onSubmitVer">
           {{ submitting ? '寫入中…' : dirtyVer ? '提交版型設定' : '版型無變動' }}
@@ -379,8 +839,10 @@ onBeforeUnmount(() => {
     <section class="block">
       <h2 class="block__h">首頁 Banner 內容（BlockBanner01）</h2>
       <p class="page__desc">
-        可新增多則輪播。圖片建議尺寸 <code>1920 × 911</code>；沒上傳則用範例圖。標題/副標/說明文按 Enter 換行會自動轉
-        <code>&lt;br&gt;</code>；文字全空的那則不顯示文字框。送出後寫回 <code>banners.json</code>。
+        可新增多則輪播。圖片建議尺寸 <code>1920 × 911</code>；沒上傳則用範例圖。
+        標題 / 副標 / 說明文按 Enter 換行自動轉 <code>&lt;br&gt;</code>，文字全空的那則不顯示文字框。
+        文字支援<strong>多語系</strong>：每欄按「<strong>🌐 多語</strong>」展開其他啟用語系，改<strong>繁中</strong>（失焦）會<strong>自動翻譯</strong>，可手動覆寫。
+        編輯內容會<strong>即時預覽到站台</strong>，由底部<strong>確認島</strong>「確定 / 套用」寫回 <code>banners.json</code>、「清除預覽」還原（或用下方「送出」按鈕固化）。
       </p>
 
       <label class="field field--full">
@@ -469,37 +931,73 @@ onBeforeUnmount(() => {
             <span class="ai-all__hint">留空則用上方共用主題</span>
           </div>
 
-          <!-- 標題 -->
-          <div class="field field--full">
-            <span class="field__label">
-              標題
-              <button type="button" class="ai" :disabled="aiBusy === `${i}:title`" @click="aiGen(i, 'title')">
-                {{ aiBusy === `${i}:title` ? 'AI…' : 'AI 生成' }}
-              </button>
-            </span>
-            <textarea v-model="row.title" rows="2" placeholder="主標（可換行）"></textarea>
+          <!-- 自動翻譯：繁中 → 其餘啟用語系（一次翻標題/副標/說明文）-->
+          <div v-if="enabledLocales.length > 1" class="translate-bar">
+            <button
+              type="button"
+              class="btn btn--ghost"
+              :disabled="translatingRow[i]"
+              @click="translateRow(i)"
+            >
+              {{ translatingRow[i] ? '翻譯中…' : '✦ 自動翻譯（繁中 → 其他語系）' }}
+            </button>
+            <span class="translate-bar__hint">也可在繁中欄位打字、失焦自動翻</span>
           </div>
 
-          <!-- 副標 -->
-          <div class="field field--full">
+          <!-- 標題 / 副標 / 說明文（繁中為主，「🌐 多語」展開其餘語系，改繁中失焦自動翻譯）-->
+          <div v-for="f in TEXT_FIELDS" :key="f.key" class="field field--full">
             <span class="field__label">
-              副標
-              <button type="button" class="ai" :disabled="aiBusy === `${i}:subtitle`" @click="aiGen(i, 'subtitle')">
-                {{ aiBusy === `${i}:subtitle` ? 'AI…' : 'AI 生成' }}
+              {{ f.label }}
+              <span v-if="translatingField[`${i}:${f.key}`]" class="translating">翻譯中…</span>
+              <button
+                type="button"
+                class="ai"
+                :disabled="aiBusy === `${i}:${f.key}`"
+                @click="aiGen(i, f.key)"
+              >
+                {{ aiBusy === `${i}:${f.key}` ? 'AI…' : 'AI 生成' }}
+              </button>
+              <button
+                v-if="otherLangs.length"
+                type="button"
+                class="ml-btn"
+                :class="{ 'is-on': isFieldOpen(i, f.key) }"
+                @click="toggleField(i, f.key)"
+              >
+                🌐 多語
               </button>
             </span>
-            <textarea v-model="row.subtitle" rows="2" placeholder="副標（可換行）"></textarea>
-          </div>
+            <textarea
+              v-model="row[f.key].tw"
+              :rows="f.rows"
+              :placeholder="f.ph"
+              :disabled="translatingField[`${i}:${f.key}`]"
+              @change="translateOne(i, f.key)"
+            ></textarea>
 
-          <!-- 說明文 -->
-          <div class="field field--full">
-            <span class="field__label">
-              說明文
-              <button type="button" class="ai" :disabled="aiBusy === `${i}:memo`" @click="aiGen(i, 'memo')">
-                {{ aiBusy === `${i}:memo` ? 'AI…' : 'AI 生成' }}
-              </button>
-            </span>
-            <textarea v-model="row.memo" rows="3" placeholder="說明文（可換行）"></textarea>
+            <!-- 其他語系（展開）-->
+            <div v-if="otherLangs.length && isFieldOpen(i, f.key)" class="ml-langs">
+              <div class="ml-langs__head">
+                <span>其他語系 — 改繁中失焦會自動翻譯，亦可手動覆寫</span>
+                <button
+                  type="button"
+                  class="mini"
+                  :disabled="translatingField[`${i}:${f.key}`]"
+                  @click="translateOne(i, f.key)"
+                >
+                  {{ translatingField[`${i}:${f.key}`] ? '翻譯中…' : '↻ 重新翻譯' }}
+                </button>
+              </div>
+              <div v-for="l in otherLangs" :key="l.code" class="ml-langs__row">
+                <span class="ml-langs__code">{{ l.label }}</span>
+                <textarea
+                  v-model="row[f.key][l.code]"
+                  :rows="f.rows"
+                  placeholder="留空＝前台用繁中"
+                  :disabled="translatingField[`${i}:${f.key}`]"
+                ></textarea>
+              </div>
+            </div>
           </div>
 
           <!-- 此則文字顏色（留空＝用全站後台色／版型預設）-->
@@ -618,6 +1116,197 @@ onBeforeUnmount(() => {
   min-width: 56px;
   font-size: 13px;
   color: #c8cfdb;
+}
+
+// 「🌐 多語」展開鈕（每個文字欄位）
+.ml-btn {
+  padding: 2px 10px;
+  font-size: 12px;
+  background: #0f1218;
+  color: #8a93a3;
+  border: 1px solid #2a3242;
+  border-radius: 99px;
+  cursor: pointer;
+
+  &.is-on,
+  &:hover {
+    color: #6dd6a3;
+    border-color: #2a4a3a;
+  }
+}
+// 其他語系展開區
+.ml-langs {
+  margin-top: 8px;
+  padding: 10px;
+  background: #0f1218;
+  border: 1px dashed #2a3242;
+  border-radius: 6px;
+}
+.ml-langs__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: #6a7382;
+}
+.ml-langs__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  & + & {
+    margin-top: 6px;
+  }
+
+  textarea {
+    flex: 1;
+    min-width: 0;
+  }
+}
+.ml-langs__code {
+  flex-shrink: 0;
+  width: 48px;
+  padding-top: 8px;
+  font-size: 12px;
+  color: #8a93a3;
+}
+.translating {
+  font-size: 11px;
+  color: #d4b170;
+}
+.translate-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.translate-bar__hint {
+  font-size: 11px;
+  color: #6a7382;
+}
+
+// 箭頭按鈕開關 / 樣式設定
+.nav-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #c8cfdb;
+  cursor: pointer;
+
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: #4fc08d;
+    cursor: pointer;
+  }
+}
+.nav-style {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  background: #1a1f2a;
+  border: 1px solid #2a3242;
+  border-radius: 8px;
+}
+.nav-style__seg {
+  display: inline-flex;
+  border: 1px solid #2a3242;
+  border-radius: 6px;
+  overflow: hidden;
+
+  button {
+    padding: 5px 12px;
+    font-size: 12px;
+    background: #0f1218;
+    color: #8a93a3;
+    border: none;
+    cursor: pointer;
+
+    &.on {
+      background: #4fc08d;
+      color: #0f1218;
+    }
+  }
+}
+.nav-style__icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.nav-style__opt {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f1218;
+  border: 1px solid #2a3242;
+  border-radius: 6px;
+  color: #c8cfdb;
+  cursor: pointer;
+
+  :deep(svg) {
+    width: 20px;
+    height: 20px;
+  }
+  &:hover {
+    border-color: #4fc08d;
+  }
+  &.on {
+    border-color: #4fc08d;
+    color: #4fc08d;
+    background: #14241d;
+  }
+}
+.nav-range {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+
+  input[type='range'] {
+    flex: 1;
+    cursor: pointer;
+    accent-color: #4fc08d;
+  }
+}
+.nav-range__lbl {
+  width: 40px;
+  font-size: 13px;
+  color: #c8cfdb;
+}
+.nav-range__num {
+  width: 80px;
+  padding: 5px 10px;
+  background: #0f1218;
+  color: #e6e9ef;
+  border: 1px solid #2a3242;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 13px;
+  text-align: right;
+  -moz-appearance: textfield; // 移除 Firefox 上下箭頭
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+  &:focus {
+    outline: 1px solid #4fc08d;
+    border-color: #4fc08d;
+  }
+}
+.nav-range__unit {
+  min-width: 18px;
+  font-size: 12px;
+  color: #8a93a3;
 }
 
 .slides {

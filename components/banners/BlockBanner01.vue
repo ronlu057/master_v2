@@ -21,6 +21,7 @@ const props = defineProps({
   videoUrl: { type: String, default: '' },
   videoFile: { type: String, default: '' }, // YT 連結為空時，改播此上傳影片（HTML5）
   news: { type: Array, default: () => [] },
+  showNav: { type: Boolean, default: true }, // 顯示「上一則 / 下一則」按鈕（後台 bannerNav 控制）
 })
 
 // ── 兩個 Swiper 雙向同步（主圖切到第 i 張，cover 也切到第 i 張）
@@ -113,7 +114,7 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
       <Swiper
         v-if="rows.length"
         class="index_banner"
-        :modules="[Autoplay, EffectFade, Pagination, Controller]"
+        :modules="[Autoplay, EffectFade, Pagination, Navigation, Controller]"
         :slides-per-view="1"
         :loop="rows.length > 1"
         effect="fade"
@@ -121,6 +122,7 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
         :speed="1000"
         :autoplay="{ delay: 5000, disableOnInteraction: false }"
         :pagination="{ clickable: true }"
+        :navigation="showNav && rows.length > 1 ? { prevEl: '.banner_nav_prev', nextEl: '.banner_nav_next' } : false"
         :allow-touch-move="false"
         @swiper="onMainReady"
       >
@@ -131,6 +133,12 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
           </picture>
         </SwiperSlide>
       </Swiper>
+
+      <!-- 上一則 / 下一則（後台 bannerNav 開關；單張時不顯示；icon/大小/圓角由後台設定）-->
+      <template v-if="showNav && rows.length > 1">
+        <BannerNavBtn dir="prev" />
+        <BannerNavBtn dir="next" />
+      </template>
 
       <!-- 背景影片：YouTube（桌面）優先；YT 連結為空時改播上傳影片檔（HTML5，含 iOS 自動播放） -->
       <div v-if="hasVideo" class="video_banner" :class="{ show: videoActive }">
@@ -282,15 +290,6 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
     animation: banner01_zoom 6s linear forwards;
   }
 
-  .swiper-pagination {
-    text-align: left;
-    bottom: 2.45vw;
-
-    @include rwd-768 {
-      text-align: center;
-      left: 0;
-    }
-  }
 }
 
 @keyframes banner01_zoom {

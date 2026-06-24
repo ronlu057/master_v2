@@ -79,6 +79,7 @@ const siteStyleContent = computed(() => {
   const dropBoxSel = [
     '.app-header nav [class*="__sub"]',
     '.app-header nav ul ul',
+    '.app-header .hsub .hsub',
     '.app-header .search_box',
     '.app-header .lang_box',
     '.app-header .lang_toggle ul',
@@ -89,6 +90,7 @@ const siteStyleContent = computed(() => {
   const sub = [
     '.app-header nav [class*="__sub"] a',
     '.app-header nav ul ul a',
+    '.app-header .hsub__link',
     '.app-header .lang_item',
     '.app-header .lang_box a',
     '.app-header .lang_box button',
@@ -104,6 +106,8 @@ const siteStyleContent = computed(() => {
     '.app-header nav [class*="__sub"] a:focus',
     '.app-header nav ul ul a:hover',
     '.app-header nav ul ul a:focus',
+    '.app-header .hsub__link:hover',
+    '.app-header .hsub__link:focus',
     '.app-header .lang_item:hover',
     '.app-header .lang_item:focus',
     '.app-header .lang_box a:hover',
@@ -178,6 +182,26 @@ const siteStyleContent = computed(() => {
     .filter(Boolean)
     .join('\n')
 
+  // 子選單展開箭頭（.hsub__arrow，絕對定位）：靠左/靠右 + 與邊緣距離（px）+ 對應文字對齊
+  //   靠左 → 文字置中（左右補 padding 讓置中文字不壓到 icon）；靠右 → 文字靠左
+  const subIconPos = siteState.headerSubmenuIconPos === 'left' ? 'left' : 'right'
+  const subIconOffNum = Number(siteState.headerSubmenuIconOffset)
+  const subOff = Number.isFinite(subIconOffNum) ? subIconOffNum : 8
+  const subClear = subOff + 32 // 為 icon（約 28px）+ 邊距預留，避免文字壓到 icon
+  const subIconCss =
+    subIconPos === 'left'
+      ? `.app-header .hsub__arrow { left: ${subOff}px; right: auto; }
+.app-header .hsub__link--has { text-align: center; padding-left: ${subClear}px; padding-right: ${subClear}px; }`
+      : `.app-header .hsub__arrow { right: ${subOff}px; left: auto; }
+.app-header .hsub__link--has { text-align: left; padding-right: ${subClear}px; }`
+
+  // flyout 模式：第三層浮層定位在第二層面板「外側」，但下拉圓角設定會給面板 overflow:hidden
+  // 而把浮層裁掉 → 在 flyout 時把第二層面板的 overflow 還原為 visible（讓浮層能露出）。
+  const flyoutOverflowCss =
+    (siteState.headerSubmenuStyle || 'flyout') === 'flyout'
+      ? '.app-header--sub-flyout nav [class*="__sub"] { overflow: visible !important; }'
+      : ''
+
   // 後台指定的 Banner 文字色 → 注入 :root CSS 變數；BlockBanner 的標題/副標/說明文以 var() 讀取。
   // 留空＝不注入，元件以自身 SCSS 預設色當 fallback。走 CSS 變數故免 !important（符合製作規範 §3.1）。
   const bannerTitle = (siteState.bannerTitleColor || '').trim()
@@ -192,8 +216,47 @@ const siteStyleContent = computed(() => {
     .join(' ')
   const bannerCss = bannerVars ? `:root { ${bannerVars} }` : ''
 
+  // Banner 輪播箭頭按鈕：大小 / 圓角 → :root 變數（main.scss .banner_nav 以 var() 讀取，免 !important）
+  const navSize = String(siteState.bannerNavSize ?? '').trim()
+  const navRadius = String(siteState.bannerNavRadius ?? '').trim()
+  const navColor = (siteState.bannerNavColor || '').trim()
+  const navBg = (siteState.bannerNavBg || '').trim()
+  const navIconSize = String(siteState.bannerNavIconSize ?? '').trim()
+  const navGap = String(siteState.bannerNavGap ?? '').trim()
+  // 輪播圓點：寬·高 / 選中寬·高 / 框線寬度 / 預設·選中背景 / 框線色
+  const dotW = String(siteState.bannerDotW ?? '').trim()
+  const dotH = String(siteState.bannerDotH ?? '').trim()
+  const dotActiveW = String(siteState.bannerDotActiveW ?? '').trim()
+  const dotActiveH = String(siteState.bannerDotActiveH ?? '').trim()
+  const dotBw = String(siteState.bannerDotBorderWidth ?? '').trim()
+  const dotBg = (siteState.bannerDotBg || '').trim()
+  const dotActiveBg = (siteState.bannerDotActiveBg || '').trim()
+  const dotBc = (siteState.bannerDotBorderColor || '').trim()
+  const navVars = [
+    navSize !== '' && `--banner-nav-size: ${navSize}px;`,
+    navRadius !== '' && `--banner-nav-radius: ${navRadius}px;`,
+    navColor && `--banner-nav-color: ${navColor};`,
+    navBg && `--banner-nav-bg: ${navBg};`,
+    navIconSize !== '' && `--banner-nav-icon-size: ${navIconSize}%;`,
+    navGap !== '' && `--banner-nav-gap: ${navGap}px;`,
+    dotW !== '' && `--banner-dot-w: ${dotW}px;`,
+    dotH !== '' && `--banner-dot-h: ${dotH}px;`,
+    dotActiveW !== '' && `--banner-dot-active-w: ${dotActiveW}px;`,
+    dotActiveH !== '' && `--banner-dot-active-h: ${dotActiveH}px;`,
+    dotBw !== '' && `--banner-dot-bw: ${dotBw}px;`,
+    dotBg && `--banner-dot-bg: ${dotBg};`,
+    dotActiveBg && `--banner-dot-active-bg: ${dotActiveBg};`,
+    dotBc && `--banner-dot-bc: ${dotBc};`,
+  ]
+    .filter(Boolean)
+    .join(' ')
+  // 圓點開關：關閉 → 隱藏整條 pagination（全 BlockBanner 共用）
+  const dotsHideCss =
+    siteState.bannerDots === false ? '.block-banner .swiper-pagination { display: none; }' : ''
+  const navCss = (navVars ? `:root { ${navVars} }` : '') + (dotsHideCss ? `\n${dotsHideCss}` : '')
+
   const customCss = siteState.customCss || ''
-  return `${cssVars}\n${headerBg}\n${menuCss}\n${iconCss}\n${bannerCss}\n${customCss}`
+  return `${cssVars}\n${headerBg}\n${menuCss}\n${iconCss}\n${subIconCss}\n${flyoutOverflowCss}\n${bannerCss}\n${navCss}\n${customCss}`
 })
 
 // i18n（useI18n / useLocaleHead 必須在 setup 頂層呼叫，不能進 computed / function 內）
@@ -222,7 +285,16 @@ useHead({
     ...head.value.htmlAttrs,
   }),
   bodyAttrs: { 'data-page': dataPage },
-  link: () => head.value.link,
+  // i18n link + CJK 各語系字型（SC/JP/KR）。放這裡（而非 nuxt.config）→ HMR 即時生效、免重啟 dev server。
+  // TC / Poppins / Roboto 等仍由 nuxt.config 的 link 載入；此處只補簡中/日/韓三個 Noto，避免重複。
+  link: () => [
+    ...head.value.link,
+    {
+      rel: 'stylesheet',
+      key: 'cjk-fonts',
+      href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;200;300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@100;200;300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap',
+    },
+  ],
   meta: () => head.value.meta,
   // 全域 <style> 注入：CSS 變數（logo 高度等）+ 後台自訂 CSS
   style: () => [

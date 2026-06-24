@@ -60,11 +60,17 @@ const bgStyle = computed(() =>
   :deep(.navtool ul),
   :deep([class*='lang-menu']),
   :deep(.navmenu__sub),
-  :deep([class*='__sub']) {
+  :deep([class*='__sub']),
+  :deep(.hsub .hsub) {
     opacity: 1 !important;
     visibility: visible !important;
     transform: none !important;
     pointer-events: auto !important;
+  }
+  // 第三層（.hsub 巢狀）：nested 模式靠 v-show（display:none）收合 → 強制 display 打開；
+  // flyout 模式則靠上面的 opacity/visibility 露出（維持往右浮出的相對定位）。
+  :deep(.hsub .hsub) {
+    display: flex !important;
   }
 }
 </style>

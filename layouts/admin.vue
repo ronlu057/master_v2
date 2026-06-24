@@ -71,6 +71,9 @@ const isActive = (to) => {
         <slot />
       </main>
     </div>
+
+    <!-- 預覽確認島：有 localStorage 預覽（Header / Banner / navtool）時，後台也直接顯示「確定/套用 ‧ 清除預覽」 -->
+    <AdminPreviewBar />
   </div>
 </template>
 

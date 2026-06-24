@@ -83,14 +83,7 @@ onBeforeUnmount(() => {
               {{ item.title }}
             </NuxtLink>
             <div v-if="item.children?.length" class="navmenu__sub">
-              <NuxtLink
-                v-for="child in item.children"
-                :key="child.url"
-                :to="child.url"
-                itemprop="url"
-              >
-                {{ child.title }}
-              </NuxtLink>
+              <HeaderSubmenu :items="item.children" />
             </div>
           </li>
         </ul>
@@ -222,23 +215,7 @@ onBeforeUnmount(() => {
 
     <transition name="drop">
       <nav v-if="ui.menuOpen && !isMinimal" class="mb_panel">
-        <div class="mb_navmenu">
-          <div v-for="item in menuData.mobile" :key="item.url" class="mb_navmenu__item">
-            <NuxtLink :to="item.url" class="mb_navmenu__link" @click="ui.closeMenu">
-              {{ item.title }}
-            </NuxtLink>
-            <div v-if="item.children?.length" class="mb_navmenu__sub">
-              <NuxtLink
-                v-for="child in item.children"
-                :key="child.url"
-                :to="child.url"
-                @click="ui.closeMenu"
-              >
-                {{ child.title }}
-              </NuxtLink>
-            </div>
-          </div>
-        </div>
+        <HeaderMobileNav :items="menuData.mobile" />
       </nav>
     </transition>
   </header>

@@ -2,14 +2,14 @@
   "projectType": "module",
   "header": "Header01",
   "pageBanner": "PageBanner01",
-  "blockBanner": "BlockBanner02",
+  "blockBanner": "BlockBanner01",
   "apiBase": "",
   "defaultLang": "tw",
   "enableShop": false,
   "logo": "",
-  "logoMaxHeight": 48,
+  "logoMaxHeight": 46,
   "customCss": "",
-  "headerBgColor": "rgba(242,242,242,0.92)",
+  "headerBgColor": "#f2f2f2",
   "langLabels": {},
   "navtool": {
     "Header07": {
@@ -279,7 +279,7 @@
       ]
     }
   },
-  "headerMenuColor": "#212121",
+  "headerMenuColor": "#474747",
   "headerMenuHoverColor": "#4fc08d",
   "headerDropdownBg": "#f5f5f5",
   "headerDropdownItemBg": "#ffffff",
@@ -310,10 +310,10 @@
   "headerMenuFontSize": "",
   "headerIconColor": "#454545",
   "headerIconHoverColor": "#54c08f",
-  "headerDropdownRadius": 9,
+  "headerDropdownRadius": 7,
   "headerDropdownItemRadius": 5,
   "headerDropdownItemHoverBg": "#d5dbdc",
-  "bannerTitleColor": "#ff004c",
+  "bannerTitleColor": "#e60000",
   "bannerSubtitleColor": "#ffffff",
   "bannerMemoColor": "#ffffff",
   "enabledLangs": [
@@ -329,10 +329,39 @@
   "headerNavtoolDropdownItemRadius": "",
   "headerDropdownPaddingY": "",
   "headerDropdownPaddingX": "",
-  "headerDropdownBorderWidth": "",
+  "headerDropdownBorderWidth": 0,
   "headerDropdownBorderColor": "",
   "headerDropdownItemPaddingY": "",
   "headerDropdownItemBorderWidth": 0,
   "headerDropdownItemBorderColor": "",
-  "headerDropdownItemPaddingX": 20
+  "headerDropdownItemPaddingX": 20,
+  "headerSubmenuStyle": "flyout",
+  "headerSubmenuIcon": {
+    "name": "chevron",
+    "style": "solid"
+  },
+  "headerSubmenuIconPos": "right",
+  "headerSubmenuIconOffset": 9,
+  "bannerNav": true,
+  "bannerNavIcon": {
+    "name": "chevron",
+    "style": "line"
+  },
+  "bannerNavSize": 74,
+  "bannerNavRadius": 0,
+  "bannerNavColor": "",
+  "bannerNavBg": "rgba(0,0,0,0.88)",
+  "bannerNavIconSize": 70,
+  "bannerNavGap": 50,
+  "bannerDotBg": "",
+  "bannerDotActiveBg": "",
+  "bannerDotBorderWidth": 0,
+  "bannerDotBorderColor": "",
+  "bannerDotSize": 10,
+  "bannerDotActiveSize": 12,
+  "bannerDots": true,
+  "bannerDotW": 10,
+  "bannerDotH": 10,
+  "bannerDotActiveW": 12,
+  "bannerDotActiveH": 12
 }

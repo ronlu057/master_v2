@@ -62,6 +62,15 @@ export function useEffectiveSettings() {
       headerDropdownItemBorderColor: pub.headerDropdownItemBorderColor || '', // 下拉單項框線顏色
       // navtool 各 slot 換 icon：{ [slot]: { name, style:'line'|'solid' } }；空＝用 icons.scss 預設 SVG
       headerIcons: {},
+      // 桌機第三層子選單呈現方式：'flyout'＝滑到第二層往右飛出、'nested'＝同框內向右縮排展開
+      headerSubmenuStyle: pub.headerSubmenuStyle || 'flyout',
+      // 「有子選單可展開」的指示 icon { name, style:'line'|'solid' }；空＝預設 chevron 線條
+      // 桌機：第二層若有第三層 → 該項目顯示此 icon；手機：有子層的項目右側顯示此 icon（可點展開）
+      headerSubmenuIcon: {},
+      // 展開 icon 位置（絕對定位）：'left'＝靠左、文字置中；'right'＝靠右、文字靠左
+      headerSubmenuIconPos: pub.headerSubmenuIconPos || 'right',
+      // 展開 icon 與該側邊緣的距離（px）
+      headerSubmenuIconOffset: pub.headerSubmenuIconOffset ?? 8,
       // 主選單文字大小（px，全站共用，''＝版型預設）
       headerMenuFontSize: pub.headerMenuFontSize ?? '',
       // Banner 文字色（全站共用，空＝交還版型預設）：標題 / 副標 / 說明文
@@ -69,6 +78,29 @@ export function useEffectiveSettings() {
       bannerTitleColor: pub.bannerTitleColor || '',
       bannerSubtitleColor: pub.bannerSubtitleColor || '',
       bannerMemoColor: pub.bannerMemoColor || '',
+      // Banner 輪播「上一則 / 下一則」按鈕開關（全站共用，預設顯示）
+      bannerNav: pub.bannerNav === undefined ? true : String(pub.bannerNav) !== 'false',
+      // 箭頭 icon { name, style:'line'|'solid' }（空＝預設 chevron 線條）/ 按鈕大小 px / 圓角 px（999＝圓形）
+      bannerNavIcon: {},
+      bannerNavSize: Number(pub.bannerNavSize) || 50,
+      bannerNavRadius: pub.bannerNavRadius === undefined ? 999 : Number(pub.bannerNavRadius),
+      // 箭頭 icon 顏色 / 按鈕背景色（空＝預設白字 + 半透明黑底）；背景可帶透明度（rgba）
+      bannerNavColor: pub.bannerNavColor || '',
+      bannerNavBg: pub.bannerNavBg || '',
+      // 箭頭 icon 佔按鈕的大小（%，最大 100）
+      bannerNavIconSize: pub.bannerNavIconSize === undefined ? 56 : Number(pub.bannerNavIconSize),
+      // 按鈕距左右邊界距離 px（左右共用同一值 → 上一則 / 下一則對稱同步）
+      bannerNavGap: pub.bannerNavGap === undefined ? 24 : Number(pub.bannerNavGap),
+      // 輪播圓點（pagination dots）：開關、預設/選中背景色、框線寬度·顏色、寬·高（預設/選中各自）
+      bannerDots: pub.bannerDots === undefined ? true : String(pub.bannerDots) !== 'false',
+      bannerDotBg: pub.bannerDotBg || '', // 預設（未選中）背景色；空＝半透明白
+      bannerDotActiveBg: pub.bannerDotActiveBg || '', // 選中背景色；空＝白
+      bannerDotBorderWidth: pub.bannerDotBorderWidth === undefined ? 0 : Number(pub.bannerDotBorderWidth),
+      bannerDotBorderColor: pub.bannerDotBorderColor || '',
+      bannerDotW: pub.bannerDotW === undefined ? 10 : Number(pub.bannerDotW), // 預設寬
+      bannerDotH: pub.bannerDotH === undefined ? 10 : Number(pub.bannerDotH), // 預設高
+      bannerDotActiveW: pub.bannerDotActiveW === undefined ? 12 : Number(pub.bannerDotActiveW), // 選中寬
+      bannerDotActiveH: pub.bannerDotActiveH === undefined ? 12 : Number(pub.bannerDotActiveH), // 選中高
       // 啟用語系（站台實際提供的語系碼陣列）；空＝全部啟用（fallback）。
       // 控制前台語系切換清單 + 後台只對「有啟用的語系」開放文字輸入
       enabledLangs: Array.isArray(pub.enabledLangs) ? pub.enabledLangs : ['tw', 'en', 'jp', 'kr'],

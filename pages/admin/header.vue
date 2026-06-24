@@ -123,16 +123,40 @@ const iconPreview = (name, style) => headerIconSvg(name, style, 'currentColor')
 const { enableShop } = useProject()
 const SHOP_SLOTS = ['member', 'cart', 'favorite']
 
+// ── 桌機第三層子選單呈現方式（flyout 向右飛出 / nested 同框內縮）────────────
+const SUBMENU_STYLES = [
+  { value: 'flyout', label: '向右飛出', hint: '滑到第二層項目，第三層往右側彈出浮層' },
+  { value: 'nested', label: '同框內縮', hint: '第三層直接顯示在第二層下拉裡，往內縮排' },
+]
+
+// ── 「子選單展開」箭頭 icon（有子層時顯示；可選形狀 + 線條/實心）──────────────
+// 桌機：第二層若有第三層 → 顯示此 icon（nested 模式點它展開）；手機：有子層項目右側顯示
+const EXPAND_OPTIONS = headerIconOptions('expand')
+const expandSel = computed(() => state.headerSubmenuIcon || {})
+const expandName = computed(() => expandSel.value.name || 'chevron')
+const expandStyle = computed(() => expandSel.value.style || 'line')
+const setExpandIcon = (name, style) => setPreview('headerSubmenuIcon', { name, style })
+
 const dirty = computed(
   () =>
-    ['header', 'logo', 'logoMaxHeight', 'customCss', 'headerBgColor', 'headerMenuFontSize'].some(
-      isDirtyKey,
-    ) ||
+    [
+      'header',
+      'logo',
+      'logoMaxHeight',
+      'customCss',
+      'headerBgColor',
+      'headerMenuFontSize',
+      'headerSubmenuStyle',
+      'headerSubmenuIconPos',
+      'headerSubmenuIconOffset',
+    ].some(isDirtyKey) ||
     MENU_COLOR_FIELDS.some((f) => isDirtyKey(f.key)) ||
     RADIUS_FIELDS.some((f) => isDirtyKey(f.key)) ||
     DROPDOWN_BOX_FIELDS.some((f) => isDirtyKey(f.key)) ||
     JSON.stringify(state.headerIcons || {}) !==
-      JSON.stringify(persisted.value.headerIcons || {}),
+      JSON.stringify(persisted.value.headerIcons || {}) ||
+    JSON.stringify(state.headerSubmenuIcon || {}) !==
+      JSON.stringify(persisted.value.headerSubmenuIcon || {}),
 )
 
 const message = ref(null)
@@ -695,6 +719,116 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
         </div>
         <span class="field__hint">主選單（最上層連結）文字大小；留空＝版型預設。套用所有版型。</span>
       </label>
+
+      <!-- 桌機第三層子選單呈現方式 -->
+      <div class="field field--full">
+        <span class="field__label">桌機第三層子選單 <em class="field__live">即時預覽</em></span>
+        <div class="submenu-style">
+          <label
+            v-for="opt in SUBMENU_STYLES"
+            :key="opt.value"
+            :class="{ 'is-on': (state.headerSubmenuStyle || 'flyout') === opt.value }"
+          >
+            <input
+              type="radio"
+              name="submenustyle"
+              :checked="(state.headerSubmenuStyle || 'flyout') === opt.value"
+              @change="setPreview('headerSubmenuStyle', opt.value)"
+            />
+            <strong>{{ opt.label }}</strong>
+            <span>{{ opt.hint }}</span>
+          </label>
+        </div>
+        <span class="field__hint">
+          選單第二層底下若還有第三層，要「往右側飛出浮層」或「在同一個下拉框內往內縮排展開」。套用所有版型。
+        </span>
+      </div>
+
+      <!-- 子選單展開箭頭 icon（形狀 + 線條/實心）— 有子層時自動顯示 -->
+      <div class="field field--full">
+        <span class="field__label">子選單展開箭頭 <em class="field__live">即時預覽</em></span>
+        <div class="expand-picker">
+          <div class="expand-picker__style">
+            <button
+              type="button"
+              :class="{ on: expandStyle === 'line' }"
+              @click="setExpandIcon(expandName, 'line')"
+            >
+              線條
+            </button>
+            <button
+              type="button"
+              :class="{ on: expandStyle === 'solid' }"
+              @click="setExpandIcon(expandName, 'solid')"
+            >
+              實心
+            </button>
+          </div>
+          <div class="expand-picker__grid">
+            <button
+              v-for="ic in EXPAND_OPTIONS"
+              :key="ic.name"
+              type="button"
+              class="expand-picker__opt"
+              :class="{ on: expandName === ic.name }"
+              :title="ic.label"
+              @click="setExpandIcon(ic.name, expandStyle)"
+              v-html="iconPreview(ic.name, expandStyle)"
+            ></button>
+          </div>
+        </div>
+        <span class="field__hint">
+          有子層的項目會自動顯示這顆箭頭。桌機「同框內縮」模式與手機版：點箭頭展開/收合子層（文字本身仍是連結），展開時自動旋轉朝下；桌機「向右飛出」模式：箭頭僅作有子選單的指示。
+        </span>
+      </div>
+
+      <!-- 展開箭頭位置（絕對定位）+ 邊距 -->
+      <div class="field field--full">
+        <span class="field__label">箭頭位置 <em class="field__live">即時預覽</em></span>
+        <div class="submenu-style">
+          <label :class="{ 'is-on': (state.headerSubmenuIconPos || 'right') === 'left' }">
+            <input
+              type="radio"
+              name="iconpos"
+              :checked="(state.headerSubmenuIconPos || 'right') === 'left'"
+              @change="setPreview('headerSubmenuIconPos', 'left')"
+            />
+            <strong>靠左</strong>
+            <span>icon 靠左、文字置中</span>
+          </label>
+          <label :class="{ 'is-on': (state.headerSubmenuIconPos || 'right') === 'right' }">
+            <input
+              type="radio"
+              name="iconpos"
+              :checked="(state.headerSubmenuIconPos || 'right') === 'right'"
+              @change="setPreview('headerSubmenuIconPos', 'right')"
+            />
+            <strong>靠右</strong>
+            <span>文字靠左、icon 靠右</span>
+          </label>
+        </div>
+        <div class="height-input" style="margin-top: 10px">
+          <input
+            type="range"
+            min="0"
+            max="40"
+            step="1"
+            :value="state.headerSubmenuIconOffset ?? 8"
+            @input="setPreview('headerSubmenuIconOffset', Number($event.target.value))"
+          />
+          <div class="height-input__num">
+            <input
+              type="number"
+              min="0"
+              max="80"
+              :value="state.headerSubmenuIconOffset ?? 8"
+              @input="setPreview('headerSubmenuIconOffset', Number($event.target.value) || 0)"
+            />
+            <span>px</span>
+          </div>
+        </div>
+        <span class="field__hint">箭頭採絕對定位，不會擠壓文字。可調與該側邊緣的距離（px）。套用所有版型。</span>
+      </div>
     </div>
 
     <div class="actions">
@@ -1063,6 +1197,97 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
       color: #4fc08d;
       background: #14241d;
     }
+  }
+}
+
+.submenu-style {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  label {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 14px;
+    background: #1a1f2a;
+    border: 1px solid #2a3242;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    strong { font-size: 13px; color: #c8cfdb; }
+    span { font-size: 11px; color: #6a7382; }
+
+    input { display: none; }
+
+    &.is-on {
+      border-color: #4fc08d;
+      background: #14241d;
+      strong { color: #6dd6a3; }
+    }
+  }
+}
+
+.expand-picker {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  background: #1a1f2a;
+  border: 1px solid #2a3242;
+  border-radius: 8px;
+}
+.expand-picker__style {
+  display: inline-flex;
+  border: 1px solid #2a3242;
+  border-radius: 6px;
+  overflow: hidden;
+
+  button {
+    padding: 6px 12px;
+    font-size: 12px;
+    background: #0f1218;
+    color: #8a93a3;
+    border: none;
+    cursor: pointer;
+
+    &.on {
+      background: #4fc08d;
+      color: #0f1218;
+    }
+  }
+}
+.expand-picker__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.expand-picker__opt {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f1218;
+  border: 1px solid #2a3242;
+  border-radius: 6px;
+  color: #c8cfdb;
+  cursor: pointer;
+
+  :deep(svg) {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover { border-color: #4fc08d; }
+  &.on {
+    border-color: #4fc08d;
+    color: #4fc08d;
+    background: #14241d;
   }
 }
 

@@ -2,133 +2,649 @@
   "tw": {
     "header": [
       {
-        "title": "關於佳質",
+        "title": "關於我們",
+        "url": "/about",
+        "data_type": "page",
+        "children": [
+          {
+            "title": "公司簡介",
+            "url": "/about/company-intro",
+            "data_type": "page",
+            "children": []
+          },
+          {
+            "title": "服務團隊",
+            "url": "/about/team",
+            "data_type": "page",
+            "children": [
+              {
+                "title": "設計團隊",
+                "url": "/about/team/design",
+                "data_type": "page",
+                "children": []
+              },
+              {
+                "title": "工程團隊",
+                "url": "/about/team/engineering",
+                "data_type": "page",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "產品系列",
+        "url": "/products",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "產品推薦",
+        "url": "/recommendation",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "客製化服務",
+        "url": "/custom-service",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "最新消息",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "線上型錄",
+        "url": "/catalog",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "聯絡我們",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
+    ],
+    "footer": [
+      {
+        "title": "關於我們",
+        "url": "/about/company-intro",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "最新消息",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "常見問題",
+        "url": "/faq",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "聯絡我們",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
+    ],
+    "mobile": [
+      {
+        "title": "首頁",
+        "url": "/",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "關於我們",
         "url": "/about/company-intro",
         "data_type": "page",
         "children": [
-          { "title": "公司簡介", "url": "/about/company-intro", "data_type": "page", "children": [] },
-          { "title": "服務團隊", "url": "/about/team", "data_type": "page", "children": [] }
+          {
+            "title": "公司簡介",
+            "url": "/about/company-intro",
+            "data_type": "page",
+            "children": []
+          },
+          {
+            "title": "服務團隊",
+            "url": "/about/team",
+            "data_type": "page",
+            "children": [
+              {
+                "title": "設計團隊",
+                "url": "/about/team/design",
+                "data_type": "page",
+                "children": []
+              },
+              {
+                "title": "工程團隊",
+                "url": "/about/team/engineering",
+                "data_type": "page",
+                "children": []
+              }
+            ]
+          }
         ]
       },
-      { "title": "產品系列", "url": "/products", "data_type": "page", "children": [] },
-      { "title": "產品推薦", "url": "/recommendation", "data_type": "page", "children": [] },
-      { "title": "客製化服務", "url": "/custom-service", "data_type": "page", "children": [] },
-      { "title": "最新消息", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "線上型錄", "url": "/catalog", "data_type": "page", "children": [] },
-      { "title": "聯絡我們", "url": "/contact", "data_type": "page", "children": [] }
-    ],
-    "footer": [
-      { "title": "關於我們", "url": "/about/company-intro", "data_type": "page", "children": [] },
-      { "title": "最新消息", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "常見問題", "url": "/faq", "data_type": "page", "children": [] },
-      { "title": "聯絡我們", "url": "/contact", "data_type": "page", "children": [] }
-    ],
-    "mobile": [
-      { "title": "首頁", "url": "/", "data_type": "page", "children": [] },
-      { "title": "關於我們", "url": "/about/company-intro", "data_type": "page", "children": [] },
-      { "title": "最新消息", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "服務據點", "url": "/location", "data_type": "page", "children": [] },
-      { "title": "常見問題", "url": "/faq", "data_type": "page", "children": [] },
-      { "title": "聯絡我們", "url": "/contact", "data_type": "page", "children": [] }
+      {
+        "title": "最新消息",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "服務據點",
+        "url": "/location",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "常見問題",
+        "url": "/faq",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "聯絡我們",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
     ]
   },
   "en": {
     "header": [
       {
-        "title": "About Quality",
+        "title": "About Us",
+        "url": "/about",
+        "data_type": "page",
+        "children": [
+          {
+            "title": "Company",
+            "url": "/about/company-intro",
+            "data_type": "page",
+            "children": []
+          },
+          {
+            "title": "Team",
+            "url": "/about/team",
+            "data_type": "page",
+            "children": [
+              {
+                "title": "Design Team",
+                "url": "/about/team/design",
+                "data_type": "page",
+                "children": []
+              },
+              {
+                "title": "Engineering Team",
+                "url": "/about/team/engineering",
+                "data_type": "page",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Products",
+        "url": "/products",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "Recommendations",
+        "url": "/recommendation",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "Custom Service",
+        "url": "/custom-service",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "News",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "Catalog",
+        "url": "/catalog",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "Contact",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
+    ],
+    "footer": [
+      {
+        "title": "About Us",
+        "url": "/about/company-intro",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "News",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "FAQ",
+        "url": "/faq",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "Contact",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
+    ],
+    "mobile": [
+      {
+        "title": "Home",
+        "url": "/",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "About Us",
         "url": "/about/company-intro",
         "data_type": "page",
         "children": [
-          { "title": "Company", "url": "/about/company-intro", "data_type": "page", "children": [] },
-          { "title": "Team", "url": "/about/team", "data_type": "page", "children": [] }
+          {
+            "title": "公司簡介",
+            "url": "/about/company-intro",
+            "data_type": "page",
+            "children": []
+          },
+          {
+            "title": "服務團隊",
+            "url": "/about/team",
+            "data_type": "page",
+            "children": [
+              {
+                "title": "設計團隊",
+                "url": "/about/team/design",
+                "data_type": "page",
+                "children": []
+              },
+              {
+                "title": "工程團隊",
+                "url": "/about/team/engineering",
+                "data_type": "page",
+                "children": []
+              }
+            ]
+          }
         ]
       },
-      { "title": "Products", "url": "/products", "data_type": "page", "children": [] },
-      { "title": "Recommendations", "url": "/recommendation", "data_type": "page", "children": [] },
-      { "title": "Custom Service", "url": "/custom-service", "data_type": "page", "children": [] },
-      { "title": "News", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "Catalog", "url": "/catalog", "data_type": "page", "children": [] },
-      { "title": "Contact", "url": "/contact", "data_type": "page", "children": [] }
-    ],
-    "footer": [
-      { "title": "About Us", "url": "/about/company-intro", "data_type": "page", "children": [] },
-      { "title": "News", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "FAQ", "url": "/faq", "data_type": "page", "children": [] },
-      { "title": "Contact", "url": "/contact", "data_type": "page", "children": [] }
-    ],
-    "mobile": [
-      { "title": "Home", "url": "/", "data_type": "page", "children": [] },
-      { "title": "About Us", "url": "/about/company-intro", "data_type": "page", "children": [] },
-      { "title": "News", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "Locations", "url": "/location", "data_type": "page", "children": [] },
-      { "title": "FAQ", "url": "/faq", "data_type": "page", "children": [] },
-      { "title": "Contact", "url": "/contact", "data_type": "page", "children": [] }
+      {
+        "title": "News",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "Locations",
+        "url": "/location",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "FAQ",
+        "url": "/faq",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "Contact",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
     ]
   },
   "jp": {
     "header": [
       {
-        "title": "品質について",
+        "title": "私たちについて",
+        "url": "/about",
+        "data_type": "page",
+        "children": [
+          {
+            "title": "会社紹介",
+            "url": "/about/company-intro",
+            "data_type": "page",
+            "children": []
+          },
+          {
+            "title": "チーム",
+            "url": "/about/team",
+            "data_type": "page",
+            "children": [
+              {
+                "title": "デザインチーム",
+                "url": "/about/team/design",
+                "data_type": "page",
+                "children": []
+              },
+              {
+                "title": "エンジニアリングチーム",
+                "url": "/about/team/engineering",
+                "data_type": "page",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "製品シリーズ",
+        "url": "/products",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "おすすめ",
+        "url": "/recommendation",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "カスタムサービス",
+        "url": "/custom-service",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "ニュース",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "オンラインカタログ",
+        "url": "/catalog",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "お問い合わせ",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
+    ],
+    "footer": [
+      {
+        "title": "私たちについて",
+        "url": "/about/company-intro",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "ニュース",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "よくある質問",
+        "url": "/faq",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "お問い合わせ",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
+    ],
+    "mobile": [
+      {
+        "title": "ホーム",
+        "url": "/",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "私たちについて",
         "url": "/about/company-intro",
         "data_type": "page",
         "children": [
-          { "title": "会社紹介", "url": "/about/company-intro", "data_type": "page", "children": [] },
-          { "title": "チーム", "url": "/about/team", "data_type": "page", "children": [] }
+          {
+            "title": "公司簡介",
+            "url": "/about/company-intro",
+            "data_type": "page",
+            "children": []
+          },
+          {
+            "title": "服務團隊",
+            "url": "/about/team",
+            "data_type": "page",
+            "children": [
+              {
+                "title": "設計團隊",
+                "url": "/about/team/design",
+                "data_type": "page",
+                "children": []
+              },
+              {
+                "title": "工程團隊",
+                "url": "/about/team/engineering",
+                "data_type": "page",
+                "children": []
+              }
+            ]
+          }
         ]
       },
-      { "title": "製品シリーズ", "url": "/products", "data_type": "page", "children": [] },
-      { "title": "おすすめ", "url": "/recommendation", "data_type": "page", "children": [] },
-      { "title": "カスタムサービス", "url": "/custom-service", "data_type": "page", "children": [] },
-      { "title": "ニュース", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "オンラインカタログ", "url": "/catalog", "data_type": "page", "children": [] },
-      { "title": "お問い合わせ", "url": "/contact", "data_type": "page", "children": [] }
-    ],
-    "footer": [
-      { "title": "私たちについて", "url": "/about/company-intro", "data_type": "page", "children": [] },
-      { "title": "ニュース", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "よくある質問", "url": "/faq", "data_type": "page", "children": [] },
-      { "title": "お問い合わせ", "url": "/contact", "data_type": "page", "children": [] }
-    ],
-    "mobile": [
-      { "title": "ホーム", "url": "/", "data_type": "page", "children": [] },
-      { "title": "私たちについて", "url": "/about/company-intro", "data_type": "page", "children": [] },
-      { "title": "ニュース", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "店舗一覧", "url": "/location", "data_type": "page", "children": [] },
-      { "title": "よくある質問", "url": "/faq", "data_type": "page", "children": [] },
-      { "title": "お問い合わせ", "url": "/contact", "data_type": "page", "children": [] }
+      {
+        "title": "ニュース",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "店舗一覧",
+        "url": "/location",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "よくある質問",
+        "url": "/faq",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "お問い合わせ",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
     ]
   },
   "kr": {
     "header": [
       {
-        "title": "품질에 대하여",
+        "title": "회사 소개",
+        "url": "/about",
+        "data_type": "page",
+        "children": [
+          {
+            "title": "회사 소개",
+            "url": "/about/company-intro",
+            "data_type": "page",
+            "children": []
+          },
+          {
+            "title": "팀",
+            "url": "/about/team",
+            "data_type": "page",
+            "children": [
+              {
+                "title": "디자인 팀",
+                "url": "/about/team/design",
+                "data_type": "page",
+                "children": []
+              },
+              {
+                "title": "엔지니어링 팀",
+                "url": "/about/team/engineering",
+                "data_type": "page",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "제품 시리즈",
+        "url": "/products",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "추천",
+        "url": "/recommendation",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "맞춤 서비스",
+        "url": "/custom-service",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "최신 소식",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "온라인 카탈로그",
+        "url": "/catalog",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "문의하기",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
+    ],
+    "footer": [
+      {
+        "title": "회사 소개",
+        "url": "/about/company-intro",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "최신 소식",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "자주 묻는 질문",
+        "url": "/faq",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "문의하기",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
+    ],
+    "mobile": [
+      {
+        "title": "홈",
+        "url": "/",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "회사 소개",
         "url": "/about/company-intro",
         "data_type": "page",
         "children": [
-          { "title": "회사 소개", "url": "/about/company-intro", "data_type": "page", "children": [] },
-          { "title": "팀", "url": "/about/team", "data_type": "page", "children": [] }
+          {
+            "title": "公司簡介",
+            "url": "/about/company-intro",
+            "data_type": "page",
+            "children": []
+          },
+          {
+            "title": "服務團隊",
+            "url": "/about/team",
+            "data_type": "page",
+            "children": [
+              {
+                "title": "設計團隊",
+                "url": "/about/team/design",
+                "data_type": "page",
+                "children": []
+              },
+              {
+                "title": "工程團隊",
+                "url": "/about/team/engineering",
+                "data_type": "page",
+                "children": []
+              }
+            ]
+          }
         ]
       },
-      { "title": "제품 시리즈", "url": "/products", "data_type": "page", "children": [] },
-      { "title": "추천", "url": "/recommendation", "data_type": "page", "children": [] },
-      { "title": "맞춤 서비스", "url": "/custom-service", "data_type": "page", "children": [] },
-      { "title": "최신 소식", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "온라인 카탈로그", "url": "/catalog", "data_type": "page", "children": [] },
-      { "title": "문의하기", "url": "/contact", "data_type": "page", "children": [] }
-    ],
-    "footer": [
-      { "title": "회사 소개", "url": "/about/company-intro", "data_type": "page", "children": [] },
-      { "title": "최신 소식", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "자주 묻는 질문", "url": "/faq", "data_type": "page", "children": [] },
-      { "title": "문의하기", "url": "/contact", "data_type": "page", "children": [] }
-    ],
-    "mobile": [
-      { "title": "홈", "url": "/", "data_type": "page", "children": [] },
-      { "title": "회사 소개", "url": "/about/company-intro", "data_type": "page", "children": [] },
-      { "title": "최신 소식", "url": "/news", "data_type": "page", "children": [] },
-      { "title": "매장 안내", "url": "/location", "data_type": "page", "children": [] },
-      { "title": "자주 묻는 질문", "url": "/faq", "data_type": "page", "children": [] },
-      { "title": "문의하기", "url": "/contact", "data_type": "page", "children": [] }
+      {
+        "title": "최신 소식",
+        "url": "/news",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "매장 안내",
+        "url": "/location",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "자주 묻는 질문",
+        "url": "/faq",
+        "data_type": "page",
+        "children": []
+      },
+      {
+        "title": "문의하기",
+        "url": "/contact",
+        "data_type": "page",
+        "children": []
+      }
     ]
   }
 }
