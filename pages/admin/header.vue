@@ -62,6 +62,30 @@ const onBgAlphaInput = (a) => {
   setPreview('headerBgColor', composeColor(customHex.value, a))
 }
 
+// ── 捲動後（.scroll）Header 背景色（與上面平行；'default' 模式＝沿用未捲動 bg、不覆寫） ──
+const _initS = parseColor(state.headerBgColorScroll)
+const customHexScroll = ref(_initS.hex)
+const customAlphaScroll = ref(_initS.alpha)
+const bgModeScroll = computed(() => {
+  const v = state.headerBgColorScroll || ''
+  if (!v) return 'default'
+  if (v === 'transparent') return 'transparent'
+  return 'custom'
+})
+const setBgModeScroll = (mode) => {
+  if (mode === 'default') setPreview('headerBgColorScroll', '')
+  else if (mode === 'transparent') setPreview('headerBgColorScroll', 'transparent')
+  else setPreview('headerBgColorScroll', composeColor(customHexScroll.value, customAlphaScroll.value))
+}
+const onBgColorInputScroll = (hex) => {
+  customHexScroll.value = hex
+  setPreview('headerBgColorScroll', composeColor(hex, customAlphaScroll.value))
+}
+const onBgAlphaInputScroll = (a) => {
+  customAlphaScroll.value = a
+  setPreview('headerBgColorScroll', composeColor(customHexScroll.value, a))
+}
+
 // 選單（menu）顏色欄位（全站共用，留空＝版型預設）；def 僅為色票初始顯示值
 const MENU_COLOR_FIELDS = [
   { key: 'headerMenuColor', name: '主選單文字色', def: '#333333' },
@@ -81,6 +105,16 @@ const MENU_COLOR_FIELDS = [
 // 任一選單色有設值 → 顯示「全部回到預設」；一鍵把 6 個顏色全清回版型預設
 const hasAnyMenuColor = computed(() => MENU_COLOR_FIELDS.some((f) => state[f.key]))
 const resetMenuColors = () => MENU_COLOR_FIELDS.forEach((f) => setPreview(f.key, ''))
+
+// 捲動後（header 加 .scroll）的選單顏色：與上面同一組欄位，key 後綴 Scroll；空＝沿用未捲動色。
+// 給 Header09 / Header02 等「捲動會變色」的版型用 — 捲動後可套不同文字 / 背景 / 圖示色。
+const SCROLL_MENU_COLOR_FIELDS = MENU_COLOR_FIELDS.map((f) => ({
+  key: f.key + 'Scroll',
+  name: f.name,
+  def: f.def,
+}))
+const hasAnyScrollMenuColor = computed(() => SCROLL_MENU_COLOR_FIELDS.some((f) => state[f.key]))
+const resetScrollMenuColors = () => SCROLL_MENU_COLOR_FIELDS.forEach((f) => setPreview(f.key, ''))
 // 手動輸入 hex：失焦時若是純 hex 數字（漏打 #）自動補上；空＝交還版型預設
 const onHexNormalize = (key, value) => {
   const v = (value || '').trim()
@@ -145,12 +179,14 @@ const dirty = computed(
       'logoMaxHeight',
       'customCss',
       'headerBgColor',
+      'headerBgColorScroll',
       'headerMenuFontSize',
       'headerSubmenuStyle',
       'headerSubmenuIconPos',
       'headerSubmenuIconOffset',
     ].some(isDirtyKey) ||
     MENU_COLOR_FIELDS.some((f) => isDirtyKey(f.key)) ||
+    SCROLL_MENU_COLOR_FIELDS.some((f) => isDirtyKey(f.key)) ||
     RADIUS_FIELDS.some((f) => isDirtyKey(f.key)) ||
     DROPDOWN_BOX_FIELDS.some((f) => isDirtyKey(f.key)) ||
     JSON.stringify(state.headerIcons || {}) !==
@@ -492,8 +528,70 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
           </div>
         </div>
         <span class="field__hint">
-          強制套用到所有狀態（含捲動後 / 內頁）。<strong>透明</strong>可讓 header 疊在 banner 上；
+          強制套用到所有狀態（含內頁）。<strong>透明</strong>可讓 header 疊在 banner 上；
           <strong>版型預設</strong>＝交還給版型自身設計（含原本捲動變色效果）。
+          捲動後想換別的底色 → 用下方「捲動後 Header 背景色」。
+        </span>
+      </div>
+
+      <!-- 捲動後（.scroll）Header 背景色：捲動後可換不同底色；沿用未捲動＝不覆寫 -->
+      <div class="field field--full">
+        <span class="field__label">捲動後 Header 背景色 <em class="field__live">即時預覽</em></span>
+        <div class="bg-picker">
+          <div class="bg-picker__modes">
+            <label :class="{ 'is-on': bgModeScroll === 'default' }">
+              <input
+                type="radio"
+                name="bgmode-scroll"
+                :checked="bgModeScroll === 'default'"
+                @change="setBgModeScroll('default')"
+              />
+              沿用未捲動
+            </label>
+            <label :class="{ 'is-on': bgModeScroll === 'transparent' }">
+              <input
+                type="radio"
+                name="bgmode-scroll"
+                :checked="bgModeScroll === 'transparent'"
+                @change="setBgModeScroll('transparent')"
+              />
+              透明
+            </label>
+            <label :class="{ 'is-on': bgModeScroll === 'custom' }">
+              <input
+                type="radio"
+                name="bgmode-scroll"
+                :checked="bgModeScroll === 'custom'"
+                @change="setBgModeScroll('custom')"
+              />
+              指定顏色
+            </label>
+          </div>
+
+          <div v-if="bgModeScroll === 'custom'" class="bg-picker__custom">
+            <input
+              type="color"
+              :value="customHexScroll"
+              @input="onBgColorInputScroll($event.target.value)"
+            />
+            <div class="bg-picker__alpha">
+              <span>不透明度</span>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                :value="customAlphaScroll"
+                @input="onBgAlphaInputScroll(Number($event.target.value))"
+              />
+              <span class="bg-picker__alpha-num">{{ customAlphaScroll }}%</span>
+            </div>
+            <code class="bg-picker__val">{{ state.headerBgColorScroll }}</code>
+          </div>
+        </div>
+        <span class="field__hint">
+          只在「header 捲動後加上 <code>.scroll</code>」時套用（例如 Header09 / Header02）。
+          <strong>沿用未捲動</strong>＝不覆寫，捲動後沿用上面那組背景色。
         </span>
       </div>
 
@@ -541,6 +639,53 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
         <span class="field__hint">
           套用到所有版型的選單連結與下拉子選單；留空＝交還版型自身配色。
           下拉文字色與主選單文字色分開控制。
+        </span>
+      </div>
+
+      <!-- 捲動後（.scroll）選單顏色：同上每個欄位，捲動後可套不同色；留空＝沿用上面未捲動色 -->
+      <div class="field field--full">
+        <span class="field__label">
+          捲動後選單顏色 <em class="field__live">即時預覽</em>
+          <button
+            v-if="hasAnyScrollMenuColor"
+            type="button"
+            class="btn btn--ghost btn--sm"
+            @click="resetScrollMenuColors"
+          >
+            全部回到預設
+          </button>
+        </span>
+        <div class="menu-colors">
+          <div v-for="f in SCROLL_MENU_COLOR_FIELDS" :key="f.key" class="menu-colors__row">
+            <span class="menu-colors__name">{{ f.name }}</span>
+            <input
+              type="color"
+              :value="state[f.key] || f.def"
+              @input="setPreview(f.key, $event.target.value)"
+            />
+            <input
+              type="text"
+              class="menu-colors__hex"
+              :value="state[f.key]"
+              placeholder="沿用未捲動色"
+              spellcheck="false"
+              maxlength="25"
+              @input="setPreview(f.key, $event.target.value)"
+              @change="onHexNormalize(f.key, $event.target.value)"
+            />
+            <button
+              v-if="state[f.key]"
+              type="button"
+              class="btn btn--ghost btn--sm"
+              @click="setPreview(f.key, '')"
+            >
+              回到預設
+            </button>
+          </div>
+        </div>
+        <span class="field__hint">
+          只在「header 捲動後加上 <code>.scroll</code>」時套用（例如 Header09 / Header02 捲動會變色的版型）。
+          每個欄位留空＝沿用上面「選單顏色」那組（未捲動）的值。
         </span>
       </div>
 

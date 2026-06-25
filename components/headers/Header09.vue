@@ -465,9 +465,9 @@ body:not([data-page="index"]) .header09 .navtool {
 
   .bars {
     position: relative;
-    width: fluid(34);
+    width: 34px;
     height: 1px;
-    margin: fluid(9) 0;
+    margin: 9px 0;
 
     .bar {
       position: absolute;
@@ -476,18 +476,18 @@ body:not([data-page="index"]) .header09 .navtool {
       width: 100%;
       height: 100%;
       background: #fff;
-      border-radius: fluid(10);
+      border-radius: 10px;
 
       &.bar1 {
-        top: fluid(-9);
-        left: fluid(9);
-        width: fluid(25);
+        top: -9px;
+        left: 9px;
+        width: 25px;
         transform-origin: left top;
         transition: all 0.5s $ani_bezier_7;
       }
       &.bar2 { transition: all 0.5s $ani_bezier_7; }
       &.bar3 {
-        top: fluid(9);
+        top: 9px;
         transform-origin: left bottom;
         transition: all 0.5s $ani_bezier_7;
       }
@@ -502,12 +502,12 @@ body:not([data-page="index"]) .header09 .navtool {
   &.active .bars .bar {
     &.bar1 {
       left: 0;
-      width: fluid(38);
+      width: 38px;
       transform: rotate(27.5deg);
     }
     &.bar2 { opacity: 0; }
     &.bar3 {
-      width: fluid(38);
+      width: 38px;
       transform: rotate(-27.5deg);
     }
   }

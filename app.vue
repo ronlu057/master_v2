@@ -17,6 +17,12 @@ const siteStyleContent = computed(() => {
     ? `:root { --header-bg-color: ${bg}; }
 .app-header header { background: var(--header-bg-color) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }`
     : ''
+  // 捲動後（header 加 .scroll）的背景色覆寫；空＝沿用未捲動的 headerBg。
+  // 目標是「帶 .scroll 的 header 本人」→ 用 header.scroll（權重高於上面 header，且只有捲動後才有）。
+  const bgScroll = (siteState.headerBgColorScroll || '').trim()
+  const headerBgScroll = bgScroll
+    ? `.app-header header.scroll { background: ${bgScroll} !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }`
+    : ''
 
   // 後台指定的「選單」顏色 → 強制套到 .app-header nav 的連結與下拉子選單（空＝交還版型預設）。
   //   文字色 / 滑鼠滑過(含 focus / active) 色 / 下拉背景色，各自有值才注入。
@@ -169,6 +175,56 @@ const siteStyleContent = computed(() => {
     .filter(Boolean)
     .join('\n')
 
+  // ── 捲動後（header 加 .scroll）的選單顏色覆寫 ───────────────────────
+  // 把上面同一組選擇器前面插入 .scroll（權重更高、且只有捲動後才有 .scroll）→ 捲動後套這組色。
+  // 每個欄位空＝沿用未捲動那組顏色（不額外注入）。
+  const scrollify = (selList) =>
+    selList
+      .split(',')
+      .map((s) => s.trim().replace(/^\.app-header /, '.app-header .scroll '))
+      .join(', ')
+  const sTop = scrollify(top)
+  const sDropBoxSel = scrollify(dropBoxSel)
+  const sSub = scrollify(sub)
+  const sSubHover = scrollify(subHover)
+  const sNavIcon = scrollify(navIcon)
+  const sMenuColor = (siteState.headerMenuColorScroll || '').trim()
+  const sMenuHover = (siteState.headerMenuHoverColorScroll || '').trim()
+  const sDropColor = (siteState.headerDropdownColorScroll || '').trim()
+  const sDropHover = (siteState.headerDropdownHoverColorScroll || '').trim()
+  const sDropBg = (siteState.headerDropdownBgScroll || '').trim()
+  const sDropItemBg = (siteState.headerDropdownItemBgScroll || '').trim()
+  const sDropItemHoverBg = (siteState.headerDropdownItemHoverBgScroll || '').trim()
+  const sDropBorderColor = (siteState.headerDropdownBorderColorScroll || '').trim()
+  const sDropItemBorderColor = (siteState.headerDropdownItemBorderColorScroll || '').trim()
+  const sIconColor = (siteState.headerIconColorScroll || '').trim()
+  const sIconHover = (siteState.headerIconHoverColorScroll || '').trim()
+  const sIconBg = (siteState.headerIconBgScroll || '').trim()
+  const sIconHoverBg = (siteState.headerIconHoverBgScroll || '').trim()
+  const scrollMenuCss = [
+    sMenuColor && `${sTop} { color: ${sMenuColor} !important; }`,
+    sMenuHover &&
+      `${sTop}:hover, ${sTop}:focus, ${sTop}:focus-within, ${sTop}.router-link-active { color: ${sMenuHover} !important; }`,
+    sDropBg && `${sDropBoxSel} { background: ${sDropBg} !important; }`,
+    sDropItemBg && `${sSub} { background: ${sDropItemBg} !important; }`,
+    sDropColor && `${sSub} { color: ${sDropColor} !important; }`,
+    sDropHover && `${sSubHover} { color: ${sDropHover} !important; }`,
+    sDropItemHoverBg && `${sSubHover} { background: ${sDropItemHoverBg} !important; }`,
+    sIconColor &&
+      `.app-header .scroll .navtool .icon, .app-header .scroll .navtool .navtool_text { color: ${sIconColor} !important; }`,
+    sIconHover &&
+      `.app-header .scroll .navtool :hover > .icon, .app-header .scroll .navtool .icon:hover, .app-header .scroll .navtool :hover > .navtool_text { color: ${sIconHover} !important; }`,
+    sIconBg &&
+      `${sNavIcon} { background: ${sIconBg} !important; padding: 0.45em !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; }`,
+    sIconHoverBg && `${sNavIcon}:hover, ${sNavIcon}:focus-within { background: ${sIconHoverBg} !important; }`,
+    sDropBorderColor &&
+      `${sDropBoxSel} { border-color: ${sDropBorderColor} !important; border-style: solid !important; }`,
+    sDropItemBorderColor &&
+      `${sSub} { border-color: ${sDropItemBorderColor} !important; border-style: solid !important; }`,
+  ]
+    .filter(Boolean)
+    .join('\n')
+
   // navtool 換 icon：依後台選擇覆寫對應 .icon-XXX 的 mask-image（line / solid 即時切換）
   const icons = siteState.headerIcons || {}
   const iconCss = HEADER_ICON_SLOTS.map(({ slot, cls }) => {
@@ -256,7 +312,7 @@ const siteStyleContent = computed(() => {
   const navCss = (navVars ? `:root { ${navVars} }` : '') + (dotsHideCss ? `\n${dotsHideCss}` : '')
 
   const customCss = siteState.customCss || ''
-  return `${cssVars}\n${headerBg}\n${menuCss}\n${iconCss}\n${subIconCss}\n${flyoutOverflowCss}\n${bannerCss}\n${navCss}\n${customCss}`
+  return `${cssVars}\n${headerBg}\n${headerBgScroll}\n${menuCss}\n${scrollMenuCss}\n${iconCss}\n${subIconCss}\n${flyoutOverflowCss}\n${bannerCss}\n${navCss}\n${customCss}`
 })
 
 // i18n（useI18n / useLocaleHead 必須在 setup 頂層呼叫，不能進 computed / function 內）

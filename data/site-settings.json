@@ -1,6 +1,6 @@
 {
   "projectType": "module",
-  "header": "Header09",
+  "header": "Header14",
   "pageBanner": "PageBanner01",
   "blockBanner": "BlockBanner01",
   "apiBase": "",
@@ -363,5 +363,19 @@
   "bannerDotW": 10,
   "bannerDotH": 10,
   "bannerDotActiveW": 12,
-  "bannerDotActiveH": 12
+  "bannerDotActiveH": 12,
+  "headerMenuColorScroll": "",
+  "headerBgColorScroll": "#ffffff",
+  "headerMenuHoverColorScroll": "",
+  "headerDropdownColorScroll": "",
+  "headerDropdownHoverColorScroll": "",
+  "headerDropdownBgScroll": "",
+  "headerDropdownItemBgScroll": "",
+  "headerDropdownItemHoverBgScroll": "",
+  "headerDropdownBorderColorScroll": "",
+  "headerDropdownItemBorderColorScroll": "",
+  "headerIconColorScroll": "",
+  "headerIconHoverColorScroll": "",
+  "headerIconBgScroll": "",
+  "headerIconHoverBgScroll": ""
 }

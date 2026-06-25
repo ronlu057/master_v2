@@ -74,6 +74,24 @@
         },
         "btnText": "",
         "link": "/shop"
+      },
+      {
+        "image": {
+          "pc": "/img/tw/banner/banner-1782380636972.jpg",
+          "mb": "/img/tw/banner/banner-1782380636972.jpg"
+        },
+        "alt": "深色背景上，一束粉色、紫色、綠色花朵",
+        "title": {
+          "tw": "花漾闇夜，視覺盛宴"
+        },
+        "subtitle": {
+          "tw": "粉紫綻放，綠意點綴，深邃網頁設計"
+        },
+        "memo": {
+          "tw": "獨特花卉意象，打造沉浸式網頁體驗，展現您的非凡品味。"
+        },
+        "btnText": "",
+        "link": "/shop"
       }
     ],
     "news": [

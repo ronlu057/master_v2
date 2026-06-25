@@ -268,7 +268,8 @@ body[data-page="index"] {
         }
         &::after {
           opacity: 0;
-          transition: opacity 0s 0s;
+          // 與 .logo 的 all 0.3s 同步（原本是瞬間切換 → 兩層不同步）
+          transition: opacity 0.3s;
         }
 
         .logo {
@@ -438,7 +439,8 @@ body[data-page="index"] {
       height: 100%;
       background: #fff;
       z-index: 1;
-      transition: opacity 0s 0.3s;
+      // 與 .logo 的 all 0.3s 同步（原本瞬間＋延遲 → 比 logo 慢、不同步）
+      transition: opacity 0.3s;
     }
   }
 

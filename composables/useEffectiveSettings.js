@@ -34,6 +34,8 @@ export function useEffectiveSettings() {
       // Header 背景色（全站共用）：''＝用版型自身預設、'transparent'＝透明、其餘＝色碼/rgba。
       // 由 app.vue 注入 !important 規則，強制套用到所有狀態（含捲動後 / 內頁）
       headerBgColor: pub.headerBgColor || '',
+      // 捲動後（.scroll）Header 背景色覆寫；''＝沿用未捲動 headerBgColor、'transparent'＝透明、其餘＝色碼
+      headerBgColorScroll: pub.headerBgColorScroll || '',
       // 選單（menu）顏色（全站共用，空＝交還版型預設）：文字色 / 滑鼠滑過色 / 下拉背景色
       // 由 app.vue 注入 !important 規則，套用到 .app-header nav 連結與下拉子選單
       headerMenuColor: pub.headerMenuColor || '',
@@ -60,6 +62,21 @@ export function useEffectiveSettings() {
       headerDropdownItemPaddingX: pub.headerDropdownItemPaddingX ?? '', // 下拉單項內距（左右）px
       headerDropdownItemBorderWidth: pub.headerDropdownItemBorderWidth ?? '', // 下拉單項框線粗細 px
       headerDropdownItemBorderColor: pub.headerDropdownItemBorderColor || '', // 下拉單項框線顏色
+      // ── 捲動後（header 加上 .scroll）的選單顏色覆寫；空＝沿用上面那組（未捲動）顏色 ──
+      // 由 app.vue 注入「.app-header .scroll …」較高權重規則，只在捲動後套用（給 Header09/02 等捲動變色版型）
+      headerMenuColorScroll: pub.headerMenuColorScroll || '',
+      headerMenuHoverColorScroll: pub.headerMenuHoverColorScroll || '',
+      headerDropdownColorScroll: pub.headerDropdownColorScroll || '',
+      headerDropdownHoverColorScroll: pub.headerDropdownHoverColorScroll || '',
+      headerDropdownBgScroll: pub.headerDropdownBgScroll || '',
+      headerDropdownItemBgScroll: pub.headerDropdownItemBgScroll || '',
+      headerDropdownItemHoverBgScroll: pub.headerDropdownItemHoverBgScroll || '',
+      headerDropdownBorderColorScroll: pub.headerDropdownBorderColorScroll || '',
+      headerDropdownItemBorderColorScroll: pub.headerDropdownItemBorderColorScroll || '',
+      headerIconColorScroll: pub.headerIconColorScroll || '',
+      headerIconHoverColorScroll: pub.headerIconHoverColorScroll || '',
+      headerIconBgScroll: pub.headerIconBgScroll || '',
+      headerIconHoverBgScroll: pub.headerIconHoverBgScroll || '',
       // navtool 各 slot 換 icon：{ [slot]: { name, style:'line'|'solid' } }；空＝用 icons.scss 預設 SVG
       headerIcons: {},
       // 桌機第三層子選單呈現方式：'flyout'＝滑到第二層往右飛出、'nested'＝同框內向右縮排展開
