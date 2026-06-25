@@ -1,6 +1,6 @@
 {
   "projectType": "module",
-  "header": "Header01",
+  "header": "Header09",
   "pageBanner": "PageBanner01",
   "blockBanner": "BlockBanner01",
   "apiBase": "",
@@ -9,7 +9,7 @@
   "logo": "",
   "logoMaxHeight": 46,
   "customCss": "",
-  "headerBgColor": "#f2f2f2",
+  "headerBgColor": "transparent",
   "langLabels": {},
   "navtool": {
     "Header07": {

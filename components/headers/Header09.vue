@@ -180,11 +180,11 @@ onBeforeUnmount(() => {
     :aria-label="$t('aria.menu')"
     @click="ui.toggleMenu"
   >
-    <span class="bars">
-      <span class="bar bar1"></span>
-      <span class="bar bar2"></span>
-      <span class="bar bar3"></span>
-    </span>
+    <div class="bars">
+      <div class="bar bar1"></div>
+      <div class="bar bar2"></div>
+      <div class="bar bar3"></div>
+    </div>
   </button>
 
   <!-- 行動版 / 漢堡開啟時的下拉選單 -->
@@ -449,20 +449,19 @@ body:not([data-page="index"]) .header09 .navtool {
 
 // ── 浮動漢堡（外層獨立元素） ──────────────────────────────
 .mbPanel_btn09 {
-  position: fixed;
-  top: fluid(26);
-  right: 4.1667vw;
+  // 參考原版：position: absolute、z-index: 110（v2 原本用 fixed + 70 會被 banner/彈窗蓋住而看不見）
+  position: absolute;
+  top: 26px;
+  right: 30px;
   background: none;
   border: none;
   cursor: pointer;
   opacity: 1;
   pointer-events: auto;
-  z-index: $z_mbPanel_btn;
+  z-index: 110;
   transition: all 0.5s $ani_bezier_7;
 
-  @include rwd-1440 { right: 2.5vw; }
-  @include rwd-1200 { right: 30px; }
-  @include rwd-480  { right: 25px; }
+  @include rwd-480 { right: 25px; }
 
   .bars {
     position: relative;
