@@ -303,10 +303,8 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
   a {
     display: block;
     position: relative;
-    color: #fff;
     font-size: fluid-fz(14);
-    width: fluid(30);
-    height: fluid(30);
+    @include banner-nav-vars(fluid(30), 0, #fff, transparent);
 
     svg {
       position: absolute;

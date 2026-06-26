@@ -14,6 +14,7 @@ export function bannerRowColorCss(rows, prefix = 'js-banner-row') {
     .map((r, i) => {
       const decls = []
       if (r?.titleColor) decls.push(`--banner-title-color: ${r.titleColor};`)
+      if (r?.titleSpanColor) decls.push(`--banner-titlespan-color: ${r.titleSpanColor};`)
       if (r?.subtitleColor) decls.push(`--banner-subtitle-color: ${r.subtitleColor};`)
       if (r?.memoColor) decls.push(`--banner-memo-color: ${r.memoColor};`)
       return decls.length ? `.${prefix}-${i} { ${decls.join(' ')} }` : ''

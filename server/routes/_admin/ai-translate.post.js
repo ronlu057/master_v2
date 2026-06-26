@@ -2,26 +2,8 @@
 // body: { text, targets: ['en','jp','kr'], source?: 'tw' }
 //   回 { ok, translations: { en, jp, kr } }
 // 金鑰：.env.local 的 NUXT_GEMINI_KEY（與 ai-generate 共用，assertDev 守門，不會上線）
-import fs from 'node:fs'
-import path from 'node:path'
-import { assertDev, readEnv } from '../../admin/utils.js'
-
-const API = 'https://generativelanguage.googleapis.com/v1beta/models'
-
-// 讀 .env.local（私密、不納版控）→ 金鑰優先放這
-const readEnvLocal = () => {
-  const p = path.join(process.cwd(), '.env.local')
-  if (!fs.existsSync(p)) return {}
-  const out = {}
-  fs.readFileSync(p, 'utf8').split('\n').forEach((line) => {
-    const t = line.trim()
-    if (!t || t.startsWith('#')) return
-    const i = t.indexOf('=')
-    if (i < 0) return
-    out[t.slice(0, i).trim()] = t.slice(i + 1).trim()
-  })
-  return out
-}
+import { assertDev } from '../../admin/utils.js'
+import { callGemini, geminiText } from '../../admin/gemini.js'
 
 const LANG_NAMES = {
   tw: 'Traditional Chinese',
@@ -43,21 +25,6 @@ export default defineEventHandler(async (event) => {
   if (!text) throw createError({ statusCode: 400, message: 'text 不可為空' })
   if (!targets.length) return { ok: true, translations: {} }
 
-  const local = readEnvLocal()
-  const key = process.env.NUXT_GEMINI_KEY || local.NUXT_GEMINI_KEY || readEnv().NUXT_GEMINI_KEY
-  if (!key) {
-    throw createError({
-      statusCode: 400,
-      message: '尚未設定 NUXT_GEMINI_KEY，請到 .env.local 填入 Gemini API 金鑰',
-    })
-  }
-
-  const model =
-    process.env.NUXT_GEMINI_MODEL ||
-    local.NUXT_GEMINI_MODEL ||
-    readEnv().NUXT_GEMINI_MODEL ||
-    'gemini-2.5-flash'
-
   const sourceName = LANG_NAMES[source] || 'Traditional Chinese'
   const targetSpec = targets.map((t) => `"${t}" (${LANG_NAMES[t] || t})`).join(', ')
   // 英文指令 + 把待譯文字放最後並清楚標示，避免模型把指令中的字當成待譯內容
@@ -77,29 +44,9 @@ export default defineEventHandler(async (event) => {
     responseMimeType: 'application/json',
   }
 
-  // 模型備援：設定的模型優先，失敗就退到 flash / lite
-  const candidates = [...new Set([model, 'gemini-2.5-flash', 'gemini-2.5-flash-lite'])]
-  let data = null
-  let lastErr = null
-  for (const m of candidates) {
-    try {
-      data = await $fetch(`${API}/${m}:generateContent?key=${key}`, {
-        method: 'POST',
-        body: { contents: [{ parts: [{ text: prompt }] }], generationConfig: genConfig },
-      })
-      lastErr = null
-      break
-    } catch (e) {
-      lastErr = e
-    }
-  }
-  if (!data) {
-    const msg = lastErr?.data?.error?.message || lastErr?.statusMessage || lastErr?.message
-    throw createError({ statusCode: 502, message: `Gemini 呼叫失敗：${msg}` })
-  }
-
-  const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
-  if (!raw) throw createError({ statusCode: 502, message: 'Gemini 沒有回傳內容' })
+  // 模型備援 + 暫時性錯誤（尖峰過載）自動重試，全在 callGemini 內處理
+  const data = await callGemini({ contents: [{ parts: [{ text: prompt }] }], generationConfig: genConfig })
+  const raw = geminiText(data)
 
   let obj
   try {

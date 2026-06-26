@@ -26,6 +26,7 @@ import 'swiper/css/effect-fade'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
+defineOptions({ supportsVideo: true }) // 此版型會渲染背景影片 → 後台才顯示影片欄位
 const props = defineProps({
   title: { type: String, default: '' },
   rows: { type: Array, default: () => [] },
@@ -389,20 +390,16 @@ const toggleSound = () => { muted.value = !muted.value }
 // ── 左右箭頭（border V-chevron；桌面 1024 以下隱藏） ──────
 .banner_arrow {
   position: absolute;
-  left: calc(4vw - 10px);
+  @include banner-nav-gap(left, calc(4vw - 10px));
   z-index: 3;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: fluid(40);
-  height: fluid(40);
-  background: none;
+  @include banner-nav-vars(fluid(40), 0, $web_font_color, none);
   border: none;
   cursor: pointer;
-  color: $web_font_color;
   transition: all 0.3s;
 
-  @media (max-width: 1200px) { width: 35px; height: 35px; }
   @media (max-width: 1024px) { display: none; }
 
   // 邊框畫 V 形箭頭

@@ -35,13 +35,16 @@ export function useBannerPreview() {
 
   const isPreviewing = computed(() => !!preview.value)
 
-  // 寫回 banners.json：取現有整包 → 換掉 home（保留 page/common/news 既有欄位）→ POST
+  // 寫回 banners.json：取現有整包 → 把預覽內容寫進「目前版型」那一份（保留 page/common/news/其他版型）→ POST
   const commit = async () => {
     if (!preview.value) return { ok: true }
     try {
+      const { state } = useEffectiveSettings()
+      const layout = preview.value._layout || state.blockBanner // 寫回預覽所屬的版型
       const res = await $fetch('/_admin/mock', { params: { name: 'banners' } })
       const doc = res?.parsed || {}
-      doc.home = { ...(doc.home || {}), ...preview.value }
+      doc.home = setBannerContent(doc.home, layout, preview.value)
+      if (preview.value.news) doc.home.news = preview.value.news
       await $fetch('/_admin/mock', { method: 'POST', body: { name: 'banners', content: doc } })
       return { ok: true }
     } catch (e) {

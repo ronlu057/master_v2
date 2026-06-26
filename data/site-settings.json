@@ -1,8 +1,8 @@
 {
   "projectType": "module",
-  "header": "Header16",
+  "header": "Header01",
   "pageBanner": "PageBanner01",
-  "blockBanner": "BlockBanner01",
+  "blockBanner": "BlockBanner03",
   "apiBase": "",
   "defaultLang": "tw",
   "enableShop": false,
@@ -279,7 +279,7 @@
       ]
     }
   },
-  "headerMenuColor": "#474747",
+  "headerMenuColor": "#ffffff",
   "headerMenuHoverColor": "#4fc08d",
   "headerDropdownBg": "#f5f5f5",
   "headerDropdownItemBg": "#ffffff",
@@ -308,14 +308,14 @@
     }
   },
   "headerMenuFontSize": "",
-  "headerIconColor": "#454545",
+  "headerIconColor": "#ffffff",
   "headerIconHoverColor": "#54c08f",
   "headerDropdownRadius": 7,
   "headerDropdownItemRadius": 5,
   "headerDropdownItemHoverBg": "#d5dbdc",
-  "bannerTitleColor": "#e60000",
-  "bannerSubtitleColor": "#ffffff",
-  "bannerMemoColor": "#ffffff",
+  "bannerTitleColor": "",
+  "bannerSubtitleColor": "",
+  "bannerMemoColor": "",
   "enabledLangs": [
     "tw",
     "en",
@@ -345,21 +345,21 @@
   "bannerNav": true,
   "bannerNavIcon": {
     "name": "chevron",
-    "style": "line"
+    "style": "solid"
   },
-  "bannerNavSize": 74,
+  "bannerNavSize": 120,
   "bannerNavRadius": 0,
   "bannerNavColor": "",
-  "bannerNavBg": "rgba(0,0,0,0.88)",
-  "bannerNavIconSize": 70,
-  "bannerNavGap": 50,
+  "bannerNavBg": "rgba(255,255,255,0.00)",
+  "bannerNavIconSize": 100,
+  "bannerNavGap": 30,
   "bannerDotBg": "",
   "bannerDotActiveBg": "",
   "bannerDotBorderWidth": 0,
   "bannerDotBorderColor": "",
   "bannerDotSize": 10,
   "bannerDotActiveSize": 12,
-  "bannerDots": true,
+  "bannerDots": false,
   "bannerDotW": 10,
   "bannerDotH": 10,
   "bannerDotActiveW": 12,
@@ -377,5 +377,32 @@
   "headerIconColorScroll": "",
   "headerIconHoverColorScroll": "",
   "headerIconBgScroll": "",
-  "headerIconHoverBgScroll": ""
+  "headerIconHoverBgScroll": "",
+  "bannerStyles": {
+    "BlockBanner03": {
+      "bannerTitleColor": "",
+      "bannerSubtitleColor": "",
+      "bannerMemoColor": "",
+      "bannerNav": true,
+      "bannerNavIcon": {
+        "name": "chevron",
+        "style": "solid"
+      },
+      "bannerNavSize": 120,
+      "bannerNavRadius": 0,
+      "bannerNavColor": "",
+      "bannerNavBg": "rgba(255,255,255,0.00)",
+      "bannerNavIconSize": 100,
+      "bannerNavGap": 30,
+      "bannerDots": false,
+      "bannerDotBg": "",
+      "bannerDotActiveBg": "",
+      "bannerDotBorderWidth": 0,
+      "bannerDotBorderColor": "",
+      "bannerDotW": 10,
+      "bannerDotH": 10,
+      "bannerDotActiveW": 12,
+      "bannerDotActiveH": 12
+    }
+  }
 }

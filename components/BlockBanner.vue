@@ -26,12 +26,15 @@ const { data: banner } = await useApiData('/banner/home', {
 
 // 後台「即時預覽」覆寫：banner 後台編輯中 → 站台即時套用、免存檔/重整。
 // preview 由 plugins/admin-preview.client.js 於 client 啟動時載入（共用 useState）；
-// 一般使用者無預覽 → preview=null → 用已存檔資料（eff = banner.value）。
+// preview.value 是「某版型」解析後的內容 { rows, videoUrl, videoFile, news, _layout }。
+// 只有當預覽的 _layout 與目前版型相符才套用，否則交還已存檔內容
+// → 避免「在 A 版型編輯的影片/內容」跑到 B 版型上（跨版型外洩）。
 const { preview: bannerPreview } = useBannerPreview()
-const eff = computed(() => {
-  const b = banner.value || {}
-  return bannerPreview.value ? { ...b, ...bannerPreview.value } : b
-})
+const eff = computed(() =>
+  bannerPreview.value && bannerPreview.value._layout === state.blockBanner
+    ? bannerPreview.value
+    : resolveBannerContent(banner.value || {}, state.blockBanner),
+)
 
 // 多語系文字解析：title/subtitle/memo 可為字串（舊資料）或多語系物件 { tw,en,jp,kr }。
 // 依目前語系取值，缺則 fallback 預設語系 / tw / 第一個有值的。版型仍收到「字串」，免逐版型改。
@@ -46,8 +49,10 @@ const resolvedRows = computed(() =>
   (eff.value.rows || []).map((r) => ({
     ...r,
     title: pickLang(r.title),
+    titleSpan: pickLang(r.titleSpan), // BlockBanner03：主標大字前綴
     subtitle: pickLang(r.subtitle),
     memo: pickLang(r.memo),
+    note: pickLang(r.note), // BlockBanner03：第四行備註（代理…）
   })),
 )
 

@@ -118,6 +118,9 @@ export function useEffectiveSettings() {
       bannerDotH: pub.bannerDotH === undefined ? 10 : Number(pub.bannerDotH), // 預設高
       bannerDotActiveW: pub.bannerDotActiveW === undefined ? 12 : Number(pub.bannerDotActiveW), // 選中寬
       bannerDotActiveH: pub.bannerDotActiveH === undefined ? 12 : Number(pub.bannerDotActiveH), // 選中高
+      // Banner 各 BlockBanner 版型各自一組設定 { [版型名]: { ...banner* } }；
+      // 執行期不直接讀（仍以上面的扁平 banner* 為「目前啟用版型」值），僅供後台切版型還原。
+      bannerStyles: {},
       // 啟用語系（站台實際提供的語系碼陣列）；空＝全部啟用（fallback）。
       // 控制前台語系切換清單 + 後台只對「有啟用的語系」開放文字輸入
       enabledLangs: Array.isArray(pub.enabledLangs) ? pub.enabledLangs : ['tw', 'en', 'jp', 'kr'],

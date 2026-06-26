@@ -83,6 +83,8 @@ const DEFAULTS = {
   bannerDotH: 10,
   bannerDotActiveW: 12,
   bannerDotActiveH: 12,
+  // Banner 各版型各自一組設定 { [版型名]: { ...banner* } }
+  bannerStyles: {},
   enabledLangs: ['tw', 'en', 'jp', 'kr'],
   langLabels: {},
   navtool: {},

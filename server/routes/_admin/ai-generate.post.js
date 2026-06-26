@@ -3,26 +3,8 @@
 //   field='all' → 依關鍵字一次產出連貫的三欄，回 { ok, title, subtitle, memo }
 //   其餘單欄位 → 回 { ok, text }
 // 金鑰：.env.local 的 NUXT_GEMINI_KEY（dev-only，assertDev 守門，不會上線）
-import fs from 'node:fs'
-import path from 'node:path'
-import { assertDev, readEnv } from '../../admin/utils.js'
-
-const API = 'https://generativelanguage.googleapis.com/v1beta/models'
-
-// 讀 .env.local（私密、不納版控）→ 金鑰優先放這
-const readEnvLocal = () => {
-  const p = path.join(process.cwd(), '.env.local')
-  if (!fs.existsSync(p)) return {}
-  const out = {}
-  fs.readFileSync(p, 'utf8').split('\n').forEach((line) => {
-    const t = line.trim()
-    if (!t || t.startsWith('#')) return
-    const i = t.indexOf('=')
-    if (i < 0) return
-    out[t.slice(0, i).trim()] = t.slice(i + 1).trim()
-  })
-  return out
-}
+import { assertDev } from '../../admin/utils.js'
+import { callGemini, geminiText } from '../../admin/gemini.js'
 
 // 各欄位的生成指示（限制長度、語氣、只回文字本身）
 const FIELD_SPEC = {
@@ -40,17 +22,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'field 須為 title / subtitle / memo / all' })
   }
 
-  const local = readEnvLocal()
-  const key = process.env.NUXT_GEMINI_KEY || local.NUXT_GEMINI_KEY || readEnv().NUXT_GEMINI_KEY
-  if (!key) {
-    throw createError({
-      statusCode: 400,
-      message: '尚未設定 NUXT_GEMINI_KEY，請到 .env.local 填入 Gemini API 金鑰',
-    })
-  }
-
-  const model =
-    process.env.NUXT_GEMINI_MODEL || local.NUXT_GEMINI_MODEL || readEnv().NUXT_GEMINI_MODEL || 'gemini-2.5-flash'
   const ctx = body?.context || {}
   const lang = ctx.lang || '繁體中文'
   const topicLine = body?.topic ? `主題 / 關鍵字：${body.topic}` : '主題：通用形象 banner。'
@@ -83,31 +54,9 @@ export default defineEventHandler(async (event) => {
       .join('\n')
   }
 
-  // 模型備援：設定的模型優先，失敗（尖峰/配額/暫時錯誤）就自動退到 lite 版
-  const candidates = [...new Set([model, 'gemini-2.5-flash', 'gemini-2.5-flash-lite'])]
-  let data = null
-  let lastErr = null
-  for (const m of candidates) {
-    try {
-      data = await $fetch(`${API}/${m}:generateContent?key=${key}`, {
-        method: 'POST',
-        body: { contents: [{ parts: [{ text: prompt }] }], generationConfig: genConfig },
-      })
-      lastErr = null
-      break
-    } catch (e) {
-      lastErr = e // 換下一個模型再試
-    }
-  }
-  if (!data) {
-    const msg = lastErr?.data?.error?.message || lastErr?.statusMessage || lastErr?.message
-    throw createError({ statusCode: 502, message: `Gemini 呼叫失敗：${msg}` })
-  }
-
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
-  if (!text) {
-    throw createError({ statusCode: 502, message: 'Gemini 沒有回傳內容' })
-  }
+  // 模型備援 + 暫時性錯誤（尖峰過載）自動重試，全在 callGemini 內處理
+  const data = await callGemini({ contents: [{ parts: [{ text: prompt }] }], generationConfig: genConfig })
+  const text = geminiText(data)
 
   const strip = (s) => (s || '').toString().replace(/^["「『]+|["」』]+$/g, '').trim()
 

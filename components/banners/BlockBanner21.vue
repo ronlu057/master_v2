@@ -24,6 +24,7 @@ import 'swiper/css'
 import 'swiper/css/effect-fade'
 import 'swiper/css/pagination'
 
+defineOptions({ supportsVideo: true }) // 此版型會渲染背景影片 → 後台才顯示影片欄位
 const props = defineProps({
   title: { type: String, default: '' },
   rows: { type: Array, default: () => [] },

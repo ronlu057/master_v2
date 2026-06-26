@@ -1,99 +1,5 @@
 {
   "home": {
-    "videoUrl": "https://www.youtube.com/watch?v=mRC8mVLoqx8",
-    "videoFile": "",
-    "rows": [
-      {
-        "image": {
-          "pc": "/img/tw/banner/banner-1782270997748.jpg",
-          "mb": "/img/tw/banner/banner-1782270997748.jpg"
-        },
-        "alt": "藍色光纖數據流環繞著發光球體",
-        "title": {
-          "tw": "光速視界，設計未來",
-          "en": "Lightspeed Horizon, Design Future",
-          "jp": "光速の視界、未来をデザイン",
-          "kr": "광속 시야, 미래 디자인"
-        },
-        "subtitle": {
-          "tw": "駕馭藍色光纖，解鎖網頁新紀元。",
-          "en": "Harness blue fiber, unlock a new era of the web.",
-          "jp": "青いファイバーを駆使して、ウェブの新時代を切り開く。",
-          "kr": "블루 파이버를 활용하여 웹의 새로운 시대를 열어보세요."
-        },
-        "memo": {
-          "tw": "數據流動之美，轉化為您的數位門面。開啟極速、創新的網頁體驗。",
-          "en": "The beauty of data flow, transformed into your digital storefront. Unlock a high-speed, innovative web experience.",
-          "jp": "データフローの美しさを、あなたのデジタルファサードに変えます。超高速で革新的なウェブ体験を解き放ちます。",
-          "kr": "데이터 흐름의 아름다움을 당신의 디지털 외관으로 전환하세요. 초고속의 혁신적인 웹 경험을 시작하세요."
-        },
-        "btnText": "",
-        "link": "/about/company-intro"
-      },
-      {
-        "image": {
-          "pc": "/img/tw/banner/banner-1782279459318.jpg",
-          "mb": "/img/tw/banner/banner-1782279459318.jpg"
-        },
-        "alt": "金黃色液體流動的紋理",
-        "title": {
-          "tw": "覺醒設計，無限可能",
-          "en": "Awakening Design, Infinite Possibilities",
-          "jp": "覚醒デザイン、無限の可能性",
-          "kr": "각성 디자인, 무한한 가능성"
-        },
-        "subtitle": {
-          "tw": "點燃創意思維，釋放你的品牌潛力，一同探索設計的無限邊界。",
-          "en": "Ignite creative thinking, unleash your brand's potential, and explore the infinite boundaries of design together.",
-          "jp": "創造的思考に火をつけ、ブランドの可能性を解き放ち、デザインの無限の境界を共に探求しましょう。",
-          "kr": "창의적 사고에 불을 붙이고, 브랜드의 잠재력을 발휘하며, 디자인의 무한한 경계를 함께 탐험하세요."
-        },
-        "memo": {
-          "tw": "將您的奇思妙想，化為獨一無二的現實。立即預約，開啟您的專屬設計旅程！",
-          "en": "Transform your whimsical ideas into a unique reality. Book now to start your exclusive design journey!",
-          "jp": "あなたの奇抜なアイデアを唯一無二の現実に変えましょう。今すぐ予約して、あなただけのデザインの旅を始めましょう！",
-          "kr": "당신의 기발한 아이디어를 독특한 현실로 바꾸세요. 지금 예약하고 당신만의 특별한 디자인 여정을 시작하세요!"
-        },
-        "btnText": "",
-        "link": "/news"
-      },
-      {
-        "image": {
-          "pc": "/img/tw/banner/banner-1781778986939.jpg",
-          "mb": "/img/tw/banner/banner-1781778986939.jpg"
-        },
-        "alt": "深色背景上盛開的粉色、白色和藍色花朵",
-        "title": {
-          "tw": "品牌光芒，由此覺醒"
-        },
-        "subtitle": {
-          "tw": "釋放品牌潛能，點亮市場視野"
-        },
-        "memo": {
-          "tw": "從策略到設計，全方位打造專屬識別，讓您的品牌故事閃耀。"
-        },
-        "btnText": "",
-        "link": "/shop"
-      },
-      {
-        "image": {
-          "pc": "/img/tw/banner/banner-1782380636972.jpg",
-          "mb": "/img/tw/banner/banner-1782380636972.jpg"
-        },
-        "alt": "深色背景上，一束粉色、紫色、綠色花朵",
-        "title": {
-          "tw": "花漾闇夜，視覺盛宴"
-        },
-        "subtitle": {
-          "tw": "粉紫綻放，綠意點綴，深邃網頁設計"
-        },
-        "memo": {
-          "tw": "獨特花卉意象，打造沉浸式網頁體驗，展現您的非凡品味。"
-        },
-        "btnText": "",
-        "link": "/shop"
-      }
-    ],
     "news": [
       {
         "title": "母版專案正式上線",
@@ -113,7 +19,217 @@
         "date": "2026.05.12",
         "url": "/news/shop-module"
       }
-    ]
+    ],
+    "byLayout": {
+      "BlockBanner02": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782445131312.jpg",
+              "mb": "/img/tw/banner/banner-1782445131312.jpg"
+            },
+            "alt": "木板上放著撒有香料的生鮭魚片、迷迭香、檸檬、橄欖油",
+            "title": {
+              "tw": "光速視界，設計未來",
+              "en": "Lightspeed Horizon, Design Future",
+              "jp": "光速の視界、未来をデザイン",
+              "kr": "광속 시야, 미래 디자인"
+            },
+            "subtitle": {
+              "tw": "駕馭藍色光纖，解鎖網頁新紀元。",
+              "en": "Harness blue fiber, unlock a new era of the web.",
+              "jp": "青いファイバーを駆使して、ウェブの新時代を切り開く。",
+              "kr": "블루 파이버를 활용하여 웹의 새로운 시대를 열어보세요."
+            },
+            "memo": {
+              "tw": "數據流動之美，轉化為您的數位門面。開啟極速、創新的網頁體驗。",
+              "en": "The beauty of data flow, transformed into your digital storefront. Unlock a high-speed, innovative web experience.",
+              "jp": "データフローの美しさを、あなたのデジタルファサードに変えます。超高速で革新的なウェブ体験を解き放ちます。",
+              "kr": "데이터 흐름의 아름다움을 당신의 디지털 외관으로 전환하세요. 초고속의 혁신적인 웹 경험을 시작하세요."
+            },
+            "btnText": "",
+            "link": "/about/company-intro"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782279459318.jpg",
+              "mb": "/img/tw/banner/banner-1782279459318.jpg"
+            },
+            "alt": "金黃色液體流動的紋理",
+            "title": {
+              "tw": "覺醒設計，無限可能",
+              "en": "Awakening Design, Infinite Possibilities",
+              "jp": "覚醒デザイン、無限の可能性",
+              "kr": "각성 디자인, 무한한 가능성"
+            },
+            "subtitle": {
+              "tw": "點燃創意思維，釋放你的品牌潛力，一同探索設計的無限邊界。",
+              "en": "Ignite creative thinking, unleash your brand's potential, and explore the infinite boundaries of design together.",
+              "jp": "創造的思考に火をつけ、ブランドの可能性を解き放ち、デザインの無限の境界を共に探求しましょう。",
+              "kr": "창의적 사고에 불을 붙이고, 브랜드의 잠재력을 발휘하며, 디자인의 무한한 경계를 함께 탐험하세요."
+            },
+            "memo": {
+              "tw": "將您的奇思妙想，化為獨一無二的現實。立即預約，開啟您的專屬設計旅程！",
+              "en": "Transform your whimsical ideas into a unique reality. Book now to start your exclusive design journey!",
+              "jp": "あなたの奇抜なアイデアを唯一無二の現実に変えましょう。今すぐ予約して、あなただけのデザインの旅を始めましょう！",
+              "kr": "당신의 기발한 아이디어를 독특한 현실로 바꾸세요. 지금 예약하고 당신만의 특별한 디자인 여정을 시작하세요!"
+            },
+            "btnText": "",
+            "link": "/news"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1781778986939.jpg",
+              "mb": "/img/tw/banner/banner-1781778986939.jpg"
+            },
+            "alt": "深色背景上盛開的粉色、白色和藍色花朵",
+            "title": {
+              "tw": "品牌光芒，由此覺醒"
+            },
+            "subtitle": {
+              "tw": "釋放品牌潛能，點亮市場視野"
+            },
+            "memo": {
+              "tw": "從策略到設計，全方位打造專屬識別，讓您的品牌故事閃耀。"
+            },
+            "btnText": "",
+            "link": "/shop"
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner01": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782445633752.jpg",
+              "mb": "/img/tw/banner/banner-1782445633752.jpg"
+            },
+            "alt": "湖面霧氣繚繞，遠方是茂密的針葉林",
+            "title": {
+              "tw": "探索無限可能",
+              "en": "Explore Infinite Possibilities",
+              "jp": "無限の可能性を探る",
+              "kr": "무한한 가능성을 탐색하다"
+            },
+            "subtitle": {
+              "tw": "啟發您的數位生活新篇章"
+            },
+            "memo": {
+              "tw": "從創新科技到生活美學，我們為您精選最佳體驗。探索、學習、創造，您的精彩由這裡開始。",
+              "en": "From innovative technology to lifestyle aesthetics, we select the best experiences for you. Explore, learn, create, your brilliance starts here.",
+              "jp": "革新的な技術からライフスタイルの美学まで、最高の体験を厳選してお届けします。発見し、学び、創造する、あなたの輝きはここから始まります。",
+              "kr": "혁신적인 기술부터 라이프스타일 미학까지, 최고의 경험을 엄선하여 제공합니다. 탐색하고, 배우고, 창조하세요. 당신의 빛나는 순간은 여기서 시작됩니다."
+            },
+            "btnText": "",
+            "link": ""
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782445258140.jpg",
+              "mb": "/img/tw/banner/banner-1782445258140.jpg"
+            },
+            "alt": "深色背景上的復古花卉組合",
+            "title": {
+              "tw": "古典與現代的完美邂逅",
+              "en": "The perfect encounter between classical and modern",
+              "jp": "古典と現代の完璧な出会い",
+              "kr": "고전과 현대의 완벽한 만남"
+            },
+            "subtitle": {
+              "tw": "當古典花卉遇上現代網頁，綻放獨特風格",
+              "en": "When classical flowers meet modern webpages, a unique style blooms",
+              "jp": "古典的な花とモダンなウェブページが出会うとき、ユニークなスタイルが咲き誇る",
+              "kr": "고전적인 꽃과 현대적인 웹페이지가 만났을 때, 독특한 스타일이 피어납니다"
+            },
+            "memo": {
+              "tw": "結合復古花卉元素與網頁設計，打造視覺與功能的完美平衡，讓您的網站脫穎而出。",
+              "en": "Combine retro floral elements with web design, achieve a perfect balance of visual and functional, make your website stand out.",
+              "jp": "レトロな花の要素とウェブデザインを組み合わせて、視覚と機能の完璧なバランスを実現し、あなたのウェブサイトを目立たせます。",
+              "kr": "복고풍 꽃 요소를 웹 디자인과 결합하여 시각과 기능의 완벽한 균형을 이루고 웹사이트를 돋보이게 만드세요."
+            },
+            "btnText": "",
+            "link": ""
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782445324638.jpg",
+              "mb": "/img/tw/banner/banner-1782445324638.jpg"
+            },
+            "alt": "藍色光點與線條組成的抽象圖案",
+            "title": {
+              "tw": "點線交織 築夢數位新未來",
+              "en": "Interweaving Dots and Lines, Building a New Digital Future",
+              "jp": "点と線が織りなす、夢のデジタル新未来を築く",
+              "kr": "점과 선의 교차, 디지털의 새로운 미래를 구축하다"
+            },
+            "subtitle": {
+              "tw": "以創新網頁設計，勾勒您的品牌藍圖，成就數位版圖新高度。",
+              "en": "Innovative web design to outline your brand blueprint and achieve new heights in the digital landscape.",
+              "jp": "革新的なウェブデザインでブランドの青写真を描き、デジタル領域で新たな高みを目指します。",
+              "kr": "혁신적인 웹 디자인으로 브랜드 청사진을 그리고 디지털 환경에서 새로운 지평을 엽니다."
+            },
+            "memo": {
+              "tw": "將藍色光點與線條融入網頁設計，點綴創意，勾勒未來，為您編織獨一無二的數位夢想。",
+              "en": "Integrate blue light spots and lines into web design, embellish creativity, outline the future, and weave a unique digital dream for you.",
+              "jp": "青い光の点と線をウェブデザインに統合し、創造性を飾り、未来を描き、あなただけのユニークなデジタルの夢を織り上げます。",
+              "kr": "파란색 빛 점과 선을 웹 디자인에 통합하여 창의력을 장식하고 미래를 그리며, 당신만을 위한 독특한 디지털 꿈을 엮어드립니다."
+            },
+            "btnText": "",
+            "link": ""
+          }
+        ],
+        "videoUrl": "https://www.youtube.com/watch?v=mRC8mVLoqx8",
+        "videoFile": ""
+      },
+      "BlockBanner03": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782453467068.jpg",
+              "mb": "/img/tw/banner/banner-1782453467068.jpg"
+            },
+            "product": {
+              "pc": "/img/tw/banner/banner-asset-1782461718330.png",
+              "mb": "/img/tw/banner/banner-asset-1782461718330.png"
+            },
+            "alt": "深色背景上盛開的各色花卉",
+            "title": {
+              "tw": "網頁的綻放時刻",
+              "en": "Website's Blooming Moment",
+              "jp": "ウェブサイトの開花",
+              "kr": "웹사이트의 개화 순간"
+            },
+            "titleSpan": {
+              "tw": "GDT",
+              "en": "GDT",
+              "jp": "GDT",
+              "kr": "GDT"
+            },
+            "subtitle": {
+              "tw": "網頁設計，綻放無限可能<br>網頁設計，綻放無限可能",
+              "en": "Web Design, Unleash Infinite Possibilities",
+              "jp": "ウェブデザイン、無限の可能性を解き放つ",
+              "kr": "웹 디자인, 무한한 가능성을 펼치다"
+            },
+            "memo": {
+              "tw": "以深邃為底，綴以繁花。為您的網站，點亮獨特視覺。"
+            },
+            "note": {
+              "tw": "代理：Weiss company、JTEKT KOYO、同飛製冷",
+              "en": "Agent: Weiss company, JTEKT KOYO, Tongfei Refrigeration",
+              "jp": "代理：Weiss company、JTEKT KOYO、同飛製冷",
+              "kr": "대리: Weiss company, JTEKT KOYO, Tongfei 냉동"
+            },
+            "btnText": "",
+            "link": "/about"
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      }
+    }
   },
   "page": {
     "news": [

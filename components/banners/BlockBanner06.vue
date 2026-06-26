@@ -484,18 +484,12 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
   display: flex;
   align-items: center;
   justify-content: center;
-  width: fluid(40);
-  height: fluid(40);
-  background: rgba(255, 255, 255, 0.85);
+  @include banner-nav-vars(fluid(40), 50%, $web_font_color, rgba(255, 255, 255, 0.85));
   border: none;
-  border-radius: 50%;
   cursor: pointer;
-  color: $web_font_color;
   transform: translateY(-50%);
   transition: all 0.3s;
 
-  @media (max-width: 1200px) { width: 35px; height: 35px; }
-  @media (max-width: 840px) { width: 30px; height: 30px; }
   @media (max-width: 640px) { display: none; }
 
   // 邊框畫 V 形箭頭：置中穩定，不受字型字形影響
@@ -510,11 +504,11 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
   &:hover { background: #fff; color: $web_color_1; }
 }
 .banner06_prev {
-  left: fluid(20);
+  @include banner-nav-gap(left, fluid(20));
   &::before { transform: rotate(-135deg); margin-left: fluid(3); }
 }
 .banner06_next {
-  right: fluid(20);
+  @include banner-nav-gap(right, fluid(20));
   &::before { transform: rotate(45deg); margin-right: fluid(3); }
 }
 </style>

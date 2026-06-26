@@ -324,12 +324,9 @@ const onSlideChange = (s) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: fluid(20);
-  height: fluid(20);
-  background: none;
+  @include banner-nav-vars(fluid(20), 0, #fff, transparent);
   border: none;
   cursor: pointer;
-  color: #fff;
   transition: all 0.3s;
 
   @media (max-width: 1024px) {

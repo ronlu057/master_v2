@@ -396,17 +396,10 @@ const onSlideChange = (s) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: fluid(40);
-  height: fluid(40);
-  background: rgba(255, 255, 255, 0.85);
+  @include banner-nav-vars(fluid(40), 50%, $web_font_color, rgba(255, 255, 255, 0.85));
   border: none;
-  border-radius: 50%;
   cursor: pointer;
-  color: $web_font_color;
   transition: all 0.3s;
-
-  @media (max-width: 1200px) { width: 35px; height: 35px; }
-  @media (max-width: 840px) { width: 30px; height: 30px; }
 
   // 邊框畫 V 形箭頭：置中穩定，不受字型字形影響
   &::before {

@@ -434,16 +434,10 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
   display: flex;
   align-items: center;
   justify-content: center;
-  width: fluid(40);
-  height: fluid(40);
-  background: none;
+  @include banner-nav-vars(fluid(40), 0, #fff, transparent);
   border: none;
   cursor: pointer;
-  color: #fff;
   transition: all 0.3s;
-
-  @media (max-width: 1200px) { width: 35px; height: 35px; }
-  @media (max-width: 840px) { width: 30px; height: 30px; }
 
   // 邊框畫 V 形箭頭：置中穩定，不受字型字形影響
   &::before {

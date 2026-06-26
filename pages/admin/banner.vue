@@ -7,10 +7,42 @@ definePageMeta({ layout: 'admin' })
 
 if (import.meta.client && !import.meta.dev) navigateTo('/', { replace: true })
 
-import BlockBanner01 from '~/components/banners/BlockBanner01.vue'
-
-const { state, options, submitting, load: loadSettings, submit, setPreview, isDirtyKey } =
+const { state, options, submitting, load: loadSettings, submit, setPreview, isDirtyKey, switchBlockBanner, bannerDirty } =
   useSiteSettings()
+
+// 即時預覽元件：依目前選取的 BlockBanner 版型動態切換（與站台 BlockBanner 派發器同機制）
+const blockBannerVariants = import.meta.glob('../../components/banners/BlockBanner*.vue', {
+  eager: true,
+})
+const currentBlockBanner = computed(
+  () =>
+    blockBannerVariants[`../../components/banners/${state.blockBanner}.vue`]?.default ||
+    Object.values(blockBannerVariants)[0]?.default,
+)
+// 此版型是否「真的會渲染背景影片」（元件以 defineOptions({ supportsVideo:true }) 標記）；
+// 不會播影片的版型 → 後台不顯示影片欄位、存檔也不寫影片（與前端一致）
+const layoutSupportsVideo = (name) =>
+  !!blockBannerVariants[`../../components/banners/${name}.vue`]?.default?.supportsVideo
+const currentSupportsVideo = computed(() => layoutSupportsVideo(state.blockBanner))
+// 此版型主標是否支援「大字 span 前綴」（元件以 defineOptions({ supportsTitleSpan:true }) 標記）
+const currentSupportsTitleSpan = computed(
+  () => !!currentBlockBanner.value?.supportsTitleSpan,
+)
+// 此版型是否有「第四行備註」（如 BlockBanner03 的「代理…」）
+const currentSupportsNote = computed(() => !!currentBlockBanner.value?.supportsNote)
+// 此版型是否有「左側產品圖（去背）」可上傳（元件以 defineOptions({ leftImage:{hint} }) 標記）
+const currentLeftImage = computed(() => currentBlockBanner.value?.leftImage || null)
+// 每則「文字顏色」可調欄位（順序對齊上方文字欄位：標題大字 → 標題 → 副標 → 說明文）
+const slideColorFields = computed(() => {
+  const base = []
+  if (currentSupportsTitleSpan.value) base.push({ key: 'titleSpanColor', name: '標題大字' })
+  base.push(
+    { key: 'titleColor', name: '標題' },
+    { key: 'subtitleColor', name: '副標' },
+    { key: 'memoColor', name: '說明文' },
+  )
+  return base
+})
 
 // Banner 文字顏色（全站共用，留空＝交還版型預設）；def 僅為色票初始顯示值
 const BANNER_COLOR_FIELDS = [
@@ -56,10 +88,26 @@ const onNavBgAlpha = (a) => {
   setPreview('bannerNavBg', composeRgba(navBgHex.value, a))
 }
 
+// 箭頭色（含透明度）：hex + alpha ↔ rgba；空＝預設白色、不透明
+const _navColorInit = parseHexAlpha(state.bannerNavColor)
+const navColorHex = ref(state.bannerNavColor ? _navColorInit.hex : '#ffffff')
+const navColorAlpha = ref(state.bannerNavColor ? _navColorInit.alpha : 100)
+const onNavColor = (hex) => {
+  navColorHex.value = hex
+  setPreview('bannerNavColor', composeRgba(hex, navColorAlpha.value))
+}
+const onNavColorAlpha = (a) => {
+  navColorAlpha.value = a
+  setPreview('bannerNavColor', composeRgba(navColorHex.value, a))
+}
+const resetNavColor = () => {
+  navColorHex.value = '#ffffff'
+  navColorAlpha.value = 100
+  setPreview('bannerNavColor', '')
+}
+
 const dirtyVer = computed(
-  () =>
-    ['pageBanner', 'blockBanner', 'bannerNav'].some(isDirtyKey) ||
-    BANNER_COLOR_FIELDS.some((f) => isDirtyKey(f.key)),
+  () => ['pageBanner', 'blockBanner'].some(isDirtyKey) || bannerDirty.value,
 )
 const verMessage = ref(null)
 const onSubmitVer = async () => {
@@ -100,12 +148,22 @@ const toggleField = (i, key) => {
   const k = fieldKey(i, key)
   openFields.has(k) ? openFields.delete(k) : openFields.add(k)
 }
-// 三個多語系文字欄位（標題/副標/說明文）— 繁中為主，其餘語系展開覆寫
-const TEXT_FIELDS = [
-  { key: 'title', label: '標題', rows: 2, ph: '主標（可換行）' },
-  { key: 'subtitle', label: '副標', rows: 2, ph: '副標（可換行）' },
-  { key: 'memo', label: '說明文', rows: 3, ph: '說明文（可換行）' },
-]
+// 多語系文字欄位（繁中為主，其餘語系展開覆寫）。
+// 支援「大字 span」的版型（BlockBanner03）會在標題前多一個 titleSpan 欄位（前綴大字）。
+const TEXT_FIELDS = computed(() => {
+  const base = [
+    { key: 'title', label: '標題', rows: 2, ph: '主標（可換行）' },
+    { key: 'subtitle', label: '副標', rows: 2, ph: '副標（可換行）' },
+    { key: 'memo', label: '說明文', rows: 3, ph: '說明文（可換行）' },
+  ]
+  if (currentSupportsTitleSpan.value) {
+    base.unshift({ key: 'titleSpan', label: '標題大字（前綴 span）', rows: 1, ph: '例：GDT（會以大字顯示，接在標題前）' })
+  }
+  if (currentSupportsNote.value) {
+    base.push({ key: 'note', label: '備註（第四行）', rows: 2, ph: '例：代理：Weiss company、JTEKT KOYO、同飛製冷' })
+  }
+  return base
+})
 // 字串(舊資料) / 物件 → 編輯用多語系物件（每語系 <br> 轉換行）
 const toLangEdit = (v) => {
   const o = {}
@@ -144,50 +202,97 @@ const altStatus = (row) => {
 }
 
 const bannersDoc = ref(null) // banners.json 完整物件（送出時整包寫回，保留 page/common/news）
-const rows = ref([]) // 編輯中的 slides
+const rows = ref([]) // 編輯中的 slides（目前版型）
 const topic = ref('') // AI 生成共用主題/關鍵字
-const videoUrl = ref('') // BlockBanner01 背景影片（YouTube 連結，block 層級、非每則）
-const videoFile = ref('') // BlockBanner01 上傳影片檔路徑（YT 連結為空時改用 HTML5 播放）
+const videoUrl = ref('') // 目前版型背景影片（YouTube 連結，block 層級、非每則）
+const videoFile = ref('') // 目前版型上傳影片檔路徑（YT 連結為空時改用 HTML5 播放）
 const loading = ref(true)
 const contentMsg = ref(null)
 const savingContent = ref(false)
+// 每個 BlockBanner 版型各自的內容草稿（編輯中、未提交）：{ [版型名]: { rows(編輯格式), videoUrl, videoFile } }
+const contentByLayout = ref({})
 
 // 首頁 Banner 內容即時預覽（編輯中 → 站台即時套用、免存檔/重整；預覽島可「確定/清除」）
 const { set: setBannerPreview, clear: clearBannerPreview, preview: bannerPreview, load: loadBannerPreview } =
   useBannerPreview()
 const nuxtApp = useNuxtApp()
 
-// 首頁 banner 內容來源 = 獨立 Banner API（banners.json 的 home 物件：rows + videoUrl/videoFile + news）
+// 後端 row（store 格式：title 等為多語系物件、<br>）→ 編輯格式（lang 物件、換行）
+const toEditRow = (r) => ({
+  image: { pc: r.image?.pc || '', mb: r.image?.mb || '' },
+  product: { pc: r.product?.pc || '', mb: r.product?.mb || '' }, // 左側產品去背圖（BlockBanner03 等）
+  alt: r.alt || '', // 圖片替代文字（SEO）
+  topic: '', // 每則 AI 關鍵字（僅供生成用，不寫回）
+  title: toLangEdit(r.title),
+  titleSpan: toLangEdit(r.titleSpan), // 主標大字前綴（僅 BlockBanner03 等支援版型）
+  subtitle: toLangEdit(r.subtitle),
+  memo: toLangEdit(r.memo),
+  note: toLangEdit(r.note), // 第四行備註（僅 BlockBanner03 等支援版型）
+  // 每則自訂文字色（空＝交還全站後台色／版型預設）
+  titleColor: r.titleColor || '',
+  titleSpanColor: r.titleSpanColor || '', // 標題大字（span）色，僅 BlockBanner03 等支援版型
+  subtitleColor: r.subtitleColor || '',
+  memoColor: r.memoColor || '',
+  btnText: r.btnText || '',
+  link: r.link || '',
+})
+// 解析後內容 { rows, videoUrl, videoFile } → 編輯格式內容
+const toEditContent = (c) => ({
+  rows: (c?.rows || []).map(toEditRow),
+  videoUrl: c?.videoUrl || '',
+  videoFile: c?.videoFile || '',
+})
+// 目前編輯區 → 草稿快照（深拷貝，避免之後編輯反向污染草稿）
+const snapshotEditor = () => ({
+  rows: JSON.parse(JSON.stringify(rows.value)),
+  videoUrl: videoUrl.value,
+  videoFile: videoFile.value,
+})
+// 把某版型的草稿載入編輯區（深拷貝；沒有就是空內容）
+const applyContentToEditor = (name) => {
+  const c = contentByLayout.value[name] || { rows: [], videoUrl: '', videoFile: '' }
+  rows.value = JSON.parse(JSON.stringify(c.rows || []))
+  videoUrl.value = c.videoUrl || ''
+  videoFile.value = c.videoFile || ''
+}
+
+// 首頁 banner 內容來源 = 獨立 Banner API（banners.json 的 home：每版型一份 byLayout + 共用 news）
 const loadContent = async () => {
   loading.value = true
   try {
     const res = await $fetch('/_admin/mock?name=banners')
     bannersDoc.value = res.parsed
-    // 若有未確認的預覽 → 以預覽為編輯來源（與站台一致；離開後再回來不會跑掉）
     loadBannerPreview()
-    const h = bannerPreview.value || res.parsed?.home || {}
-    videoUrl.value = h.videoUrl || ''
-    videoFile.value = h.videoFile || ''
-    rows.value = (h.rows || []).map((r) => ({
-      image: { pc: r.image?.pc || '', mb: r.image?.mb || '' },
-      alt: r.alt || '', // 圖片替代文字（SEO）
-      topic: '', // 每則 AI 關鍵字（僅供生成用，不寫回）
-      title: toLangEdit(r.title),
-      subtitle: toLangEdit(r.subtitle),
-      memo: toLangEdit(r.memo),
-      // 每則自訂文字色（空＝交還全站後台色／版型預設）
-      titleColor: r.titleColor || '',
-      subtitleColor: r.subtitleColor || '',
-      memoColor: r.memoColor || '',
-      btnText: r.btnText || '',
-      link: r.link || '',
-    }))
+    const home = res.parsed?.home || {}
+    // 建每版型編輯草稿：有 byLayout 就逐版型收；舊資料（頂層 rows）→ 歸到目前啟用版型
+    const draft = {}
+    if (home.byLayout && typeof home.byLayout === 'object') {
+      for (const [name, c] of Object.entries(home.byLayout)) draft[name] = toEditContent(c)
+    } else if ((home.rows && home.rows.length) || home.videoUrl || home.videoFile) {
+      draft[state.blockBanner] = toEditContent(home)
+    }
+    // 若有未確認的站台預覽，且它正是「目前版型」的預覽 → 以預覽為目前版型來源（與站台一致）
+    if (bannerPreview.value && bannerPreview.value._layout === state.blockBanner) {
+      draft[state.blockBanner] = toEditContent(bannerPreview.value)
+    }
+    contentByLayout.value = draft
+    applyContentToEditor(state.blockBanner)
   } catch (e) {
     contentMsg.value = { type: 'error', text: `讀取 banners.json 失敗：${e.data?.message || e.statusMessage || e.message}` }
   } finally {
     loading.value = false
   }
 }
+
+// 切換版型：先把目前編輯區存回舊版型草稿，再載入新版型草稿（內容各自獨立、互不影響）
+watch(
+  () => state.blockBanner,
+  (newL, oldL) => {
+    if (loading.value || newL === oldL) return
+    if (oldL) contentByLayout.value[oldL] = snapshotEditor()
+    applyContentToEditor(newL)
+  },
+)
 
 onMounted(() => {
   loadSettings()
@@ -197,12 +302,16 @@ onMounted(() => {
 const addRow = () => {
   rows.value.push({
     image: { pc: SAMPLE_IMG, mb: '' },
+    product: { pc: '', mb: '' },
     alt: '',
     topic: '',
     title: emptyLang(),
+    titleSpan: emptyLang(),
     subtitle: emptyLang(),
     memo: emptyLang(),
+    note: emptyLang(),
     titleColor: '',
+    titleSpanColor: '',
     subtitleColor: '',
     memoColor: '',
     btnText: '',
@@ -257,6 +366,33 @@ const onCropConfirm = async (blob) => {
   }
   // 上傳成功 → 自動以 AI 辨識圖片內容填入 alt（best-effort，不影響上傳結果）
   if (uploaded) recognizeAlt(i)
+}
+
+// 左側產品去背圖：限 PNG / SVG，不裁切原圖上傳（→ product.pc / product.mb）
+const uploadingProductIdx = ref(-1)
+const onPickProduct = async (i, e) => {
+  const file = e.target.files?.[0]
+  e.target.value = ''
+  if (!file) return
+  if (!['image/png', 'image/svg+xml'].includes(file.type)) {
+    contentMsg.value = { type: 'error', text: '左側產品圖只能上傳 PNG 或 SVG（需去背透明）' }
+    return
+  }
+  uploadingProductIdx.value = i
+  try {
+    const form = new FormData()
+    form.append('image', file, file.name)
+    const res = await $fetch('/_admin/upload-banner-asset', { method: 'POST', body: form })
+    rows.value[i].product = { pc: res.path, mb: res.path }
+    contentMsg.value = { type: 'success', text: `第 ${i + 1} 則左側產品圖已上傳` }
+  } catch (err) {
+    contentMsg.value = { type: 'error', text: err.data?.message || err.statusMessage || err.message }
+  } finally {
+    uploadingProductIdx.value = -1
+  }
+}
+const clearProduct = (i) => {
+  rows.value[i].product = { pc: '', mb: '' }
 }
 
 // AI 圖片辨識 → 自動填 alt（僅支援本機上傳的 /img 圖；外部 URL 無法讀檔辨識）
@@ -390,11 +526,15 @@ const translateRow = async (i) => {
 const previewRows = computed(() =>
   rows.value.map((r) => ({
     image: r.image?.pc ? r.image : { pc: SAMPLE_IMG, mb: '' },
+    product: r.product || { pc: '', mb: '' },
     alt: r.alt,
     title: toStore(r.title.tw || ''),
+    titleSpan: toStore(r.titleSpan?.tw || ''),
     subtitle: toStore(r.subtitle.tw || ''),
     memo: toStore(r.memo.tw || ''),
+    note: toStore(r.note?.tw || ''),
     titleColor: r.titleColor || '',
+    titleSpanColor: r.titleSpanColor || '',
     subtitleColor: r.subtitleColor || '',
     memoColor: r.memoColor || '',
     btnText: r.btnText,
@@ -402,21 +542,27 @@ const previewRows = computed(() =>
   })),
 )
 
-// 存檔 / 站台預覽用 rows（多語系物件；前台 BlockBanner 依站台語系自行解析）
-const storeRows = computed(() =>
-  rows.value.map((r) => ({
-    image: r.image?.pc ? r.image : { pc: SAMPLE_IMG, mb: '' },
-    alt: (r.alt || '').trim(),
-    title: toLangStore(r.title),
-    subtitle: toLangStore(r.subtitle),
-    memo: toLangStore(r.memo),
-    ...(r.titleColor ? { titleColor: r.titleColor } : {}),
-    ...(r.subtitleColor ? { subtitleColor: r.subtitleColor } : {}),
-    ...(r.memoColor ? { memoColor: r.memoColor } : {}),
-    btnText: r.btnText || '',
-    link: r.link || '',
-  })),
-)
+// 編輯格式 row → 存檔格式 row（多語系物件；前台 BlockBanner 依站台語系自行解析）
+const toStoreRow = (r) => ({
+  image: r.image?.pc ? r.image : { pc: SAMPLE_IMG, mb: '' },
+  ...(r.product?.pc ? { product: { pc: r.product.pc, mb: r.product.mb || r.product.pc } } : {}),
+  alt: (r.alt || '').trim(),
+  title: toLangStore(r.title),
+  ...(r.titleSpan && Object.keys(toLangStore(r.titleSpan)).length
+    ? { titleSpan: toLangStore(r.titleSpan) }
+    : {}),
+  subtitle: toLangStore(r.subtitle),
+  memo: toLangStore(r.memo),
+  ...(r.note && Object.keys(toLangStore(r.note)).length ? { note: toLangStore(r.note) } : {}),
+  ...(r.titleColor ? { titleColor: r.titleColor } : {}),
+  ...(r.titleSpanColor ? { titleSpanColor: r.titleSpanColor } : {}),
+  ...(r.subtitleColor ? { subtitleColor: r.subtitleColor } : {}),
+  ...(r.memoColor ? { memoColor: r.memoColor } : {}),
+  btnText: r.btnText || '',
+  link: r.link || '',
+})
+// 存檔 / 站台預覽用 rows（目前版型）
+const storeRows = computed(() => rows.value.map(toStoreRow))
 
 // 預覽用：把每則自訂色注入 <head>（與站台 BlockBanner 派發器同機制；不用行內 :style）
 useHead(() => {
@@ -437,22 +583,31 @@ watch(
         videoUrl: videoUrl.value,
         videoFile: videoFile.value,
         news: bannersDoc.value?.home?.news || [],
+        _layout: state.blockBanner, // 標記這份預覽屬於哪個版型，避免套到別的版型
       })
     }, 250)
   },
   { deep: true },
 )
 
-// 送出：把 rows / 影片設定寫回 banners.json 的 home（保留 news / page / common）
+// 送出：把「每個版型各自的內容」整包寫回 banners.json 的 home.byLayout（保留 news / page / common）
 const saveContent = async () => {
   if (!bannersDoc.value) return
   savingContent.value = true
   try {
+    // 目前編輯區先存回草稿，再把所有版型草稿轉存檔格式
+    contentByLayout.value[state.blockBanner] = snapshotEditor()
+    const byLayout = {}
+    for (const [name, c] of Object.entries(contentByLayout.value)) {
+      const canVideo = layoutSupportsVideo(name) // 不會播影片的版型 → 不寫影片，保持前後端一致
+      byLayout[name] = {
+        rows: (c.rows || []).map(toStoreRow),
+        videoUrl: canVideo ? (c.videoUrl || '').trim() : '',
+        videoFile: canVideo ? (c.videoFile || '').trim() : '',
+      }
+    }
     const doc = bannersDoc.value
-    doc.home = doc.home || {}
-    doc.home.videoUrl = videoUrl.value.trim()
-    doc.home.videoFile = videoFile.value.trim()
-    doc.home.rows = storeRows.value // 多語系物件（title/subtitle/memo = { tw,en,jp,kr }）
+    doc.home = { news: doc.home?.news || [], byLayout } // 丟掉舊頂層 rows/video，改以 byLayout 為準
     await $fetch('/_admin/mock', { method: 'POST', body: { name: 'banners', content: doc } })
     // 已固化 → 清掉站台預覽、重抓 banner（refreshNuxtData 需 Nuxt context，await 後已遺失 → runWithContext 包）
     // 並廣播其他分頁重抓（其預覽也會因清除而落回剛存檔的資料）
@@ -503,9 +658,12 @@ onBeforeUnmount(() => {
         </label>
         <label class="field field--full">
           <span class="field__label">BlockBanner（首頁輪播） <em class="field__live">即時預覽</em></span>
-          <select :value="state.blockBanner" @change="setPreview('blockBanner', $event.target.value)">
+          <select :value="state.blockBanner" @change="switchBlockBanner($event.target.value)">
             <option v-for="b in options.blockBanners" :key="b" :value="b">{{ b }}</option>
           </select>
+          <span class="field__hint">
+            下面的文字顏色、箭頭、圓點等設定<strong>每個版型各自記一組</strong>；切換版型會自動帶出該版型自己的設定，互不影響。
+          </span>
         </label>
       </div>
 
@@ -663,12 +821,25 @@ onBeforeUnmount(() => {
         </div>
         <div class="nav-range">
           <span class="nav-range__lbl">箭頭色</span>
+          <input type="color" :value="navColorHex" @input="onNavColor($event.target.value)" />
           <input
-            type="color"
-            :value="state.bannerNavColor || '#ffffff'"
-            @input="setPreview('bannerNavColor', $event.target.value)"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            :value="navColorAlpha"
+            @input="onNavColorAlpha(Number($event.target.value))"
           />
-          <button v-if="state.bannerNavColor" type="button" class="mini" @click="setPreview('bannerNavColor', '')">
+          <input
+            type="number"
+            class="nav-range__num"
+            min="0"
+            max="100"
+            :value="navColorAlpha"
+            @input="onNavColorAlpha(Number($event.target.value) || 0)"
+          />
+          <span class="nav-range__unit">%</span>
+          <button v-if="state.bannerNavColor" type="button" class="mini" @click="resetNavColor">
             預設
           </button>
         </div>
@@ -697,7 +868,7 @@ onBeforeUnmount(() => {
           </button>
         </div>
         <span class="field__hint">
-          箭頭大小最大 100%（相對按鈕）；圓角 0＝方形、拉到底＝圓形；底色可調透明度。箭頭「上一則」自動水平翻轉。套用所有 BlockBanner 版型。
+          箭頭大小最大 100%（相對按鈕）；圓角 0＝方形、拉到底＝圓形；箭頭色 / 底色皆可調透明度。箭頭「上一則」自動水平翻轉。套用所有 BlockBanner 版型。
         </span>
       </div>
 
@@ -835,9 +1006,12 @@ onBeforeUnmount(() => {
       <p v-if="verMessage" :class="['msg', `msg--${verMessage.type}`]">{{ verMessage.text }}</p>
     </section>
 
-    <!-- 2) 首頁 Banner 內容（BlockBanner01）-->
+    <!-- 2) 首頁 Banner 內容（依目前選取版型，各版型各自一份）-->
     <section class="block">
-      <h2 class="block__h">首頁 Banner 內容（BlockBanner01）</h2>
+      <h2 class="block__h">首頁 Banner 內容（{{ state.blockBanner }}）</h2>
+      <p class="page__desc">
+        <strong>每個 BlockBanner 版型的內容各自獨立</strong>，目前編輯的是「{{ state.blockBanner }}」；切到上方其他版型會帶出該版型自己的圖片 / 文字 / 影片。沒設背景影片的版型前台就不會出現影片。
+      </p>
       <p class="page__desc">
         可新增多則輪播。圖片建議尺寸 <code>1920 × 911</code>；沒上傳則用範例圖。
         標題 / 副標 / 說明文按 Enter 換行自動轉 <code>&lt;br&gt;</code>，文字全空的那則不顯示文字框。
@@ -851,30 +1025,34 @@ onBeforeUnmount(() => {
         <span class="field__hint">各欄位的「AI 生成」會參考這個主題</span>
       </label>
 
-      <label class="field field--full">
-        <span class="field__label">背景影片 YouTube 連結 <em class="field__live">即時預覽</em></span>
-        <input v-model="videoUrl" type="text" placeholder="例：https://www.youtube.com/watch?v=cMzGuRieo-8" />
-        <span class="field__hint">
-          填入後桌面版會以「靜音循環背景影片」覆蓋主圖（&lt; 1024px 自動隱藏）；留空＝只顯示輪播圖。
-          支援 <code>watch?v=</code> 與 <code>youtu.be/</code> 連結。
-        </span>
-      </label>
+      <!-- 背景影片：只有「會渲染影片」的版型（BlockBanner01/09/13/21…）才顯示；其餘版型不出現 -->
+      <template v-if="currentSupportsVideo">
+        <label class="field field--full">
+          <span class="field__label">背景影片 YouTube 連結 <em class="field__live">即時預覽</em></span>
+          <input v-model="videoUrl" type="text" placeholder="例：https://www.youtube.com/watch?v=cMzGuRieo-8" />
+          <span class="field__hint">
+            填入後桌面版會以「靜音循環背景影片」覆蓋主圖（&lt; 1024px 自動隱藏）；留空＝只顯示輪播圖。
+            支援 <code>watch?v=</code> 與 <code>youtu.be/</code> 連結。
+          </span>
+        </label>
 
-      <div class="field field--full">
-        <span class="field__label">或上傳背景影片檔（YT 連結留空時播放） <em class="field__live">即時預覽</em></span>
-        <div class="video-up">
-          <label class="btn btn--ghost">
-            {{ uploadingVideo ? '上傳中…' : '上傳影片檔' }}
-            <input type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime" hidden @change="onPickVideo" />
-          </label>
-          <span v-if="videoFile" class="video-up__name">{{ videoFile }}</span>
-          <button v-if="videoFile" type="button" class="mini mini--danger" @click="clearVideoFile">移除</button>
+        <div class="field field--full">
+          <span class="field__label">或上傳背景影片檔（YT 連結留空時播放） <em class="field__live">即時預覽</em></span>
+          <div class="video-up">
+            <label class="btn btn--ghost">
+              {{ uploadingVideo ? '上傳中…' : '上傳影片檔' }}
+              <input type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime" hidden @change="onPickVideo" />
+            </label>
+            <span v-if="videoFile" class="video-up__name">{{ videoFile }}</span>
+            <button v-if="videoFile" type="button" class="mini mini--danger" @click="clearVideoFile">移除</button>
+          </div>
+          <span class="field__hint">
+            HTML5 播放器、靜音循環、<code>playsinline</code> — 桌面與手機（含 iOS / Apple）皆自動播放。
+            限 mp4 / webm / ogg，≤ 50MB。<strong>YT 連結優先</strong>，兩者皆有時播 YT。
+          </span>
         </div>
-        <span class="field__hint">
-          HTML5 播放器、靜音循環、<code>playsinline</code> — 桌面與手機（含 iOS / Apple）皆自動播放。
-          限 mp4 / webm / ogg，≤ 50MB。<strong>YT 連結優先</strong>，兩者皆有時播 YT。
-        </span>
-      </div>
+      </template>
+      <p v-else class="page__desc">此版型（{{ state.blockBanner }}）不支援背景影片，已隱藏影片欄位。</p>
 
       <p v-if="loading" class="page__desc">讀取中…</p>
 
@@ -897,6 +1075,22 @@ onBeforeUnmount(() => {
               {{ uploadingIdx === i ? '上傳中…' : '上傳背景圖' }}
               <input type="file" accept="image/*" hidden @change="onPickImage(i, $event)" />
             </label>
+          </div>
+
+          <!-- 左側產品去背圖（僅支援的版型，如 BlockBanner03）：限 PNG / SVG -->
+          <div v-if="currentLeftImage" class="slide__img slide__img--product">
+            <img v-if="row.product?.pc" :src="row.product.pc" alt="" class="thumb thumb--product" />
+            <div v-else class="thumb thumb--empty">未設定<br />（用版型預設圖）</div>
+            <div class="slide__img-ops">
+              <label class="btn btn--ghost">
+                {{ uploadingProductIdx === i ? '上傳中…' : '上傳左側產品圖' }}
+                <input type="file" accept="image/png,image/svg+xml,.png,.svg" hidden @change="onPickProduct(i, $event)" />
+              </label>
+              <button v-if="row.product?.pc" type="button" class="mini mini--danger" @click="clearProduct(i)">移除</button>
+              <span class="field__hint">
+                只能上傳 <strong>PNG / SVG</strong>（需去背透明）；{{ currentLeftImage.hint || '建議去背圖' }}。留空＝用版型內建去背圖。
+              </span>
+            </div>
           </div>
 
           <!-- 圖片替代文字（SEO alt）：可由 AI 辨識圖片自動產生 -->
@@ -1004,15 +1198,7 @@ onBeforeUnmount(() => {
           <div class="field field--full">
             <span class="field__label">此則文字顏色 <em class="field__live">即時預覽</em></span>
             <div class="color-rows">
-              <div
-                v-for="c in [
-                  { key: 'titleColor', name: '標題' },
-                  { key: 'subtitleColor', name: '副標' },
-                  { key: 'memoColor', name: '說明文' },
-                ]"
-                :key="c.key"
-                class="color-rows__row"
-              >
+              <div v-for="c in slideColorFields" :key="c.key" class="color-rows__row">
                 <span class="color-rows__name">{{ c.name }}</span>
                 <input type="color" :value="row[c.key] || '#ffffff'" @input="row[c.key] = $event.target.value" />
                 <code>{{ row[c.key] || '預設' }}</code>
@@ -1054,7 +1240,13 @@ onBeforeUnmount(() => {
       <div ref="previewBox" class="banner-preview" :style="{ height: winH * scale + 'px' }">
         <ClientOnly>
           <div class="banner-preview__inner" :style="{ width: '100vw', height: winH + 'px', transform: `scale(${scale})` }">
-            <BlockBanner01 :rows="previewRows" :video-url="videoUrl" :video-file="videoFile" />
+            <component
+              :is="currentBlockBanner"
+              :rows="previewRows"
+              :video-url="videoUrl"
+              :video-file="videoFile"
+              :show-nav="state.bannerNav"
+            />
           </div>
         </ClientOnly>
       </div>
@@ -1378,6 +1570,43 @@ onBeforeUnmount(() => {
     border-radius: 4px;
     background: #0f1218;
   }
+}
+
+// 左側產品去背圖：用 contain（不裁切變形）+ 棋盤格底色顯示透明
+.slide__img--product {
+  align-items: flex-start;
+
+  .thumb--product {
+    object-fit: contain;
+    background-color: #0f1218;
+    background-image:
+      linear-gradient(45deg, #1b212c 25%, transparent 25%),
+      linear-gradient(-45deg, #1b212c 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #1b212c 75%),
+      linear-gradient(-45deg, transparent 75%, #1b212c 75%);
+    background-size: 14px 14px;
+    background-position: 0 0, 0 7px, 7px -7px, -7px 0;
+  }
+  .thumb--empty {
+    width: 160px;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #6a7382;
+    border: 1px dashed #2a3242;
+    border-radius: 4px;
+    background: #0f1218;
+  }
+}
+.slide__img-ops {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .field__label .ai {

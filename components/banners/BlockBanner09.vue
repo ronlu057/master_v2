@@ -16,6 +16,7 @@
 //   props.videoUrl = YouTube 連結或影片 ID（背景影片）
 //   標語文字 = rows[0].title（無則 props.title）
 // rows[].link / news：本版型未使用（保留與 BlockBanner01 介面相容）
+defineOptions({ supportsVideo: true }) // 此版型會渲染背景影片 → 後台才顯示影片欄位
 const props = defineProps({
   title: { type: String, default: '' },
   rows: { type: Array, default: () => [] },

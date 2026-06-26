@@ -62,6 +62,23 @@ $bp-360: 360px;
 }
 
 
+/* ---- Banner 自製箭頭：讓後台「箭頭按鈕」設定生效（保留各版型造型）----
+   各版型的箭頭按鈕 @include banner-nav-vars(原大小, 原圓角, 原箭頭色, 原底色)，
+   讓 app.vue 注入的 --banner-nav-* 變數可覆寫；參數＝該版型原本值（未設定時的 fallback）。
+   位置（距邊界）用 banner-nav-gap($side, 原距離)。
+   註：後台「icon 形狀／線條·實心」對 CSS 畫的箭頭無效（僅共用 .banner_nav 版型適用）。 */
+@mixin banner-nav-vars($size, $radius, $color, $bg) {
+  width: var(--banner-nav-size, #{$size});
+  height: var(--banner-nav-size, #{$size});
+  border-radius: var(--banner-nav-radius, #{$radius});
+  color: var(--banner-nav-color, #{$color});
+  background: var(--banner-nav-bg, #{$bg});
+}
+@mixin banner-nav-gap($side, $gap) {
+  #{$side}: var(--banner-nav-gap, #{$gap});
+}
+
+
 /* ---- 網站用色設定 ---- */
 $web_header_1: #000;
 $web_header_2: #000;

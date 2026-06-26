@@ -25,7 +25,11 @@ const { data: homeView } = await useApiData('/home/view', {
   default: () => ({ slots: [] }),
 })
 
-const hero = computed(() => banners.value?.rows?.[0] || {})
+// banner 內容已改成「每版型一份」；客製首頁只取一張當 hero → 依目前版型解析，找不到退回第一個版型
+const { state: siteState } = useEffectiveSettings()
+const hero = computed(
+  () => resolveBannerContent(banners.value || {}, siteState.blockBanner, { fallbackFirst: true }).rows[0] || {},
+)
 const newsList = computed(() => newsRes.value?.items || [])
 const hotProducts = computed(() => shopRes.value?.items || [])
 

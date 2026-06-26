@@ -402,12 +402,9 @@ const onSlideChange = (s) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: fluid(30);
-  height: fluid(30);
-  background: none;
+  @include banner-nav-vars(fluid(30), 0, #fff, transparent);
   border: none;
   cursor: pointer;
-  color: #fff;
   transition: all 0.3s;
 
   // 邊框畫 V 形箭頭：9px 方塊，border-top + border-right 旋轉
