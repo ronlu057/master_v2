@@ -108,6 +108,8 @@ export function useEffectiveSettings() {
       bannerNavIconSize: pub.bannerNavIconSize === undefined ? 56 : Number(pub.bannerNavIconSize),
       // 按鈕距左右邊界距離 px（左右共用同一值 → 上一則 / 下一則對稱同步）
       bannerNavGap: pub.bannerNavGap === undefined ? 24 : Number(pub.bannerNavGap),
+      // 箭頭線條粗細 px（''＝隨按鈕大小自動縮放；給 CSS 畫的箭頭如 BlockBanner03 用）
+      bannerNavThickness: pub.bannerNavThickness ?? '',
       // 輪播圓點（pagination dots）：開關、預設/選中背景色、框線寬度·顏色、寬·高（預設/選中各自）
       bannerDots: pub.bannerDots === undefined ? true : String(pub.bannerDots) !== 'false',
       bannerDotBg: pub.bannerDotBg || '', // 預設（未選中）背景色；空＝半透明白

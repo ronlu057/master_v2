@@ -800,6 +800,35 @@ onBeforeUnmount(() => {
           <span class="nav-range__unit">px</span>
         </div>
         <div class="nav-range">
+          <span class="nav-range__lbl">線粗細</span>
+          <input
+            type="range"
+            min="1"
+            max="12"
+            step="1"
+            :value="state.bannerNavThickness || 4"
+            @input="setPreview('bannerNavThickness', Number($event.target.value))"
+          />
+          <input
+            type="number"
+            class="nav-range__num"
+            min="1"
+            max="20"
+            placeholder="自動"
+            :value="state.bannerNavThickness"
+            @input="setPreview('bannerNavThickness', $event.target.value === '' ? '' : Number($event.target.value) || '')"
+          />
+          <span class="nav-range__unit">px</span>
+          <button
+            v-if="state.bannerNavThickness !== '' && state.bannerNavThickness != null"
+            type="button"
+            class="mini"
+            @click="setPreview('bannerNavThickness', '')"
+          >
+            自動
+          </button>
+        </div>
+        <div class="nav-range">
           <span class="nav-range__lbl">箭頭大小</span>
           <input
             type="range"

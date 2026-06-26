@@ -74,6 +74,7 @@ const DEFAULTS = {
   bannerNavBg: '',
   bannerNavIconSize: 56,
   bannerNavGap: 24,
+  bannerNavThickness: '',
   bannerDots: true,
   bannerDotBg: '',
   bannerDotActiveBg: '',

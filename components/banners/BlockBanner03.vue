@@ -419,13 +419,13 @@ const leftMb = (row) => row.product?.mb || row.product?.pc || OB_MB
 
   @media (max-width: 1024px) { display: none; }
 
-  // V 形箭頭與線條粗細都跟著按鈕大小縮放（大按鈕＝大且粗的箭頭）
+  // V 形箭頭跟著按鈕大小縮放；線條粗細＝後台設定（--banner-nav-thickness），未設則隨大小自動
   &::before {
     content: '';
     width: calc(var(--banner-nav-size, #{fluid(40)}) * 0.3);
     height: calc(var(--banner-nav-size, #{fluid(40)}) * 0.3);
-    border-top: calc(var(--banner-nav-size, #{fluid(40)}) * 0.06) solid currentColor;
-    border-right: calc(var(--banner-nav-size, #{fluid(40)}) * 0.06) solid currentColor;
+    border-top: var(--banner-nav-thickness, calc(var(--banner-nav-size, #{fluid(40)}) * 0.06)) solid currentColor;
+    border-right: var(--banner-nav-thickness, calc(var(--banner-nav-size, #{fluid(40)}) * 0.06)) solid currentColor;
   }
 
   &:hover { opacity: 0.7; }

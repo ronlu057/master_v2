@@ -279,6 +279,7 @@ const siteStyleContent = computed(() => {
   const navBg = (siteState.bannerNavBg || '').trim()
   const navIconSize = String(siteState.bannerNavIconSize ?? '').trim()
   const navGap = String(siteState.bannerNavGap ?? '').trim()
+  const navThickness = String(siteState.bannerNavThickness ?? '').trim()
   // 輪播圓點：寬·高 / 選中寬·高 / 框線寬度 / 預設·選中背景 / 框線色
   const dotW = String(siteState.bannerDotW ?? '').trim()
   const dotH = String(siteState.bannerDotH ?? '').trim()
@@ -295,6 +296,7 @@ const siteStyleContent = computed(() => {
     navBg && `--banner-nav-bg: ${navBg};`,
     navIconSize !== '' && `--banner-nav-icon-size: ${navIconSize}%;`,
     navGap !== '' && `--banner-nav-gap: ${navGap}px;`,
+    navThickness !== '' && `--banner-nav-thickness: ${navThickness}px;`,
     dotW !== '' && `--banner-dot-w: ${dotW}px;`,
     dotH !== '' && `--banner-dot-h: ${dotH}px;`,
     dotActiveW !== '' && `--banner-dot-active-w: ${dotActiveW}px;`,

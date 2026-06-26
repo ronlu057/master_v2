@@ -394,6 +394,7 @@
       "bannerNavBg": "rgba(255,255,255,0.00)",
       "bannerNavIconSize": 100,
       "bannerNavGap": 30,
+      "bannerNavThickness": "",
       "bannerDots": false,
       "bannerDotBg": "",
       "bannerDotActiveBg": "",
