@@ -360,6 +360,9 @@
             "memo": {
               "tw": "感受花卉的極致色彩與暗夜的靜謐，交織成一幅視覺的華麗篇章。"
             },
+            "titleColor": "#ffffff",
+            "subtitleColor": "#ffffff",
+            "memoColor": "#ffffff",
             "btnText": "",
             "link": "/about"
           },
@@ -378,6 +381,9 @@
             "memo": {
               "tw": "感受流動的溫暖與光澤，讓想像力隨之飛揚。"
             },
+            "titleColor": "#ffdd00",
+            "subtitleColor": "#ffdd00",
+            "memoColor": "#ffea00",
             "btnText": "",
             "link": "/about"
           }

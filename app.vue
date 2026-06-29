@@ -4,6 +4,9 @@ const { type } = useProject()
 
 // 站台設定 — LOGO 高度走 CSS variable、自訂 CSS 注入 <head>
 const { state: siteState } = useEffectiveSettings()
+// 每則 Banner 文字色 CSS：由 BlockBanner 派發器寫入此共用 state（useState 會序列化到 payload，
+// 比子元件 useHead 在 client 端更可靠），由本元件的 site-runtime-style 一併注入。
+const bannerRowColorCssState = useState('banner-row-color-css', () => '')
 
 // 動態組成 <style> 內容：(1) :root CSS variable 給 SiteLogo 用 (2) 後台自訂 CSS
 const siteStyleContent = computed(() => {
@@ -263,10 +266,12 @@ const siteStyleContent = computed(() => {
   const bannerTitle = (siteState.bannerTitleColor || '').trim()
   const bannerSubtitle = (siteState.bannerSubtitleColor || '').trim()
   const bannerMemo = (siteState.bannerMemoColor || '').trim()
+  const bannerAccent = (siteState.bannerAccentColor || '').trim()
   const bannerVars = [
     bannerTitle && `--banner-title-color: ${bannerTitle};`,
     bannerSubtitle && `--banner-subtitle-color: ${bannerSubtitle};`,
     bannerMemo && `--banner-memo-color: ${bannerMemo};`,
+    bannerAccent && `--banner-accent-color: ${bannerAccent};`,
   ]
     .filter(Boolean)
     .join(' ')
@@ -314,7 +319,8 @@ const siteStyleContent = computed(() => {
   const navCss = (navVars ? `:root { ${navVars} }` : '') + (dotsHideCss ? `\n${dotsHideCss}` : '')
 
   const customCss = siteState.customCss || ''
-  return `${cssVars}\n${headerBg}\n${headerBgScroll}\n${menuCss}\n${scrollMenuCss}\n${iconCss}\n${subIconCss}\n${flyoutOverflowCss}\n${bannerCss}\n${navCss}\n${customCss}`
+  const rowColorCss = bannerRowColorCssState.value || ''
+  return `${cssVars}\n${headerBg}\n${headerBgScroll}\n${menuCss}\n${scrollMenuCss}\n${iconCss}\n${subIconCss}\n${flyoutOverflowCss}\n${bannerCss}\n${navCss}\n${rowColorCss}\n${customCss}`
 })
 
 // i18n（useI18n / useLocaleHead 必須在 setup 頂層呼叫，不能進 computed / function 內）

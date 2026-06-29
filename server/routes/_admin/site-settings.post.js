@@ -69,6 +69,7 @@ const ALLOWED_KEYS = [
   'bannerTitleColor',
   'bannerSubtitleColor',
   'bannerMemoColor',
+  'bannerAccentColor',
   'bannerNav',
   'bannerNavIcon',
   'bannerNavSize',

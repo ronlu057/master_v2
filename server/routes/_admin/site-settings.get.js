@@ -66,6 +66,7 @@ const DEFAULTS = {
   bannerTitleColor: '',
   bannerSubtitleColor: '',
   bannerMemoColor: '',
+  bannerAccentColor: '',
   bannerNav: true,
   bannerNavIcon: {},
   bannerNavSize: 50,

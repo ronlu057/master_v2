@@ -95,6 +95,8 @@ export function useEffectiveSettings() {
       bannerTitleColor: pub.bannerTitleColor || '',
       bannerSubtitleColor: pub.bannerSubtitleColor || '',
       bannerMemoColor: pub.bannerMemoColor || '',
+      // 主色色塊／強調色（如 BlockBanner06 的斜切色塊）；空＝版型預設
+      bannerAccentColor: pub.bannerAccentColor || '',
       // Banner 輪播「上一則 / 下一則」按鈕開關（全站共用，預設顯示）
       bannerNav: pub.bannerNav === undefined ? true : String(pub.bannerNav) !== 'false',
       // 箭頭 icon { name, style:'line'|'solid' }（空＝預設 chevron 線條）/ 按鈕大小 px / 圓角 px（999＝圓形）

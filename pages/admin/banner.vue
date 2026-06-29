@@ -30,6 +30,8 @@ const currentSupportsTitleSpan = computed(
 )
 // 此版型是否有「第四行備註」（如 BlockBanner03 的「代理…」）
 const currentSupportsNote = computed(() => !!currentBlockBanner.value?.supportsNote)
+// 此版型是否有「主色色塊」可換色（如 BlockBanner06 的斜切色塊）；{ name, def }
+const currentAccentColor = computed(() => currentBlockBanner.value?.accentColor || null)
 // 此版型是否有「左側產品圖（去背）」可上傳（元件以 defineOptions({ leftImage:{hint} }) 標記）
 const currentLeftImage = computed(() => currentBlockBanner.value?.leftImage || null)
 // 每則「文字顏色」可調欄位（順序對齊上方文字欄位：標題大字 → 標題 → 副標 → 說明文）
@@ -621,10 +623,18 @@ const toStoreRow = (r) => ({
 // 存檔 / 站台預覽用 rows（目前版型）
 const storeRows = computed(() => rows.value.map(toStoreRow))
 
-// 預覽用：把每則自訂色注入 <head>（與站台 BlockBanner 派發器同機制；不用行內 :style）
-useHead(() => {
-  const css = bannerRowColorCss(previewRows.value)
-  return css ? { style: [{ children: css }] } : {}
+// 預覽用：把每則自訂色寫進共用 state，由 app.vue 的 site-runtime-style 注入（與站台同機制、
+// client 端可靠；底部 BlockBanner 預覽框即時變色）。
+const bannerRowColorCssState = useState('banner-row-color-css', () => '')
+watch(
+  previewRows,
+  () => {
+    bannerRowColorCssState.value = bannerRowColorCss(previewRows.value)
+  },
+  { immediate: true, deep: true },
+)
+onBeforeUnmount(() => {
+  bannerRowColorCssState.value = ''
 })
 
 // 編輯中即時寫入「站台預覽」（debounce）→ 前台 BlockBanner 即時套用、預覽島出現可確定/清除
@@ -764,6 +774,37 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <span class="field__hint">套用到所有 BlockBanner 版型的標題 / 副標 / 說明文；留空＝交還版型自身配色。</span>
+      </div>
+
+      <!-- 主色色塊顏色（僅有此設計的版型，如 BlockBanner06 的斜切色塊）-->
+      <div v-if="currentAccentColor" class="field field--full">
+        <span class="field__label">{{ currentAccentColor.name || '色塊顏色' }} <em class="field__live">即時預覽</em></span>
+        <div class="color-rows">
+          <div class="color-rows__row">
+            <input
+              type="color"
+              :value="isHex6(state.bannerAccentColor) ? state.bannerAccentColor : (currentAccentColor.def || '#393993')"
+              @input="setPreview('bannerAccentColor', $event.target.value)"
+            />
+            <input
+              type="text"
+              class="hex-input"
+              :value="state.bannerAccentColor"
+              :placeholder="`版型預設 ${currentAccentColor.def || ''}`"
+              @input="setPreview('bannerAccentColor', $event.target.value)"
+              @change="setPreview('bannerAccentColor', normalizeHex(state.bannerAccentColor))"
+            />
+            <button
+              v-if="state.bannerAccentColor"
+              type="button"
+              class="btn btn--ghost btn--sm"
+              @click="setPreview('bannerAccentColor', '')"
+            >
+              回到預設
+            </button>
+          </div>
+        </div>
+        <span class="field__hint">{{ state.blockBanner }} 的主色色塊；留空＝版型預設（{{ currentAccentColor.def }}）。</span>
       </div>
 
       <!-- 自動播放 / 無限循環 開關 -->

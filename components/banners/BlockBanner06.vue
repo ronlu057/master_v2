@@ -19,6 +19,8 @@ import 'swiper/css/effect-fade'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
+// 主色斜切色塊可換色（後台「色塊顏色」；--banner-accent-color，未設＝版型預設 #393993）
+defineOptions({ accentColor: { name: '主色斜切色塊', def: '#393993' } })
 const props = defineProps({
   title: { type: String, default: '' },
   rows: { type: Array, default: () => [] },
@@ -150,7 +152,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
         position: absolute;
         left: 0;
         width: calc(1213 / 1903 * 100%);
-        background: $web_color_2;
+        background: var(--banner-accent-color, #{$web_color_2});
         transform-origin: left center;
         transform: scaleX(0);
         transition: transform 0.5s $banner06_block 0.3s;

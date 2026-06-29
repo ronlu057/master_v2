@@ -380,6 +380,7 @@
       "bannerTitleColor": "",
       "bannerSubtitleColor": "",
       "bannerMemoColor": "",
+      "bannerAccentColor": "#ffc800",
       "bannerNav": true,
       "bannerNavIcon": {},
       "bannerNavSize": 50,
@@ -477,5 +478,6 @@
     }
   },
   "bannerLoop": true,
-  "bannerAutoplay": true
+  "bannerAutoplay": true,
+  "bannerAccentColor": "#ffc800"
 }

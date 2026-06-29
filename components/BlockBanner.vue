@@ -58,9 +58,18 @@ const resolvedRows = computed(() =>
 
 // 每則自訂文字色 → 注入 <head> 的 <style>（用 row-index class 當 hook，不用行內 :style）。
 // 各版型文字容器已掛 `js-banner-row-${i}` class，並以 color: var(--banner-*-color) 取值。
-useHead(() => {
-  const css = bannerRowColorCss(eff.value?.rows)
-  return css ? { style: [{ children: css }] } : {}
+// 每則自訂文字色 → 寫進共用 state，由 app.vue 的 site-runtime-style 注入（useState 會序列化到
+// payload，client 端比子元件 useHead 可靠；各版型文字容器掛 js-banner-row-${i}、以 var() 取值）。
+const bannerRowColorCssState = useState('banner-row-color-css', () => '')
+watch(
+  () => eff.value?.rows,
+  () => {
+    bannerRowColorCssState.value = bannerRowColorCss(eff.value?.rows)
+  },
+  { immediate: true, deep: true },
+)
+onBeforeUnmount(() => {
+  bannerRowColorCssState.value = ''
 })
 </script>
 
