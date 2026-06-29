@@ -78,6 +78,8 @@ const ALLOWED_KEYS = [
   'bannerNavIconSize',
   'bannerNavGap',
   'bannerNavThickness',
+  'bannerLoop',
+  'bannerAutoplay',
   'bannerDots',
   'bannerDotBg',
   'bannerDotActiveBg',

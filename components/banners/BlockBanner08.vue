@@ -30,6 +30,8 @@ const props = defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // 計數器：目前頁 / 總頁數（對應原 JS tool_btn 的 01 / 03，補零兩位）
@@ -46,11 +48,11 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
       class="index_banner"
       :modules="[Autoplay, EffectFade, Navigation]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && (rows.length > 1)"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1000"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
       :navigation="{ prevEl: '.banner08_prev', nextEl: '.banner08_next' }"
       @slide-change="onSlideChange"
     >

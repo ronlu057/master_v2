@@ -744,6 +744,30 @@ onBeforeUnmount(() => {
         <span class="field__hint">套用到所有 BlockBanner 版型的標題 / 副標 / 說明文；留空＝交還版型自身配色。</span>
       </div>
 
+      <!-- 自動播放 / 無限循環 開關 -->
+      <div class="field field--full">
+        <span class="field__label">輪播播放 <em class="field__live">即時預覽</em></span>
+        <label class="nav-switch">
+          <input
+            type="checkbox"
+            :checked="state.bannerAutoplay"
+            @change="setPreview('bannerAutoplay', $event.target.checked)"
+          />
+          <span>{{ state.bannerAutoplay ? '自動播放：開' : '自動播放：關' }}</span>
+        </label>
+        <label class="nav-switch">
+          <input
+            type="checkbox"
+            :checked="state.bannerLoop"
+            @change="setPreview('bannerLoop', $event.target.checked)"
+          />
+          <span>{{ state.bannerLoop ? '無限循環：開' : '無限循環：關' }}</span>
+        </label>
+        <span class="field__hint">
+          自動播放＝每 5 秒換下一張；無限循環＝播到最後一張接回第一張（只有一張時自動不循環）。套用所有 BlockBanner 版型。
+        </span>
+      </div>
+
       <!-- 上一則 / 下一則 箭頭按鈕開關 -->
       <div class="field field--full">
         <span class="field__label">輪播箭頭按鈕（上一則 / 下一則）<em class="field__live">即時預覽</em></span>

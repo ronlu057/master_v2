@@ -35,6 +35,8 @@ const props = defineProps({
   // BlockBanner01 介面相容（本版型無影片，videoUrl 忽略）
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // 換行：把 \n 轉成 <br>（對應原 PHP nl2br）
@@ -48,18 +50,18 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       class="index_banner"
       :modules="[Autoplay, EffectFade, Pagination, Navigation]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && (rows.length > 1)"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1600"
-      :autoplay="{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: false } : false"
       :pagination="{ el: '.banner19 .dots_box .swiper-pagination', clickable: true }"
       :navigation="{ prevEl: '.banner19_prev', nextEl: '.banner19_next' }"
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title3 || ''" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.subtitle || ''" />
         </picture>
 
         <div class="content">
@@ -67,11 +69,11 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
             <div class="row no_gutter">
               <div class="info" :class="`js-banner-row-${i}`">
                 <div v-if="row.title" v-html="toHtml(row.title)" />
-                <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title3" v-html="toHtml(row.title3)" />
-                <div v-if="row.title4" v-html="toHtml(row.title4)" />
+                <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
+                <div v-if="row.memo" v-html="toHtml(row.memo)" />
 
                 <div class="button_set">
-                  <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title3 || 'VIEW MORE'" target="_blank">
+                  <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.subtitle || 'VIEW MORE'" target="_blank">
                     <span>VIEW MORE</span>
                   </NuxtLink>
                 </div>

@@ -22,6 +22,8 @@ const props = defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // 影片來源比照 BlockBanner01：用專用的 props.videoUrl 欄位（rows[].link 是 VIEW MORE 頁面連結、非影片）

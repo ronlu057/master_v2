@@ -31,6 +31,8 @@ const props = defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true }, // 後台 bannerLoop：無限循環
+  autoplay: { type: Boolean, default: true }, // 後台 bannerAutoplay：自動播放
 })
 
 // 換行欄位：把 \n 轉成 <br>（對應原 PHP nl2br）
@@ -73,11 +75,11 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
       class="index_banner"
       :modules="[Autoplay, EffectFade, Pagination, Controller]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && rows.length > 1"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1000"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
       :pagination="{ clickable: true }"
       @swiper="onMainReady"
       @slide-change="onSlideChange"
@@ -92,8 +94,8 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
           <!-- 手機版文字（桌面隱藏，桌面改由左側 text_banner 顯示） -->
           <div class="cover_txt mb_only">
             <div v-if="row.title" v-html="toHtml(row.title)" />
-            <div v-if="row.title2" v-html="toHtml(row.title2)" />
-            <div v-if="row.slogan" v-html="toHtml(row.slogan)" />
+            <div v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
+            <div v-if="row.memo" v-html="toHtml(row.memo)" />
 
             <NuxtLink v-if="row.link" class="cover_btn center" :to="row.link" :title="row.title || 'VIEW MORE'">
               <span>VIEW MORE</span>
@@ -112,7 +114,7 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
       class="text_banner"
       :modules="[EffectFade, Controller]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && rows.length > 1"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :allow-touch-move="false"
@@ -121,8 +123,8 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
       <SwiperSlide v-for="(row, i) in rows" :key="i" :class="`js-banner-row-${i}`">
         <div class="cover_txt">
           <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
-          <h2 v-if="row.title2" v-html="toHtml(row.title2)" />
-          <div v-if="row.slogan" v-html="toHtml(row.slogan)" />
+          <h2 v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
+          <div v-if="row.memo" v-html="toHtml(row.memo)" />
 
           <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">
             <span>VIEW MORE</span>

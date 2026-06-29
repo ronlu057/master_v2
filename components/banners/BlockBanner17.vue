@@ -27,6 +27,8 @@ const props = defineProps({
   // BlockBanner01 介面相容（本版型無影片，videoUrl 忽略）
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // 換行欄位：把 \n 轉成 <br>（對應原 PHP nl2br）
@@ -41,11 +43,11 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       class="index_banner"
       :modules="[Autoplay, EffectFade, Pagination, Navigation, Controller]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && (rows.length > 1)"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1000"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
       :pagination="{ clickable: true }"
       :navigation="{ prevEl: '.banner17_prev', nextEl: '.banner17_next' }"
     >
@@ -57,7 +59,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
         <div class="cover" :class="`js-banner-row-${i}`">
           <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
-          <h2 v-if="row.title2" v-html="toHtml(row.title2)" />
+          <h2 v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
 
           <NuxtLink v-if="row.link" class="cover_btn center" :to="row.link" :title="row.title || 'VIEW MORE'">
             <span>VIEW MORE</span>

@@ -32,6 +32,8 @@ const props = defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true }, // 後台 bannerLoop：無限循環（本版型兩層皆不 loop，僅保留介面相容）
+  autoplay: { type: Boolean, default: true }, // 後台 bannerAutoplay：自動播放
 })
 
 // title3 內含的 <span>，</span> 與 <br> 需原樣輸出 → 用 v-html（資料端標記）
@@ -93,7 +95,7 @@ const onReachBeginning = (s) => {
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 721px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title2 || ''" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
       </SwiperSlide>
     </Swiper>
@@ -107,7 +109,7 @@ const onReachBeginning = (s) => {
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="3000"
-      :autoplay="{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: false } : false"
       :allow-touch-move="true"
       :breakpoints="{ 721: { allowTouchMove: false } }"
       :navigation="{ prevEl: '.banner05_prev', nextEl: '.banner05_next' }"
@@ -117,12 +119,12 @@ const onReachBeginning = (s) => {
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <div class="cover" :class="`js-banner-row-${i}`">
-          <div v-if="row.title2">{{ row.title2 }}</div>
-          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title3" v-html="toHtml(row.title3)" />
-          <div v-if="row.title4">{{ row.title4 }}</div>
+          <div v-if="row.title">{{ row.title }}</div>
+          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
+          <div v-if="row.memo">{{ row.memo }}</div>
 
           <div v-if="row.link" class="button_set">
-            <NuxtLink class="cover_btn" :to="row.link" :title="row.title3 || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
+            <NuxtLink class="cover_btn" :to="row.link" :title="row.subtitle || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
           </div>
         </div>
       </SwiperSlide>

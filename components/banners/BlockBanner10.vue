@@ -29,6 +29,8 @@ const props = defineProps({
   // BlockBanner01 介面相容（本版型未使用 videoUrl / news）
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // 換行文字：\n -> <br>（對應原 PHP nl2br）
@@ -55,11 +57,11 @@ const onSlideChange = (s) => {
       class="index_banner"
       :modules="[Autoplay, EffectFade, Pagination, Navigation]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && (rows.length > 1)"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1000"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
       :pagination="{ el: '.banner10 .swiper-pagination', clickable: true }"
       :navigation="{ prevEl: '.banner10 .tool_btn .prev', nextEl: '.banner10 .tool_btn .next' }"
       @slide-change="onSlideChange"

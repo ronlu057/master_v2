@@ -262,7 +262,31 @@
               "kr": "안개 낀 산림 호수 사이에서, 초월적인 선경을 체험하고, 자연의 시적인 아름다움과 신비에 마음을 담그세요."
             },
             "btnText": "",
-            "link": ""
+            "link": "/about"
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner04": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782700522278.jpg",
+              "mb": "/img/tw/banner/banner-1782700522278.jpg"
+            },
+            "alt": "男子騎越野摩托車，背景是山與湖",
+            "title": {
+              "tw": "征服山湖，馭風而行"
+            },
+            "subtitle": {
+              "tw": "探索未知，體驗越野的極限魅力"
+            },
+            "memo": {
+              "tw": "騎士與自然共舞，每一刻都是史詩級冒險。獨家路線，等你來挑戰。"
+            },
+            "btnText": "",
+            "link": "/about"
           }
         ],
         "videoUrl": "",

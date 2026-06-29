@@ -30,6 +30,8 @@ const props = defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // 換行標語：把 \n 轉成 <br>（對應原 PHP nl2br）
@@ -81,11 +83,11 @@ onBeforeUnmount(() => {
       class="index_banner"
       :modules="[Autoplay, EffectFade, Pagination]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && (rows.length > 1)"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1600"
-      :autoplay="{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: false } : false"
       :pagination="{ el: '.banner21_pagination', clickable: true }"
       @swiper="onMainReady"
       @slide-change="onSlideChange"
@@ -111,17 +113,17 @@ onBeforeUnmount(() => {
             <div class="info" :class="`js-banner-row-${i}`">
               <div class="mb">
                 {{ row.title }}
-                <template v-if="row.title2"><br />{{ row.title2 }}</template>
+                <template v-if="row.subtitle"><br />{{ row.subtitle }}</template>
               </div>
-              <div v-if="row.slogan" class="mb" v-html="toHtml(row.slogan)" />
+              <div v-if="row.memo" class="mb" v-html="toHtml(row.memo)" />
 
               <!-- 桌面主標（對應原 .cus_txt；此版以一般文字呈現，去除滑鼠跟隨 SVG 特效） -->
               <component :is="i === 0 ? 'h1' : 'h2'" class="title_lg">
                 {{ row.title }}
-                <template v-if="row.title2"><br />{{ row.title2 }}</template>
+                <template v-if="row.subtitle"><br />{{ row.subtitle }}</template>
               </component>
 
-              <div v-if="row.slogan" class="paragraph" v-html="toHtml(row.slogan)" />
+              <div v-if="row.memo" class="paragraph" v-html="toHtml(row.memo)" />
 
               <div class="button_set">
                 <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">

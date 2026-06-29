@@ -31,6 +31,8 @@ const props = defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // 換行：把 \n 轉成 <br>（對應原 PHP nl2br）
@@ -47,11 +49,11 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
       class="index_banner"
       :modules="[Autoplay, EffectFade, Pagination, Navigation]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && (rows.length > 1)"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1000"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
       :pagination="{ clickable: true }"
       :navigation="{ prevEl: '.banner16_prev', nextEl: '.banner16_next' }"
     >
@@ -85,7 +87,7 @@ const decoWidth = (w) => `calc(${w} / 1760 * 100%)`
 
           <div class="cover_txt" :class="`js-banner-row-${i}`">
             <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
-            <h2 v-if="row.title2" v-html="toHtml(row.title2)" />
+            <h2 v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
           </div>
         </component>
       </SwiperSlide>

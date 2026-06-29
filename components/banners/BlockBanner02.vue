@@ -25,6 +25,8 @@ const props = defineProps({
   // BlockBanner01 介面相容（本版型無影片，videoUrl 忽略）
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true }, // 後台 bannerLoop：無限循環
+  autoplay: { type: Boolean, default: true }, // 後台 bannerAutoplay：自動播放
 })
 
 // 換行標語：把 \n 轉成 <br>（對應原 PHP nl2br）
@@ -39,11 +41,11 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       class="index_banner"
       :modules="[Autoplay, EffectFade, Navigation]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && rows.length > 1"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1000"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
       :navigation="{ prevEl: '.banner02_prev', nextEl: '.banner02_next' }"
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">

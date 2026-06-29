@@ -23,6 +23,8 @@ const props = defineProps({
   videoFile: { type: String, default: '' }, // YT 連結為空時，改播此上傳影片（HTML5）
   news: { type: Array, default: () => [] },
   showNav: { type: Boolean, default: true }, // 顯示「上一則 / 下一則」按鈕（後台 bannerNav 控制）
+  loop: { type: Boolean, default: true }, // 後台 bannerLoop：無限循環
+  autoplay: { type: Boolean, default: true }, // 後台 bannerAutoplay：自動播放
 })
 
 // ── 兩個 Swiper 雙向同步（主圖切到第 i 張，cover 也切到第 i 張）
@@ -117,11 +119,11 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
         class="index_banner"
         :modules="[Autoplay, EffectFade, Pagination, Navigation, Controller]"
         :slides-per-view="1"
-        :loop="rows.length > 1"
+        :loop="loop && rows.length > 1"
         effect="fade"
         :fade-effect="{ crossFade: true }"
         :speed="1000"
-        :autoplay="{ delay: 5000, disableOnInteraction: false }"
+        :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
         :pagination="{ clickable: true }"
         :navigation="showNav && rows.length > 1 ? { prevEl: '.banner_nav_prev', nextEl: '.banner_nav_next' } : false"
         :allow-touch-move="false"
@@ -171,7 +173,7 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
         class="index_banner_cover"
         :modules="[EffectFade, Controller]"
         :slides-per-view="1"
-        :loop="rows.length > 1"
+        :loop="loop && rows.length > 1"
         effect="fade"
         :fade-effect="{ crossFade: true }"
         :allow-touch-move="false"

@@ -39,6 +39,8 @@ defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // memo 換行：\n → <br>（對應原 PHP nl2br）
@@ -131,11 +133,11 @@ onBeforeUnmount(() => {
       :class="{ beginning }"
       :modules="[Autoplay, EffectFade, Pagination]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && (rows.length > 1)"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1000"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
       :pagination="{ clickable: true }"
       @swiper="onMainReady"
       @slide-change="bgPos"
@@ -148,9 +150,9 @@ onBeforeUnmount(() => {
 
         <div class="frosted_glass">
           <div class="hollow_txt">
-            <p v-if="row.title || row.title2">
+            <p v-if="row.title || row.subtitle">
               <span class="hollow_1" :style="{ '--bg': `url('${row.image?.pc}')` }">{{ row.title }}</span>
-              <span>{{ row.title2 }}</span>
+              <span>{{ row.subtitle }}</span>
             </p>
             <p v-if="row.title3 || row.title4">
               <span class="hollow_2" :style="{ '--bg': `url('${row.image?.pc}')` }">{{ row.title3 }}</span>

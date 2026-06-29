@@ -30,6 +30,8 @@ const props = defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // 換行：把 \n 轉成 <br>（對應原 PHP nl2br）
@@ -43,11 +45,11 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       class="index_banner"
       :modules="[Autoplay, EffectFade, Navigation]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && (rows.length > 1)"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1600"
-      :autoplay="{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: false } : false"
       :navigation="{ prevEl: '.banner20_prev', nextEl: '.banner20_next' }"
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">

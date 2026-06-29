@@ -21,6 +21,8 @@ const props = defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // 換行標題：把 \n 轉成 <br>（對應原 PHP 內容換行）
@@ -35,24 +37,25 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       class="index_banner"
       :modules="[Autoplay, EffectFade, Pagination]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && (rows.length > 1)"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1600"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
       :pagination="{ clickable: true }"
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
           <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title2 || ''" />
+          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
         <div class="cover" :class="`js-banner-row-${i}`">
-          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title2" v-html="toHtml(row.title2)" />
-          <h2 v-if="row.title3" v-html="toHtml(row.title3)" />
+          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
+          <h2 v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
+          <p v-if="row.memo" class="cover_memo" v-html="toHtml(row.memo)" />
 
-          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title2 || 'VIEW MORE'">
+          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">
             <span>{{ $t('btn.more') }}</span>
           </NuxtLink>
         </div>
@@ -150,6 +153,15 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         }
       }
 
+      // 第三行：說明文
+      .cover_memo {
+        color: var(--banner-memo-color, #fff);
+        font-size: clamp(15px, calc(17 / 19.2 * 1vw), calc(17 / 1920 * 2560 * 1px));
+        line-height: 1.5;
+        margin-top: fluid(15);
+        transition: all 0.3s, opacity 0.8s 0.2s, transform 0.8s 0.2s;
+      }
+
       // 了解更多按鈕（對應原 .button06 center；btnMarginTop(1)）
       .cover_btn {
         margin-top: fluid(55);
@@ -177,8 +189,11 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         > :nth-child(2) {
           transition: all 0.3s, opacity 0.8s 1.1s, transform 0.8s 1.1s;
         }
-        .cover_btn {
+        .cover_memo {
           transition: all 0.3s, opacity 0.8s 1.2s, transform 0.8s 1.2s;
+        }
+        .cover_btn {
+          transition: all 0.3s, opacity 0.8s 1.3s, transform 0.8s 1.3s;
         }
       }
     }

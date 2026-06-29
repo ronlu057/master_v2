@@ -30,6 +30,8 @@ defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
   // 底部弧形遮罩圖（已將 banner11_mask.png 複製進 public/img/banner/）
   mask: { type: String, default: '/img/banner/banner11_mask.png' },
 })
@@ -42,11 +44,11 @@ defineProps({
       class="index_banner"
       :modules="[Autoplay, EffectFade, Pagination]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && (rows.length > 1)"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="2000"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
       :pagination="{ clickable: true }"
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">
@@ -58,11 +60,11 @@ defineProps({
 
           <div class="cover_txt" :class="`js-banner-row-${i}`">
             <div>{{ row.title }}</div>
-            <component :is="i === 0 ? 'h1' : 'h2'">{{ row.title2 }}</component>
-            <div>{{ row.title3 }}</div>
+            <component :is="i === 0 ? 'h1' : 'h2'">{{ row.subtitle }}</component>
+            <div>{{ row.memo }}</div>
 
             <div v-if="row.link" class="button_set">
-              <NuxtLink class="cover_btn" :to="row.link" :title="row.title2 || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
+              <NuxtLink class="cover_btn" :to="row.link" :title="row.subtitle || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
             </div>
           </div>
         </div>

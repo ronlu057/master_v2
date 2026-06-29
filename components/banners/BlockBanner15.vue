@@ -28,6 +28,8 @@ const props = defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // 換行標語：把 \n 轉成 <br>（對應原 PHP nl2br）
@@ -55,11 +57,11 @@ const onSlideChange = (s) => {
       class="index_banner"
       :modules="[Autoplay, EffectFade, Pagination, Navigation]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && (rows.length > 1)"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1000"
-      :autoplay="{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: false } : false"
       :pagination="{ clickable: true }"
       :navigation="{ prevEl: '.banner15_prev', nextEl: '.banner15_next' }"
       @slide-change="onSlideChange"
@@ -73,8 +75,8 @@ const onSlideChange = (s) => {
 
           <div class="cover_txt" :class="`js-banner-row-${i}`">
             <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title">{{ row.title }}</component>
-            <div v-if="row.title2">{{ row.title2 }}</div>
-            <div v-if="row.slogan" v-html="toHtml(row.slogan)" />
+            <div v-if="row.subtitle">{{ row.subtitle }}</div>
+            <div v-if="row.memo" v-html="toHtml(row.memo)" />
 
             <div class="button_set">
               <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">

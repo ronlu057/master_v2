@@ -32,6 +32,8 @@ const props = defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true },
+  autoplay: { type: Boolean, default: true },
 })
 
 // 換行欄位：把 \n 轉成 <br>（對應原 PHP nl2br）
@@ -86,11 +88,11 @@ const toggleSound = () => { muted.value = !muted.value }
         class="index_banner"
         :modules="[Autoplay, EffectFade, Pagination, Navigation]"
         :slides-per-view="1"
-        :loop="rows.length > 1"
+        :loop="loop && (rows.length > 1)"
         effect="fade"
         :fade-effect="{ crossFade: true }"
         :speed="1000"
-        :autoplay="{ delay: 5000, disableOnInteraction: false }"
+        :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
         :pagination="{ clickable: true }"
         :navigation="{ prevEl: '.banner13_prev', nextEl: '.banner13_next' }"
       >
@@ -103,14 +105,14 @@ const toggleSound = () => { muted.value = !muted.value }
 
             <div class="cover_txt" :class="`js-banner-row-${i}`">
               <div v-if="row.title">{{ row.title }}</div>
-              <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title2">{{ row.title2 }}</component>
+              <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.subtitle">{{ row.subtitle }}</component>
               <p v-if="row.memo" v-html="toHtml(row.memo)" />
 
               <div v-if="videoEmbedUrl" class="play" @click="onPlay">
                 <span class="play_icon" aria-hidden="true"></span>
                 <span>WATCH VIDEO</span>
               </div>
-              <NuxtLink v-else-if="row.link" class="cover_btn" :to="row.link" :title="row.title2 || 'VIEW MORE'">
+              <NuxtLink v-else-if="row.link" class="cover_btn" :to="row.link" :title="row.subtitle || 'VIEW MORE'">
                 <span>VIEW MORE</span>
               </NuxtLink>
             </div>

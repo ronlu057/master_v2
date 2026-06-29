@@ -25,6 +25,8 @@ const props = defineProps({
   // BlockBanner01 介面相容（本版型無影片 / 無新聞，videoUrl、news 忽略）
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true }, // 後台 bannerLoop：無限循環
+  autoplay: { type: Boolean, default: true }, // 後台 bannerAutoplay：自動播放
 })
 
 // 換行標語：把 \n 轉成 <br>（對應原 PHP 內嵌 <br>）
@@ -57,7 +59,7 @@ const onCoverReady = (s) => {
       class="index_banner"
       :modules="[EffectFade, Controller]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && rows.length > 1"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1600"
@@ -83,11 +85,11 @@ const onCoverReady = (s) => {
       class="index_cover"
       :modules="[Autoplay, EffectFade, Pagination, Navigation, Controller]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && rows.length > 1"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1600"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
       :pagination="{ clickable: true }"
       :navigation="{ prevEl: '.banner06_prev', nextEl: '.banner06_next' }"
       @swiper="onCoverReady"
@@ -96,11 +98,11 @@ const onCoverReady = (s) => {
         <div class="wider_container" :class="`js-banner-row-${i}`">
           <ul>
             <li><div>{{ row.title }}</div></li>
-            <li><component :is="i === 0 ? 'h1' : 'h2'">{{ row.title2 }}</component></li>
-            <li><div v-html="toHtml(row.slogan)" /></li>
+            <li><component :is="i === 0 ? 'h1' : 'h2'">{{ row.subtitle }}</component></li>
+            <li><div v-html="toHtml(row.memo)" /></li>
           </ul>
 
-          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title2 || 'VIEW MORE'">
+          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.subtitle || 'VIEW MORE'">
             <span>VIEW MORE</span>
           </NuxtLink>
         </div>

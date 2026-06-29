@@ -27,6 +27,8 @@ const props = defineProps({
   // BlockBanner01 介面相容（本版型未使用 videoUrl / news）
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true }, // 後台 bannerLoop：無限循環
+  autoplay: { type: Boolean, default: true }, // 後台 bannerAutoplay：自動播放
 })
 
 // 換行文字：\n -> <br>（對應原 PHP nl2br）
@@ -49,12 +51,12 @@ const onProductSlideChange = (s) => {
   const i = s.realIndex
   productNum.value = String(i + 1).padStart(2, '0')
   const row = props.rows[i]
-  productName.value = (row && (row.name || row.title)) || ''
+  productName.value = (row && row.subtitle) || ''
 }
 
 // 初始化左下產品資訊
 const firstRow = computed(() => props.rows[0] || {})
-const initName = computed(() => firstRow.value.name || firstRow.value.title || '')
+const initName = computed(() => firstRow.value.subtitle || '')
 </script>
 
 <template>
@@ -68,7 +70,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
 
         <div class="editor" :class="'js-banner-row-0'">
           <h1 v-if="title" class="editor_title">{{ title }}</h1>
-          <p v-if="firstRow.memo" v-html="toHtml(firstRow.memo)" />
+          <p v-if="firstRow.title" v-html="toHtml(firstRow.title)" />
         </div>
 
         <div v-if="firstRow.link" class="button_set">
@@ -86,18 +88,18 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
             class="index_banner_product"
             :modules="[Autoplay, Pagination, Navigation]"
             :slides-per-view="1"
-            :loop="rows.length > 1"
+            :loop="loop && rows.length > 1"
             :speed="1000"
-            :autoplay="{ delay: 5000, disableOnInteraction: false }"
+            :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
             :pagination="{ clickable: true }"
             :navigation="{ prevEl: '.product_prev', nextEl: '.product_next' }"
             @slide-change="onProductSlideChange"
           >
             <SwiperSlide v-for="(row, i) in rows" :key="i">
-              <NuxtLink :to="row.link || ''" :title="row.name || row.title || 'VIEW MORE'">
-                <img :src="row.image?.pc || row.image?.mb" :alt="row.alt || row.title || ''" />
+              <NuxtLink :to="row.link || ''" :title="row.subtitle || 'VIEW MORE'">
+                <img :src="row.image?.pc || row.image?.mb" :alt="row.alt || row.subtitle || ''" />
               </NuxtLink>
-              <p>{{ row.name || row.title }}</p>
+              <p>{{ row.subtitle }}</p>
             </SwiperSlide>
           </Swiper>
 
@@ -118,7 +120,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
         class="index_banner"
         :modules="[EffectFade, Navigation]"
         :slides-per-view="1"
-        :loop="rows.length > 1"
+        :loop="loop && rows.length > 1"
         effect="fade"
         :fade-effect="{ crossFade: true }"
         :speed="1000"
@@ -128,7 +130,7 @@ const initName = computed(() => firstRow.value.name || firstRow.value.title || '
         <SwiperSlide v-for="(row, i) in rows" :key="i">
           <picture>
             <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
+            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.subtitle || ''" />
           </picture>
         </SwiperSlide>
       </Swiper>

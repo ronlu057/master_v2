@@ -34,6 +34,8 @@ const props = defineProps({
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
   news: { type: Array, default: () => [] },
+  loop: { type: Boolean, default: true }, // 後台 bannerLoop：無限循環
+  autoplay: { type: Boolean, default: true }, // 後台 bannerAutoplay：自動播放
 })
 
 // 換行：把 \n 轉成 <br>（對應原 PHP nl2br / 樣板內 <br>）
@@ -60,11 +62,11 @@ const leftMb = (row) => row.product?.mb || row.product?.pc || OB_MB
       class="index_banner"
       :modules="[Autoplay, EffectFade, Navigation, Pagination]"
       :slides-per-view="1"
-      :loop="rows.length > 1"
+      :loop="loop && rows.length > 1"
       effect="fade"
       :fade-effect="{ crossFade: true }"
       :speed="1000"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
       :pagination="{ clickable: true }"
       :navigation="{ prevEl: '.banner03_prev', nextEl: '.banner03_next' }"
     >

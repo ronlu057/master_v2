@@ -75,6 +75,8 @@ useHead(() => {
       :video-file="eff.videoFile || ''"
       :news="eff.news || []"
       :show-nav="state.bannerNav"
+      :loop="state.bannerLoop"
+      :autoplay="state.bannerAutoplay"
     />
   </div>
 </template>
