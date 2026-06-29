@@ -2,7 +2,7 @@
   "projectType": "module",
   "header": "Header01",
   "pageBanner": "PageBanner01",
-  "blockBanner": "BlockBanner04",
+  "blockBanner": "BlockBanner05",
   "apiBase": "",
   "defaultLang": "tw",
   "enableShop": false,
@@ -376,35 +376,7 @@
   "headerIconBgScroll": "",
   "headerIconHoverBgScroll": "",
   "bannerStyles": {
-    "BlockBanner03": {
-      "bannerTitleColor": "",
-      "bannerSubtitleColor": "",
-      "bannerMemoColor": "",
-      "bannerNav": true,
-      "bannerNavIcon": {
-        "name": "chevron",
-        "style": "solid"
-      },
-      "bannerNavSize": 120,
-      "bannerNavRadius": 0,
-      "bannerNavColor": "",
-      "bannerNavBg": "rgba(255,255,255,0.00)",
-      "bannerNavIconSize": 100,
-      "bannerNavGap": 30,
-      "bannerNavThickness": "",
-      "bannerLoop": true,
-      "bannerAutoplay": true,
-      "bannerDots": false,
-      "bannerDotBg": "",
-      "bannerDotActiveBg": "",
-      "bannerDotBorderWidth": 0,
-      "bannerDotBorderColor": "",
-      "bannerDotW": 10,
-      "bannerDotH": 10,
-      "bannerDotActiveW": 12,
-      "bannerDotActiveH": 12
-    },
-    "BlockBanner04": {
+    "BlockBanner05": {
       "bannerTitleColor": "",
       "bannerSubtitleColor": "",
       "bannerMemoColor": "",

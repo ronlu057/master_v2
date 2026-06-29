@@ -291,6 +291,57 @@
         ],
         "videoUrl": "",
         "videoFile": ""
+      },
+      "BlockBanner05": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782710761259.jpg",
+              "mb": "/img/tw/banner/banner-1782710761259.jpg"
+            },
+            "alt": "白色與粉色牡丹花束特寫",
+            "title": {
+              "tw": "粉白牡丹 傾心綻放",
+              "en": "Spring craftsmanship, precise load-bearing",
+              "jp": "スプリングの職人技、精密な耐荷重",
+              "kr": "스프링 장인정신, 정밀한 하중 지지"
+            },
+            "subtitle": {
+              "tw": "柔美花顏，細膩特寫",
+              "en": "Metal spring, the soul of precision structure",
+              "jp": "金属ばね、精密構造の魂",
+              "kr": "금속 스프링, 정밀 구조의 영혼"
+            },
+            "memo": {
+              "tw": "捕捉盛開牡丹的純粹之美，獻給獨特的您。",
+              "en": "From miniature to heavy-duty, springs inject vitality into machinery, demonstrating excellent resilience and elasticity.",
+              "jp": "ミニチュアからヘビーデューティーまで、スプリングは機械に活力を注入し、優れた弾力性と弾性を示します。",
+              "kr": "소형부터 중장비까지, 스프링은 기계에 활력을 불어넣고 탁월한 탄성과 탄성을 보여줍니다."
+            },
+            "btnText": "",
+            "link": ""
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782712039744.jpg",
+              "mb": "/img/tw/banner/banner-1782712039744.jpg"
+            },
+            "alt": "汽車避震器彈簧與零件特寫",
+            "title": {
+              "tw": "懸吊新視界"
+            },
+            "subtitle": {
+              "tw": "精準調校，駕馭極致"
+            },
+            "memo": {
+              "tw": "汽車懸吊避震器彈簧特寫，感受每一次的貼地飛行。"
+            },
+            "btnText": "",
+            "link": ""
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
       }
     }
   },

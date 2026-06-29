@@ -79,7 +79,9 @@ function classifyError(e) {
 
 // 呼叫 Gemini generateContent：多金鑰 + 模型備援 + 「過載」指數退避重試。
 //   - 過載（暫時性）→ 同金鑰同模型退避後重試，再換下一個模型。
-//   - 配額用盡 → 不重試，直接換「下一把金鑰」（額度按金鑰算，換把就有額度）。
+//   - 配額用盡 → 換「下一個模型」（免費額度是「每模型每日」獨立計算，
+//     例如 2.5-flash 每日僅 20 次，但 2.5-flash-lite 有獨立且更高的額度）；
+//     同把金鑰所有模型都用盡，才換下一把金鑰。
 // args: { model?, contents, generationConfig }
 // 成功回傳 API 原始 data；全部失敗丟 502/429（過載/配額給友善訊息）。
 export async function callGemini({ model, contents, generationConfig }) {
@@ -90,15 +92,16 @@ export async function callGemini({ model, contents, generationConfig }) {
       message: '尚未設定 NUXT_GEMINI_KEY，請到 .env.local 填入 Gemini API 金鑰',
     })
   }
-  // 候選模型：只留免費方案可用且支援 vision 的 2.5 系列（2.0-flash 免費額度為 0，不放）
-  const candidates = [...new Set([model || geminiModel(), 'gemini-2.5-flash', 'gemini-2.5-flash-lite'])]
+  // 候選模型：免費方案可用且支援 vision 的 2.5 系列（2.0-flash 免費額度為 0，不放）。
+  // flash-lite 每日額度比 flash 高很多，放進備援；用盡某模型會自動換下一個。
+  const candidates = [
+    ...new Set([model || geminiModel(), 'gemini-2.5-flash-lite', 'gemini-2.5-flash']),
+  ]
   const backoff = [600, 1500, 3000] // 同一模型遇「過載」的退避等待（ms）
   let lastErr = null
   let sawQuota = false
   for (const key of keys) {
-    let quotaThisKey = false // 這把金鑰配額用盡 → 跳出換下一把
     for (const m of candidates) {
-      if (quotaThisKey) break
       for (let attempt = 0; attempt <= backoff.length; attempt++) {
         try {
           return await $fetch(`${API}/${m}:generateContent?key=${key}`, {
@@ -110,8 +113,7 @@ export async function callGemini({ model, contents, generationConfig }) {
           const { isQuota, isOverload } = classifyError(e)
           if (isQuota) {
             sawQuota = true
-            quotaThisKey = true
-            break // 配額用盡 → 不重試、不換模型，直接換下一把金鑰
+            break // 配額用盡（每模型獨立）→ 換下一個模型（如 flash-lite 額度分開）
           }
           if (isOverload && attempt < backoff.length) {
             await sleep(backoff[attempt]) // 過載 → 退避後同模型重試

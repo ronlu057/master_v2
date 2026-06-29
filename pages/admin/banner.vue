@@ -53,6 +53,17 @@ const BANNER_COLOR_FIELDS = [
 const hasAnyBannerColor = computed(() => BANNER_COLOR_FIELDS.some((f) => state[f.key]))
 const resetBannerColors = () => BANNER_COLOR_FIELDS.forEach((f) => setPreview(f.key, ''))
 
+// 色碼正規化：允許直接輸入 #ffffff / ffffff / #fff；空＝預設、其餘原樣保留
+const isHex6 = (v) => /^#[0-9a-fA-F]{6}$/.test(v || '')
+const normalizeHex = (v) => {
+  const t = (v || '').trim()
+  if (!t) return ''
+  const h = t.replace(/^#/, '')
+  if (/^[0-9a-fA-F]{6}$/.test(h)) return '#' + h.toLowerCase()
+  if (/^[0-9a-fA-F]{3}$/.test(h)) return '#' + h.split('').map((c) => c + c).join('').toLowerCase()
+  return t
+}
+
 // 輪播箭頭按鈕：icon（沿用 header 的 expand 箭頭組）/ 線條·實心 / 大小 / 圓角
 const NAV_ICON_OPTIONS = headerIconOptions('expand')
 const navIconName = computed(() => state.bannerNavIcon?.name || 'chevron')
@@ -729,8 +740,19 @@ onBeforeUnmount(() => {
         <div class="color-rows">
           <div v-for="f in BANNER_COLOR_FIELDS" :key="f.key" class="color-rows__row">
             <span class="color-rows__name">{{ f.name }}</span>
-            <input type="color" :value="state[f.key] || f.def" @input="setPreview(f.key, $event.target.value)" />
-            <code>{{ state[f.key] || '版型預設' }}</code>
+            <input
+              type="color"
+              :value="isHex6(state[f.key]) ? state[f.key] : f.def"
+              @input="setPreview(f.key, $event.target.value)"
+            />
+            <input
+              type="text"
+              class="hex-input"
+              :value="state[f.key]"
+              placeholder="版型預設 #ffffff"
+              @input="setPreview(f.key, $event.target.value)"
+              @change="setPreview(f.key, normalizeHex(state[f.key]))"
+            />
             <button
               v-if="state[f.key]"
               type="button"
@@ -1315,8 +1337,19 @@ onBeforeUnmount(() => {
             <div class="color-rows">
               <div v-for="c in slideColorFields" :key="c.key" class="color-rows__row">
                 <span class="color-rows__name">{{ c.name }}</span>
-                <input type="color" :value="row[c.key] || '#ffffff'" @input="row[c.key] = $event.target.value" />
-                <code>{{ row[c.key] || '預設' }}</code>
+                <input
+                  type="color"
+                  :value="isHex6(row[c.key]) ? row[c.key] : '#ffffff'"
+                  @input="row[c.key] = $event.target.value"
+                />
+                <input
+                  type="text"
+                  class="hex-input"
+                  :value="row[c.key]"
+                  placeholder="預設 #ffffff"
+                  @input="row[c.key] = $event.target.value"
+                  @change="row[c.key] = normalizeHex(row[c.key])"
+                />
                 <button v-if="row[c.key]" type="button" class="btn btn--ghost btn--sm" @click="row[c.key] = ''">
                   回到預設
                 </button>
@@ -1417,6 +1450,21 @@ onBeforeUnmount(() => {
     min-width: 86px;
     font-size: 12px;
     color: #9fc0ff;
+  }
+  .hex-input {
+    width: 130px;
+    padding: 5px 10px;
+    background: #0f1218;
+    color: #9fc0ff;
+    border: 1px solid #2a3242;
+    border-radius: 6px;
+    font: inherit;
+    font-size: 12px;
+
+    &:focus {
+      outline: 1px solid #4fc08d;
+      border-color: #4fc08d;
+    }
   }
 }
 .color-rows__name {

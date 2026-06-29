@@ -32,23 +32,26 @@ export default defineEventHandler(async (event) => {
   // 組 prompt 與 generationConfig：單欄位 vs 一次生成全部（標題+副標+內文，連貫）
   let prompt
   // thinkingBudget:0 關掉 2.5-flash 的思考（文案是簡單任務，否則思考會吃光 token → 回空字串）
-  const genConfig = { temperature: 1.0, maxOutputTokens: 256, thinkingConfig: { thinkingBudget: 0 } }
+  const genConfig = { temperature: 0.6, maxOutputTokens: 256, thinkingConfig: { thinkingBudget: 0 } }
   if (field === 'all') {
     prompt = [
-      '你是網站 banner 文案撰寫助手。請依主題產生「一組」首頁主視覺 banner 文案，三者需互相呼應、連貫。',
+      '你是網站 banner 文案撰寫助手。請依主題產生一組首頁主視覺 banner 文案，標題/副標/說明文三個欄位需互相呼應、連貫。',
       `語言：${lang}。${topicLine}`,
-      '輸出 JSON 物件，鍵與長度限制：',
+      '務必緊扣上述主題 / 關鍵字發想，不要自行虛構與主題無關的品牌或主題。',
+      '只輸出「單一個」JSON 物件（不是陣列），三個鍵與長度限制：',
       'title（主標，12 字以內，簡潔有力）、subtitle（副標，20 字以內）、memo（說明文，40 字以內，可一兩句）。',
-      '只回 JSON，不要 markdown、註解或多餘文字。',
+      '只回一個 JSON 物件，不要陣列、不要 markdown、不要註解或多餘文字。',
     ].join('\n')
-    genConfig.maxOutputTokens = 512
-    genConfig.responseMimeType = 'application/json'
+    // 不用 responseMimeType:'application/json'：gemini-2.5-flash 在「JSON 模式 + thinkingBudget:0」
+    // 常回空內容；改由文字解析 JSON（prompt 已要求只回 JSON，下方會 strip ```json 圍欄再 parse）。
+    genConfig.maxOutputTokens = 800
   } else {
     const spec = FIELD_SPEC[field]
     prompt = [
       `你是網站 banner 文案撰寫助手。請為首頁主視覺 banner 產生「${spec.label}」。`,
       `語言：${lang}。長度：${spec.limit}。${spec.extra}`,
       topicLine,
+      '務必緊扣上述主題 / 關鍵字，不要自行虛構與主題無關的品牌。',
       ctx.title && field !== 'title' ? `已有主標：「${ctx.title}」，請與其呼應。` : '',
       ctx.subtitle && field !== 'subtitle' ? `已有副標：「${ctx.subtitle}」。` : '',
       '只回傳文字本身，不要任何引號、標點符號開頭、說明或 markdown。',
@@ -65,10 +68,23 @@ export default defineEventHandler(async (event) => {
 
   // 一次全部：解析 JSON，回三欄位
   if (field === 'all') {
-    let obj
+    const cleaned = text.replace(/^```(?:json)?\s*|\s*```$/gi, '').trim()
+    let obj = null
     try {
-      obj = JSON.parse(text.replace(/^```json\s*|\s*```$/g, '').trim())
+      obj = JSON.parse(cleaned)
     } catch {
+      // fallback：從文字中抓第一個 {...} 區塊再 parse
+      const m = cleaned.match(/\{[\s\S]*\}/)
+      if (m) {
+        try {
+          obj = JSON.parse(m[0])
+        } catch {
+          obj = null
+        }
+      }
+    }
+    if (Array.isArray(obj)) obj = obj[0] || {} // 模型偶爾回多組陣列 → 取第一組
+    if (!obj || typeof obj !== 'object') {
       throw createError({ statusCode: 502, message: 'AI 回傳格式無法解析，請再試一次' })
     }
     return { ok: true, title: strip(obj.title), subtitle: strip(obj.subtitle), memo: strip(obj.memo) }
