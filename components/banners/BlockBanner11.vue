@@ -59,12 +59,12 @@ defineProps({
           </picture>
 
           <div class="cover_txt" :class="`js-banner-row-${i}`">
-            <div>{{ row.title }}</div>
-            <component :is="i === 0 ? 'h1' : 'h2'">{{ row.subtitle }}</component>
+            <div>{{ row.subtitle }}</div>
+            <component :is="i === 0 ? 'h1' : 'h2'">{{ row.title }}</component>
             <div>{{ row.memo }}</div>
 
             <div v-if="row.link" class="button_set">
-              <NuxtLink class="cover_btn" :to="row.link" :title="row.subtitle || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
+              <NuxtLink class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
             </div>
           </div>
         </div>

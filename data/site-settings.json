@@ -2,7 +2,7 @@
   "projectType": "module",
   "header": "Header01",
   "pageBanner": "PageBanner01",
-  "blockBanner": "BlockBanner05",
+  "blockBanner": "BlockBanner06",
   "apiBase": "",
   "defaultLang": "tw",
   "enableShop": false,
@@ -376,7 +376,7 @@
   "headerIconBgScroll": "",
   "headerIconHoverBgScroll": "",
   "bannerStyles": {
-    "BlockBanner05": {
+    "BlockBanner06": {
       "bannerTitleColor": "",
       "bannerSubtitleColor": "",
       "bannerMemoColor": "",

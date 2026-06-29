@@ -323,21 +323,63 @@
           },
           {
             "image": {
-              "pc": "/img/tw/banner/banner-1782712039744.jpg",
-              "mb": "/img/tw/banner/banner-1782712039744.jpg"
+              "pc": "/img/tw/banner/banner-1782715740214.jpg",
+              "mb": "/img/tw/banner/banner-1782715740214.jpg"
             },
-            "alt": "汽車避震器彈簧與零件特寫",
+            "alt": "全麥雜糧麵包特寫",
             "title": {
-              "tw": "懸吊新視界"
+              "tw": "彎道上的純白身影"
             },
             "subtitle": {
-              "tw": "精準調校，駕馭極致"
+              "tw": "俐落劃破每一個弧度"
             },
             "memo": {
-              "tw": "汽車懸吊避震器彈簧特寫，感受每一次的貼地飛行。"
+              "tw": "感受白色轎車在賽道上，展現極致操控與速度的魅力。"
             },
             "btnText": "",
             "link": ""
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner06": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782716085137.jpg",
+              "mb": "/img/tw/banner/banner-1782716085137.jpg"
+            },
+            "alt": "暗色背景下的華麗花束，包含牡丹、百合、繡球",
+            "title": {
+              "tw": "暗夜綻放的奢華"
+            },
+            "subtitle": {
+              "tw": "牡丹、百合、繡球，暗色背景下的絕美盛宴"
+            },
+            "memo": {
+              "tw": "感受花卉的極致色彩與暗夜的靜謐，交織成一幅視覺的華麗篇章。"
+            },
+            "btnText": "",
+            "link": "/about"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782716129949.jpg",
+              "mb": "/img/tw/banner/banner-1782716129949.jpg"
+            },
+            "alt": "金黃色液體流動的抽象紋理",
+            "title": {
+              "tw": "流金歲月"
+            },
+            "subtitle": {
+              "tw": "抽象金黃液體紋理，點亮視覺饗宴"
+            },
+            "memo": {
+              "tw": "感受流動的溫暖與光澤，讓想像力隨之飛揚。"
+            },
+            "btnText": "",
+            "link": "/about"
           }
         ],
         "videoUrl": "",

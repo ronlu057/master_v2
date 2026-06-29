@@ -104,15 +104,15 @@ const toggleSound = () => { muted.value = !muted.value }
             </picture>
 
             <div class="cover_txt" :class="`js-banner-row-${i}`">
-              <div v-if="row.title">{{ row.title }}</div>
-              <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.subtitle">{{ row.subtitle }}</component>
+              <div v-if="row.subtitle">{{ row.subtitle }}</div>
+              <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title">{{ row.title }}</component>
               <p v-if="row.memo" v-html="toHtml(row.memo)" />
 
               <div v-if="videoEmbedUrl" class="play" @click="onPlay">
                 <span class="play_icon" aria-hidden="true"></span>
                 <span>WATCH VIDEO</span>
               </div>
-              <NuxtLink v-else-if="row.link" class="cover_btn" :to="row.link" :title="row.subtitle || 'VIEW MORE'">
+              <NuxtLink v-else-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">
                 <span>VIEW MORE</span>
               </NuxtLink>
             </div>

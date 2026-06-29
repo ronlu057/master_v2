@@ -97,12 +97,12 @@ const onCoverReady = (s) => {
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <div class="wider_container" :class="`js-banner-row-${i}`">
           <ul>
-            <li><div>{{ row.title }}</div></li>
-            <li><component :is="i === 0 ? 'h1' : 'h2'">{{ row.subtitle }}</component></li>
+            <li><div>{{ row.subtitle }}</div></li>
+            <li><component :is="i === 0 ? 'h1' : 'h2'">{{ row.title }}</component></li>
             <li><div v-html="toHtml(row.memo)" /></li>
           </ul>
 
-          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.subtitle || 'VIEW MORE'">
+          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">
             <span>VIEW MORE</span>
           </NuxtLink>
         </div>

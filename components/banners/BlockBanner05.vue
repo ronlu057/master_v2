@@ -119,12 +119,13 @@ const onReachBeginning = (s) => {
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <div class="cover" :class="`js-banner-row-${i}`">
-          <div v-if="row.title">{{ row.title }}</div>
-          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
+          <!-- nth-child(1)=小字(--banner-subtitle-color) → 副標；nth-child(2)=大字 h1(--banner-title-color) → 主標 -->
+          <div v-if="row.subtitle">{{ row.subtitle }}</div>
+          <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
           <div v-if="row.memo">{{ row.memo }}</div>
 
           <div v-if="row.link" class="button_set">
-            <NuxtLink class="cover_btn" :to="row.link" :title="row.subtitle || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
+            <NuxtLink class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'"><span>VIEW MORE</span></NuxtLink>
           </div>
         </div>
       </SwiperSlide>

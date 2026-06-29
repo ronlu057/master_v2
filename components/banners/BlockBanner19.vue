@@ -68,12 +68,12 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           <div class="wider_container">
             <div class="row no_gutter">
               <div class="info" :class="`js-banner-row-${i}`">
-                <div v-if="row.title" v-html="toHtml(row.title)" />
-                <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
+                <div v-if="row.subtitle" v-html="toHtml(row.subtitle)" />
+                <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" v-html="toHtml(row.title)" />
                 <div v-if="row.memo" v-html="toHtml(row.memo)" />
 
                 <div class="button_set">
-                  <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.subtitle || 'VIEW MORE'" target="_blank">
+                  <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'" target="_blank">
                     <span>VIEW MORE</span>
                   </NuxtLink>
                 </div>

@@ -68,12 +68,12 @@ const onSlideChange = (s) => {
 
         <!-- p 順序固定（對應原 PHP 四行），讓 nth-child 動畫穩定；空值僅留空段落 -->
         <div class="cover" :class="`js-banner-row-${i}`">
-          <div>{{ row.title }}</div>
-          <component :is="i === 0 ? 'h1' : 'h2'" v-html="toHtml(row.subtitle)" />
+          <div>{{ row.subtitle }}</div>
+          <component :is="i === 0 ? 'h1' : 'h2'" v-html="toHtml(row.title)" />
           <div class="cover_line"><span></span></div>
           <div>{{ row.memo }}</div>
 
-          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.subtitle || 'VIEW MORE'">
+          <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">
             <span>VIEW MORE</span>
           </NuxtLink>
         </div>
