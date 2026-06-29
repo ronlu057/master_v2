@@ -194,6 +194,7 @@
               "pc": "/img/tw/banner/banner-asset-1782461718330.png",
               "mb": "/img/tw/banner/banner-asset-1782461718330.png"
             },
+            "productAlt": "冷卻機、軸承與主軸零件",
             "alt": "深色背景上盛開的各色花卉",
             "title": {
               "tw": "網頁的綻放時刻",
@@ -224,6 +225,44 @@
             },
             "btnText": "",
             "link": "/about"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782696952352.jpg",
+              "mb": "/img/tw/banner/banner-1782696952352.jpg"
+            },
+            "product": {
+              "pc": "/img/tw/banner/banner-asset-1782696956728.png",
+              "mb": "/img/tw/banner/banner-asset-1782696956728.png"
+            },
+            "productAlt": "白色工業冷水機、軸承與主軸馬達",
+            "alt": "清晨湖面霧氣繚繞，遠方山林翠綠茂密",
+            "title": {
+              "tw": "晨霧山湖，仙境之旅",
+              "en": "Morning Mist Mountain Lake, Fairyland Journey",
+              "jp": "朝霧の山と湖、仙境の旅",
+              "kr": "아침 안개 산과 호수, 신선경 여행"
+            },
+            "titleSpan": {
+              "tw": "GDT",
+              "en": "GDT",
+              "jp": "GDT",
+              "kr": "GDT"
+            },
+            "subtitle": {
+              "tw": "踏入清晨的詩意畫卷，感受山水間的寧靜與神秘。",
+              "en": "Step into the poetic scroll of early morning, feel the tranquility and mystery between mountains and rivers.",
+              "jp": "早朝の詩的な絵巻に足を踏み入れ、山水画の静けさと神秘を感じてください。",
+              "kr": "이른 아침의 시적인 그림 두루마리에 발을 들여놓고 산과 강 사이의 고요함과 신비를 느껴보세요."
+            },
+            "memo": {
+              "tw": "在晨霧瀰漫的山林湖泊間，體驗超凡脫俗的仙境，讓心靈沉浸於大自然的詩意與神秘。",
+              "en": "Amidst the misty mountains, forests, and lakes, experience an extraordinary fairyland, letting your soul immerse in the poetic and mysterious beauty of nature.",
+              "jp": "朝霧に包まれた山林湖畔で、この上ない別世界の体験をし、心ゆくまで自然の詩情と神秘に浸ってください。",
+              "kr": "안개 낀 산림 호수 사이에서, 초월적인 선경을 체험하고, 자연의 시적인 아름다움과 신비에 마음을 담그세요."
+            },
+            "btnText": "",
+            "link": ""
           }
         ],
         "videoUrl": "",

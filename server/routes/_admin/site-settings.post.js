@@ -88,6 +88,7 @@ const ALLOWED_KEYS = [
   'bannerDotActiveW',
   'bannerDotActiveH',
   'bannerStyles',
+  'headerStyles',
   'enabledLangs',
   'langLabels',
   'navtool',

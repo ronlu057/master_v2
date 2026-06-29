@@ -405,5 +405,79 @@
       "bannerDotActiveW": 12,
       "bannerDotActiveH": 12
     }
+  },
+  "bannerNavThickness": "",
+  "headerStyles": {
+    "Header01": {
+      "headerBgColor": "transparent",
+      "headerBgColorScroll": "#ffffff",
+      "headerMenuColor": "#ffffff",
+      "headerMenuHoverColor": "#4fc08d",
+      "headerDropdownColor": "#4a4a4a",
+      "headerDropdownHoverColor": "#58c694",
+      "headerDropdownBg": "#f5f5f5",
+      "headerDropdownItemBg": "#ffffff",
+      "headerDropdownItemHoverBg": "#d5dbdc",
+      "headerDropdownBorderColor": "",
+      "headerDropdownItemBorderColor": "",
+      "headerIconColor": "#ffffff",
+      "headerIconHoverColor": "#54c08f",
+      "headerIconBg": "",
+      "headerIconHoverBg": "",
+      "headerMenuColorScroll": "",
+      "headerMenuHoverColorScroll": "",
+      "headerDropdownColorScroll": "",
+      "headerDropdownHoverColorScroll": "",
+      "headerDropdownBgScroll": "",
+      "headerDropdownItemBgScroll": "",
+      "headerDropdownItemHoverBgScroll": "",
+      "headerDropdownBorderColorScroll": "",
+      "headerDropdownItemBorderColorScroll": "",
+      "headerIconColorScroll": "",
+      "headerIconHoverColorScroll": "",
+      "headerIconBgScroll": "",
+      "headerIconHoverBgScroll": "",
+      "headerIconRadius": "",
+      "headerDropdownRadius": 7,
+      "headerDropdownItemRadius": 5,
+      "headerNavtoolDropdownRadius": "",
+      "headerNavtoolDropdownItemRadius": "",
+      "headerDropdownPaddingY": "",
+      "headerDropdownPaddingX": "",
+      "headerDropdownBorderWidth": 0,
+      "headerDropdownItemPaddingY": "",
+      "headerDropdownItemPaddingX": 20,
+      "headerDropdownItemBorderWidth": 0,
+      "headerMenuFontSize": "",
+      "headerSubmenuStyle": "flyout",
+      "headerSubmenuIconPos": "right",
+      "headerSubmenuIconOffset": 9,
+      "headerIcons": {
+        "search": {
+          "name": "search",
+          "style": "line"
+        },
+        "language": {
+          "name": "globe",
+          "style": "line"
+        },
+        "member": {
+          "name": "user",
+          "style": "line"
+        },
+        "favorite": {
+          "name": "heart",
+          "style": "line"
+        },
+        "cart": {
+          "name": "cart",
+          "style": "line"
+        }
+      },
+      "headerSubmenuIcon": {
+        "name": "chevron",
+        "style": "solid"
+      }
+    }
   }
 }

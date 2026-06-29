@@ -30,6 +30,58 @@ export const BANNER_LAYOUT_KEYS = [
   { key: 'bannerDotActiveH', def: 12 },
 ]
 
+// ── Header「每個版型各自一組」的設定欄位 ──────────────────────
+// 同 banner：扁平 key 存「目前啟用 Header」的值（執行期 / SSR 直接讀），
+// 另整包記進 headerStyles[版型名]，切版型各自還原、互不影響。
+// 不含全站共用的 logo / logoMaxHeight / customCss；navtool 已自有 per-header 機制。
+export const HEADER_LAYOUT_KEYS = [
+  { key: 'headerBgColor', def: '' },
+  { key: 'headerBgColorScroll', def: '' },
+  { key: 'headerMenuColor', def: '' },
+  { key: 'headerMenuHoverColor', def: '' },
+  { key: 'headerDropdownColor', def: '' },
+  { key: 'headerDropdownHoverColor', def: '' },
+  { key: 'headerDropdownBg', def: '' },
+  { key: 'headerDropdownItemBg', def: '' },
+  { key: 'headerDropdownItemHoverBg', def: '' },
+  { key: 'headerDropdownBorderColor', def: '' },
+  { key: 'headerDropdownItemBorderColor', def: '' },
+  { key: 'headerIconColor', def: '' },
+  { key: 'headerIconHoverColor', def: '' },
+  { key: 'headerIconBg', def: '' },
+  { key: 'headerIconHoverBg', def: '' },
+  { key: 'headerMenuColorScroll', def: '' },
+  { key: 'headerMenuHoverColorScroll', def: '' },
+  { key: 'headerDropdownColorScroll', def: '' },
+  { key: 'headerDropdownHoverColorScroll', def: '' },
+  { key: 'headerDropdownBgScroll', def: '' },
+  { key: 'headerDropdownItemBgScroll', def: '' },
+  { key: 'headerDropdownItemHoverBgScroll', def: '' },
+  { key: 'headerDropdownBorderColorScroll', def: '' },
+  { key: 'headerDropdownItemBorderColorScroll', def: '' },
+  { key: 'headerIconColorScroll', def: '' },
+  { key: 'headerIconHoverColorScroll', def: '' },
+  { key: 'headerIconBgScroll', def: '' },
+  { key: 'headerIconHoverBgScroll', def: '' },
+  { key: 'headerIconRadius', def: '' },
+  { key: 'headerDropdownRadius', def: '' },
+  { key: 'headerDropdownItemRadius', def: '' },
+  { key: 'headerNavtoolDropdownRadius', def: '' },
+  { key: 'headerNavtoolDropdownItemRadius', def: '' },
+  { key: 'headerDropdownPaddingY', def: '' },
+  { key: 'headerDropdownPaddingX', def: '' },
+  { key: 'headerDropdownBorderWidth', def: '' },
+  { key: 'headerDropdownItemPaddingY', def: '' },
+  { key: 'headerDropdownItemPaddingX', def: '' },
+  { key: 'headerDropdownItemBorderWidth', def: '' },
+  { key: 'headerMenuFontSize', def: '' },
+  { key: 'headerSubmenuStyle', def: 'flyout' },
+  { key: 'headerSubmenuIconPos', def: 'right' },
+  { key: 'headerSubmenuIconOffset', def: 8 },
+  { key: 'headerIcons', def: {} },
+  { key: 'headerSubmenuIcon', def: {} },
+]
+
 export function useSiteSettings() {
   const { state, setPreview, clearPreview } = useEffectiveSettings()
   const navtoolCfg = useNavtoolConfig()
@@ -46,6 +98,45 @@ export function useSiteSettings() {
   const submitting = useState('site-settings-submitting', () => false)
   // Banner 各版型設定草稿（編輯中、未提交）：{ [版型名]: { ...BANNER_LAYOUT_KEYS } }
   const bannerDraft = useState('banner-styles-draft', () => ({}))
+  // Header 各版型設定草稿（同上）
+  const headerDraft = useState('header-styles-draft', () => ({}))
+
+  // 以 persisted 為基底重建 header 草稿（缺目前啟用版型 → 用扁平值補上）
+  const seedHeaderDraft = () => {
+    const draft = { ...(persisted.value.headerStyles || {}) }
+    const active = persisted.value.header || 'Header01'
+    if (!draft[active]) {
+      const o = {}
+      for (const { key } of HEADER_LAYOUT_KEYS) o[key] = persisted.value[key]
+      draft[active] = o
+    }
+    headerDraft.value = draft
+  }
+
+  // 切換 Header 版型：先存舊版型草稿 → 切 → 載入新版型草稿（沒設過用預設）寫進 state
+  const switchHeader = (name) => {
+    const cur = {}
+    for (const { key } of HEADER_LAYOUT_KEYS) cur[key] = state[key]
+    headerDraft.value = { ...headerDraft.value, [state.header]: cur }
+    setPreview('header', name)
+    const next = headerDraft.value[name]
+    for (const { key, def } of HEADER_LAYOUT_KEYS) {
+      setPreview(key, next && next[key] !== undefined ? next[key] : def)
+    }
+  }
+
+  // Header 是否有未提交變動（目前啟用版型扁平值 vs persisted；其他版型草稿 vs persisted.headerStyles）
+  const headerDirty = computed(() => {
+    for (const { key } of HEADER_LAYOUT_KEYS) {
+      if (JSON.stringify(state[key]) !== JSON.stringify(persisted.value[key])) return true
+    }
+    const saved = persisted.value.headerStyles || {}
+    for (const name of Object.keys(headerDraft.value)) {
+      if (name === state.header) continue
+      if (JSON.stringify(headerDraft.value[name]) !== JSON.stringify(saved[name] || {})) return true
+    }
+    return false
+  })
 
   // 以 persisted 為基底重建 banner 草稿：
   //   - 既有 bannerStyles 全收
@@ -69,6 +160,7 @@ export function useSiteSettings() {
       options.value = res.options
       persisted.value = res.settings
       seedBannerDraft()
+      seedHeaderDraft()
       loaded.value = true
     } catch (e) {
       console.warn('[useSiteSettings] load failed:', e)
@@ -201,9 +293,14 @@ export function useSiteSettings() {
       const activeSnap = {}
       for (const { key } of BANNER_LAYOUT_KEYS) activeSnap[key] = payload[key]
       payload.bannerStyles = { ...bannerDraft.value, [state.blockBanner]: activeSnap }
+      // Header 各版型設定：同 banner，整包 headerStyles 連同目前啟用版型快照寫回
+      const headerSnap = {}
+      for (const { key } of HEADER_LAYOUT_KEYS) headerSnap[key] = payload[key]
+      payload.headerStyles = { ...headerDraft.value, [state.header]: headerSnap }
       const res = await $fetch('/_admin/site-settings', { method: 'POST', body: payload })
       persisted.value = res.settings || payload
       seedBannerDraft()
+      seedHeaderDraft()
       // navtool 已寫回 JSON → 同步 state.navtool 並清掉預覽（浮條收起、開關維持存檔值）
       state.navtool = res.settings?.navtool ?? payload.navtool
       navtoolCfg.markSaved()
@@ -232,5 +329,7 @@ export function useSiteSettings() {
     isDirtyKey,
     switchBlockBanner,
     bannerDirty,
+    switchHeader,
+    headerDirty,
   }
 }

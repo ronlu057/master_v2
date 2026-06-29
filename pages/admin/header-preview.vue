@@ -15,13 +15,15 @@ if (import.meta.client && !import.meta.dev) navigateTo('/', { replace: true })
 const route = useRoute()
 const forceDropdown = computed(() => route.query.dropdown === '1')
 
-// 底圖：用首頁 banner 第一張圖，讓 header 像疊在實際頁面內容上
+// 底圖：用目前版型的首頁 banner 第一張圖，讓 header 像疊在實際頁面內容上
+// （banners.json 已改 byLayout 結構 → 用 resolveBannerContent 解析該版型內容）
+const { state } = useEffectiveSettings()
 const bg = ref('')
 onMounted(async () => {
   try {
     const res = await $fetch('/_admin/mock?name=banners')
-    const rows = res?.parsed?.home?.rows || []
-    const first = rows.find((r) => r?.image?.pc)?.image?.pc
+    const content = resolveBannerContent(res?.parsed?.home || {}, state.blockBanner, { fallbackFirst: true })
+    const first = (content.rows || []).find((r) => r?.image?.pc)?.image?.pc
     if (first) bg.value = first
   } catch {}
 })
@@ -38,15 +40,24 @@ const bgStyle = computed(() =>
 </script>
 
 <template>
-  <div class="header-preview-page" :class="{ 'force-dropdown': forceDropdown }" :style="bgStyle">
+  <div class="header-preview-page" :class="{ 'force-dropdown': forceDropdown }">
     <AppHeader />
+    <!-- 模擬首頁 banner：class 以 banner 開頭、滿版高，讓各 Header 的捲動偵測
+         （querySelector('[class^="banner"]') 量 bannerH）在頂端正確判定為「未捲動」=透明，
+         不會誤套捲動後（.scroll）的底色。 -->
+    <div class="banner-stage index_banner" :style="bgStyle"></div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .header-preview-page {
+  position: relative;
   min-height: 100vh;
   width: 100%;
+}
+.banner-stage {
+  width: 100%;
+  height: 100vh;
   // 無 banner 圖時的退回底（模擬頁面內容，讓透明 header + 白字仍可見）
   background: linear-gradient(120deg, #46587a 0%, #28324a 55%, #141a26 100%);
 }

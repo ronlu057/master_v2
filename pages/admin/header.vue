@@ -7,7 +7,7 @@ definePageMeta({ layout: 'admin' })
 
 if (import.meta.client && !import.meta.dev) navigateTo('/', { replace: true })
 
-const { state, options, persisted, submitting, load, submit, setPreview, isDirtyKey } =
+const { state, options, persisted, submitting, load, submit, setPreview, isDirtyKey, switchHeader, headerDirty } =
   useSiteSettings()
 
 onMounted(load)
@@ -171,28 +171,10 @@ const expandName = computed(() => expandSel.value.name || 'chevron')
 const expandStyle = computed(() => expandSel.value.style || 'line')
 const setExpandIcon = (name, style) => setPreview('headerSubmenuIcon', { name, style })
 
+// 全站共用欄位（logo / customCss 等）走 isDirtyKey；Header 各版型欄位走 headerDirty
 const dirty = computed(
   () =>
-    [
-      'header',
-      'logo',
-      'logoMaxHeight',
-      'customCss',
-      'headerBgColor',
-      'headerBgColorScroll',
-      'headerMenuFontSize',
-      'headerSubmenuStyle',
-      'headerSubmenuIconPos',
-      'headerSubmenuIconOffset',
-    ].some(isDirtyKey) ||
-    MENU_COLOR_FIELDS.some((f) => isDirtyKey(f.key)) ||
-    SCROLL_MENU_COLOR_FIELDS.some((f) => isDirtyKey(f.key)) ||
-    RADIUS_FIELDS.some((f) => isDirtyKey(f.key)) ||
-    DROPDOWN_BOX_FIELDS.some((f) => isDirtyKey(f.key)) ||
-    JSON.stringify(state.headerIcons || {}) !==
-      JSON.stringify(persisted.value.headerIcons || {}) ||
-    JSON.stringify(state.headerSubmenuIcon || {}) !==
-      JSON.stringify(persisted.value.headerSubmenuIcon || {}),
+    ['header', 'logo', 'logoMaxHeight', 'customCss'].some(isDirtyKey) || headerDirty.value,
 )
 
 const message = ref(null)
@@ -399,7 +381,7 @@ const codeHint = `/* LOGO 高度也可這樣覆寫（預設由 logoMaxHeight 控
     <div class="grid">
       <label class="field field--full">
         <span class="field__label">Header 版型 <em class="field__live">即時預覽</em></span>
-        <select :value="state.header" @change="setPreview('header', $event.target.value)">
+        <select :value="state.header" @change="switchHeader($event.target.value)">
           <option v-for="h in options.headers" :key="h" :value="h">{{ h }}</option>
         </select>
       </label>

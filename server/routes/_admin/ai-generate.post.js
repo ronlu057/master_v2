@@ -11,6 +11,9 @@ const FIELD_SPEC = {
   title: { label: '主標題', limit: '12 個字以內', extra: '簡潔有力、像 banner 大標。' },
   subtitle: { label: '副標', limit: '20 個字以內', extra: '補充主標、可帶一點說明。' },
   memo: { label: '說明文', limit: '40 個字以內', extra: '一兩句描述，可較完整。' },
+  // BlockBanner03 等版型的額外欄位
+  titleSpan: { label: '標題大字（前綴強調詞）', limit: '6 個字以內', extra: '精簡有力的品牌名或強調短詞，接在主標前。' },
+  note: { label: '備註', limit: '30 個字以內', extra: '一行補充，如服務項目 / 代理品牌 / 特色。' },
 }
 
 export default defineEventHandler(async (event) => {

@@ -86,6 +86,8 @@ const DEFAULTS = {
   bannerDotActiveH: 12,
   // Banner 各版型各自一組設定 { [版型名]: { ...banner* } }
   bannerStyles: {},
+  // Header 各版型各自一組設定 { [版型名]: { ...header* } }
+  headerStyles: {},
   enabledLangs: ['tw', 'en', 'jp', 'kr'],
   langLabels: {},
   navtool: {},

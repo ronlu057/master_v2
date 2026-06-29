@@ -85,7 +85,7 @@ const leftMb = (row) => row.product?.mb || row.product?.pc || OB_MB
               <div class="left">
                 <picture>
                   <source media="(min-width: 541px)" :srcset="leftPc(row)" />
-                  <img :src="leftMb(row)" alt="" />
+                  <img :src="leftMb(row)" :alt="row.productAlt || row.title || ''" />
                 </picture>
               </div>
 

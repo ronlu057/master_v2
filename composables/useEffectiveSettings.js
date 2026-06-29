@@ -130,6 +130,8 @@ export function useEffectiveSettings() {
       langLabels: {},
       // navtool per-header 設定 { [HeaderName]: { items: [{key,enabled,order}] } }；空 → 走 PRESETS
       navtool: {},
+      // Header 各版型各自一組設定 { [版型名]: { ...header* } }；執行期讀扁平值，僅後台切版型還原用
+      headerStyles: {},
       isPreviewing: false,
     })
   })

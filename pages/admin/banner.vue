@@ -221,6 +221,7 @@ const nuxtApp = useNuxtApp()
 const toEditRow = (r) => ({
   image: { pc: r.image?.pc || '', mb: r.image?.mb || '' },
   product: { pc: r.product?.pc || '', mb: r.product?.mb || '' }, // 左側產品去背圖（BlockBanner03 等）
+  productAlt: r.productAlt || '', // 左側產品圖替代文字（SEO）
   alt: r.alt || '', // 圖片替代文字（SEO）
   topic: '', // 每則 AI 關鍵字（僅供生成用，不寫回）
   title: toLangEdit(r.title),
@@ -303,6 +304,7 @@ const addRow = () => {
   rows.value.push({
     image: { pc: SAMPLE_IMG, mb: '' },
     product: { pc: '', mb: '' },
+    productAlt: '',
     alt: '',
     topic: '',
     title: emptyLang(),
@@ -384,7 +386,8 @@ const onPickProduct = async (i, e) => {
     form.append('image', file, file.name)
     const res = await $fetch('/_admin/upload-banner-asset', { method: 'POST', body: form })
     rows.value[i].product = { pc: res.path, mb: res.path }
-    contentMsg.value = { type: 'success', text: `第 ${i + 1} 則左側產品圖已上傳` }
+    contentMsg.value = { type: 'success', text: `第 ${i + 1} 則左側產品圖已上傳，AI 辨識 alt 中…` }
+    if (res.path.startsWith('/img/')) recognizeProductAlt(i) // best-effort 自動辨識 alt
   } catch (err) {
     contentMsg.value = { type: 'error', text: err.data?.message || err.statusMessage || err.message }
   } finally {
@@ -393,6 +396,29 @@ const onPickProduct = async (i, e) => {
 }
 const clearProduct = (i) => {
   rows.value[i].product = { pc: '', mb: '' }
+  rows.value[i].productAlt = ''
+}
+
+// 左側產品圖 AI 辨識 alt（僅本機上傳的 /img 圖）
+const aiProductAltBusy = ref(-1)
+const recognizeProductAlt = async (i) => {
+  const pc = rows.value[i]?.product?.pc || ''
+  if (!pc.startsWith('/img/')) {
+    contentMsg.value = { type: 'error', text: 'AI 辨識僅支援本機上傳的圖片（請先上傳產品圖）' }
+    return
+  }
+  aiProductAltBusy.value = i
+  try {
+    const res = await $fetch('/_admin/ai-alt', { method: 'POST', body: { path: pc } })
+    if (res.alt) {
+      rows.value[i].productAlt = res.alt
+      contentMsg.value = { type: 'success', text: `第 ${i + 1} 則左側產品圖 alt 已由 AI 辨識填入：「${res.alt}」` }
+    }
+  } catch (err) {
+    contentMsg.value = { type: 'error', text: `alt 辨識失敗：${err.data?.message || err.statusMessage || err.message}` }
+  } finally {
+    aiProductAltBusy.value = -1
+  }
 }
 
 // AI 圖片辨識 → 自動填 alt（僅支援本機上傳的 /img 圖；外部 URL 無法讀檔辨識）
@@ -452,6 +478,25 @@ const aiGenAll = async (i) => {
     if (res.title) rows.value[i].title.tw = res.title
     if (res.subtitle) rows.value[i].subtitle.tw = res.subtitle
     if (res.memo) rows.value[i].memo.tw = res.memo
+    // 此版型的額外欄位（BlockBanner03：標題大字 / 備註）也一起生成
+    const extras = []
+    if (currentSupportsTitleSpan.value) extras.push('titleSpan')
+    if (currentSupportsNote.value) extras.push('note')
+    for (const k of extras) {
+      try {
+        const r2 = await $fetch('/_admin/ai-generate', {
+          method: 'POST',
+          body: {
+            field: k,
+            topic: rows.value[i].topic || topic.value,
+            context: { title: rows.value[i].title.tw, lang: '繁體中文' },
+          },
+        })
+        if (r2.text) rows.value[i][k].tw = r2.text
+      } catch {
+        /* 額外欄位生成失敗不影響主流程 */
+      }
+    }
   } catch (err) {
     contentMsg.value = { type: 'error', text: `AI 生成失敗：${err.data?.message || err.statusMessage || err.message}` }
   } finally {
@@ -546,6 +591,7 @@ const previewRows = computed(() =>
 const toStoreRow = (r) => ({
   image: r.image?.pc ? r.image : { pc: SAMPLE_IMG, mb: '' },
   ...(r.product?.pc ? { product: { pc: r.product.pc, mb: r.product.mb || r.product.pc } } : {}),
+  ...(r.productAlt ? { productAlt: r.productAlt.trim() } : {}),
   alt: (r.alt || '').trim(),
   title: toLangStore(r.title),
   ...(r.titleSpan && Object.keys(toLangStore(r.titleSpan)).length
@@ -1120,6 +1166,22 @@ onBeforeUnmount(() => {
                 只能上傳 <strong>PNG / SVG</strong>（需去背透明）；{{ currentLeftImage.hint || '建議去背圖' }}。留空＝用版型內建去背圖。
               </span>
             </div>
+          </div>
+
+          <!-- 左側產品圖替代文字（SEO alt）：可 AI 辨識 -->
+          <div v-if="currentLeftImage && row.product?.pc" class="field field--full">
+            <span class="field__label">
+              左側產品圖 alt（SEO）
+              <button
+                type="button"
+                class="ai"
+                :disabled="aiProductAltBusy === i || !row.product?.pc?.startsWith('/img/')"
+                @click="recognizeProductAlt(i)"
+              >
+                {{ aiProductAltBusy === i ? 'AI 辨識中…' : 'AI 辨識' }}
+              </button>
+            </span>
+            <input v-model="row.productAlt" type="text" placeholder="描述左側產品圖的內容（留空則前台以標題替代）" />
           </div>
 
           <!-- 圖片替代文字（SEO alt）：可由 AI 辨識圖片自動產生 -->
