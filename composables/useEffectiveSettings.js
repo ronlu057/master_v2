@@ -97,6 +97,17 @@ export function useEffectiveSettings() {
       bannerMemoColor: pub.bannerMemoColor || '',
       // 主色色塊／強調色（如 BlockBanner06 的斜切色塊）；空＝版型預設
       bannerAccentColor: pub.bannerAccentColor || '',
+      // 第二強調色（如 BlockBanner08 右側三角色塊，與左側梯形各自換色）；空＝版型預設
+      bannerAccentColor2: pub.bannerAccentColor2 || '',
+      // BlockBanner15 影片圓鈕：五部位獨立色 + 旋轉文字（空＝版型預設）
+      bannerVideoOuterColor: pub.bannerVideoOuterColor || '',
+      bannerVideoInnerColor: pub.bannerVideoInnerColor || '',
+      bannerVideoTextColor: pub.bannerVideoTextColor || '',
+      bannerVideoBgColor: pub.bannerVideoBgColor || '',
+      bannerVideoTriColor: pub.bannerVideoTriColor || '',
+      bannerVideoText: pub.bannerVideoText || '',
+      // 左上文字區背景圖（如 BlockBanner07）；整個版型一張、空＝版型預設底色
+      bannerTopImage: pub.bannerTopImage || '',
       // Banner 輪播「上一則 / 下一則」按鈕開關（全站共用，預設顯示）
       bannerNav: pub.bannerNav === undefined ? true : String(pub.bannerNav) !== 'false',
       // 箭頭 icon { name, style:'line'|'solid' }（空＝預設 chevron 線條）/ 按鈕大小 px / 圓角 px（999＝圓形）

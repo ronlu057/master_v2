@@ -16,12 +16,14 @@
 //           p > span.hollow_1（毛玻璃「內」：鏤空填圖，右緣貼齊毛玻璃邊界）
 //               + span        （毛玻璃「外」：白色實心字，左緣貼齊毛玻璃邊界）
 //           p > span.hollow_2 + span（第二行同上）
-//       .cover > .wider_container > p×3（memo）+ a.cover_btn（VIEW MORE）
+//       .cover > .wider_container > p.cover_memo（說明文白字）+ a.cover_btn（VIEW MORE）
 //
-// rows 結構（每筆）：
-//   { image:{pc,mb}, title, title2, title3, title4, memo, link }
-//     title  = 第一行毛玻璃內鏤空字、title2 = 第一行毛玻璃外白字
-//     title3 = 第二行鏤空字、title4 = 第二行白字
+// rows 結構（每筆，主標 / 副標各兩段：鏤空 SPAN + 白字）：
+//   { image:{pc,mb}, titleSpan, title, subtitleSpan, subtitle, memo, link }
+//     主標：titleSpan    = 第一行毛玻璃內鏤空大字（SPAN）
+//           title        = 第一行毛玻璃外白字（接在 SPAN 後）
+//     副標：subtitleSpan = 第二行毛玻璃內鏤空大字（SPAN）
+//           subtitle     = 第二行毛玻璃外白字
 //     memo   = 底部 cover 文字（HTML，三段 <p>；亦相容 \n → <br>）、link = VIEW MORE 連結
 // props.title / videoUrl / news：BlockBanner01 介面相容，本版型未使用。
 //
@@ -34,6 +36,8 @@ import 'swiper/css'
 import 'swiper/css/effect-fade'
 import 'swiper/css/pagination'
 
+// 主標 / 副標各為「鏤空 SPAN + 白字」兩段 → 後台顯示對應文字欄位（titleSpan / title / subtitleSpan / subtitle）
+defineOptions({ supportsHollowText: true })
 defineProps({
   title: { type: String, default: '' },
   rows: { type: Array, default: () => [] },
@@ -46,9 +50,10 @@ defineProps({
 // memo 換行：\n → <br>（對應原 PHP nl2br）
 const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
-// cover 內容：memo 的 <p> 與 VIEW MORE 按鈕直接灑進 .wider_container（對齊 demo 逐層結構，按鈕用 <a>）
+// cover 內容：說明文（白字）＋ VIEW MORE 按鈕灑進 .wider_container（按鈕用 <a>）
 const coverHtml = (row) => {
-  let html = toHtml(row.memo)
+  let html = ''
+  if (row.memo) html += `<p class="cover_memo">${toHtml(row.memo)}</p>`
   if (row.link) {
     html += `<a class="cover_btn" href="${row.link}"><span>VIEW MORE</span></a>`
   }
@@ -150,13 +155,15 @@ onBeforeUnmount(() => {
 
         <div class="frosted_glass">
           <div class="hollow_txt">
-            <p v-if="row.title || row.subtitle">
-              <span class="hollow_1" :style="{ '--bg': `url('${row.image?.pc}')` }">{{ row.title }}</span>
-              <span>{{ row.subtitle }}</span>
+            <!-- 主標：鏤空 SPAN（titleSpan）+ 白字（title） -->
+            <p v-if="row.titleSpan || row.title">
+              <span class="hollow_1" :style="{ '--bg': `url('${row.image?.pc}')` }">{{ row.titleSpan }}</span>
+              <span>{{ row.title }}</span>
             </p>
-            <p v-if="row.title3 || row.title4">
-              <span class="hollow_2" :style="{ '--bg': `url('${row.image?.pc}')` }">{{ row.title3 }}</span>
-              <span>{{ row.title4 }}</span>
+            <!-- 副標：鏤空 SPAN（subtitleSpan）+ 白字（subtitle） -->
+            <p v-if="row.subtitleSpan || row.subtitle">
+              <span class="hollow_2" :style="{ '--bg': `url('${row.image?.pc}')` }">{{ row.subtitleSpan }}</span>
+              <span>{{ row.subtitle }}</span>
             </p>
           </div>
         </div>
@@ -243,6 +250,7 @@ onBeforeUnmount(() => {
 
           span {
             // 毛玻璃「內」：鏤空填圖（透出背景），右緣對齊毛玻璃邊界
+            // 預設隱藏，待毛玻璃展開後才淡入（active 設定延遲）
             &:nth-child(1) {
               position: absolute;
               right: calc(1120 / 1920 * 100%);
@@ -251,6 +259,8 @@ onBeforeUnmount(() => {
               background-repeat: no-repeat;
               background-clip: text;
               -webkit-background-clip: text;
+              opacity: 0;
+              transition: opacity 1s;
             }
 
             // 毛玻璃「外」：白色實心字，左緣對齊毛玻璃邊界
@@ -263,10 +273,15 @@ onBeforeUnmount(() => {
             }
           }
         }
+
+        // 主標（第一行）與副標（第二行）的間距
+        p + p {
+          margin-top: clamp(12px, calc(30 / 19.2 * 1vw), calc(30 / 1920 * 2560 * 1px));
+        }
       }
     }
 
-    // ── 底部 cover（wider_container 內：memo 三段 <p> + VIEW MORE 按鈕）──
+    // ── 底部 cover（wider_container 內：說明文 .cover_memo + VIEW MORE 按鈕）──
     .cover {
       position: absolute;
       bottom: calc(96 / 19.2 * 1vw);
@@ -284,8 +299,8 @@ onBeforeUnmount(() => {
           padding: 0 15px;
         }
 
-        // 進場前初始狀態（memo 三段 + 按鈕共用）：右移淡出，手機改下移
-        :deep(p),
+        // 進場前初始狀態（說明文 + 按鈕共用）：右移淡出，手機改下移
+        :deep(.cover_memo),
         :deep(.cover_btn) {
           opacity: 0;
           transform: translate(40px, 0);
@@ -294,49 +309,22 @@ onBeforeUnmount(() => {
           @media (max-width: 720px) { transform: translate(0, 40px); }
         }
 
-        // memo 三段共用：陰影（顏色各自吃對應變數）
-        :deep(p) {
+        // 說明文：白字（可被後台「說明文」色覆寫）
+        :deep(.cover_memo) {
+          color: var(--banner-memo-color, #fff);
+          font-size: clamp(14px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
+          line-height: 1.6;
           text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
         }
 
-        // memo 第一段（手機標題，桌面隱藏）
-        :deep(p):nth-child(1) {
-          color: var(--banner-title-color, #fff);
-          font-size: clamp(20px, calc(28 / 19.2 * 1vw), calc(28 / 1920 * 2560 * 1px));
-          font-weight: 900;
-          font-family: 'Roboto', sans-serif;
-          line-height: 1;
-          margin-bottom: fluid(18);
-
-          @media (min-width: 721px) { display: none; }
-        }
-
-        // memo 第二段（主標）
-        :deep(p):nth-child(2) {
-          color: var(--banner-title-color, #fff);
-          font-size: clamp(20px, calc(28 / 19.2 * 1vw), calc(28 / 1920 * 2560 * 1px));
-          font-weight: 700;
-          font-family: $title_font_cht;
-        }
-
-        // memo 第三段（副標）
-        :deep(p):nth-child(3) {
-          color: var(--banner-subtitle-color, #fff);
-          font-size: clamp(14px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
-          font-family: $title_font_en;
-          margin-top: fluid(15);
-
-          @media (max-width: 720px) { margin-top: 24px; }
-        }
-
-        // VIEW MORE 按鈕進場（對齊原始 btnMarginTop(1)：55px、≤1200 為 35px）
+        // VIEW MORE 按鈕進場
         :deep(.cover_btn) {
-          margin-top: fluid(55);
+          margin-top: fluid(30);
 
-          @media (max-width: 1200px) { margin-top: 35px; }
+          @media (max-width: 1200px) { margin-top: 25px; }
           @media (max-width: 720px) {
             margin: 0 auto;
-            margin-top: 35px;
+            margin-top: 25px;
           }
         }
       }
@@ -350,6 +338,12 @@ onBeforeUnmount(() => {
           transition: width 1s 1s;
         }
 
+        // 鏤空大字（主標 + 副標）：等毛玻璃展開完成（約 2s）後才淡入
+        .hollow_txt p span:nth-child(1) {
+          opacity: 1;
+          transition: opacity 1s 2s;
+        }
+
         .hollow_txt p span:nth-child(2) {
           opacity: 1;
           transition: opacity 1s 1.9s;
@@ -357,18 +351,14 @@ onBeforeUnmount(() => {
       }
 
       .cover .wider_container {
-        :deep(p):nth-child(1),
-        :deep(p):nth-child(2),
-        :deep(p):nth-child(3),
+        :deep(.cover_memo),
         :deep(.cover_btn) {
           opacity: 1;
           transform: translate(0, 0);
         }
 
-        :deep(p):nth-child(1) { transition: all 0.3s, opacity 1s 1s, transform 1s 1s; }
-        :deep(p):nth-child(2) { transition: all 0.3s, opacity 1s 1.3s, transform 1s 1.3s; }
-        :deep(p):nth-child(3) { transition: all 0.3s, opacity 1s 1.6s, transform 1s 1.6s; }
-        :deep(.cover_btn) { transition: all 0.3s, opacity 1s 1.9s, transform 1s 1.9s; }
+        :deep(.cover_memo) { transition: all 0.3s, opacity 1s 1.3s, transform 1s 1.3s; }
+        :deep(.cover_btn) { transition: all 0.3s, opacity 1s 1.6s, transform 1s 1.6s; }
       }
     }
   }
@@ -378,13 +368,12 @@ onBeforeUnmount(() => {
     .swiper-slide.swiper-slide-active {
       .frosted_glass {
         &::before { width: 0%; }
+        .hollow_txt p span:nth-child(1) { opacity: 0; }
         .hollow_txt p span:nth-child(2) { opacity: 0; }
       }
 
       .cover .wider_container {
-        :deep(p):nth-child(1),
-        :deep(p):nth-child(2),
-        :deep(p):nth-child(3),
+        :deep(.cover_memo),
         :deep(.cover_btn) {
           opacity: 0;
           transform: translate(40px, 0);

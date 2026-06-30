@@ -11,20 +11,27 @@
 //     <picture class="cover">  右側疊圖（data_type8_banner2），active 時 goUp 上浮淡入
 //     <div class="cover_txt">  說明文字 data_memo（內含 4 個 <p>）
 //
-// rows 結構（每筆）：
-//   { image: { pc, mb }, coverImage: { pc, mb }, memo }
+// rows 結構（每筆，對齊全版型 title/subtitle/memo）：
+//   { image: { pc, mb }, coverImage: { pc, mb }, title, subtitle, memo }
 //     image      = 基本背景圖（data_banner_basic / _mb）
-//     coverImage = 右側疊圖（data_type8_banner2 / _mb）
-//     memo       = 說明文字 HTML，需含 4 個 <p>（依序：英文標(描邊)/英文標/中文主標/標語）
+//     coverImage = 右側疊圖（data_type8_banner2 / _mb；可選）
+//     title      = 中文主標（第一則 h1、其後 h2）
+//     subtitle   = 標語 / 副標
+//     memo       = 說明文字（可含換行）
 //   ※ 原 data_type8_banner3（左側圖）PHP 註明「廢棄」，不轉。
 //   ※ 高度依原始 SCSS 由圖片自然高度決定（非 100vh）。
-// 本版型不使用 title / videoUrl / news / link（保留與 BlockBanner01 介面相容）
+// 本版型不使用 videoUrl / news（保留與 BlockBanner01 介面相容）
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, EffectFade, Navigation } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/effect-fade'
 import 'swiper/css/navigation'
 
+// 揭幕斜切色塊：左側梯形 / 右側三角各自換色（後台兩個色票 → --banner-accent-color / -2）
+defineOptions({
+  accentColor: { name: '左側梯形色塊', def: '#000000' },
+  accentColor2: { name: '右側三角色塊', def: '#393993' },
+})
 const props = defineProps({
   title: { type: String, default: '' },
   rows: { type: Array, default: () => [] },
@@ -64,14 +71,18 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
             <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
 
-          <!-- 右側疊圖（active 時上浮淡入） -->
-          <picture class="cover">
+          <!-- 右側疊圖（active 時上浮淡入；無圖則不出） -->
+          <picture v-if="row.coverImage?.pc || row.coverImage?.mb" class="cover">
             <source media="(min-width: 641px)" :srcset="row.coverImage?.pc" />
             <img :src="row.coverImage?.mb || row.coverImage?.pc" alt="" />
           </picture>
 
-          <!-- 說明文字（memo 內含 4 個 <p>） -->
-          <div class="cover_txt" :class="`js-banner-row-${i}`" v-html="row.memo"></div>
+          <!-- 文字：主標（第一則 h1、其後 h2）＋ 副標 ＋ 說明文（沿用 BlockBanner01 慣例） -->
+          <div class="cover_txt" :class="`js-banner-row-${i}`">
+            <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title" class="cover_title" v-html="row.title" />
+            <h2 v-if="row.subtitle" class="cover_subtitle" v-html="row.subtitle" />
+            <p v-if="row.memo" class="cover_memo" v-html="row.memo" />
+          </div>
         </a>
       </SwiperSlide>
     </Swiper>
@@ -139,12 +150,14 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
             top: 0;
             left: -9.5%;
             width: 60%;
-            height: 0;
-            background: linear-gradient(45deg, rgba($web_header_1, 0.9) 0%, rgba($web_header_1, 0.9) 60%, rgba($web_header_2, 0.9) 100%);
+            height: 100%;
+            // 左側梯形：後台可換色（--banner-accent-color）；留空＝原斜切漸層
+            background: var(--banner-accent-color, linear-gradient(45deg, rgba($web_header_1, 0.9) 0%, rgba($web_header_1, 0.9) 60%, rgba($web_header_2, 0.9) 100%));
             z-index: 1;
-            transform: skewX(-27.63deg);
+            // 由左到右展開（scaleX 由 origin 左側長出），比原本慢
+            transform: skewX(-27.63deg) scaleX(0);
             transform-origin: top left;
-            animation: banner08_height 1s ease-in-out 0.3s forwards;
+            animation: banner08_wipe 1.6s ease-in-out 0.3s forwards;
 
             @media (max-width: 640px) {
               left: -7%;
@@ -158,12 +171,14 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
             top: 0;
             right: -56.5%;
             width: 50%;
-            height: 0;
-            background: $web_color_2;
+            height: 100%;
+            // 右側三角：後台可換色（--banner-accent-color-2）；留空＝原 $web_color_2
+            background: var(--banner-accent-color-2, #{$web_color_2});
             z-index: 1;
-            transform: skewX(-27.63deg);
+            // 由右到左展開（origin 右側長出），與梯形同速度
+            transform: skewX(-27.63deg) scaleX(0);
             transform-origin: top right;
-            animation: banner08_height 1s ease-in-out 0.6s forwards;
+            animation: banner08_wipe 1.6s ease-in-out 0.6s forwards;
 
             @media (max-width: 640px) {
               right: -89%;
@@ -193,87 +208,73 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
         @media (max-width: 1600px) { left: 8vw; }
         @media (max-width: 640px) { bottom: 72vw; }
 
-        // memo 經 v-html 注入 → 需 :deep 才能命中內部 <p>
-        :deep(p) {
+        // 三行共用：預設右移淡出，active 時依序滑入
+        .cover_title,
+        .cover_subtitle,
+        .cover_memo {
+          margin: 0;
           color: #fff;
           opacity: 0;
           transform: translate(40px, 0);
+        }
 
-          // 第一行：描邊空心英文標（bannerTitleSize_cht(1)）
-          &:nth-child(1) {
-            color: transparent;
-            -webkit-text-stroke: 1px #fff;
-            font-weight: 500;
-            font-family: 'Oswald', sans-serif;
-            line-height: 1.2;
-            text-transform: uppercase;
-            font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
-            transition: all 0.3s, opacity 0.5s, transform 0.5s;
+        // 主標：尺寸 / 粗細沿用 BlockBanner01 cover_title
+        .cover_title {
+          color: var(--banner-title-color, #fff);
+          font-weight: 900;
+          line-height: 1.2;
+          font-size: clamp(24px, calc(56 / 19.2 * 1vw), calc(56 / 1920 * 2560 * 1px));
+          transition: all 0.3s, opacity 0.5s, transform 0.5s;
+        }
 
-            @media (min-width: 1201px) { letter-spacing: 2px; }
-          }
+        // 副標：沿用 BlockBanner01 cover_subtitle
+        .cover_subtitle {
+          color: var(--banner-subtitle-color, #fff);
+          margin-top: fluid(12);
+          font-weight: 500;
+          font-size: clamp(16px, calc(24 / 19.2 * 1vw), calc(24 / 1920 * 2560 * 1px));
+          transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;
+        }
 
-          // 第二行：實心英文標（bannerTitleSize_cht(1)）
-          &:nth-child(2) {
-            color: var(--banner-title-color, #fff);
-            font-weight: 500;
-            font-family: 'Oswald', sans-serif;
-            line-height: 1.2;
-            text-transform: uppercase;
-            font-size: clamp(32px, calc(50 / 19.2 * 1vw), calc(50 / 1920 * 2560 * 1px));
-            transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;
-
-            @media (min-width: 1201px) { letter-spacing: 2px; }
-          }
-
-          // 第三行：中文主標（moduleTitleSize_cht(1)）
-          &:nth-child(3) {
-            color: var(--banner-title-color, #fff);
-            font-weight: 500;
-            margin-top: 10px;
-            font-size: clamp(30px, calc(45 / 19.2 * 1vw), calc(45 / 1920 * 2560 * 1px));
-            transition: all 0.3s, opacity 0.5s 0.2s, transform 0.5s 0.2s;
-
-            @media (max-width: 480px) { font-weight: 400; }
-          }
-
-          // 第四行：標語（moduleTitleSize_en(3)）
-          &:nth-child(4) {
-            color: var(--banner-subtitle-color, #fff);
-            margin-top: 10px;
-            font-size: clamp(17px, calc(20 / 19.2 * 1vw), calc(20 / 1920 * 2560 * 1px));
-            transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
-
-            @media (max-width: 480px) { font-weight: 300; }
-          }
+        // 說明文
+        .cover_memo {
+          color: var(--banner-memo-color, #fff);
+          margin-top: fluid(12);
+          line-height: 1.6;
+          font-size: clamp(14px, calc(16 / 19.2 * 1vw), calc(16 / 1920 * 2560 * 1px));
+          transition: all 0.3s, opacity 0.5s 0.2s, transform 0.5s 0.2s;
         }
       }
     }
 
-    // active：疊圖上浮淡入 + 文字依序淡入
+    // active：疊圖上浮淡入 + 文字依序滑入
     &.swiper-slide-active {
       a {
         picture.cover {
           animation: goUp 1.5s ease-in-out 0.9s forwards;
         }
 
-        .cover_txt :deep(p) {
-          opacity: 1;
-          transform: translate(0, 0);
+        .cover_txt {
+          .cover_title,
+          .cover_subtitle,
+          .cover_memo {
+            opacity: 1;
+            transform: translate(0, 0);
+          }
 
-          &:nth-child(1) { transition: all 0.3s, opacity 1s 1s, transform 1s 1s; }
-          &:nth-child(2) { transition: all 0.3s, opacity 1s 1.1s, transform 1s 1.1s; }
-          &:nth-child(3) { transition: all 0.3s, opacity 1s 1.2s, transform 1s 1.2s; }
-          &:nth-child(4) { transition: all 0.3s, opacity 1s 1.3s, transform 1s 1.3s; }
+          .cover_title { transition: all 0.3s, opacity 1s 1s, transform 1s 1s; }
+          .cover_subtitle { transition: all 0.3s, opacity 1s 1.1s, transform 1s 1.1s; }
+          .cover_memo { transition: all 0.3s, opacity 1s 1.2s, transform 1s 1.2s; }
         }
       }
     }
   }
 }
 
-@keyframes banner08_height {
-  0% { height: 0; }
-  100% { height: 100%; }
+// 斜切色塊揭幕：scaleX 0→1（方向由各自 transform-origin 決定：梯形左、三角右）
+@keyframes banner08_wipe {
+  0% { transform: skewX(-27.63deg) scaleX(0); }
+  100% { transform: skewX(-27.63deg) scaleX(1); }
 }
 
 // goUp（master_dev basic/_animate.scss）：上浮淡入

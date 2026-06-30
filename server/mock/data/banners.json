@@ -390,6 +390,437 @@
         ],
         "videoUrl": "",
         "videoFile": ""
+      },
+      "BlockBanner07": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782722478934.jpg",
+              "mb": "/img/tw/banner/banner-1782722478934.jpg"
+            },
+            "product": {
+              "pc": "/img/tw/banner/banner-asset-1782728146891.png",
+              "mb": "/img/tw/banner/banner-asset-1782728146891.png"
+            },
+            "productAlt": "鍍鉻蓮蓬頭帶有開關",
+            "alt": "藍黃色系花卉線條圖案",
+            "title": {
+              "tw": "藍黃花語，綻放清新",
+              "en": "Blue and Yellow Floral Language, Blooming Freshness",
+              "jp": "青と黄色の花の言葉、咲き誇る新鮮さ",
+              "kr": "파란색과 노란색 꽃말, 피어나는 신선함"
+            },
+            "subtitle": {
+              "tw": "以線條勾勒，藍黃交織的自然詩篇。",
+              "en": "Drawn with lines, a natural poem of blue and yellow.",
+              "jp": "線で描かれ、青と黄色の自然の詩。",
+              "kr": "선으로 그려낸, 파랑과 노랑이 어우러진 자연의 시."
+            },
+            "memo": {
+              "tw": "以線條勾勒，藍黃交織的自然詩篇。<br>感受獨特的花卉線條藝術，為您的空間注入溫暖與活力。",
+              "en": "Outlined with lines, a natural poem interwoven with blue and yellow. Experience unique floral line art, injecting warmth and vitality into your space.",
+              "jp": "線で描かれ、青と黄が織りなす自然の詩。ユニークな花の線画アートを体験し、あなたの空間に温かさと活力を注入します。",
+              "kr": "선으로 그려내고 파랑과 노랑이 어우러진 자연의 시. 독특한 꽃 선 아트를 경험하고 당신의 공간에 따뜻함과 활력을 불어넣으세요."
+            },
+            "titleColor": "#ffffff",
+            "subtitleColor": "#ffffff",
+            "memoColor": "#ffffff",
+            "btnText": "",
+            "link": "/about"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782723617160.jpg",
+              "mb": "/img/tw/banner/banner-1782723617160.jpg"
+            },
+            "product": {
+              "pc": "/img/tw/banner/banner-asset-1782729022410.png",
+              "mb": "/img/tw/banner/banner-asset-1782729022410.png"
+            },
+            "productAlt": "工業冷水機、軸承與主軸馬達零件",
+            "alt": "摩托車儀表板與把手，黑白特寫",
+            "title": {
+              "tw": "精準掌握，馳騁無限"
+            },
+            "subtitle": {
+              "tw": "你的速度，我來定義"
+            },
+            "memo": {
+              "tw": "新世代摩托車時速表，科技與美學的完美結合。"
+            },
+            "btnText": "",
+            "link": ""
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner08": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782786264695.jpg",
+              "mb": "/img/tw/banner/banner-1782786264695.jpg"
+            },
+            "alt": "深色背景上盛開的各色花卉",
+            "title": {
+              "tw": "闇夜花語"
+            },
+            "subtitle": {
+              "tw": "綻放斑斕，點亮心扉"
+            },
+            "memo": {
+              "tw": "深色背景襯托花朵的絢麗，<br>每一朵都述說著獨特的故事。",
+              "en": "The dark background sets off the splendor of the flowers, each telling a unique story.",
+              "jp": "暗い背景が花の輝きを引き立て、それぞれの花が独自の物語を語っています。",
+              "kr": "어두운 배경이 꽃의 화려함을 돋보이게 하며, 각 꽃은 독특한 이야기를 들려줍니다."
+            },
+            "titleColor": "#ffffff",
+            "subtitleColor": "#ffffff",
+            "memoColor": "#ffffff",
+            "btnText": "",
+            "link": "/about"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782786328217.jpg",
+              "mb": "/img/tw/banner/banner-1782786328217.jpg"
+            },
+            "alt": "清晨湖面霧氣繚繞，遠方山林倒影",
+            "title": {
+              "tw": "晨霧湖光"
+            },
+            "subtitle": {
+              "tw": "山嵐倒影，詩意瀰漫"
+            },
+            "memo": {
+              "tw": "靜謐湖面輕攏薄霧，遠山如畫映入眼簾，<br>感受清晨的獨特魅力。",
+              "en": "The tranquil lake is lightly shrouded in mist, and distant mountains are picturesque, entering the field of vision, feeling the unique charm of the early morning.",
+              "jp": "静かな湖面は薄い霧に包まれ、遠くの山々は絵のように目に映り、早朝の独特の魅力を感じさせます。",
+              "kr": "고요한 호수 표면은 옅은 안개로 가볍게 덮여 있고, 먼 산은 그림처럼 눈에 들어와 새벽의 독특한 매력을 느낄 수 있습니다."
+            },
+            "btnText": "",
+            "link": "/about"
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner09": {
+        "rows": [],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner10": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782790591764.jpg",
+              "mb": "/img/tw/banner/banner-1782790591764.jpg"
+            },
+            "alt": "多罐蜂蜜與蜂蜜棒特寫",
+            "title": {
+              "tw": "醇厚獻禮"
+            },
+            "subtitle": {
+              "tw": "多種蜜源，品味自然恩賜"
+            },
+            "memo": {
+              "tw": "精選多款蜂蜜，搭配蜂蜜棒，豐富您的甜蜜生活。"
+            },
+            "btnText": "",
+            "link": "/about"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782790648766.jpg",
+              "mb": "/img/tw/banner/banner-1782790648766.jpg"
+            },
+            "alt": "生巧克力豆餅乾麵團特寫",
+            "title": {
+              "tw": "生巧豆餅乾麵團"
+            },
+            "subtitle": {
+              "tw": "濃郁可可，軟糯香甜的完美結合。"
+            },
+            "memo": {
+              "tw": "特選生巧克力豆，揉入金黃麵團，烘焙前的美好預告。"
+            },
+            "btnText": "",
+            "link": "/about"
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner11": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782791098540.jpg",
+              "mb": "/img/tw/banner/banner-1782791098540.jpg"
+            },
+            "alt": "黑色皮卡車行駛在鄉間道路上",
+            "title": {
+              "tw": "曠野黑駒 馳騁鄉間"
+            },
+            "subtitle": {
+              "tw": "駕馭黑色皮卡，探索無盡鄉野"
+            },
+            "memo": {
+              "tw": "征服崎嶇，享受自由，黑色皮卡帶你奔向遠方。"
+            },
+            "btnText": "",
+            "link": ""
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782791224212.jpg",
+              "mb": "/img/tw/banner/banner-1782791224212.jpg"
+            },
+            "alt": "白色馬自達汽車在彎曲山路上行駛",
+            "title": {
+              "tw": "駕馭山道之白"
+            },
+            "subtitle": {
+              "tw": "白色馬自達，劃破蜿蜒的風景線。"
+            },
+            "memo": {
+              "tw": "感受俐落操控，讓每一次轉彎都成為享受。白色馬自達，與您一同征服山路。"
+            },
+            "titleColor": "#ffffff",
+            "subtitleColor": "#e3e3e3",
+            "memoColor": "#f5f5f5",
+            "btnText": "",
+            "link": ""
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner12": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782802568015.jpg",
+              "mb": "/img/tw/banner/banner-1782802568015.jpg"
+            },
+            "alt": "牛肉麵",
+            "title": {
+              "tw": "牛肉麵",
+              "en": "Beef Noodle Soup",
+              "jp": "牛肉麺",
+              "kr": "소고기 국수"
+            },
+            "titleSpan": {
+              "tw": "紅燒",
+              "en": "Braised",
+              "jp": "煮込み",
+              "kr": "홍소"
+            },
+            "subtitleSpan": {
+              "tw": "熬醇醇厚",
+              "en": "Aged mellow rich",
+              "jp": "熟成まろやか濃厚",
+              "kr": "숙성 부드러운 진한"
+            },
+            "subtitle": {
+              "tw": "一碗入魂",
+              "en": "One bowl soul",
+              "jp": "一杯魂",
+              "kr": "한 그릇 영혼"
+            },
+            "memo": {
+              "tw": "嚴選腱子肉，麵條Q彈，每一口都是感動。"
+            },
+            "btnText": "",
+            "link": "/about"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782791726429.jpg",
+              "mb": "/img/tw/banner/banner-1782791726429.jpg"
+            },
+            "alt": "熱騰騰的燉肉與蔬菜，冒著蒸氣",
+            "title": {
+              "tw": "入口即化",
+              "en": "Melt in your mouth",
+              "jp": "口でとろける",
+              "kr": "입에서 녹는"
+            },
+            "titleSpan": {
+              "tw": "純燉肉",
+              "en": "Pure Stewed Meat",
+              "jp": "純粋な煮込み肉",
+              "kr": "순수 찜 고기"
+            },
+            "subtitleSpan": {
+              "tw": "滿滿幸福"
+            },
+            "subtitle": {
+              "tw": "溫暖你的胃",
+              "en": "Warm your stomach",
+              "jp": "胃を温める",
+              "kr": "위를 따뜻하게"
+            },
+            "memo": {
+              "tw": "一口咬下，滿滿幸福感。立即品嚐，感受家的溫暖。"
+            },
+            "btnText": "",
+            "link": "/about"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782804422227.jpg",
+              "mb": "/img/tw/banner/banner-1782804422227.jpg"
+            },
+            "alt": "湯匙舀起滷肉飯特寫",
+            "title": {
+              "tw": "滷肉飯",
+              "en": "Braised Pork Rice",
+              "jp": "魯肉飯",
+              "kr": "대만식 돼지고기 덮밥"
+            },
+            "titleSpan": {
+              "tw": "極致濃香"
+            },
+            "subtitleSpan": {
+              "tw": "一口入魂",
+              "en": "One Bite Soul",
+              "jp": "一口魂",
+              "kr": "한입 영혼"
+            },
+            "subtitle": {
+              "tw": "的經典滋味",
+              "en": "The classic taste",
+              "jp": "クラシックな味",
+              "kr": "클래식한 맛"
+            },
+            "memo": {
+              "tw": "嚴選食材，慢火燉煮，香氣四溢，暖暖你的胃。"
+            },
+            "btnText": "",
+            "link": ""
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner13": {
+        "rows": [],
+        "videoUrl": "https://www.youtube.com/watch?v=z9DlztH2ocU",
+        "videoFile": ""
+      },
+      "BlockBanner14": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782810845853.jpg",
+              "mb": "/img/tw/banner/banner-1782810845853.jpg"
+            },
+            "alt": "一位女性，長髮，穿灰色外套，黃色眼影",
+            "title": {
+              "tw": "長髮女伶，注目焦點"
+            },
+            "subtitle": {
+              "tw": "灰色外套下的溫柔，黃色眼影閃耀自信光芒"
+            },
+            "memo": {
+              "tw": "捕捉瞬間，展現妳獨特的魅力與風格。"
+            },
+            "titleColor": "#4d4d4d",
+            "subtitleColor": "#2b2b2b",
+            "memoColor": "#303030",
+            "btnText": "",
+            "link": "/about"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782810567234.jpg",
+              "mb": "/img/tw/banner/banner-1782810567234.jpg"
+            },
+            "alt": "一位女性低頭，穿著高領毛衣和外套",
+            "title": {
+              "tw": "靜謐暖冬"
+            },
+            "subtitle": {
+              "tw": "高領溫柔包覆，沉思片刻"
+            },
+            "memo": {
+              "tw": "感受衣料的溫度，尋回內心平靜。暖意由內而外，伴您度過冬日。"
+            },
+            "btnText": "",
+            "link": ""
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner15": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782810963779.jpg",
+              "mb": "/img/tw/banner/banner-1782810963779.jpg"
+            },
+            "alt": "新鮮菠菜葉上佈滿水珠",
+            "title": {
+              "tw": "露珠菠菜，鮮活直送"
+            },
+            "subtitle": {
+              "tw": "清晨採摘，水滴飽滿如初"
+            },
+            "memo": {
+              "tw": "每一片都充滿大自然的恩賜，感受最純粹的鮮甜。"
+            },
+            "titleColor": "#ffffff",
+            "subtitleColor": "#ffffff",
+            "memoColor": "#ffffff",
+            "btnText": "",
+            "link": "/about"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782812496111.jpg",
+              "mb": "/img/tw/banner/banner-1782812496111.jpg"
+            },
+            "alt": "一位亞洲女性，穿著高領毛衣，低頭閉眼",
+            "title": {
+              "tw": "靜謐時刻"
+            },
+            "subtitle": {
+              "tw": "高領溫柔，沉浸內心世界"
+            },
+            "memo": {
+              "tw": "放下喧囂，與自己對話。感受溫暖，尋找寧靜。"
+            },
+            "titleColor": "#ffffff",
+            "subtitleColor": "#ffffff",
+            "memoColor": "#ffffff",
+            "btnText": "",
+            "link": "/about"
+          }
+        ],
+        "videoUrl": "https://www.youtube.com/watch?v=naoGk-Zjc1s",
+        "videoFile": ""
+      },
+      "BlockBanner16": {
+        "rows": [
+          {
+            "image": {
+              "pc": "https://picsum.photos/seed/banner-new/1920/911",
+              "mb": ""
+            },
+            "alt": "",
+            "title": {},
+            "subtitle": {},
+            "memo": {},
+            "btnText": "",
+            "link": ""
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
       }
     }
   },

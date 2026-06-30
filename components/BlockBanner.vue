@@ -49,7 +49,8 @@ const resolvedRows = computed(() =>
   (eff.value.rows || []).map((r) => ({
     ...r,
     title: pickLang(r.title),
-    titleSpan: pickLang(r.titleSpan), // BlockBanner03：主標大字前綴
+    titleSpan: pickLang(r.titleSpan), // BlockBanner03：主標大字前綴 / BlockBanner12：主標鏤空大字
+    subtitleSpan: pickLang(r.subtitleSpan), // BlockBanner12：副標鏤空大字
     subtitle: pickLang(r.subtitle),
     memo: pickLang(r.memo),
     note: pickLang(r.note), // BlockBanner03：第四行備註（代理…）

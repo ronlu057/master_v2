@@ -6,8 +6,9 @@
 //
 // 說明：
 //   - 全螢幕 fade 切換主圖；每張 slide 左側疊一段文字 cover（title / title2 / memo），隨 active 依序淡入。
-//   - 「WATCH VIDEO」按鈕（.play）開啟 YouTube 背景影片浮層（桌面填滿、手機 < 1025 不顯示影片）。
-//   - 影片浮層含「停止」與「靜音切換」兩顆按鈕（對應原 YTPlayer 的 stop / sound）。
+//   - 影片（YouTube 連結或上傳檔）：對應原版 #videoBanner.show —— 桌面（≥1025）載入即「靜音循環背景影片」覆蓋主圖；
+//     「WATCH VIDEO」按鈕（.play）= 取消靜音；手機的 YouTube 不自動背景，改由 WATCH VIDEO 外連。
+//   - 影片浮層含「停止（隱藏）」與「靜音切換」兩顆按鈕（對應原 YTPlayer 的 stop / sound）。
 //   - 僅轉首頁 index banner；page-banner 交給共用 PageBanner01 處理（原 PHP 的 else 分支忽略）。
 //
 // rows 結構（每筆）：
@@ -17,7 +18,9 @@
 //     title2   = 第二行（主色，moduleTitleSize_cht(1)）
 //     memo     = 說明（bannerTitleSize_cht(2)，可含換行 → toHtml）
 //     link     = 預留 VIEW MORE 連結（原版預設走影片，link 為備援；可選）
-// props.videoUrl：YouTube 連結（WATCH VIDEO 背景影片，可選；無則不顯示 .play 與影片浮層）
+// props.videoUrl：YouTube 連結（WATCH VIDEO 影片，可選）
+// props.videoFile：上傳影片檔（YT 連結為空時改播 HTML5），WATCH VIDEO 一樣以浮層播放
+// 兩者皆空 → 不顯示 .play 與影片浮層
 // props.news：介面相容用，本版型未使用
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, EffectFade, Pagination, Navigation } from 'swiper/modules'
@@ -31,6 +34,7 @@ const props = defineProps({
   title: { type: String, default: '' },
   rows: { type: Array, default: () => [] },
   videoUrl: { type: String, default: '' },
+  videoFile: { type: String, default: '' }, // YT 連結為空時改播此上傳影片（HTML5）
   news: { type: Array, default: () => [] },
   loop: { type: Boolean, default: true },
   autoplay: { type: Boolean, default: true },
@@ -46,37 +50,96 @@ const videoEmbedUrl = computed(() => {
   const m = props.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)
   const id = m ? m[1] : props.videoUrl.trim()
   if (!id) return ''
-  const mute = muted.value ? 1 : 0
-  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=${mute}&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0&playsinline=1`
+  // 起播即靜音（瀏覽器才允許自動播放）；enablejsapi → 暫停/播放、靜音切換走 postMessage，不重載 iframe
+  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&vq=hd2160`
 })
 
-// ── 影片浮層開關 / 靜音狀態
+// 影片來源優先序：YouTube 連結 > 上傳影片檔（HTML5）
+const useFileVideo = computed(() => !videoEmbedUrl.value && !!props.videoFile)
+const hasVideo = computed(() => !!videoEmbedUrl.value || useFileVideo.value)
+
+// ── 影片浮層開關 / 靜音 / 暫停狀態
 const videoOn = ref(false)
 const muted = ref(true)
+const paused = ref(false)
+const videoEl = ref(null)
+const ytFrame = ref(null)
 const isMobile = ref(false)
+
+// YouTube IFrame API 指令（postMessage；需 enablejsapi=1）
+const ytCmd = (func) => {
+  try {
+    ytFrame.value?.contentWindow?.postMessage(
+      JSON.stringify({ event: 'command', func, args: [] }),
+      '*',
+    )
+  } catch { /* iframe 尚未就緒時忽略 */ }
+}
 let mq = null
 const updateBreakpoint = () => { isMobile.value = mq.matches }
 onMounted(() => {
   mq = window.matchMedia('(max-width: 1024px)')
   isMobile.value = mq.matches
   mq.addEventListener('change', updateBreakpoint)
+  autoShow() // 桌面載入即自動播放靜音背景影片（對應原版 #videoBanner.show）
 })
 onBeforeUnmount(() => {
   if (mq) mq.removeEventListener('change', updateBreakpoint)
 })
 
-// WATCH VIDEO：桌面開背景影片浮層；手機（< 1025）改開外連 YouTube
+// HTML5 影片起播（含 iOS：muted property + 主動 play）
+const playFile = () => {
+  const el = videoEl.value
+  if (!el) return
+  el.muted = muted.value
+  const p = el.play?.()
+  if (p && typeof p.catch === 'function') p.catch(() => {})
+}
+
+// 對應原版 banner13.js：桌面（≥1025）載入即自動播放「靜音循環背景影片」覆蓋主圖。
+//   - YouTube：行動裝置不自動背景（僅 WATCH VIDEO 外連）
+//   - 上傳影片檔：任何裝置都可自動背景（HTML5 playsinline）
+const autoShow = () => {
+  if (!hasVideo.value) return
+  if (videoEmbedUrl.value && isMobile.value) return
+  muted.value = true
+  videoOn.value = true
+  if (useFileVideo.value) nextTick(playFile)
+}
+
+// WATCH VIDEO：取消靜音（背景影片已在播）；YouTube 在手機改外連 YT
 const onPlay = () => {
-  if (!videoEmbedUrl.value) return
-  if (isMobile.value) {
+  if (!hasVideo.value) return
+  if (videoEmbedUrl.value && isMobile.value) {
     window.open(props.videoUrl, '_blank', 'noopener')
-  } else {
-    muted.value = false
-    videoOn.value = true
+    return
+  }
+  videoOn.value = true
+  muted.value = false
+  paused.value = false
+  if (videoEmbedUrl.value) ytCmd('unMute')
+  else if (useFileVideo.value) nextTick(playFile)
+}
+
+// 控制鈕①：暫停 / 播放
+const togglePlay = () => {
+  paused.value = !paused.value
+  if (videoEmbedUrl.value && !isMobile.value) {
+    ytCmd(paused.value ? 'pauseVideo' : 'playVideo')
+  } else if (videoEl.value) {
+    paused.value ? videoEl.value.pause() : videoEl.value.play()
   }
 }
-const onStop = () => { videoOn.value = false }
-const toggleSound = () => { muted.value = !muted.value }
+
+// 控制鈕②：靜音 / 有聲音
+const toggleSound = () => {
+  muted.value = !muted.value
+  if (videoEmbedUrl.value && !isMobile.value) {
+    ytCmd(muted.value ? 'mute' : 'unMute')
+  } else if (videoEl.value) {
+    videoEl.value.muted = muted.value
+  }
+}
 </script>
 
 <template>
@@ -108,7 +171,7 @@ const toggleSound = () => { muted.value = !muted.value }
               <component :is="i === 0 ? 'h1' : 'h2'" v-if="row.title">{{ row.title }}</component>
               <p v-if="row.memo" v-html="toHtml(row.memo)" />
 
-              <div v-if="videoEmbedUrl" class="play" @click="onPlay">
+              <div v-if="hasVideo" class="play" @click="onPlay">
                 <span class="play_icon" aria-hidden="true"></span>
                 <span>WATCH VIDEO</span>
               </div>
@@ -123,18 +186,44 @@ const toggleSound = () => { muted.value = !muted.value }
       <button class="banner13_prev banner_arrow" type="button" aria-label="上一張"></button>
       <button class="banner13_next banner_arrow" type="button" aria-label="下一張"></button>
 
-      <!-- YouTube 背景影片浮層（桌面才掛 iframe；點 WATCH VIDEO 開啟） -->
-      <div v-if="videoEmbedUrl" class="video_banner" :class="{ show: videoOn && !isMobile }">
+      <!-- 影片浮層（點 WATCH VIDEO 開啟）：YouTube 掛 iframe（桌面）；上傳影片檔掛 HTML5 video（含手機） -->
+      <div v-if="hasVideo" class="video_banner" :class="{ show: videoOn && (!isMobile || useFileVideo) }">
         <iframe
-          v-if="videoOn && !isMobile"
+          v-if="videoOn && videoEmbedUrl && !isMobile"
+          ref="ytFrame"
           :src="videoEmbedUrl"
           frameborder="0"
           allow="autoplay; encrypted-media"
           allowfullscreen
         />
-        <button class="vb_btn stop" type="button" aria-label="關閉影片" @click="onStop">×</button>
-        <button class="vb_btn sound" type="button" aria-label="靜音切換" @click="toggleSound">
-          {{ muted ? '🔇' : '🔊' }}
+        <video
+          v-else-if="videoOn && useFileVideo"
+          ref="videoEl"
+          class="vb_video"
+          :src="videoFile"
+          :muted="muted"
+          autoplay
+          loop
+          playsinline
+          webkit-playsinline
+          preload="auto"
+          disablepictureinpicture
+        />
+        <button
+          class="vb_btn toggle"
+          type="button"
+          :aria-label="paused ? '播放' : '暫停'"
+          @click="togglePlay"
+        >
+          <AppIcon :name="paused ? 'play' : 'pause'" />
+        </button>
+        <button
+          class="vb_btn sound"
+          type="button"
+          :aria-label="muted ? '開啟聲音' : '靜音'"
+          @click="toggleSound"
+        >
+          <AppIcon :name="muted ? 'volume-mute' : 'volume'" />
         </button>
       </div>
     </div>
@@ -148,6 +237,8 @@ const toggleSound = () => { muted.value = !muted.value }
 
 .index_banner_wrap {
   position: relative;
+  // 沒有 banner 圖（rows 為 0）時，swiper 不渲染 → 仍給滿版高度，讓影片可獨立全螢幕顯示
+  min-height: 100vh;
 }
 
 // ── 主圖 swiper（全螢幕） ─────────────────────────────────
@@ -455,24 +546,40 @@ const toggleSound = () => { muted.value = !muted.value }
   border: 0;
   pointer-events: none;
 }
+// 上傳影片檔（HTML5）：直接 object-fit cover 填滿
+.video_banner .vb_video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+  pointer-events: none;
+}
 
+// 影片控制鈕：暫停/播放、靜音/有聲音（底部置中，左右各一）
 .vb_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   bottom: fluid(30);
+  width: fluid(40);
+  height: fluid(40);
+  padding: 0;
   background: none;
   border: none;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 24px;
-  line-height: 1;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: fluid(24); // 圖示大小（.app-icon = 1em）
   transition: all 0.3s;
 
   @media (max-width: 1440px) { bottom: 15px; }
   @media (max-width: 1024px) { font-size: 22px; }
 
-  &.stop { right: calc(50% + 10px); }
-  &.sound { left: calc(50% + 10px); }
+  &.toggle { right: calc(50% + 6px); }
+  &.sound { left: calc(50% + 6px); }
 
-  &:hover { color: rgba(255, 255, 255, 1); }
+  &:hover { color: #fff; }
 }
 </style>

@@ -6,21 +6,27 @@
 //       D:\www\master_dev\template\css\scss\module\banner\_banner07.scss
 //
 // rows 結構（每筆 = 一張主圖 + 對應產品）：
-//   { image: { pc, mb }, link, title, name, memo }
-//     image.pc / image.mb = 右欄主圖（桌機 / 手機）
-//     link  = 產品連結（可選）
-//     title = 左欄產品圖 alt / 顯示名稱
-//     name  = 左下產品名稱（顯示於編號下方；未填則用 title）
-//     memo  = 左上區塊說明文字（可含換行；只取第一筆 row 顯示）
-// title：左上區塊大標（可選，顯示於 memo 上方）
-// news：版型 07 未使用（保留與 BlockBanner01 介面相容）
+//   { image: { pc, mb }, product: { pc, mb }, link, title, subtitle, memo }
+//     image.pc / image.mb   = 右欄主圖（桌機 / 手機）
+//     product.pc / .mb      = 左下產品去背圖（可另上傳；未填退回 image）
+//     link                  = 產品連結（可選）
+//     title                 = 左下產品名稱（顯示於編號下方；第一則 h1、其後 h2）
+//     subtitle              = 左上副標（顯示於說明文上方；只取第一筆 row）
+//     memo                  = 左上說明文字（可含換行；只取第一筆 row）
+// title（prop）/ news：版型 07 未使用（保留與 BlockBanner01 介面相容）
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Autoplay, EffectFade, Pagination, Navigation } from 'swiper/modules'
+import { Autoplay, EffectFade, Pagination, Navigation, Controller } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/effect-fade'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
+// 左下產品圖可「另外上傳」（每則一張，去背 PNG/SVG）；右大圖用 row.image；
+// 左上文字區可上「整個版型一張」背景圖（topImage 能力 → 後台單張上傳）
+defineOptions({
+  leftImage: { name: '左下產品圖', hint: '產品去背圖（PNG / SVG）' },
+  topImage: { name: '左上背景圖', hint: '左上文字區底圖（整個版型一張）' },
+})
 const props = defineProps({
   title: { type: String, default: '' },
   rows: { type: Array, default: () => [] },
@@ -34,29 +40,36 @@ const props = defineProps({
 // 換行文字：\n -> <br>（對應原 PHP nl2br）
 const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 
-// 右欄主圖 swiper：頁碼指示（目前頁 / 總頁數 + 進度條）
+// 右大圖 swiper 與左下產品 swiper 雙向同步（Controller）→ 大圖 / 產品圖 / 標題同時更換
+const mainSwiper = ref(null)
+const productSwiper = ref(null)
+const linkControllers = () => {
+  if (mainSwiper.value && productSwiper.value) {
+    mainSwiper.value.controller.control = productSwiper.value
+    productSwiper.value.controller.control = mainSwiper.value
+  }
+}
+const onMainReady = (s) => {
+  mainSwiper.value = s
+  linkControllers()
+}
+const onProductReady = (s) => {
+  productSwiper.value = s
+  linkControllers()
+}
+
+// 目前頁（1-based）：單一來源，驅動頁碼 / 進度條 / 左上文字 / 左下標題
 const current = ref(1)
 const total = computed(() => props.rows.length)
 const barHeight = computed(() => (total.value ? 100 / total.value : 100))
 const barTop = computed(() => (current.value - 1) * barHeight.value)
-
-const onMainSlideChange = (s) => {
+const productNum = computed(() => String(current.value).padStart(2, '0'))
+const onSlideChange = (s) => {
   current.value = s.realIndex + 1
 }
 
-// 左下產品名稱（跟著產品 swiper 切換）
-const productName = ref('')
-const productNum = ref('01')
-const onProductSlideChange = (s) => {
-  const i = s.realIndex
-  productNum.value = String(i + 1).padStart(2, '0')
-  const row = props.rows[i]
-  productName.value = (row && row.subtitle) || ''
-}
-
-// 初始化左下產品資訊
-const firstRow = computed(() => props.rows[0] || {})
-const initName = computed(() => firstRow.value.subtitle || '')
+// 左上文字（副標 + 說明文 + 按鈕）取目前頁那筆，隨 swiper 切換
+const activeRow = computed(() => props.rows[current.value - 1] || {})
 </script>
 
 <template>
@@ -65,16 +78,16 @@ const initName = computed(() => firstRow.value.subtitle || '')
       <!-- 上：文字區塊（背景圖 + 說明 + VIEW MORE） -->
       <div class="top">
         <NuxtLink class="logo" to="/">
-          <img src="" alt="" />
+          <SiteLogo alt="Logo" />
         </NuxtLink>
 
-        <div class="editor" :class="'js-banner-row-0'">
-          <h1 v-if="title" class="editor_title">{{ title }}</h1>
-          <p v-if="firstRow.title" v-html="toHtml(firstRow.title)" />
+        <div class="editor" :class="`js-banner-row-${current - 1}`">
+          <h2 v-if="activeRow.subtitle" :key="`st-${current}`" class="editor_title">{{ activeRow.subtitle }}</h2>
+          <p v-if="activeRow.memo" :key="`memo-${current}`" v-html="toHtml(activeRow.memo)" />
         </div>
 
-        <div v-if="firstRow.link" class="button_set">
-          <NuxtLink class="cover_btn" :to="firstRow.link"><span>VIEW MORE</span></NuxtLink>
+        <div v-if="activeRow.link" :key="`btn-${current}`" class="button_set">
+          <NuxtLink class="cover_btn" :to="activeRow.link"><span>VIEW MORE</span></NuxtLink>
         </div>
       </div>
 
@@ -86,24 +99,37 @@ const initName = computed(() => firstRow.value.subtitle || '')
           <Swiper
             v-if="rows.length"
             class="index_banner_product"
-            :modules="[Autoplay, Pagination, Navigation]"
+            :modules="[Autoplay, Pagination, Navigation, Controller]"
             :slides-per-view="1"
             :loop="loop && rows.length > 1"
             :speed="1000"
             :autoplay="autoplay ? { delay: 5000, disableOnInteraction: false } : false"
             :pagination="{ clickable: true }"
             :navigation="{ prevEl: '.product_prev', nextEl: '.product_next' }"
-            @slide-change="onProductSlideChange"
+            @swiper="onProductReady"
+            @slide-change="onSlideChange"
           >
             <SwiperSlide v-for="(row, i) in rows" :key="i">
-              <NuxtLink :to="row.link || ''" :title="row.subtitle || 'VIEW MORE'">
-                <img :src="row.image?.pc || row.image?.mb" :alt="row.alt || row.subtitle || ''" />
+              <NuxtLink :to="row.link || ''" :title="row.title || 'VIEW MORE'">
+                <img
+                  :src="row.product?.pc || row.product?.mb || row.image?.pc || row.image?.mb"
+                  :alt="row.productAlt || row.title || ''"
+                />
               </NuxtLink>
-              <p>{{ row.subtitle }}</p>
             </SwiperSlide>
           </Swiper>
 
-          <p class="index_product_name">{{ productName || initName }}</p>
+          <!-- 產品標題：放 swiper 外避免被 overflow 裁掉；每則一個 h1/h2，只顯示目前頁 -->
+          <div class="index_product_name">
+            <template v-for="(row, i) in rows" :key="i">
+              <component
+                :is="i === 0 ? 'h1' : 'h2'"
+                v-if="row.title"
+                class="index_product_name_item"
+                :class="['js-banner-row-' + i, { 'is-active': current === i + 1 }]"
+              >{{ row.title }}</component>
+            </template>
+          </div>
         </div>
 
         <div v-if="rows.length > 1" class="button_set">
@@ -118,14 +144,15 @@ const initName = computed(() => firstRow.value.subtitle || '')
       <Swiper
         v-if="rows.length"
         class="index_banner"
-        :modules="[EffectFade, Navigation]"
+        :modules="[EffectFade, Navigation, Controller]"
         :slides-per-view="1"
         :loop="loop && rows.length > 1"
         effect="fade"
         :fade-effect="{ crossFade: true }"
         :speed="1000"
         :navigation="{ prevEl: '.main_prev', nextEl: '.main_next' }"
-        @slide-change="onMainSlideChange"
+        @swiper="onMainReady"
+        @slide-change="onSlideChange"
       >
         <SwiperSlide v-for="(row, i) in rows" :key="i">
           <picture>
@@ -150,6 +177,18 @@ const initName = computed(() => firstRow.value.subtitle || '')
 </template>
 
 <style lang="scss" scoped>
+// 左上文字切換：由左向右滑入（副標 → 說明文 → 按鈕 依序延遲）
+@keyframes banner07_slide_in {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-40 / 19.2 * 1vw));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .banner07 {
   display: flex;
 
@@ -174,8 +213,12 @@ const initName = computed(() => firstRow.value.subtitle || '')
   .top {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     padding: 0 calc(80 / 19.2 * 1vw) fluid(30);
-    background: $web_color_2 no-repeat center center / cover;
+    // 左上背景：後台上傳的底圖（--banner-top-image）疊在主色上；未上傳＝純主色
+    background: var(--banner-top-image, none) no-repeat center center / cover, $web_color_2;
 
     @media (min-width: 641px) { height: calc(495 / 840 * 100%); }
     @media (max-width: 640px) { padding: 30px calc(80 / 19.2 * 1vw); }
@@ -186,7 +229,6 @@ const initName = computed(() => firstRow.value.subtitle || '')
       flex-shrink: 0;
       height: fluid(70);
       margin-bottom: fluid(25);
-      visibility: hidden;
 
       @media (max-width: 640px) {
         position: absolute;
@@ -205,7 +247,6 @@ const initName = computed(() => firstRow.value.subtitle || '')
     }
 
     .editor {
-      margin-top: auto;
       color: #fff;
 
       // text_scroll_y(21px, 14)
@@ -214,11 +255,13 @@ const initName = computed(() => firstRow.value.subtitle || '')
       overflow-y: auto;
 
       .editor_title {
-        // bannerTitleSize_cht(2)
-        color: var(--banner-title-color, #fff);
+        // 左上副標：bannerTitleSize_cht(2)
+        color: var(--banner-subtitle-color, #fff);
         font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
         font-weight: 700;
         margin-bottom: fluid(10);
+        // 切換時由左滑入
+        animation: banner07_slide_in 0.7s ease both;
       }
 
       p {
@@ -226,6 +269,8 @@ const initName = computed(() => firstRow.value.subtitle || '')
         color: var(--banner-memo-color, #fff);
         font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
         line-height: 1.6;
+        // 比副標略慢滑入
+        animation: banner07_slide_in 0.7s ease 0.18s both;
       }
 
       &::-webkit-scrollbar { width: 3px; }
@@ -247,6 +292,8 @@ const initName = computed(() => firstRow.value.subtitle || '')
       display: flex;
       gap: fluid(12);
       margin-top: fluid(30);
+      // 跟著文字滑入，再略慢於說明文
+      animation: banner07_slide_in 0.7s ease 0.32s both;
 
       @media (max-width: 640px) { justify-content: center; }
     }
@@ -285,18 +332,36 @@ const initName = computed(() => firstRow.value.subtitle || '')
         }
       }
 
+      // 左下產品名稱（每則 title，h1/h2）：放 swiper 外，全部疊在同格、只顯示目前頁
       .index_product_name {
+        display: grid;
         position: absolute;
         top: 100%;
+        left: 0;
         width: 100%;
-        color: #fff;
-        font-size: clamp(17px, calc(24 / 19.2 * 1vw), calc(24 / 1920 * 2560 * 1px));
-        font-weight: 700;
-        line-height: 1;
-        text-align: right;
 
-        @media (max-width: 640px) { font-size: calc(12 / 16 * 1rem + 12 / 6.4 * 1vw); }
-        @media (max-width: 480px) { display: none; }
+        @media (max-width: 480px) {
+          position: static;
+          margin-top: fluid(30);
+        }
+
+        .index_product_name_item {
+          grid-area: 1 / 1; // 全部疊同一格
+          margin: 0;
+          color: var(--banner-title-color, #fff);
+          font-size: clamp(17px, calc(24 / 19.2 * 1vw), calc(24 / 1920 * 2560 * 1px));
+          font-weight: 700;
+          line-height: 1;
+          text-align: right;
+          opacity: 0;
+          transition: opacity 0.6s ease;
+
+          // 與大圖同時更換：目前頁淡入，其餘淡出
+          &.is-active { opacity: 1; }
+
+          @media (max-width: 640px) { font-size: calc(12 / 16 * 1rem + 12 / 6.4 * 1vw); }
+          @media (max-width: 480px) { text-align: center; }
+        }
       }
 
       .index_banner_product {
@@ -313,16 +378,6 @@ const initName = computed(() => firstRow.value.subtitle || '')
               max-height: 100%;
               margin: 0 auto;
             }
-          }
-
-          p {
-            color: #fff;
-            font-size: calc(12 / 16 * 1rem + 12 / 6.4 * 1vw);
-            font-weight: 700;
-            text-align: center;
-            margin-top: fluid(30);
-
-            @media (min-width: 481px) { display: none; }
           }
         }
 

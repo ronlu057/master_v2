@@ -39,7 +39,7 @@ const videoId = computed(() => {
 })
 const videoEmbedUrl = computed(() =>
   videoId.value
-    ? `https://www.youtube.com/embed/${videoId.value}?autoplay=1&mute=1&loop=1&playlist=${videoId.value}&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1`
+    ? `https://www.youtube.com/embed/${videoId.value}?autoplay=1&mute=1&loop=1&playlist=${videoId.value}&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1&vq=hd2160`
     : '',
 )
 

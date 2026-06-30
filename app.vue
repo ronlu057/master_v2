@@ -267,11 +267,26 @@ const siteStyleContent = computed(() => {
   const bannerSubtitle = (siteState.bannerSubtitleColor || '').trim()
   const bannerMemo = (siteState.bannerMemoColor || '').trim()
   const bannerAccent = (siteState.bannerAccentColor || '').trim()
+  const bannerAccent2 = (siteState.bannerAccentColor2 || '').trim()
+  // BlockBanner15 影片圓鈕：五部位獨立色
+  const bvOuter = (siteState.bannerVideoOuterColor || '').trim()
+  const bvInner = (siteState.bannerVideoInnerColor || '').trim()
+  const bvText = (siteState.bannerVideoTextColor || '').trim()
+  const bvBg = (siteState.bannerVideoBgColor || '').trim()
+  const bvTri = (siteState.bannerVideoTriColor || '').trim()
+  const bannerTopImg = (siteState.bannerTopImage || '').trim()
   const bannerVars = [
     bannerTitle && `--banner-title-color: ${bannerTitle};`,
     bannerSubtitle && `--banner-subtitle-color: ${bannerSubtitle};`,
     bannerMemo && `--banner-memo-color: ${bannerMemo};`,
     bannerAccent && `--banner-accent-color: ${bannerAccent};`,
+    bannerAccent2 && `--banner-accent-color-2: ${bannerAccent2};`,
+    bvOuter && `--banner-video-outer: ${bvOuter};`,
+    bvInner && `--banner-video-inner: ${bvInner};`,
+    bvText && `--banner-video-text: ${bvText};`,
+    bvBg && `--banner-video-bg: ${bvBg};`,
+    bvTri && `--banner-video-tri: ${bvTri};`,
+    bannerTopImg && `--banner-top-image: url('${bannerTopImg}');`,
   ]
     .filter(Boolean)
     .join(' ')

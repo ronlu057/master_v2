@@ -30,8 +30,43 @@ const currentSupportsTitleSpan = computed(
 )
 // 此版型是否有「第四行備註」（如 BlockBanner03 的「代理…」）
 const currentSupportsNote = computed(() => !!currentBlockBanner.value?.supportsNote)
+// 此版型主標 / 副標是否各為「鏤空 SPAN + 白字」兩段（如 BlockBanner12）
+const currentSupportsHollowText = computed(() => !!currentBlockBanner.value?.supportsHollowText)
 // 此版型是否有「主色色塊」可換色（如 BlockBanner06 的斜切色塊）；{ name, def }
 const currentAccentColor = computed(() => currentBlockBanner.value?.accentColor || null)
+// 第二色塊（如 BlockBanner08 左梯形 / 右三角各自換色）；{ name, def }
+const currentAccentColor2 = computed(() => currentBlockBanner.value?.accentColor2 || null)
+// 此版型是否有「影片圓鈕」可調（BlockBanner15）：五部位獨立色 + 旋轉文字
+const currentVideoButton = computed(() => !!currentBlockBanner.value?.videoButton)
+// 影片圓鈕五色欄位（key 對應 site-settings、CSS 變數）
+const VIDEO_BTN_COLORS = [
+  { key: 'bannerVideoOuterColor', name: '外圈線', def: '#000000' },
+  { key: 'bannerVideoInnerColor', name: '內圈線', def: '#000000' },
+  { key: 'bannerVideoTextColor', name: '旋轉文字', def: '#000000' },
+  { key: 'bannerVideoBgColor', name: '播放圓底', def: '#000000' },
+  { key: 'bannerVideoTriColor', name: '三角形', def: '#ffffff' },
+]
+// 此版型是否有「整個版型一張」的背景圖（如 BlockBanner07 左上）；{ name, hint }
+const currentTopImage = computed(() => currentBlockBanner.value?.topImage || null)
+// 左上背景圖上傳（單張、per-layout，走背景圖端點，接受一般圖檔）
+const uploadingTopImg = ref(false)
+const onPickTopImage = async (e) => {
+  const file = e.target.files?.[0]
+  e.target.value = ''
+  if (!file) return
+  uploadingTopImg.value = true
+  try {
+    const form = new FormData()
+    form.append('image', file, file.name)
+    const res = await $fetch('/_admin/upload-banner', { method: 'POST', body: form })
+    setPreview('bannerTopImage', res.path)
+    verMessage.value = { type: 'success', text: '左上背景圖已上傳（按提交固化）' }
+  } catch (err) {
+    verMessage.value = { type: 'error', text: err.data?.message || err.statusMessage || err.message }
+  } finally {
+    uploadingTopImg.value = false
+  }
+}
 // 此版型是否有「左側產品圖（去背）」可上傳（元件以 defineOptions({ leftImage:{hint} }) 標記）
 const currentLeftImage = computed(() => currentBlockBanner.value?.leftImage || null)
 // 每則「文字顏色」可調欄位（順序對齊上方文字欄位：標題大字 → 標題 → 副標 → 說明文）
@@ -164,6 +199,16 @@ const toggleField = (i, key) => {
 // 多語系文字欄位（繁中為主，其餘語系展開覆寫）。
 // 支援「大字 span」的版型（BlockBanner03）會在標題前多一個 titleSpan 欄位（前綴大字）。
 const TEXT_FIELDS = computed(() => {
+  // 鏤空大字版型（BlockBanner12）：主標 / 副標各「鏤空 SPAN + 白字」兩段
+  if (currentSupportsHollowText.value) {
+    return [
+      { key: 'titleSpan', label: '主標 · 鏤空大字（SPAN）', rows: 1, ph: '毛玻璃內鏤空大字' },
+      { key: 'title', label: '主標 · 白字', rows: 1, ph: '接在鏤空大字後的白字' },
+      { key: 'subtitleSpan', label: '副標 · 鏤空大字（SPAN）', rows: 1, ph: '毛玻璃內鏤空大字' },
+      { key: 'subtitle', label: '副標 · 白字', rows: 1, ph: '接在鏤空大字後的白字' },
+      { key: 'memo', label: '說明文', rows: 3, ph: '底部說明文（可換行）' },
+    ]
+  }
   const base = [
     { key: 'title', label: '標題', rows: 2, ph: '主標（可換行）' },
     { key: 'subtitle', label: '副標', rows: 2, ph: '副標（可換行）' },
@@ -238,7 +283,8 @@ const toEditRow = (r) => ({
   alt: r.alt || '', // 圖片替代文字（SEO）
   topic: '', // 每則 AI 關鍵字（僅供生成用，不寫回）
   title: toLangEdit(r.title),
-  titleSpan: toLangEdit(r.titleSpan), // 主標大字前綴（僅 BlockBanner03 等支援版型）
+  titleSpan: toLangEdit(r.titleSpan), // 主標大字前綴 / 鏤空大字（BlockBanner03 / 12）
+  subtitleSpan: toLangEdit(r.subtitleSpan), // 副標鏤空大字（BlockBanner12）
   subtitle: toLangEdit(r.subtitle),
   memo: toLangEdit(r.memo),
   note: toLangEdit(r.note), // 第四行備註（僅 BlockBanner03 等支援版型）
@@ -322,6 +368,7 @@ const addRow = () => {
     topic: '',
     title: emptyLang(),
     titleSpan: emptyLang(),
+    subtitleSpan: emptyLang(),
     subtitle: emptyLang(),
     memo: emptyLang(),
     note: emptyLang(),
@@ -494,6 +541,7 @@ const aiGenAll = async (i) => {
     // 此版型的額外欄位（BlockBanner03：標題大字 / 備註）也一起生成
     const extras = []
     if (currentSupportsTitleSpan.value) extras.push('titleSpan')
+    if (currentSupportsHollowText.value) extras.push('titleSpan', 'subtitleSpan')
     if (currentSupportsNote.value) extras.push('note')
     for (const k of extras) {
       try {
@@ -588,6 +636,7 @@ const previewRows = computed(() =>
     alt: r.alt,
     title: toStore(r.title.tw || ''),
     titleSpan: toStore(r.titleSpan?.tw || ''),
+    subtitleSpan: toStore(r.subtitleSpan?.tw || ''),
     subtitle: toStore(r.subtitle.tw || ''),
     memo: toStore(r.memo.tw || ''),
     note: toStore(r.note?.tw || ''),
@@ -609,6 +658,9 @@ const toStoreRow = (r) => ({
   title: toLangStore(r.title),
   ...(r.titleSpan && Object.keys(toLangStore(r.titleSpan)).length
     ? { titleSpan: toLangStore(r.titleSpan) }
+    : {}),
+  ...(r.subtitleSpan && Object.keys(toLangStore(r.subtitleSpan)).length
+    ? { subtitleSpan: toLangStore(r.subtitleSpan) }
     : {}),
   subtitle: toLangStore(r.subtitle),
   memo: toLangStore(r.memo),
@@ -805,6 +857,104 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <span class="field__hint">{{ state.blockBanner }} 的主色色塊；留空＝版型預設（{{ currentAccentColor.def }}）。</span>
+      </div>
+
+      <!-- 第二色塊顏色（如 BlockBanner08 右側三角，與左側梯形各自換色）-->
+      <div v-if="currentAccentColor2" class="field field--full">
+        <span class="field__label">{{ currentAccentColor2.name || '色塊顏色 2' }} <em class="field__live">即時預覽</em></span>
+        <div class="color-rows">
+          <div class="color-rows__row">
+            <input
+              type="color"
+              :value="isHex6(state.bannerAccentColor2) ? state.bannerAccentColor2 : (currentAccentColor2.def || '#393993')"
+              @input="setPreview('bannerAccentColor2', $event.target.value)"
+            />
+            <input
+              type="text"
+              class="hex-input"
+              :value="state.bannerAccentColor2"
+              :placeholder="`版型預設 ${currentAccentColor2.def || ''}`"
+              @input="setPreview('bannerAccentColor2', $event.target.value)"
+              @change="setPreview('bannerAccentColor2', normalizeHex(state.bannerAccentColor2))"
+            />
+            <button
+              v-if="state.bannerAccentColor2"
+              type="button"
+              class="btn btn--ghost btn--sm"
+              @click="setPreview('bannerAccentColor2', '')"
+            >
+              回到預設
+            </button>
+          </div>
+        </div>
+        <span class="field__hint">{{ state.blockBanner }} 的第二色塊；留空＝版型預設（{{ currentAccentColor2.def }}）。</span>
+      </div>
+
+      <!-- 影片圓鈕（BlockBanner15）：旋轉文字 + 五部位獨立色 -->
+      <div v-if="currentVideoButton" class="field field--full">
+        <span class="field__label">影片圓鈕文字 <em class="field__live">即時預覽</em></span>
+        <input
+          type="text"
+          :value="state.bannerVideoText"
+          placeholder="預設 WATCH VIDEO"
+          @input="setPreview('bannerVideoText', $event.target.value)"
+        />
+        <span class="field__hint">圓鈕外圈旋轉文字；留空＝WATCH VIDEO。</span>
+      </div>
+
+      <div v-if="currentVideoButton" class="field field--full">
+        <span class="field__label">影片圓鈕配色（五部位各自獨立）<em class="field__live">即時預覽</em></span>
+        <div class="color-rows">
+          <div v-for="f in VIDEO_BTN_COLORS" :key="f.key" class="color-rows__row">
+            <span class="color-rows__name">{{ f.name }}</span>
+            <input
+              type="color"
+              :value="isHex6(state[f.key]) ? state[f.key] : f.def"
+              @input="setPreview(f.key, $event.target.value)"
+            />
+            <input
+              type="text"
+              class="hex-input"
+              :value="state[f.key]"
+              :placeholder="`版型預設 ${f.def}`"
+              @input="setPreview(f.key, $event.target.value)"
+              @change="setPreview(f.key, normalizeHex(state[f.key]))"
+            />
+            <button
+              v-if="state[f.key]"
+              type="button"
+              class="btn btn--ghost btn--sm"
+              @click="setPreview(f.key, '')"
+            >
+              回到預設
+            </button>
+          </div>
+        </div>
+        <span class="field__hint">外圈線 / 內圈線 / 旋轉文字 / 播放圓底 / 三角形 各自可換色；留空＝版型預設。</span>
+      </div>
+
+      <!-- 左上 / 文字區背景圖（整個版型一張；如 BlockBanner07）-->
+      <div v-if="currentTopImage" class="field field--full">
+        <span class="field__label">{{ currentTopImage.name || '背景圖' }} <em class="field__live">即時預覽</em></span>
+        <div class="slide__img">
+          <img v-if="state.bannerTopImage" :src="state.bannerTopImage" alt="" class="thumb" />
+          <div v-else class="thumb thumb--empty">未設定<br />（用版型預設底色）</div>
+          <div class="slide__img-ops">
+            <label class="btn btn--ghost">
+              {{ uploadingTopImg ? '上傳中…' : `上傳${currentTopImage.name || '背景圖'}` }}
+              <input type="file" accept="image/*" hidden @change="onPickTopImage" />
+            </label>
+            <button
+              v-if="state.bannerTopImage"
+              type="button"
+              class="mini mini--danger"
+              @click="setPreview('bannerTopImage', '')"
+            >
+              移除
+            </button>
+            <span class="field__hint">{{ currentTopImage.hint || '整個版型一張' }}；留空＝版型預設底色。</span>
+          </div>
+        </div>
       </div>
 
       <!-- 自動播放 / 無限循環 開關 -->
@@ -1245,12 +1395,12 @@ onBeforeUnmount(() => {
             <div v-else class="thumb thumb--empty">未設定<br />（用版型預設圖）</div>
             <div class="slide__img-ops">
               <label class="btn btn--ghost">
-                {{ uploadingProductIdx === i ? '上傳中…' : '上傳左側產品圖' }}
+                {{ uploadingProductIdx === i ? '上傳中…' : `上傳${currentLeftImage.name || '左側產品圖'}` }}
                 <input type="file" accept="image/png,image/svg+xml,.png,.svg" hidden @change="onPickProduct(i, $event)" />
               </label>
               <button v-if="row.product?.pc" type="button" class="mini mini--danger" @click="clearProduct(i)">移除</button>
               <span class="field__hint">
-                只能上傳 <strong>PNG / SVG</strong>（需去背透明）；{{ currentLeftImage.hint || '建議去背圖' }}。留空＝用版型內建去背圖。
+                只能上傳 <strong>PNG / SVG</strong>（需去背透明）；{{ currentLeftImage.hint || '建議去背圖' }}。
               </span>
             </div>
           </div>

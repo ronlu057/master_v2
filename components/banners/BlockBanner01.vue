@@ -52,7 +52,7 @@ const videoEmbedUrl = computed(() => {
   const m = props.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)
   if (!m) return ''
   const id = m[1]
-  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0&playsinline=1`
+  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0&playsinline=1&vq=hd2160`
 })
 
 // ── 背景影片來源優先序：YouTube 連結 > 上傳影片檔（HTML5）
