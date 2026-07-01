@@ -293,6 +293,7 @@ const onSlideChange = (s) => {
   }
 
   .button_set {
+    margin-top: fluid(30);
     opacity: 0;
   }
 }

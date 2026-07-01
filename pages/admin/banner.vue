@@ -69,6 +69,13 @@ const onPickTopImage = async (e) => {
 }
 // 此版型是否有「左側產品圖（去背）」可上傳（元件以 defineOptions({ leftImage:{hint} }) 標記）
 const currentLeftImage = computed(() => currentBlockBanner.value?.leftImage || null)
+// 此版型是否有「版型層級一組」的固定背景大圖 + 浮層小圖（如 BlockBanner16）
+// 元件以 defineOptions({ bannerLevelMedia:{ bgHint, decoHint, decoSlots } }) 標記；
+// 這些圖為「整個版型一份」（非每則），存 site-settings（bannerBgImage / bannerDeco1~3），只有文字輪播。
+const currentBannerLevelMedia = computed(() => currentBlockBanner.value?.bannerLevelMedia || null)
+const bannerDecoKeys = ['bannerDeco1', 'bannerDeco2', 'bannerDeco3']
+// 此版型是否有「滑鼠水波紋」可開關（元件以 defineOptions({ rippleEffect:true }) 標記，如 BlockBanner17）
+const currentRipple = computed(() => !!currentBlockBanner.value?.rippleEffect)
 // 每則「文字顏色」可調欄位（順序對齊上方文字欄位：標題大字 → 標題 → 副標 → 說明文）
 const slideColorFields = computed(() => {
   const base = []
@@ -457,6 +464,49 @@ const onPickProduct = async (i, e) => {
 const clearProduct = (i) => {
   rows.value[i].product = { pc: '', mb: '' }
   rows.value[i].productAlt = ''
+}
+
+// 版型層級「固定背景大圖 / 浮層小圖」上傳（如 BlockBanner16）：整個版型一份，寫進 site-settings。
+// 背景大圖走一般圖端點；浮層小圖限 PNG / SVG 走去背素材端點。皆用 setPreview 即時預覽、提交固化。
+const uploadingBg = ref(false)
+const onPickBannerBg = async (e) => {
+  const file = e.target.files?.[0]
+  e.target.value = ''
+  if (!file) return
+  uploadingBg.value = true
+  try {
+    const form = new FormData()
+    form.append('image', file, file.name)
+    const res = await $fetch('/_admin/upload-banner', { method: 'POST', body: form })
+    setPreview('bannerBgImage', res.path)
+    verMessage.value = { type: 'success', text: '固定背景大圖已上傳（按提交固化）' }
+  } catch (err) {
+    verMessage.value = { type: 'error', text: err.data?.message || err.statusMessage || err.message }
+  } finally {
+    uploadingBg.value = false
+  }
+}
+const uploadingBannerDeco = ref('') // 上傳中的 deco key
+const onPickBannerDeco = async (key, e) => {
+  const file = e.target.files?.[0]
+  e.target.value = ''
+  if (!file) return
+  if (!['image/png', 'image/svg+xml'].includes(file.type)) {
+    verMessage.value = { type: 'error', text: '浮層小圖只能上傳 PNG 或 SVG（需去背透明）' }
+    return
+  }
+  uploadingBannerDeco.value = key
+  try {
+    const form = new FormData()
+    form.append('image', file, file.name)
+    const res = await $fetch('/_admin/upload-banner-asset', { method: 'POST', body: form })
+    setPreview(key, res.path)
+    verMessage.value = { type: 'success', text: '浮層小圖已上傳（按提交固化）' }
+  } catch (err) {
+    verMessage.value = { type: 'error', text: err.data?.message || err.statusMessage || err.message }
+  } finally {
+    uploadingBannerDeco.value = ''
+  }
 }
 
 // 左側產品圖 AI 辨識 alt（僅本機上傳的 /img 圖）
@@ -957,6 +1007,59 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
+      <!-- 固定背景大圖 + 中央浮層小圖（版型層級一組，如 BlockBanner16；只有文字輪播）-->
+      <template v-if="currentBannerLevelMedia">
+        <div class="field field--full">
+          <span class="field__label">固定背景大圖 <em class="field__live">即時預覽</em></span>
+          <div class="slide__img">
+            <img v-if="state.bannerBgImage" :src="state.bannerBgImage" alt="" class="thumb" />
+            <div v-else class="thumb thumb--empty">未設定<br />（用版型預設底色）</div>
+            <div class="slide__img-ops">
+              <label class="btn btn--ghost">
+                {{ uploadingBg ? '上傳中…' : '上傳背景大圖' }}
+                <input type="file" accept="image/*" hidden @change="onPickBannerBg" />
+              </label>
+              <button
+                v-if="state.bannerBgImage"
+                type="button"
+                class="mini mini--danger"
+                @click="setPreview('bannerBgImage', '')"
+              >
+                移除
+              </button>
+              <span class="field__hint">{{ currentBannerLevelMedia.bgHint || '整個版型一張固定背景' }}；只有文字會輪播。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field field--full">
+          <span class="field__label">
+            中央浮層小圖（{{ currentBannerLevelMedia.decoSlots || 3 }} 張）<em class="field__live">即時預覽</em>
+          </span>
+          <div class="deco-grid">
+            <div
+              v-for="(key, di) in bannerDecoKeys.slice(0, currentBannerLevelMedia.decoSlots || 3)"
+              :key="key"
+              class="deco-slot"
+            >
+              <img v-if="state[key]" :src="state[key]" alt="" class="thumb thumb--product" />
+              <div v-else class="thumb thumb--empty">未設定</div>
+              <div class="deco-slot__ops">
+                <span class="deco-slot__name">浮層 {{ di + 1 }}</span>
+                <label class="btn btn--ghost btn--sm">
+                  {{ uploadingBannerDeco === key ? '上傳中…' : '換圖' }}
+                  <input type="file" accept="image/png,image/svg+xml,.png,.svg" hidden @change="onPickBannerDeco(key, $event)" />
+                </label>
+                <button v-if="state[key]" type="button" class="mini mini--danger" @click="setPreview(key, '')">移除</button>
+              </div>
+            </div>
+          </div>
+          <span class="field__hint">
+            只能上傳 <strong>PNG / SVG</strong>（需去背透明）；{{ currentBannerLevelMedia.decoHint || '桌面有滑鼠視差浮動' }}。
+          </span>
+        </div>
+      </template>
+
       <!-- 自動播放 / 無限循環 開關 -->
       <div class="field field--full">
         <span class="field__label">輪播播放 <em class="field__live">即時預覽</em></span>
@@ -979,6 +1082,20 @@ onBeforeUnmount(() => {
         <span class="field__hint">
           自動播放＝每 5 秒換下一張；無限循環＝播到最後一張接回第一張（只有一張時自動不循環）。套用所有 BlockBanner 版型。
         </span>
+      </div>
+
+      <!-- 主圖滑鼠水波紋開關（僅支援的版型，如 BlockBanner17）-->
+      <div v-if="currentRipple" class="field field--full">
+        <span class="field__label">主圖滑鼠水波紋 <em class="field__live">即時預覽</em></span>
+        <label class="nav-switch">
+          <input
+            type="checkbox"
+            :checked="state.bannerRipple"
+            @change="setPreview('bannerRipple', $event.target.checked)"
+          />
+          <span>{{ state.bannerRipple ? '開啟（滑鼠滑過主圖產生水波）' : '關閉' }}</span>
+        </label>
+        <span class="field__hint">游標滑過主圖時產生水波紋擴散；關閉＝主圖靜態顯示。</span>
       </div>
 
       <!-- 上一則 / 下一則 箭頭按鈕開關 -->
@@ -1380,8 +1497,8 @@ onBeforeUnmount(() => {
             </div>
           </div>
 
-          <!-- 背景圖 -->
-          <div class="slide__img">
+          <!-- 背景圖（每則各自一張）；版型層級固定背景的版型（BlockBanner16）改在上方版型切換區設定，這裡隱藏 -->
+          <div v-if="!currentBannerLevelMedia" class="slide__img">
             <img :src="row.image.pc || SAMPLE_IMG" alt="" class="thumb" />
             <label class="btn btn--ghost">
               {{ uploadingIdx === i ? '上傳中…' : '上傳背景圖' }}
@@ -1615,6 +1732,38 @@ onBeforeUnmount(() => {
   font-size: 16px;
   color: #e6ebf2;
   margin-bottom: 12px;
+}
+
+// 中央浮層小圖：多槽網格（每槽縮圖 + 換圖/移除）
+.deco-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.deco-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 150px;
+
+  .thumb {
+    width: 150px;
+    height: 90px;
+    object-fit: contain;
+    background: #0f1218;
+    border: 1px solid #2a3242;
+    border-radius: 6px;
+  }
+}
+.deco-slot__ops {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.deco-slot__name {
+  font-size: 12px;
+  color: #c8cfdb;
 }
 
 // Banner 文字顏色色票列

@@ -808,13 +808,127 @@
         "rows": [
           {
             "image": {
-              "pc": "https://picsum.photos/seed/banner-new/1920/911",
-              "mb": ""
+              "pc": "/img/tw/banner/banner-1782870585012.jpg",
+              "mb": "/img/tw/banner/banner-1782870585012.jpg"
             },
-            "alt": "",
-            "title": {},
-            "subtitle": {},
-            "memo": {},
+            "alt": "紅燒牛肉麵，有青江菜與酸菜",
+            "title": {
+              "tw": "經典紅燒牛肉麵"
+            },
+            "subtitle": {
+              "tw": "醇厚湯頭，軟嫩牛肉",
+              "en": "Mellow soup, tender beef",
+              "jp": "まろやかなスープ、柔らかい牛肉",
+              "kr": "진한 육수, 부드러운 소고기"
+            },
+            "memo": {
+              "tw": "青江菜與酸菜完美搭配，層次豐富，美味加倍。"
+            },
+            "btnText": "",
+            "link": ""
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782870636023.jpg",
+              "mb": "/img/tw/banner/banner-1782870636023.jpg"
+            },
+            "alt": "湯匙舀起一匙滷肉飯",
+            "title": {
+              "tw": "一匙入魂"
+            },
+            "subtitle": {
+              "tw": "經典滷肉飯，口口銷魂滋味"
+            },
+            "memo": {
+              "tw": "香氣四溢的滷肉，完美融合米飯，每一口都是幸福。"
+            },
+            "btnText": "",
+            "link": ""
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner17": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782883087996.jpg",
+              "mb": "/img/tw/banner/banner-1782883087996.jpg"
+            },
+            "alt": "碗牛肉麵有青菜、牛肉塊與麵條",
+            "title": {
+              "tw": "經典牛肉麵"
+            },
+            "subtitle": {
+              "tw": "紅燒慢燉，麵Q肉嫩菜鮮"
+            },
+            "memo": {
+              "tw": "嚴選上等牛肉，搭配翠綠青菜，麵條Q彈，湯頭濃郁。"
+            },
+            "btnText": "",
+            "link": "/about"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782883164041.jpg",
+              "mb": "/img/tw/banner/banner-1782883164041.jpg"
+            },
+            "alt": "一位女性的特寫，她閉著眼睛，頭向下傾斜",
+            "title": {
+              "tw": "凝視，發現美"
+            },
+            "subtitle": {
+              "tw": "眼神流轉間，綻放獨特光采"
+            },
+            "memo": {
+              "tw": "捕捉女性臉龐的細膩表情，每一刻都值得珍藏。"
+            },
+            "btnText": "",
+            "link": ""
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner18": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782886469443.jpg",
+              "mb": "/img/tw/banner/banner-1782886469443.jpg"
+            },
+            "alt": "一碗熱騰騰的紅燒牛肉麵",
+            "title": {
+              "tw": "紅燒牛肉麵",
+              "en": "Braised Beef Noodle Soup",
+              "jp": "牛肉麺",
+              "kr": "홍소 우육면"
+            },
+            "subtitle": {
+              "tw": "暖心暖胃，醇厚湯頭"
+            },
+            "memo": {
+              "tw": "慢燉細熬，肉質軟嫩入味，一口入魂的極致享受。"
+            },
+            "btnText": "",
+            "link": ""
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782886496415.jpg",
+              "mb": "/img/tw/banner/banner-1782886496415.jpg"
+            },
+            "alt": "白色轎車在山路高速行駛",
+            "title": {
+              "tw": "山路疾馳，白色魅影"
+            },
+            "subtitle": {
+              "tw": "劃破蜿蜒，速度與自由的極致展現"
+            },
+            "memo": {
+              "tw": "感受風的呼嘯，體驗駕馭的激情。每一次轉彎，都是對極限的挑戰。"
+            },
             "btnText": "",
             "link": ""
           }

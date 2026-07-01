@@ -108,6 +108,11 @@ export function useEffectiveSettings() {
       bannerVideoText: pub.bannerVideoText || '',
       // 左上文字區背景圖（如 BlockBanner07）；整個版型一張、空＝版型預設底色
       bannerTopImage: pub.bannerTopImage || '',
+      // BlockBanner16：固定背景大圖 + 3 張浮層小圖（版型層級一組，只換圖不分則；空＝不顯示）
+      bannerBgImage: pub.bannerBgImage || '',
+      bannerDeco1: pub.bannerDeco1 || '',
+      bannerDeco2: pub.bannerDeco2 || '',
+      bannerDeco3: pub.bannerDeco3 || '',
       // Banner 輪播「上一則 / 下一則」按鈕開關（全站共用，預設顯示）
       bannerNav: pub.bannerNav === undefined ? true : String(pub.bannerNav) !== 'false',
       // 箭頭 icon { name, style:'line'|'solid' }（空＝預設 chevron 線條）/ 按鈕大小 px / 圓角 px（999＝圓形）
@@ -126,6 +131,8 @@ export function useEffectiveSettings() {
       // 輪播：無限循環 / 自動播放開關（全 BlockBanner 版型共用此語意，預設開）
       bannerLoop: pub.bannerLoop === undefined ? true : String(pub.bannerLoop) !== 'false',
       bannerAutoplay: pub.bannerAutoplay === undefined ? true : String(pub.bannerAutoplay) !== 'false',
+      // BlockBanner17：主圖滑鼠水波紋效果開關（預設開）
+      bannerRipple: pub.bannerRipple === undefined ? true : String(pub.bannerRipple) !== 'false',
       // 輪播圓點（pagination dots）：開關、預設/選中背景色、框線寬度·顏色、寬·高（預設/選中各自）
       bannerDots: pub.bannerDots === undefined ? true : String(pub.bannerDots) !== 'false',
       bannerDotBg: pub.bannerDotBg || '', // 預設（未選中）背景色；空＝半透明白
