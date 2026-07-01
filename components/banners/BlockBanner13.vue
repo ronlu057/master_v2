@@ -336,7 +336,7 @@ const toggleSound = () => {
     margin-top: fluid(55);
     transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
 
-    @media (max-width: 1200px) { margin-top: 35px; }
+    @include rwd-1200 { margin-top: 35px; }
     @media (max-width: 640px) { margin: 0 auto; }
     @media (max-width: 400px) { margin-top: 20px; }
   }

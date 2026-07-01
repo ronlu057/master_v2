@@ -334,8 +334,9 @@ const leftMb = (row) => row.product?.mb || row.product?.pc || OB_MB
         }
 
         .button_set {
-          margin-top: fluid(30);
+          margin-top: fluid(55);
 
+          @include rwd-1200 { margin-top: 35px; }
           @media (max-width: 400px) { margin-top: 30px; }
         }
       }

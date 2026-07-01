@@ -363,7 +363,7 @@ onBeforeUnmount(() => {
         transition: all 0.3s, opacity 1s, transform 1s;
         margin-top: fluid(55);
 
-        @media (max-width: 1200px) { margin-top: 35px; }
+        @include rwd-1200 { margin-top: 35px; }
       }
     }
 

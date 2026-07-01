@@ -283,7 +283,6 @@ onBeforeUnmount(() => {
         transition: opacity 0.5s 0.1s, transform 0.5s 0.1s;
         // bannerTitleSize_cht(2)
         font-size: clamp(16px, calc(18 / 19.2 * 1vw), calc(18 / 1920 * 2560 * 1px));
-        margin-top: fluid(15);
 
         @media (max-width: 640px) {
           display: none;
@@ -294,10 +293,14 @@ onBeforeUnmount(() => {
         display: flex;
         align-items: center;
         gap: fluid(15);
-        margin-top: fluid(30);
+        margin-top: fluid(55);
         opacity: 0;
         transform: translate(40px, 0);
         transition: opacity 0.5s 0.2s, transform 0.5s 0.2s;
+
+        @include rwd-1200 {
+          margin-top: 35px;
+        }
 
         @media (max-width: 640px) {
           justify-content: center;

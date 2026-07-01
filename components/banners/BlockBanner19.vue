@@ -15,7 +15,8 @@
 // rows 結構（每筆）：
 //   {
 //     image: { pc, mb },   // pc=大圖(data_banner_basic)，mb=小圖(data_banner_basic_mb)
-//     product,             // 右欄產品去背圖(data_type4_banner2_mb)
+//     product: { pc, mb }, // 右欄產品去背圖（沿用 BB03 機制，後台上傳 PNG/SVG）；productAlt=alt
+//     link2, btnText2,     // 第二顆按鈕（有 link2 才顯示）
 //     title,               // 第一行：英文/標題（bannerTitleSize_en(3)，可含換行）
 //     title3,              // 第二行：中文主標（bannerTitleSize_cht(1)，可含換行）
 //     title4,              // 第三行：標語（bannerTitleSize_cht(2)，可含換行）
@@ -28,6 +29,14 @@ import 'swiper/css'
 import 'swiper/css/effect-fade'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
+
+// 能力標記：
+//   secondButton — 每則支援「兩顆按鈕」（後台各自設文字＋連結；第 2 顆為外框樣式）
+//   leftImage    — 每則右側「產品去背圖」（沿用 BlockBanner03 的 product{pc,mb} 機制，後台可上傳 PNG/SVG）
+defineOptions({
+  secondButton: true,
+  leftImage: { name: '右側產品圖', hint: '產品去背圖（PNG / SVG），顯示在每則右側' },
+})
 
 const props = defineProps({
   title: { type: String, default: '' },
@@ -73,14 +82,33 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
                 <div v-if="row.memo" v-html="toHtml(row.memo)" />
 
                 <div class="button_set">
-                  <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'" target="_blank">
-                    <span>VIEW MORE</span>
+                  <NuxtLink
+                    v-if="row.link"
+                    class="cover_btn"
+                    :to="row.link"
+                    :title="row.title || row.btnText || 'VIEW MORE'"
+                    target="_blank"
+                  >
+                    <span>{{ row.btnText || 'VIEW MORE' }}</span>
+                  </NuxtLink>
+                  <NuxtLink
+                    v-if="row.link2"
+                    class="cover_btn cover_btn_alt"
+                    :to="row.link2"
+                    :title="row.title || row.btnText2 || 'MORE'"
+                    target="_blank"
+                  >
+                    <span>{{ row.btnText2 || 'CONTACT' }}</span>
                   </NuxtLink>
                 </div>
               </div>
 
               <div class="pic">
-                <img v-if="row.product" :src="row.product" alt="" />
+                <img
+                  v-if="row.product?.pc"
+                  :src="row.product.mb || row.product.pc"
+                  :alt="row.productAlt || row.title || ''"
+                />
               </div>
             </div>
           </div>
@@ -145,8 +173,14 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
       width: 100%;
       transform: translateY(-50%);
 
+      // 左文右圖分欄：.info(58.75%) + .pic(41.25%) 並排、垂直置中（原用 grid .row，母版改 flex）
       .row {
+        display: flex;
         align-items: center;
+
+        @media (max-width: 640px) {
+          flex-direction: column;
+        }
       }
 
       .info {
@@ -197,10 +231,16 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         }
 
         .button_set {
+          display: flex;
+          align-items: center;
+          gap: fluid(15);
+          flex-wrap: wrap;
+          margin-top: fluid(55); // 與說明文間距（對應範本 btnMarginTop(1)=55/35）
           opacity: 0;
           transform: translate(40px, 0);
           transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
 
+          @include rwd-1200 { margin-top: 35px; }
           @media (max-width: 640px) {
             justify-content: center;
             transform: translate(0, 40px);
@@ -216,12 +256,15 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         }
 
         img {
+          width: fluid(660); // 隨視窗等比（設計稿 660px ≈ 34vw、鎖 2560）→ 大螢幕不會顯得太小
+          max-width: 100%; // 安全上限：不超出 .pic 欄
           margin: 0 auto;
           opacity: 0;
           transform: translate(-40px, 0);
           transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
 
           @media (max-width: 640px) {
+            width: auto;
             max-width: calc(300 / 430 * 100%);
             transform: translate(0, 40px);
           }
@@ -284,6 +327,18 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   &:hover {
     color: #fff;
     background: $web_color_1;
+  }
+}
+
+// 第二顆按鈕：白色外框（深色主圖上可見；hover 反白）
+.cover_btn_alt {
+  background: transparent;
+  border-color: #fff;
+  color: #fff;
+
+  &:hover {
+    background: #fff;
+    color: $web_color_1;
   }
 }
 

@@ -414,7 +414,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
       transform: translate(-40px, 0);
       transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
 
-      @media (max-width: 1200px) { margin-top: 35px; }
+      @include rwd-1200 { margin-top: 35px; }
       @media (max-width: 640px) { transform: translate(0, 40px); }
 
       &:hover {

@@ -296,7 +296,7 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
   .cover_btn {
     margin-top: fluid(55);
 
-    @media (max-width: 1200px) { margin-top: 35px; }
+    @include rwd-1200 { margin-top: 35px; }
   }
 }
 

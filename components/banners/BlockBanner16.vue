@@ -285,7 +285,7 @@ $b16-strip: fluid(151.5); // 桌面左側直欄寬（放上下箭頭）
   display: flex;
   flex-direction: row-reverse; // 第一個 DOM 子（標題）排最右，符合直書右起
   align-items: flex-start; // 各欄「頂端」對齊 → 齊頭
-  gap: fluid(22);
+  gap: fluid(15);
   position: absolute;
   top: 32%;
   left: 8.5%;
@@ -312,6 +312,7 @@ $b16-strip: fluid(151.5); // 桌面左側直欄寬（放上下箭頭）
     max-width: none;
     text-align: center;
     padding: 0 15px;
+    gap: 20px;
   }
 
   > * {

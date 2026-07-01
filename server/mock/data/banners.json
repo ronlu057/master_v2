@@ -935,6 +935,62 @@
         ],
         "videoUrl": "",
         "videoFile": ""
+      },
+      "BlockBanner19": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner19-bg.jpg",
+              "mb": "/img/tw/banner/banner19-bg.jpg"
+            },
+            "product": {
+              "pc": "/img/tw/banner/banner-asset-1782894744934.png",
+              "mb": "/img/tw/banner/banner-asset-1782894744934.png"
+            },
+            "productAlt": "AMADA HG 2204 折床機",
+            "alt": "AMADA HG 2204 紅黑色鈑金折床機台",
+            "title": {
+              "tw": "皇鋼機械｜鈑金設計製造商"
+            },
+            "subtitle": {
+              "tw": "SOLUTIONS TO ALL PROBLEMS"
+            },
+            "memo": {
+              "tw": "30 年生產經驗，提供您最好的產品解決方案"
+            },
+            "btnText": "VIEW MORE",
+            "link": "/about/company-intro",
+            "btnText2": "聯絡我們",
+            "link2": "/contact"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner19-bg.jpg",
+              "mb": "/img/tw/banner/banner19-bg.jpg"
+            },
+            "product": {
+              "pc": "/img/tw/banner/banner-asset-1782894752381.png",
+              "mb": "/img/tw/banner/banner-asset-1782894752381.png"
+            },
+            "productAlt": "AMADA HG 2204 折床機",
+            "alt": "AMADA HG 系列高精度折床設備",
+            "title": {
+              "tw": "高精度折床設備"
+            },
+            "subtitle": {
+              "tw": "PRECISION BENDING"
+            },
+            "memo": {
+              "tw": "AMADA HG 系列，提升您的生產效率與品質"
+            },
+            "btnText": "產品介紹",
+            "link": "/products",
+            "btnText2": "立即詢價",
+            "link2": "/contact"
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
       }
     }
   },

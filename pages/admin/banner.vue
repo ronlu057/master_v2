@@ -76,6 +76,8 @@ const currentBannerLevelMedia = computed(() => currentBlockBanner.value?.bannerL
 const bannerDecoKeys = ['bannerDeco1', 'bannerDeco2', 'bannerDeco3']
 // 此版型是否有「滑鼠水波紋」可開關（元件以 defineOptions({ rippleEffect:true }) 標記，如 BlockBanner17）
 const currentRipple = computed(() => !!currentBlockBanner.value?.rippleEffect)
+// 此版型每則是否支援「第二顆按鈕」（元件以 defineOptions({ secondButton:true }) 標記，如 BlockBanner19）
+const currentSecondButton = computed(() => !!currentBlockBanner.value?.secondButton)
 // 每則「文字顏色」可調欄位（順序對齊上方文字欄位：標題大字 → 標題 → 副標 → 說明文）
 const slideColorFields = computed(() => {
   const base = []
@@ -302,6 +304,8 @@ const toEditRow = (r) => ({
   memoColor: r.memoColor || '',
   btnText: r.btnText || '',
   link: r.link || '',
+  btnText2: r.btnText2 || '', // 第二顆按鈕（BlockBanner19）
+  link2: r.link2 || '',
 })
 // 解析後內容 { rows, videoUrl, videoFile } → 編輯格式內容
 const toEditContent = (c) => ({
@@ -385,6 +389,8 @@ const addRow = () => {
     memoColor: '',
     btnText: '',
     link: '',
+    btnText2: '',
+    link2: '',
   })
 }
 const removeRow = (i) => rows.value.splice(i, 1)
@@ -696,6 +702,8 @@ const previewRows = computed(() =>
     memoColor: r.memoColor || '',
     btnText: r.btnText,
     link: r.link,
+    btnText2: r.btnText2,
+    link2: r.link2,
   })),
 )
 
@@ -721,6 +729,8 @@ const toStoreRow = (r) => ({
   ...(r.memoColor ? { memoColor: r.memoColor } : {}),
   btnText: r.btnText || '',
   link: r.link || '',
+  ...(r.btnText2 ? { btnText2: r.btnText2 } : {}),
+  ...(r.link2 ? { link2: r.link2 } : {}),
 })
 // 存檔 / 站台預覽用 rows（目前版型）
 const storeRows = computed(() => rows.value.map(toStoreRow))
@@ -1669,12 +1679,24 @@ onBeforeUnmount(() => {
           <!-- 按鈕 -->
           <div class="grid">
             <label class="field">
-              <span class="field__label">按鈕文字</span>
+              <span class="field__label">{{ currentSecondButton ? '按鈕 1 文字' : '按鈕文字' }}</span>
               <input v-model="row.btnText" type="text" placeholder="預設 VIEW MORE" />
             </label>
             <label class="field">
-              <span class="field__label">按鈕連結</span>
+              <span class="field__label">{{ currentSecondButton ? '按鈕 1 連結' : '按鈕連結' }}</span>
               <input v-model="row.link" type="text" placeholder="/about 或 https://…" />
+            </label>
+          </div>
+
+          <!-- 第二顆按鈕（僅支援的版型，如 BlockBanner19）-->
+          <div v-if="currentSecondButton" class="grid">
+            <label class="field">
+              <span class="field__label">按鈕 2 文字</span>
+              <input v-model="row.btnText2" type="text" placeholder="預設 CONTACT" />
+            </label>
+            <label class="field">
+              <span class="field__label">按鈕 2 連結</span>
+              <input v-model="row.link2" type="text" placeholder="有填才顯示第二顆按鈕" />
             </label>
           </div>
         </div>

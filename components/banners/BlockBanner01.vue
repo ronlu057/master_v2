@@ -392,13 +392,13 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
 .cover_title {
   font-size: clamp(24px, calc(56 / 19.2 * 1vw), calc(56 / 1920 * 2560 * 1px));
   font-weight: 900;
-  margin: 0 0 fluid(18); // 改用 h1/h2 後清掉瀏覽器預設 margin
+  margin: 0; // 改用 h1/h2 後清掉瀏覽器預設 margin
 }
 
 .cover_subtitle {
   font-size: clamp(16px, calc(24 / 19.2 * 1vw), calc(24 / 1920 * 2560 * 1px));
   font-weight: 500;
-  margin: 0 0 fluid(12);
+  margin: fluid(20) 0 0;
 }
 
 .cover_btn {
@@ -410,10 +410,14 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
   color: #fff;
   font-size: fluid-fz(14);
   letter-spacing: 2px;
-  margin-top: fluid(24);
+  margin-top: fluid(55);
   opacity: 0;
   transform: translate(-20px, 0);
   transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+
+  @include rwd-1200 {
+    margin-top: 35px;
+  }
 
   @include rwd-768 {
     transform: translate(0, 20px);

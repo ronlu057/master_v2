@@ -319,12 +319,11 @@ onBeforeUnmount(() => {
 
         // VIEW MORE 按鈕進場
         :deep(.cover_btn) {
-          margin-top: fluid(30);
+          margin-top: fluid(55);
 
-          @media (max-width: 1200px) { margin-top: 25px; }
+          @include rwd-1200 { margin-top: 35px; }
           @media (max-width: 720px) {
             margin: 0 auto;
-            margin-top: 25px;
           }
         }
       }

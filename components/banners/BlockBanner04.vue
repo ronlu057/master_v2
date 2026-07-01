@@ -167,7 +167,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
         margin-top: fluid(55);
         transition: all 0.3s, opacity 0.8s, transform 0.8s;
 
-        @media (max-width: 1200px) { margin-top: 35px; }
+        @include rwd-1200 { margin-top: 35px; }
       }
     }
 

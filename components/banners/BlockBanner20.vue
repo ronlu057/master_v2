@@ -287,10 +287,10 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   display: flex;
   align-items: center;
   gap: fluid(15);
-  margin-top: fluid(30);
+  margin-top: fluid(55);
 
-  @media (max-width: 400px) {
-    margin-top: 20px;
+  @include rwd-1200 {
+    margin-top: 35px;
   }
 }
 

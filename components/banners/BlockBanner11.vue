@@ -154,11 +154,12 @@ defineProps({
         }
 
         .button_set {
-          margin-top: fluid(30);
+          margin-top: fluid(55);
           opacity: 0;
           transform: translate(40px, 0);
           transition: all 0.3s, opacity 1s 0.6s, transform 1s 0.6s;
 
+          @include rwd-1200 { margin-top: 35px; }
           @media (max-width: 600px) {
             display: flex;
             justify-content: center;

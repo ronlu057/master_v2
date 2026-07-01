@@ -293,8 +293,10 @@ const onSlideChange = (s) => {
   }
 
   .button_set {
-    margin-top: fluid(30);
+    margin-top: fluid(55);
     opacity: 0;
+
+    @include rwd-1200 { margin-top: 35px; }
   }
 }
 

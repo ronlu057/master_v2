@@ -201,11 +201,12 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   }
 
   .button_set {
-    margin-top: fluid(30);
+    margin-top: fluid(55);
     opacity: 0;
     transform: translate(40px, 0);
     transition: all 0.3s, opacity 0.5s 0.3s, transform 0.5s 0.3s;
 
+    @include rwd-1200 { margin-top: 35px; }
     @media (max-width: 640px) {
       display: flex;
       justify-content: center;

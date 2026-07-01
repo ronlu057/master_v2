@@ -230,7 +230,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
         // 副標：沿用 BlockBanner01 cover_subtitle
         .cover_subtitle {
           color: var(--banner-subtitle-color, #fff);
-          margin-top: fluid(12);
+          margin-top: fluid(10);
           font-weight: 500;
           font-size: clamp(16px, calc(24 / 19.2 * 1vw), calc(24 / 1920 * 2560 * 1px));
           transition: all 0.3s, opacity 0.5s 0.1s, transform 0.5s 0.1s;
@@ -239,7 +239,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
         // 說明文
         .cover_memo {
           color: var(--banner-memo-color, #fff);
-          margin-top: fluid(12);
+          margin-top: fluid(10);
           line-height: 1.6;
           font-size: clamp(14px, calc(16 / 19.2 * 1vw), calc(16 / 1920 * 2560 * 1px));
           transition: all 0.3s, opacity 0.5s 0.2s, transform 0.5s 0.2s;

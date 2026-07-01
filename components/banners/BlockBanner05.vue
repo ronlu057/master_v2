@@ -327,9 +327,10 @@ const onReachBeginning = (s) => {
     }
 
     .button_set {
-      margin-top: fluid(30);
+      margin-top: fluid(55);
       transition: all 0.3s, opacity 1s, transform 1s;
 
+      @include rwd-1200 { margin-top: 35px; }
       @media (max-width: 720px) {
         display: flex;
         justify-content: center;
