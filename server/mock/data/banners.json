@@ -991,6 +991,44 @@
         ],
         "videoUrl": "",
         "videoFile": ""
+      },
+      "BlockBanner20": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner20-bg.jpg",
+              "mb": "/img/tw/banner/banner20-bg.jpg"
+            },
+            "product": {
+              "pc": "/img/tw/banner/banner20-product.png",
+              "mb": "/img/tw/banner/banner20-product.png"
+            },
+            "productAlt": "KEYEAST 大型 CNC 精密加工機台",
+            "alt": "精密機械廠房背景",
+            "title": { "tw": "KEYEAST MACHINERY" },
+            "memo": { "tw": "專注精密機械之研發、設計、製造與銷售，提供最佳解決方案。" },
+            "link": "/about/company-intro",
+            "videoLink": "https://www.youtube.com/watch?v=mRC8mVLoqx8"
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner20-bg.jpg",
+              "mb": "/img/tw/banner/banner20-bg.jpg"
+            },
+            "product": {
+              "pc": "/img/tw/banner/banner20-product.png",
+              "mb": "/img/tw/banner/banner20-product.png"
+            },
+            "productAlt": "KEYEAST 大型 CNC 精密加工機台",
+            "alt": "精密機械廠房背景",
+            "title": { "tw": "PRECISION MACHINERY" },
+            "memo": { "tw": "30 年製造經驗，打造高剛性、高精度的加工設備。" },
+            "link": "/products",
+            "videoLink": "https://www.youtube.com/watch?v=mRC8mVLoqx8"
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
       }
     }
   },

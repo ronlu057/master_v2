@@ -10,20 +10,26 @@
 //       page-banner 部分由共用 PageBanner01 處理，這裡只做首頁版。
 //
 // rows 結構（每筆）：
-//   { image: { pc, mb }, object, title, memo, link, videoLink }
-//     image.pc   = 背景大圖（min-width:641px 顯示）
-//     image.mb   = 背景小圖（手機）
-//     object     = 中央產品物件圖（桌面置中、手機在文字下方）
-//     title      = 主標（主色、bannerTitleSize_en(1)）
-//     memo       = 說明文字（白、可含換行、bannerTitleSize_cht(2)；<360 隱藏）
-//     link       = VIEW MORE 內部連結（可選）
-//     videoLink  = PLAY VIDEO 外部影片連結（可選，另開分頁）
+//   { image: { pc, mb }, product: { pc, mb }, productAlt, title, memo, link, videoLink }
+//     image.pc     = 背景大圖（min-width:641px 顯示）
+//     image.mb     = 背景小圖（手機）
+//     product{pc,mb} = 中央產品物件圖（桌面置中偏右、手機在文字下方）；沿用 BB03/BB19 機制，後台可上傳
+//     productAlt   = 產品圖 alt（SEO）
+//     title        = 主標（主色、bannerTitleSize_en(1)）
+//     memo         = 說明文字（白、可含換行、bannerTitleSize_cht(2)；<360 隱藏）
+//     link         = VIEW MORE 內部連結（可選）
+//     videoLink    = PLAY VIDEO 外部影片連結（可選，另開分頁）
 // props.videoUrl、props.news：本版型未使用（保留以相容 BlockBanner 介面）
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, EffectFade, Navigation } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/effect-fade'
 import 'swiper/css/navigation'
+
+// 能力標記：中央產品去背圖（沿用 BB03/BB19 的 product{pc,mb} 機制，後台每則可上傳 PNG/SVG）
+defineOptions({
+  leftImage: { name: '產品圖', hint: '產品去背圖（PNG / SVG），桌面置中、手機在文字下方' },
+})
 
 const props = defineProps({
   title: { type: String, default: '' },
@@ -58,8 +64,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
           <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
-        <div v-if="row.object" class="object">
-          <img :src="row.object" alt="" />
+        <div v-if="row.product?.pc" class="object">
+          <img :src="row.product.pc" :alt="row.productAlt || row.title || ''" />
         </div>
 
         <div class="content">
@@ -68,8 +74,8 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
               <component :is="i === 0 ? 'h1' : 'h2'">{{ row.title }}</component>
               <p v-if="row.memo" v-html="toHtml(row.memo)" />
 
-              <div v-if="row.object" class="object_mb">
-                <img :src="row.object" alt="" />
+              <div v-if="row.product?.pc" class="object_mb">
+                <img :src="row.product.mb || row.product.pc" :alt="row.productAlt || row.title || ''" />
               </div>
 
               <div class="button_set">
