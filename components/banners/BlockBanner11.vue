@@ -203,7 +203,7 @@ defineProps({
       gap: 10px;
       top: 50%;
       bottom: unset;
-      left: calc(60 / 19.2 * 1vw);
+      left: min(calc(60 / 19.2 * 1vw), calc(60 / 1920 * 2560 * 1px));
       width: auto;
       transform: translateY(-50%);
     }

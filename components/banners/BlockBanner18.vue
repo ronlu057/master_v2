@@ -66,12 +66,12 @@ const onSlideChange = (s) => {
           <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
-        <!-- p 順序固定（對應原 PHP 四行），讓 nth-child 動畫穩定；空值僅留空段落 -->
+        <!-- 段落順序固定（對應原 PHP 四行），讓 nth-child 動畫穩定；說明/內文用 <p>（製作規範 §2.6） -->
         <div class="cover" :class="`js-banner-row-${i}`">
-          <div>{{ row.subtitle }}</div>
+          <p>{{ row.subtitle }}</p>
           <component :is="i === 0 ? 'h1' : 'h2'" v-html="toHtml(row.title)" />
           <div class="cover_line"><span></span></div>
-          <div>{{ row.memo }}</div>
+          <p>{{ row.memo }}</p>
 
           <NuxtLink v-if="row.link" class="cover_btn" :to="row.link" :title="row.title || 'VIEW MORE'">
             <span>VIEW MORE</span>
@@ -135,7 +135,7 @@ const onSlideChange = (s) => {
       position: absolute;
       top: 0;
       left: 0;
-      width: calc(500 / 19.2 * 1vw);
+      width: fluid(680);
       height: 100%;
       background: rgba(0, 0, 0, 0.5);
       z-index: 1;
@@ -143,12 +143,12 @@ const onSlideChange = (s) => {
       transform: translateX(-80px);
       transition: all 0.3s, opacity 1s, transform 1s;
 
-      @media (max-width: 1440px) {
-        width: calc(450 / 14.4 * 1vw);
+      @include rwd-1440 {
+        width: calc(600 / 14.4 * 1vw);
       }
 
       @media (max-width: 960px) {
-        width: calc(345 / 9.6 * 1vw);
+        width: calc(460 / 9.6 * 1vw);
       }
 
       @media (max-width: 640px) {
@@ -161,7 +161,7 @@ const onSlideChange = (s) => {
       top: 50%;
       left: 0;
       width: 100%;
-      padding: 0 calc(160 / 19.2 * 1vw);
+      padding: 0 fluid(160);
       z-index: 2;
       transform: translateY(-50%);
 
@@ -215,7 +215,7 @@ const onSlideChange = (s) => {
           position: absolute;
           top: 50%;
           right: calc(100% + 13px);
-          width: calc(160 / 19.2 * 1vw - 13px);
+          width: calc(#{fluid(160)} - 13px); // 與 cover padding 同步、且 2560 後鎖住（4K 不再無限長）
           height: 1px;
           background: rgba(255, 255, 255, 0.4);
 
@@ -281,7 +281,7 @@ const onSlideChange = (s) => {
         transform: translate(-40px, 0);
         transition: all 0.3s, opacity 1s 0.6s, transform 1s 0.6s;
 
-        @media (max-width: 1200px) {
+        @include rwd-1200 {
           margin-top: 35px;
         }
 
@@ -356,7 +356,7 @@ const onSlideChange = (s) => {
   flex-direction: column;
   position: absolute;
   top: 56%;
-  right: calc(108 / 19.2 * 1vw);
+  right: fluid(108);
   transform: translateY(-50%);
   z-index: 2;
 
@@ -382,7 +382,7 @@ const onSlideChange = (s) => {
       background: rgba(255, 255, 255, 0.2);
       transition: all 0.3s;
 
-      @media (max-width: 1440px) {
+      @include rwd-1440 {
         height: 80px;
       }
 
@@ -426,7 +426,7 @@ const onSlideChange = (s) => {
   margin-bottom: fluid(28);
   &::before { transform: rotate(-45deg); margin-top: fluid(3); }
 
-  @media (max-width: 1440px) {
+  @include rwd-1440 {
     margin-bottom: 15px;
   }
 }

@@ -246,7 +246,7 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   right: 0;
-  padding: 0 0 0 calc(80 / 19.2 * 1vw);
+  padding: 0 0 0 fluid(80);
   background: #fff;
   z-index: $z_header;
   transition: all 0.3s;

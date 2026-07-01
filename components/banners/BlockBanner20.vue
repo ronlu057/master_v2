@@ -275,7 +275,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 .wider_container {
   width: 100%;
   max-width: fluid(1903);
-  padding: 0 calc(156 / 19.2 * 1vw);
+  padding: 0 fluid(156);
   margin: 0 auto;
 
   @media (max-width: 640px) {

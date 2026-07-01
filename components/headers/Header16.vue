@@ -243,7 +243,7 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   right: 0;
-  padding: 0 calc(80 / 19.2 * 1vw);
+  padding: 0 fluid(80);
   background: #fff;
   z-index: $z_header;
   transition: all 0.3s;
@@ -491,7 +491,7 @@ onBeforeUnmount(() => {
 
   // 9 點漢堡：3×3 方陣，奇偶雙色，中央固定品牌色
   .mbPanel_btn {
-    @media (min-width: 1201px) { margin-left: calc(65 / 19.2 * 1vw); }
+    @media (min-width: 1201px) { margin-left: min(calc(65 / 19.2 * 1vw), calc(65 / 1920 * 2560 * 1px)); }
 
     .bars {
       display: flex;
@@ -536,7 +536,7 @@ onBeforeUnmount(() => {
   padding: fluid(70) 0;
   background: #fff;
   background-position: left bottom;
-  background-size: calc(562 / 19.2 * 1vw) calc(406 / 19.2 * 1vw);
+  background-size: fluid(562) fluid(406);
   background-repeat: no-repeat;
   overflow: hidden;
   z-index: $z_mbPanel_95;
@@ -547,7 +547,7 @@ onBeforeUnmount(() => {
     width: 100%;
     max-width: fluid(1600);
     margin: 0 auto;
-    padding: 0 calc(80 / 19.2 * 1vw);
+    padding: 0 fluid(80);
   }
 
   .row_by_gap {
@@ -557,7 +557,7 @@ onBeforeUnmount(() => {
 
   .left {
     width: calc(600 / 1600 * 100%);
-    padding-right: calc(130 / 19.2 * 1vw);
+    padding-right: fluid(130);
 
     .logo {
       display: block;
@@ -570,7 +570,7 @@ onBeforeUnmount(() => {
     display: flex;
     flex-wrap: wrap;
     flex-shrink: 0;
-    gap: calc(50 / 19.2 * 1vw) calc(130 / 19.2 * 1vw);
+    gap: fluid(50) fluid(130);
     width: calc(1000 / 1600 * 100%);
     max-height: calc(100vh - 210px);
     padding-right: fluid(22);

@@ -70,7 +70,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
   margin-top: fluid(100);
 
   @media (min-width: 641px) {
-    padding: 0 calc(75 / 19.2 * 1vw);
+    padding: 0 min(calc(75 / 19.2 * 1vw), calc(75 / 1920 * 2560 * 1px));
   }
 }
 

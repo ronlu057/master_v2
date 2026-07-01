@@ -175,7 +175,7 @@ $banner06_text: cubic-bezier(0.7, 0.2, 0.4, 1); // 文字展開
       }
 
       .empty {
-        width: calc(310 / 19.2 * 1vw);
+        width: fluid(310);
 
         @media (max-width: 640px) {
           display: none;

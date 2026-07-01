@@ -284,7 +284,7 @@ onBeforeUnmount(() => {
     // ── 底部 cover（wider_container 內：說明文 .cover_memo + VIEW MORE 按鈕）──
     .cover {
       position: absolute;
-      bottom: calc(96 / 19.2 * 1vw);
+      bottom: fluid(96);
       left: 0;
       right: 0;
 
@@ -389,9 +389,9 @@ onBeforeUnmount(() => {
     gap: fluid(10);
 
     @media (min-width: 721px) {
-      bottom: calc(96 / 19.2 * 1vw);
+      bottom: min(calc(96 / 19.2 * 1vw), calc(96 / 1920 * 2560 * 1px));
       left: unset;
-      right: calc(160 / 19.2 * 1vw);
+      right: min(calc(160 / 19.2 * 1vw), calc(160 / 1920 * 2560 * 1px));
       transform: unset;
       text-align: right;
     }

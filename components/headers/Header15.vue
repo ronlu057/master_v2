@@ -226,7 +226,7 @@ onBeforeUnmount(() => {
   left: 0;
   right: 0;
   height: fluid(70);
-  padding: 0 calc(80 / 19.2 * 1vw);
+  padding: 0 fluid(80);
   z-index: $z_mbPanel_btn;
 
   @include rwd-1440 { padding: 0 calc(48 / 19.2 * 1vw); }
@@ -242,7 +242,7 @@ onBeforeUnmount(() => {
   .navbar {
     display: flex;
     align-items: center;
-    gap: 0 calc(45 / 19.2 * 1vw);
+    gap: 0 fluid(45);
 
     .navbtn {
       @include rwd-1200 { display: none; }

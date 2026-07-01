@@ -138,7 +138,7 @@ const onSlideChange = (s) => {
       .cover_txt {
         position: absolute;
         top: 50%;
-        left: calc(155 / 19.2 * 1vw);
+        left: fluid(155);
         width: max-content;
         max-width: calc(100% - 155 / 19.2 * 2vw);
         transform: translate(0, -50%);
@@ -246,7 +246,7 @@ const onSlideChange = (s) => {
     display: block;
     position: relative;
     width: 2px;
-    height: calc(360 / 19.2 * 1vw);
+    height: fluid(360);
     background: #fff;
 
     span {
@@ -265,7 +265,7 @@ const onSlideChange = (s) => {
 .tool_btn {
   display: flex;
   align-items: center;
-  gap: calc(55 / 19.2 * 1vw);
+  gap: fluid(55);
   position: absolute;
   top: 50%;
   right: calc(40 / 16 * 1rem + 40 / 19.2 * 1vw);
@@ -291,7 +291,7 @@ const onSlideChange = (s) => {
     .swiper-pagination {
       display: flex;
       align-items: center;
-      gap: calc(50 / 19.2 * 1vw);
+      gap: fluid(50);
       position: unset;
       transform: unset;
 

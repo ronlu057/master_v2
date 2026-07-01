@@ -175,7 +175,7 @@ const leftMb = (row) => row.product?.mb || row.product?.pc || OB_MB
     // 大字浮水印
     .cover_txt {
       position: absolute;
-      top: calc(100 / 19.2 * 1vw);
+      top: fluid(100);
       left: 0;
       width: 100%;
       color: transparent;
@@ -237,7 +237,7 @@ const leftMb = (row) => row.product?.mb || row.product?.pc || OB_MB
 
       .left {
         width: calc(900 / 1600 * 100%);
-        max-width: calc(680 / 19.2 * 1vw);
+        max-width: fluid(680);
         opacity: 0;
         transform: translate(-20px, 0);
 
@@ -302,7 +302,7 @@ const leftMb = (row) => row.product?.mb || row.product?.pc || OB_MB
           color: var(--banner-subtitle-color, #fff);
           font-size: clamp(16px, calc(22 / 19.2 * 1vw), calc(22 / 1920 * 2560 * 1px));
           line-height: 1.3;
-          margin-top: calc(23 / 19.2 * 1vw);
+          margin-top: fluid(23);
 
           @media (max-width: 840px) {
             line-height: 1.5;
@@ -315,7 +315,7 @@ const leftMb = (row) => row.product?.mb || row.product?.pc || OB_MB
           color: var(--banner-memo-color, #fff);
           font-size: clamp(16px, calc(22 / 19.2 * 1vw), calc(22 / 1920 * 2560 * 1px));
           line-height: 1.3;
-          margin-top: calc(28 / 19.2 * 1vw);
+          margin-top: fluid(28);
 
           @media (max-width: 840px) {
             line-height: 1.5;
@@ -328,7 +328,7 @@ const leftMb = (row) => row.product?.mb || row.product?.pc || OB_MB
         .b_note {
           color: var(--banner-memo-color, #fff);
           font-size: clamp(14px, calc(15 / 19.2 * 1vw), calc(15 / 1920 * 2560 * 1px));
-          margin-top: calc(30 / 19.2 * 1vw);
+          margin-top: fluid(30);
 
           @media (max-width: 840px) { display: none; }
         }

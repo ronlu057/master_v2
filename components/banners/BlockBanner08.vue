@@ -122,7 +122,7 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
       display: block;
       position: relative;
       height: 100%;
-      padding-bottom: calc(100 / 19.2 * 1vw);
+      padding-bottom: fluid(100);
       overflow: hidden;
 
       @media (max-width: 640px) {

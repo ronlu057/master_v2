@@ -216,7 +216,7 @@ const activeRow = computed(() => props.rows[current.value - 1] || {})
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 0 calc(80 / 19.2 * 1vw) fluid(30);
+    padding: 0 fluid(80) fluid(30);
     // 左上背景：後台上傳的底圖（--banner-top-image）疊在主色上；未上傳＝純主色
     background: var(--banner-top-image, none) no-repeat center center / cover, $web_color_2;
 
@@ -303,7 +303,7 @@ const activeRow = computed(() => props.rows[current.value - 1] || {})
     display: flex;
     align-items: center;
     position: relative;
-    padding: fluid(30) calc(80 / 19.2 * 1vw) calc(44 / 16 * 1rem + 10 / 19.2 * 1vw);
+    padding: fluid(30) fluid(80) calc(44 / 16 * 1rem + 10 / 19.2 * 1vw);
     background: $web_color_2;
 
     @media (min-width: 641px) { height: calc(345 / 840 * 100%); }
@@ -447,7 +447,7 @@ const activeRow = computed(() => props.rows[current.value - 1] || {})
     flex-direction: column;
     position: absolute;
     top: 56%;
-    right: calc(40 / 19.2 * 1vw);
+    right: fluid(40);
     transform: translateY(-50%);
     z-index: 1;
 

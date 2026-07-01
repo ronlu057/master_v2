@@ -324,7 +324,7 @@ body[data-page="index"] {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  gap: 0 calc(80 / 19.2 * 1vw);
+  gap: 0 fluid(80);
 
   @include rwd-1200 { justify-content: space-between; }
 }
@@ -332,7 +332,7 @@ body[data-page="index"] {
 // ── 主選單（共用樣式給左右） ───────────────────────────────
 .navmenu {
   display: flex;
-  gap: 0 calc(50 / 19.2 * 1vw);
+  gap: 0 fluid(50);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -482,7 +482,7 @@ body[data-page="index"] {
 .right {
   display: flex;
   align-items: center;
-  gap: 0 calc(50 / 19.2 * 1vw);
+  gap: 0 fluid(50);
   width: calc(50% - 65px);
 
   @include rwd-1200 { width: auto; }

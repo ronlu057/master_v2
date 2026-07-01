@@ -267,7 +267,7 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   right: 0;
-  padding: 0 calc(75 / 19.2 * 1vw);
+  padding: 0 fluid(75);
   height: fluid(70);
   background: #fff;
   z-index: $z_header;
@@ -283,8 +283,8 @@ onBeforeUnmount(() => {
 
     @media (min-width: 1201px) {
       top: 10px;
-      left: calc(75 / 19.2 * 1vw);
-      right: calc(75 / 19.2 * 1vw);
+      left: min(calc(75 / 19.2 * 1vw), calc(75 / 1920 * 2560 * 1px));
+      right: min(calc(75 / 19.2 * 1vw), calc(75 / 1920 * 2560 * 1px));
       padding: 0 30px;
       border-radius: 999px;
     }

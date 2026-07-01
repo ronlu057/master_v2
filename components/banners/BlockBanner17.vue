@@ -385,7 +385,7 @@ onBeforeUnmount(() => {
   }
 
   :deep(.swiper-pagination) {
-    bottom: calc(135 / 19.2 * 1vw);
+    bottom: fluid(135);
 
     @media (max-width: 1024px) {
       bottom: 20px;

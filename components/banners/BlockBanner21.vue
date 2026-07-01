@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
     .wider_container {
       width: 100%;
       max-width: fluid(1920);
-      padding: 0 calc(156 / 19.2 * 1vw);
+      padding: 0 fluid(156);
       margin: 0 auto;
 
       @media (max-width: 640px) {
@@ -400,7 +400,7 @@ onBeforeUnmount(() => {
   .wider_container {
     width: 100%;
     max-width: fluid(1920);
-    padding: 0 calc(156 / 19.2 * 1vw);
+    padding: 0 fluid(156);
     margin: 0 auto;
 
     @media (max-width: 640px) { padding: 0 25px; }
@@ -428,7 +428,7 @@ onBeforeUnmount(() => {
 .dots_cus {
   position: absolute;
   top: 50%;
-  right: calc(85 / 19.2 * 1vw);
+  right: fluid(85);
   z-index: 1;
   transform: translateY(-50%);
 

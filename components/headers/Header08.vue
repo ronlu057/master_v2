@@ -630,13 +630,13 @@ body[data-page="index"] {
   transform: translateY(-55%);
 
   .logo {
-    margin-bottom: calc(30 / 19.2 * 1vw);
+    margin-bottom: fluid(30);
 
   }
 
   .navmenu {
     display: flex;
-    gap: 0 calc(50 / 19.2 * 1vw);
+    gap: 0 fluid(50);
     list-style: none;
     margin: 0;
     padding: 0;

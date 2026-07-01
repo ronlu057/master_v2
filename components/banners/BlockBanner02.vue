@@ -133,7 +133,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 .cover_txt {
   position: absolute;
   top: 50%;
-  left: calc(156 / 19.2 * 1vw);
+  left: fluid(156);
   transform: translate(0, -50%);
 
   @media (max-width: 640px) {
@@ -291,7 +291,7 @@ const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
 .banner_news {
   position: absolute;
   bottom: 0;
-  left: calc(156 / 19.2 * 1vw);
+  left: fluid(156);
   width: 100%;
   max-width: fluid(586);
   padding: 0 fluid(30) fluid(20) 0;

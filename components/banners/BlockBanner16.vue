@@ -172,7 +172,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
-$b16-strip: calc(151.5 / 19.2 * 1vw); // 桌面左側直欄寬（放上下箭頭）
+$b16-strip: fluid(151.5); // 桌面左側直欄寬（放上下箭頭）
 
 .banner16 {
   position: relative;
@@ -384,7 +384,7 @@ $b16-strip: calc(151.5 / 19.2 * 1vw); // 桌面左側直欄寬（放上下箭頭
 .tool_btn {
   position: absolute;
   top: 50%;
-  left: calc(75.75 / 19.2 * 1vw);
+  left: fluid(75.75);
   z-index: 2;
   transform: translate(-50%, -50%);
   transition: all 0.3s;

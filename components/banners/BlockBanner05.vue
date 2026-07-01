@@ -163,7 +163,7 @@ const onReachBeginning = (s) => {
         content: '';
         display: block;
         flex-shrink: 0;
-        width: calc(368 / 19.2 * 1vw);
+        width: min(calc(368 / 19.2 * 1vw), calc(368 / 1920 * 2560 * 1px));
       }
     }
   }
@@ -174,8 +174,8 @@ const onReachBeginning = (s) => {
 
     @media (min-width: 721px) {
       width: 100%;
-      padding-right: calc(368 / 19.2 * 1vw);
-      margin-top: calc(99 / 19.2 * 1vw);
+      padding-right: min(calc(368 / 19.2 * 1vw), calc(368 / 1920 * 2560 * 1px));
+      margin-top: min(calc(99 / 19.2 * 1vw), calc(99 / 1920 * 2560 * 1px));
       transition: margin-top 3s ease-in-out, margin-left 3s ease-in-out;
     }
 
