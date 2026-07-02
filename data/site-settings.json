@@ -279,11 +279,11 @@
       ]
     }
   },
-  "headerMenuColor": "#545454",
+  "headerMenuColor": "#ffffff",
   "headerMenuHoverColor": "#4fc08d",
   "headerDropdownBg": "#f5f5f5",
   "headerDropdownItemBg": "#ffffff",
-  "headerDropdownColor": "#4a4a4a",
+  "headerDropdownColor": "#545454",
   "headerDropdownHoverColor": "#58c694",
   "headerIcons": {
     "search": {
@@ -308,7 +308,7 @@
     }
   },
   "headerMenuFontSize": "",
-  "headerIconColor": "#333333",
+  "headerIconColor": "#ffffff",
   "headerIconHoverColor": "#54c08f",
   "headerDropdownRadius": 7,
   "headerDropdownItemRadius": 5,
@@ -502,16 +502,16 @@
     "Header01": {
       "headerBgColor": "transparent",
       "headerBgColorScroll": "#ffffff",
-      "headerMenuColor": "#545454",
+      "headerMenuColor": "#ffffff",
       "headerMenuHoverColor": "#4fc08d",
-      "headerDropdownColor": "#4a4a4a",
+      "headerDropdownColor": "#545454",
       "headerDropdownHoverColor": "#58c694",
       "headerDropdownBg": "#f5f5f5",
       "headerDropdownItemBg": "#ffffff",
       "headerDropdownItemHoverBg": "#d5dbdc",
       "headerDropdownBorderColor": "",
       "headerDropdownItemBorderColor": "",
-      "headerIconColor": "#333333",
+      "headerIconColor": "#ffffff",
       "headerIconHoverColor": "#54c08f",
       "headerIconBg": "",
       "headerIconHoverBg": "",

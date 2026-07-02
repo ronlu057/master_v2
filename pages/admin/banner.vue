@@ -820,21 +820,66 @@ const saveContent = async () => {
   }
 }
 
-// ── 即時預覽縮放（BlockBanner01 為 100vw×100vh，依預覽框寬等比縮放）────────
+// ── 即時預覽（iframe 嵌入 /admin/banner-preview，可選裝置尺寸 + 等比縮放）──────
+// iframe 寬＝所選裝置 viewport 寬 → banner 三段圖 <picture> / fluid / @media 走該裝置斷點；
+// 內容 / 設定改動由 iframe 內的 storage 監聽即時同步（免重整）。與 /admin/header 同機制。
+const PREVIEW_DEVICES = [
+  { key: 'pc27', name: '27吋螢幕', type: 'pc', w: 2560, h: 1440 },
+  { key: 'pc', name: '桌機', type: 'pc', w: 1920, h: 1080 },
+  { key: 'laptop', name: '筆電', type: 'pc', w: 1440, h: 900 },
+  { key: 'macair', name: 'Mac Air', type: 'pc', w: 1280, h: 800 },
+  { key: 'ipadPro', name: 'iPad Pro', type: 'tablet', w: 1024, h: 1366 },
+  { key: 'galaxyTabS', name: '三星 Tab S', type: 'tablet', w: 800, h: 1280 },
+  { key: 'ipad', name: 'iPad', type: 'tablet', w: 768, h: 1024 },
+  { key: 'ipadMini', name: 'iPad mini', type: 'tablet', w: 744, h: 1133 },
+  { key: 'iphoneSE', name: 'iPhone SE', type: 'phone', w: 375, h: 667 },
+  { key: 'iphoneMini', name: 'iPhone mini', type: 'phone', w: 375, h: 812 },
+  { key: 'iphone', name: 'iPhone 14/15', type: 'phone', w: 390, h: 844 },
+  { key: 'iphonePro', name: 'iPhone 15 Pro', type: 'phone', w: 393, h: 852 },
+  { key: 'iphoneProMax', name: 'iPhone ProMax', type: 'phone', w: 430, h: 932 },
+  { key: 'galaxySsmall', name: 'Galaxy S(最小)', type: 'phone', w: 360, h: 640 },
+  { key: 'galaxyS', name: 'Galaxy S', type: 'phone', w: 360, h: 800 },
+  { key: 'galaxyUltra', name: 'Galaxy S Ultra', type: 'phone', w: 412, h: 915 },
+  { key: 'galaxyA', name: 'Galaxy A', type: 'phone', w: 360, h: 780 },
+  { key: 'galaxyFold', name: 'Galaxy Z Fold(折)', type: 'phone', w: 344, h: 882 },
+]
+const previewDeviceKey = ref('pc')
+const previewDevice = computed(
+  () => PREVIEW_DEVICES.find((d) => d.key === previewDeviceKey.value) || PREVIEW_DEVICES[0],
+)
+const previewLandscape = ref(false)
+const previewCanRotate = computed(() => previewDevice.value.type !== 'pc')
+const previewDims = computed(() => {
+  const d = previewDevice.value
+  if (previewCanRotate.value && previewLandscape.value) {
+    return { w: Math.max(d.w, d.h), h: Math.min(d.w, d.h) }
+  }
+  return { w: d.w, h: d.h }
+})
 const previewBox = ref(null)
-const scale = ref(0.25)
-const winH = ref(900)
-const calcScale = () => {
-  if (!previewBox.value || !import.meta.client) return
-  scale.value = previewBox.value.clientWidth / window.innerWidth
-  winH.value = window.innerHeight
+const previewBoxW = ref(900)
+const calcPreview = () => {
+  if (!import.meta.client || !previewBox.value) return
+  previewBoxW.value = previewBox.value.clientWidth
 }
+// 裝置寬 ≤ 預覽框寬 → 1:1 置中；比框寬才等比縮小塞進框寬（高度顯示全高）
+const previewScale = computed(() => Math.min(1, previewBoxW.value / previewDims.value.w))
+const previewFrameLeft = computed(() =>
+  Math.max(0, (previewBoxW.value - previewDims.value.w * previewScale.value) / 2),
+)
+const previewBoxStyle = computed(() => ({ height: previewDims.value.h * previewScale.value + 'px' }))
+const previewFrameStyle = computed(() => ({
+  width: previewDims.value.w + 'px',
+  height: previewDims.value.h + 'px',
+  transform: `scale(${previewScale.value})`,
+  marginLeft: previewFrameLeft.value + 'px',
+}))
 onMounted(() => {
-  nextTick(calcScale)
-  if (import.meta.client) window.addEventListener('resize', calcScale)
+  nextTick(calcPreview)
+  if (import.meta.client) window.addEventListener('resize', calcPreview)
 })
 onBeforeUnmount(() => {
-  if (import.meta.client) window.removeEventListener('resize', calcScale)
+  if (import.meta.client) window.removeEventListener('resize', calcPreview)
 })
 </script>
 
@@ -1754,20 +1799,40 @@ onBeforeUnmount(() => {
       <p v-if="contentMsg" :class="['msg', `msg--${contentMsg.type}`]">{{ contentMsg.text }}</p>
     </section>
 
-    <!-- 3) 即時預覽 -->
+    <!-- 3) 即時預覽（可選裝置尺寸；iframe 內部 viewport＝裝置寬，三段圖/RWD 走該斷點） -->
     <section class="block">
-      <h2 class="block__h">即時預覽</h2>
-      <div ref="previewBox" class="banner-preview" :style="{ height: winH * scale + 'px' }">
+      <h2 class="block__h">即時預覽 <em class="field__live">即時預覽</em></h2>
+      <p class="page__desc" style="margin-bottom: 12px">
+        下方為目前設定的實際首頁 Banner，改任何內容 / 設定即時反映。選裝置可看該尺寸下的排版與三段圖（桌機 2560 橫式 / 平板・手機直式）效果。
+      </p>
+      <div class="device-bar">
+        <button
+          v-for="d in PREVIEW_DEVICES"
+          :key="d.key"
+          type="button"
+          class="device-bar__btn"
+          :class="{ 'is-on': previewDeviceKey === d.key }"
+          @click="previewDeviceKey = d.key"
+        >
+          {{ d.name }}<span class="device-bar__dim">{{ d.w }}×{{ d.h }}</span>
+        </button>
+      </div>
+      <div v-if="previewCanRotate" class="device-bar">
+        <button type="button" class="device-bar__btn" :class="{ 'is-on': !previewLandscape }" @click="previewLandscape = false">
+          直版<span class="device-bar__dim">{{ Math.min(previewDevice.w, previewDevice.h) }}×{{ Math.max(previewDevice.w, previewDevice.h) }}</span>
+        </button>
+        <button type="button" class="device-bar__btn" :class="{ 'is-on': previewLandscape }" @click="previewLandscape = true">
+          橫版<span class="device-bar__dim">{{ Math.max(previewDevice.w, previewDevice.h) }}×{{ Math.min(previewDevice.w, previewDevice.h) }}</span>
+        </button>
+      </div>
+      <div ref="previewBox" class="banner-preview" :style="previewBoxStyle">
         <ClientOnly>
-          <div class="banner-preview__inner" :style="{ width: '100vw', height: winH + 'px', transform: `scale(${scale})` }">
-            <component
-              :is="currentBlockBanner"
-              :rows="previewRows"
-              :video-url="videoUrl"
-              :video-file="videoFile"
-              :show-nav="state.bannerNav"
-            />
-          </div>
+          <iframe
+            class="banner-preview__frame"
+            src="/admin/banner-preview"
+            title="Banner 即時預覽"
+            :style="previewFrameStyle"
+          ></iframe>
         </ClientOnly>
       </div>
     </section>
@@ -2302,17 +2367,44 @@ onBeforeUnmount(() => {
   border-radius: 8px;
   background: #000;
 }
-.banner-preview__inner {
-  position: absolute;
-  top: 0;
-  left: 0;
+.banner-preview__frame {
   transform-origin: top left;
-  pointer-events: none;
+  border: 0;
+  background: #000;
+  // 預設可互動（讓輪播箭頭 / 影片鈕 / 滑鼠特效可測試）；點到連結會讓 iframe 內跳頁、重整即可
+}
 
-  // 預覽整體不可互動（避免誤點 banner 連結跳頁）；唯獨放行「影片開關（× / ▶）」，
-  // 方便在後台關掉背景影片看主圖／文字。
-  :deep(.video_control) {
-    pointer-events: auto;
+// 裝置尺寸選擇列（與 /admin/header 即時預覽同款）
+.device-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.device-bar__btn {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #1a1f2a;
+  color: #c8cfdb;
+  border: 1px solid #2a3242;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover { background: #232a38; }
+  &.is-on {
+    background: #4fc08d;
+    border-color: #4fc08d;
+    color: #0f1218;
+    font-weight: 600;
   }
+}
+.device-bar__dim {
+  font-size: 10px;
+  opacity: 0.7;
 }
 </style>
