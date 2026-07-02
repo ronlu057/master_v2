@@ -67,14 +67,16 @@ const onSlideChange = (s) => { current.value = s.realIndex + 1 }
         <a>
           <!-- 基本圖（含斜切色塊揭幕） -->
           <picture>
-            <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
+            <source media="(min-width: 1025px)" :srcset="row.image?.pc" />
+            <source media="(min-width: 641px)" :srcset="row.image?.pad || row.image?.pc" />
+            <img :src="row.image?.mb || row.image?.pad || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
 
           <!-- 右側疊圖（active 時上浮淡入；無圖則不出） -->
           <picture v-if="row.coverImage?.pc || row.coverImage?.mb" class="cover">
-            <source media="(min-width: 641px)" :srcset="row.coverImage?.pc" />
-            <img :src="row.coverImage?.mb || row.coverImage?.pc" alt="" />
+            <source media="(min-width: 1025px)" :srcset="row.coverImage?.pc" />
+            <source media="(min-width: 641px)" :srcset="row.coverImage?.pad || row.coverImage?.pc" />
+            <img :src="row.coverImage?.mb || row.coverImage?.pad || row.coverImage?.pc" alt="" />
           </picture>
 
           <!-- 文字：主標（第一則 h1、其後 h2）＋ 副標 ＋ 說明文（沿用 BlockBanner01 慣例） -->

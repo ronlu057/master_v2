@@ -112,6 +112,8 @@ export function useEffectiveSettings() {
       bannerTopImage: pub.bannerTopImage || '',
       // BlockBanner16：固定背景大圖 + 3 張浮層小圖（版型層級一組，只換圖不分則；空＝不顯示）
       bannerBgImage: pub.bannerBgImage || '',
+      bannerBgImagePad: pub.bannerBgImagePad || '',
+      bannerBgImageMb: pub.bannerBgImageMb || '',
       bannerDeco1: pub.bannerDeco1 || '',
       bannerDeco2: pub.bannerDeco2 || '',
       bannerDeco3: pub.bannerDeco3 || '',

@@ -162,8 +162,9 @@ const toggleSound = () => {
         <SwiperSlide v-for="(row, i) in rows" :key="i">
           <div class="slide_inner">
             <picture>
-              <source media="(min-width: 721px)" :srcset="row.image?.pc" />
-              <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
+              <source media="(min-width: 1025px)" :srcset="row.image?.pc" />
+              <source media="(min-width: 641px)" :srcset="row.image?.pad || row.image?.pc" />
+              <img :src="row.image?.mb || row.image?.pad || row.image?.pc" :alt="row.alt || row.title || ''" />
             </picture>
 
             <div class="cover_txt" :class="`js-banner-row-${i}`">

@@ -92,8 +92,9 @@ const slideNext = () => mainSwiper.value && mainSwiper.value.slideNext()
       <SwiperSlide v-for="(row, i) in rows" :key="i" :class="`js-banner-row-${i}`">
         <div class="slide_inner">
           <picture>
-            <source media="(min-width: 721px)" :srcset="row.image?.pc" />
-            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
+            <source media="(min-width: 1025px)" :srcset="row.image?.pc" />
+            <source media="(min-width: 641px)" :srcset="row.image?.pad || row.image?.pc" />
+            <img :src="row.image?.mb || row.image?.pad || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
 
           <!-- 手機版文字（疊圖上、白字；桌面改由 .text_banner 顯示） -->

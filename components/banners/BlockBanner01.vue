@@ -131,8 +131,9 @@ const hasCover = (row) => !!(row.title || row.subtitle || row.memo || row.link)
       >
         <SwiperSlide v-for="(row, i) in rows" :key="i">
           <picture>
-            <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-            <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
+            <source media="(min-width: 1025px)" :srcset="row.image?.pc" />
+            <source media="(min-width: 641px)" :srcset="row.image?.pad || row.image?.pc" />
+            <img :src="row.image?.mb || row.image?.pad || row.image?.pc" :alt="row.alt || row.title || ''" />
           </picture>
         </SwiperSlide>
       </Swiper>

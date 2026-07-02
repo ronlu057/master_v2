@@ -349,7 +349,7 @@
   "bannerNavColor": "",
   "bannerNavBg": "",
   "bannerNavIconSize": 56,
-  "bannerNavGap": 24,
+  "bannerNavGap": 20,
   "bannerDotBg": "",
   "bannerDotActiveBg": "",
   "bannerDotBorderWidth": 0,
@@ -469,6 +469,8 @@
       "bannerVideoText": "",
       "bannerTopImage": "",
       "bannerBgImage": "",
+      "bannerBgImagePad": "",
+      "bannerBgImageMb": "",
       "bannerDeco1": "",
       "bannerDeco2": "",
       "bannerDeco3": "",
@@ -479,7 +481,7 @@
       "bannerNavColor": "",
       "bannerNavBg": "",
       "bannerNavIconSize": 56,
-      "bannerNavGap": 24,
+      "bannerNavGap": 20,
       "bannerNavThickness": "",
       "bannerLoop": true,
       "bannerAutoplay": true,
@@ -585,5 +587,7 @@
   "bannerDeco2": "",
   "bannerDeco3": "",
   "bannerRipple": true,
-  "bannerCircleSize": 60
+  "bannerCircleSize": 60,
+  "bannerBgImagePad": "",
+  "bannerBgImageMb": ""
 }

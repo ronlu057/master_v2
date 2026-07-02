@@ -62,8 +62,9 @@ const onSlideChange = (s) => {
     >
       <SwiperSlide v-for="(row, i) in rows" :key="i">
         <picture>
-          <source media="(min-width: 641px)" :srcset="row.image?.pc" />
-          <img :src="row.image?.mb || row.image?.pc" :alt="row.alt || row.title || ''" />
+          <source media="(min-width: 1025px)" :srcset="row.image?.pc" />
+          <source media="(min-width: 641px)" :srcset="row.image?.pad || row.image?.pc" />
+          <img :src="row.image?.mb || row.image?.pad || row.image?.pc" :alt="row.alt || row.title || ''" />
         </picture>
 
         <!-- 段落順序固定（對應原 PHP 四行），讓 nth-child 動畫穩定；說明/內文用 <p>（製作規範 §2.6） -->

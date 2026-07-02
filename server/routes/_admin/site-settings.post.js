@@ -80,6 +80,8 @@ const ALLOWED_KEYS = [
   'bannerVideoText',
   'bannerTopImage',
   'bannerBgImage',
+  'bannerBgImagePad',
+  'bannerBgImageMb',
   'bannerDeco1',
   'bannerDeco2',
   'bannerDeco3',

@@ -288,7 +288,7 @@ const nuxtApp = useNuxtApp()
 
 // 後端 row（store 格式：title 等為多語系物件、<br>）→ 編輯格式（lang 物件、換行）
 const toEditRow = (r) => ({
-  image: { pc: r.image?.pc || '', mb: r.image?.mb || '' },
+  image: { pc: r.image?.pc || '', pad: r.image?.pad || '', mb: r.image?.mb || '' },
   product: { pc: r.product?.pc || '', mb: r.product?.mb || '' }, // 左側產品去背圖（BlockBanner03 等）
   productAlt: r.productAlt || '', // 左側產品圖替代文字（SEO）
   alt: r.alt || '', // 圖片替代文字（SEO）
@@ -374,7 +374,7 @@ onMounted(() => {
 
 const addRow = () => {
   rows.value.push({
-    image: { pc: SAMPLE_IMG, mb: '' },
+    image: { pc: SAMPLE_IMG, pad: '', mb: '' },
     product: { pc: '', mb: '' },
     productAlt: '',
     alt: '',
@@ -405,18 +405,23 @@ const moveRow = (i, dir) => {
 
 // 背景圖目標比例（沿用 1920:911）；輸出寬度固定 2560，高度「按比例」換算（≈1215，非固定 911）
 const BANNER_RATIO = 1920 / 911
-const BANNER_TARGET_W = 2560
-const BANNER_TARGET_H = Math.round(BANNER_TARGET_W / BANNER_RATIO)
+// 三段圖片尺寸（除產品圖外，每張背景圖都上傳三種）：桌機 2560 / 平板 1024 / 手機 640
+// 前台 <picture>：≥1025 用 pc、641–1024 用 pad、≤640 用 mb（缺就往上一層 fallback）
+const IMG_TIERS = [
+  { key: 'pc', label: '桌機 2560', w: 2560, ratio: 1920 / 911 }, // 橫式
+  { key: 'pad', label: '平板 1024（直式）', w: 1024, ratio: 3 / 4 }, // 直式（1024×1365）
+  { key: 'mb', label: '手機 640（直式）', w: 640, ratio: 9 / 16 }, // 直式（640×1138）
+]
 
-// 背景圖：選檔 → 開啟互動式裁切器（BannerImageCropper）→ 套用後上傳裁切結果（2560 × 按比例高）
+// 背景圖：選檔 → 互動式裁切器（依該段目標寬裁切、同比例）→ 上傳 → 寫進 row.image[tier]
 const uploadingIdx = ref(-1)
-const cropTarget = ref(null) // { file, index }：裁切器開啟中
+const cropTarget = ref(null) // { file, index, tier, width }：裁切器開啟中
 
-const onPickImage = (i, e) => {
+const onPickImage = (i, tier, e) => {
   const file = e.target.files?.[0]
   e.target.value = ''
   if (!file) return
-  cropTarget.value = { file, index: i }
+  cropTarget.value = { file, index: i, tier: tier.key, width: tier.w, ratio: tier.ratio }
 }
 
 const onCropConfirm = async (blob) => {
@@ -424,25 +429,29 @@ const onCropConfirm = async (blob) => {
   cropTarget.value = null
   if (!target || !blob) return
   const i = target.index
+  const tier = target.tier
   uploadingIdx.value = i
   let uploaded = false
   try {
     const form = new FormData()
     form.append('image', blob, target.file.name)
     const res = await $fetch('/_admin/upload-banner', { method: 'POST', body: form })
-    rows.value[i].image = { pc: res.path, mb: res.path }
+    if (!rows.value[i].image || typeof rows.value[i].image !== 'object') {
+      rows.value[i].image = { pc: '', pad: '', mb: '' }
+    }
+    rows.value[i].image[tier] = res.path
     uploaded = true
     contentMsg.value = {
       type: 'success',
-      text: `第 ${i + 1} 則背景圖已上傳（${BANNER_TARGET_W}×${BANNER_TARGET_H}），AI 辨識 alt 中…`,
+      text: `第 ${i + 1} 則背景圖（${target.width}px）已上傳${tier === 'pc' ? '，AI 辨識 alt 中…' : ''}`,
     }
   } catch (err) {
     contentMsg.value = { type: 'error', text: err.data?.message || err.statusMessage || err.message }
   } finally {
     uploadingIdx.value = -1
   }
-  // 上傳成功 → 自動以 AI 辨識圖片內容填入 alt（best-effort，不影響上傳結果）
-  if (uploaded) recognizeAlt(i)
+  // 桌機主圖上傳成功 → 自動以 AI 辨識圖片內容填入 alt（best-effort）
+  if (uploaded && tier === 'pc') recognizeAlt(i)
 }
 
 // 左側產品去背圖：限 PNG / SVG，不裁切原圖上傳（→ product.pc / product.mb）
@@ -476,22 +485,28 @@ const clearProduct = (i) => {
 
 // 版型層級「固定背景大圖 / 浮層小圖」上傳（如 BlockBanner16）：整個版型一份，寫進 site-settings。
 // 背景大圖走一般圖端點；浮層小圖限 PNG / SVG 走去背素材端點。皆用 setPreview 即時預覽、提交固化。
-const uploadingBg = ref(false)
-const onPickBannerBg = async (e) => {
+// 版型層級固定背景大圖：三段尺寸（桌機/平板/手機），各自上傳到對應 site-settings key
+const BG_TIERS = [
+  { key: 'bannerBgImage', label: '桌機 2560' },
+  { key: 'bannerBgImagePad', label: '平板 1024' },
+  { key: 'bannerBgImageMb', label: '手機 640' },
+]
+const uploadingBg = ref('') // 上傳中的 tier key
+const onPickBannerBg = async (key, e) => {
   const file = e.target.files?.[0]
   e.target.value = ''
   if (!file) return
-  uploadingBg.value = true
+  uploadingBg.value = key
   try {
     const form = new FormData()
     form.append('image', file, file.name)
     const res = await $fetch('/_admin/upload-banner', { method: 'POST', body: form })
-    setPreview('bannerBgImage', res.path)
+    setPreview(key, res.path)
     verMessage.value = { type: 'success', text: '固定背景大圖已上傳（按提交固化）' }
   } catch (err) {
     verMessage.value = { type: 'error', text: err.data?.message || err.statusMessage || err.message }
   } finally {
-    uploadingBg.value = false
+    uploadingBg.value = ''
   }
 }
 const uploadingBannerDeco = ref('') // 上傳中的 deco key
@@ -689,7 +704,7 @@ const translateRow = async (i) => {
 // 即時預覽用 rows（取繁中、換行轉 <br>）— 給後台自身 BlockBanner01 預覽框
 const previewRows = computed(() =>
   rows.value.map((r) => ({
-    image: r.image?.pc ? r.image : { pc: SAMPLE_IMG, mb: '' },
+    image: r.image?.pc ? r.image : { pc: SAMPLE_IMG, pad: '', mb: '' },
     product: r.product || { pc: '', mb: '' },
     alt: r.alt,
     title: toStore(r.title.tw || ''),
@@ -1048,26 +1063,19 @@ onBeforeUnmount(() => {
       <!-- 固定背景大圖 + 中央浮層小圖（版型層級一組，如 BlockBanner16；只有文字輪播）-->
       <template v-if="currentBannerLevelMedia">
         <div class="field field--full">
-          <span class="field__label">固定背景大圖 <em class="field__live">即時預覽</em></span>
-          <div class="slide__img">
-            <img v-if="state.bannerBgImage" :src="state.bannerBgImage" alt="" class="thumb" />
-            <div v-else class="thumb thumb--empty">未設定<br />（用版型預設底色）</div>
-            <div class="slide__img-ops">
-              <label class="btn btn--ghost">
-                {{ uploadingBg ? '上傳中…' : '上傳背景大圖' }}
-                <input type="file" accept="image/*" hidden @change="onPickBannerBg" />
+          <span class="field__label">固定背景大圖（三種尺寸）<em class="field__live">即時預覽</em></span>
+          <div class="img-tiers__row">
+            <div v-for="t in BG_TIERS" :key="t.key" class="img-tier">
+              <img v-if="state[t.key]" :src="state[t.key]" alt="" class="thumb" />
+              <div v-else class="thumb thumb--empty">未設定</div>
+              <label class="btn btn--ghost btn--sm">
+                {{ uploadingBg === t.key ? '上傳中…' : `上傳${t.label}` }}
+                <input type="file" accept="image/*" hidden @change="onPickBannerBg(t.key, $event)" />
               </label>
-              <button
-                v-if="state.bannerBgImage"
-                type="button"
-                class="mini mini--danger"
-                @click="setPreview('bannerBgImage', '')"
-              >
-                移除
-              </button>
-              <span class="field__hint">{{ currentBannerLevelMedia.bgHint || '整個版型一張固定背景' }}；只有文字會輪播。</span>
+              <button v-if="state[t.key]" type="button" class="mini mini--danger" @click="setPreview(t.key, '')">移除</button>
             </div>
           </div>
+          <span class="field__hint">桌機橫式 2560；平板 1024 / 手機 640 建議<strong>直式</strong>。{{ currentBannerLevelMedia.bgHint || '' }}</span>
         </div>
 
         <div class="field field--full">
@@ -1536,12 +1544,18 @@ onBeforeUnmount(() => {
           </div>
 
           <!-- 背景圖（每則各自一張）；版型層級固定背景的版型（BlockBanner16）改在上方版型切換區設定，這裡隱藏 -->
-          <div v-if="!currentBannerLevelMedia" class="slide__img">
-            <img :src="row.image.pc || SAMPLE_IMG" alt="" class="thumb" />
-            <label class="btn btn--ghost">
-              {{ uploadingIdx === i ? '上傳中…' : '上傳背景圖' }}
-              <input type="file" accept="image/*" hidden @change="onPickImage(i, $event)" />
-            </label>
+          <div v-if="!currentBannerLevelMedia" class="img-tiers">
+            <span class="img-tiers__lbl">背景圖（三種尺寸，各自裁切上傳；平板／手機留空＝往上一層）</span>
+            <div class="img-tiers__row">
+              <div v-for="t in IMG_TIERS" :key="t.key" class="img-tier">
+                <img v-if="row.image?.[t.key]" :src="row.image[t.key]" alt="" class="thumb" />
+                <div v-else class="thumb thumb--empty">未設定</div>
+                <label class="btn btn--ghost btn--sm">
+                  {{ uploadingIdx === i ? '上傳中…' : `上傳${t.label}` }}
+                  <input type="file" accept="image/*" hidden @change="onPickImage(i, t, $event)" />
+                </label>
+              </div>
+            </div>
           </div>
 
           <!-- 左側產品去背圖（僅支援的版型，如 BlockBanner03）：限 PNG / SVG -->
@@ -1762,8 +1776,8 @@ onBeforeUnmount(() => {
     <BannerImageCropper
       v-if="cropTarget"
       :file="cropTarget.file"
-      :ratio="BANNER_RATIO"
-      :out-width="BANNER_TARGET_W"
+      :ratio="cropTarget.ratio || BANNER_RATIO"
+      :out-width="cropTarget.width"
       @confirm="onCropConfirm"
       @cancel="cropTarget = null"
     />
@@ -1782,6 +1796,37 @@ onBeforeUnmount(() => {
   font-size: 16px;
   color: #e6ebf2;
   margin-bottom: 12px;
+}
+
+// 背景圖三段尺寸（桌機 2560 / 平板 1024 / 手機 640）：每段縮圖 + 上傳
+.img-tiers {
+  margin-bottom: 12px;
+}
+.img-tiers__lbl {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #8a93a3;
+}
+.img-tiers__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.img-tier {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 200px;
+
+  .thumb {
+    width: 200px;
+    height: 95px;
+    object-fit: cover;
+    background: #0f1218;
+    border: 1px solid #2a3242;
+    border-radius: 6px;
+  }
 }
 
 // 中央浮層小圖：多槽網格（每槽縮圖 + 換圖/移除）

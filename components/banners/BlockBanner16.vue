@@ -45,6 +45,8 @@ const props = defineProps({
 // 固定媒體（版型層級一組）：背景大圖 + 3 張浮層小圖，皆取自後台設定
 const { state: siteState } = useEffectiveSettings()
 const bgImage = computed(() => siteState.bannerBgImage || '')
+const bgImagePad = computed(() => siteState.bannerBgImagePad || '')
+const bgImageMb = computed(() => siteState.bannerBgImageMb || '')
 const deco1 = computed(() => siteState.bannerDeco1 || '')
 const deco2 = computed(() => siteState.bannerDeco2 || '')
 const deco3 = computed(() => siteState.bannerDeco3 || '')
@@ -115,7 +117,9 @@ onBeforeUnmount(() => {
     <!-- 固定媒體層：背景大圖 + 浮層小圖（不隨文字輪播；桌面滑鼠視差） -->
     <div ref="mediaEl" class="fixed_media">
       <picture v-if="bgImage" class="fixed_bg">
-        <img :src="bgImage" :alt="bgAlt" />
+        <source media="(min-width: 1025px)" :srcset="bgImage" />
+        <source media="(min-width: 641px)" :srcset="bgImagePad || bgImage" />
+        <img :src="bgImageMb || bgImagePad || bgImage" :alt="bgAlt" />
       </picture>
       <div v-if="deco1" class="deco deco_1"><img :src="deco1" alt="" /></div>
       <div v-if="deco2" class="deco deco_2"><img :src="deco2" alt="" /></div>

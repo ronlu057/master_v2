@@ -1045,7 +1045,8 @@
           {
             "image": {
               "pc": "/img/tw/banner/banner-1782957629524.jpg",
-              "mb": "/img/tw/banner/banner-1782957629524.jpg"
+              "pad": "/img/tw/banner/banner-1782970657872.jpg",
+              "mb": "/img/tw/banner/banner-1782970664482.jpg"
             },
             "alt": "女子身穿灰色外套，眼神望向遠方",
             "title": {
@@ -1063,6 +1064,7 @@
           {
             "image": {
               "pc": "/img/tw/banner/banner-1782959692694.jpg",
+              "pad": "",
               "mb": "/img/tw/banner/banner-1782959692694.jpg"
             },
             "alt": "粉色頭髮女孩近距離特寫，背景光點閃爍",

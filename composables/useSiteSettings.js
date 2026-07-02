@@ -24,6 +24,8 @@ export const BANNER_LAYOUT_KEYS = [
   { key: 'bannerTopImage', def: '' },
   // BlockBanner16：固定背景大圖 + 3 張浮層小圖（版型層級一組，非每則）
   { key: 'bannerBgImage', def: '' },
+  { key: 'bannerBgImagePad', def: '' },
+  { key: 'bannerBgImageMb', def: '' },
   { key: 'bannerDeco1', def: '' },
   { key: 'bannerDeco2', def: '' },
   { key: 'bannerDeco3', def: '' },
@@ -297,6 +299,8 @@ export function useSiteSettings() {
         bannerVideoText: state.bannerVideoText || '',
         bannerTopImage: state.bannerTopImage || '',
         bannerBgImage: state.bannerBgImage || '',
+        bannerBgImagePad: state.bannerBgImagePad || '',
+        bannerBgImageMb: state.bannerBgImageMb || '',
         bannerDeco1: state.bannerDeco1 || '',
         bannerDeco2: state.bannerDeco2 || '',
         bannerDeco3: state.bannerDeco3 || '',
