@@ -1059,6 +1059,24 @@
             },
             "btnText": "",
             "link": ""
+          },
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782959692694.jpg",
+              "mb": "/img/tw/banner/banner-1782959692694.jpg"
+            },
+            "alt": "粉色頭髮女孩近距離特寫，背景光點閃爍",
+            "title": {
+              "tw": "粉色光影，夢幻視界"
+            },
+            "subtitle": {
+              "tw": "捕捉瞬間，點亮你的獨特風格"
+            },
+            "memo": {
+              "tw": "迷人粉髮與閃爍光點交織，綻放妳的無限魅力。"
+            },
+            "btnText": "",
+            "link": "/about"
           }
         ],
         "videoUrl": "",

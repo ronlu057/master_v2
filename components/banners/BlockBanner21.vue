@@ -199,8 +199,8 @@ onBeforeUnmount(() => {
       >
         <p>{{ padNum(i) }}</p>
         <div class="circle">
-          <svg>
-            <circle cx="21px" cy="21px" r="20px"></circle>
+          <svg viewBox="0 0 42 42" aria-hidden="true">
+            <circle cx="21" cy="21" r="20"></circle>
           </svg>
         </div>
       </div>
@@ -568,6 +568,7 @@ onBeforeUnmount(() => {
       }
     }
 
+    // active：目前播放那張，沿圓畫進度（對應範例 banner21_draw 18s）
     &.active .circle svg circle {
       animation: banner21_draw 18s linear;
     }
