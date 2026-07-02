@@ -24,7 +24,11 @@ import 'swiper/css'
 import 'swiper/css/effect-fade'
 import 'swiper/css/pagination'
 
-defineOptions({ supportsVideo: true }) // 此版型會渲染背景影片 → 後台才顯示影片欄位
+defineOptions({
+  supportsVideo: true, // 此版型會渲染背景影片 → 後台才顯示影片欄位
+  accentColor: { name: '游標圓反白色', def: '#000000' }, // 大標滑鼠圓內反白的文字色（後台可換）
+  circleSize: { name: '游標圓大小（半徑）', def: 96, min: 40, max: 240 }, // 反白圓半徑（後台可調）
+})
 const props = defineProps({
   title: { type: String, default: '' },
   rows: { type: Array, default: () => [] },
@@ -33,6 +37,10 @@ const props = defineProps({
   loop: { type: Boolean, default: true },
   autoplay: { type: Boolean, default: true },
 })
+
+// 後台「游標圓大小」→ 圓半徑（設計稿 px；SCSS 以此換算 fluid 鎖 2560）
+const { state: siteState } = useEffectiveSettings()
+const circleSize = computed(() => Number(siteState.bannerCircleSize) || 96)
 
 // 換行標語：把 \n 轉成 <br>（對應原 PHP nl2br）
 const toHtml = (s) => (s || '').replace(/\n/g, '<br>')
@@ -61,6 +69,38 @@ const goTo = (i) => {
   if (mainSwiper.value) mainSwiper.value.slideToLoop(i)
 }
 
+// ── 桌面大標「滑鼠跟隨圓形反白」（對應原 .cus_txt）：游標在大標上移動時，
+//    reveal 主色字只在游標圓內顯現（圓形＝radial-gradient 遮罩）。以 rAF lerp 順滑跟隨。
+let cusRaf = 0
+let cusEl = null
+let ctx = 0
+let cty = 0
+let ccx = 0
+let ccy = 0
+const cusTick = () => {
+  ccx += (ctx - ccx) / 8 // lerp 拖尾（越大越即時）
+  ccy += (cty - ccy) / 8
+  if (cusEl) {
+    cusEl.style.setProperty('--mx', `${ccx.toFixed(1)}px`)
+    cusEl.style.setProperty('--my', `${ccy.toFixed(1)}px`)
+  }
+  cusRaf = requestAnimationFrame(cusTick)
+}
+const onCusMove = (e) => {
+  const el = e.currentTarget
+  const r = el.getBoundingClientRect()
+  ctx = e.clientX - r.left
+  cty = e.clientY - r.top
+  cusEl = el
+  if (!cusRaf) cusRaf = requestAnimationFrame(cusTick)
+}
+const onCusLeave = (e) => {
+  // 離開時圓形緩緩回到大標左上（近似原範本 mouseleave 復位）
+  const r = e.currentTarget.getBoundingClientRect()
+  ctx = r.width * 0.22
+  cty = r.height * 0.45
+}
+
 // ── 桌面才掛背景影片（< 1024 不顯示，對應原 .content_video 隱藏 + JS matchMedia）
 const isDesktop = ref(false)
 let mq = null
@@ -72,11 +112,13 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   if (mq) mq.removeEventListener('change', updateBreakpoint)
+  if (cusRaf) cancelAnimationFrame(cusRaf)
 })
 </script>
 
 <template>
-  <section class="banner21">
+  <!-- --banner-circle-size：後台「游標圓大小」執行期變數（§3.1.2 允許的動態變數例外） -->
+  <section class="banner21" :style="{ '--banner-circle-size': circleSize }">
     <!-- 主圖 swiper（fade 切換，每張疊文字 info、隨 active 淡入） -->
     <Swiper
       v-if="rows.length"
@@ -117,11 +159,15 @@ onBeforeUnmount(() => {
               </div>
               <div v-if="row.memo" class="mb" v-html="toHtml(row.memo)" />
 
-              <!-- 桌面主標（對應原 .cus_txt；此版以一般文字呈現，去除滑鼠跟隨 SVG 特效） -->
-              <component :is="i === 0 ? 'h1' : 'h2'" class="title_lg">
-                {{ row.title }}
-                <template v-if="row.subtitle"><br />{{ row.subtitle }}</template>
-              </component>
+              <!-- 桌面主標：滑鼠跟隨圓形反白（base 白字＝h1 供 SEO；reveal 主色字只在游標圓內顯現） -->
+              <div class="cus_txt" @pointermove="onCusMove" @pointerleave="onCusLeave">
+                <component :is="i === 0 ? 'h1' : 'h2'" class="cus_txt_base">
+                  {{ row.title }}<template v-if="row.subtitle"><br />{{ row.subtitle }}</template>
+                </component>
+                <div class="cus_txt_reveal" aria-hidden="true">
+                  {{ row.title }}<template v-if="row.subtitle"><br />{{ row.subtitle }}</template>
+                </div>
+              </div>
 
               <div v-if="row.memo" class="paragraph" v-html="toHtml(row.memo)" />
 
@@ -259,14 +305,15 @@ onBeforeUnmount(() => {
         }
       }
 
-      // 桌面主標（對應原 .cus_txt 文字尺寸）→ 標題
-      .title_lg {
-        color: var(--banner-title-color, #fff);
-        font-size: clamp(46px, calc(84 / 19.2 * 1vw), calc(84 / 1920 * 2560 * 1px));
-        font-weight: 900;
-        line-height: 1.15;
-        text-transform: uppercase;
-        text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      // 桌面主標：滑鼠跟隨圓形反白（對應原 .cus_txt SVG 特效）
+      .cus_txt {
+        position: relative;
+        display: inline-block;
+        --mx: 22%; // 游標圓心（JS 動態覆寫）
+        --my: 45%;
+        // 圓半徑：後台「游標圓大小」(--banner-circle-size 設計稿 px) → fluid 換算、鎖 2560
+        --cr: var(--banner-circle-size, 96);
+        --r: clamp(calc(var(--cr) / 1920 * 1024 * 1px), calc(var(--cr) / 19.2 * 1vw), calc(var(--cr) / 1920 * 2560 * 1px));
         opacity: 0;
         transform: translate(40px, 0);
         transition: opacity 0.5s, transform 0.5s;
@@ -276,8 +323,33 @@ onBeforeUnmount(() => {
         }
       }
 
+      // base 白字（h1）與 reveal 主色字：同字型/字級/行高 → 完全疊合
+      .cus_txt_base,
+      .cus_txt_reveal {
+        margin: 0;
+        font-size: clamp(46px, calc(84 / 19.2 * 1vw), calc(84 / 1920 * 2560 * 1px));
+        font-weight: 900;
+        line-height: 1.15;
+        text-transform: uppercase;
+      }
+      .cus_txt_base {
+        color: var(--banner-title-color, #fff);
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      }
+      // reveal：主色字，只在游標圓內顯現（radial-gradient 遮罩，圓心＝--mx/--my）
+      .cus_txt_reveal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: var(--banner-accent-color, #{$web_color_1}); // 後台「游標圓反白色」可換
+        pointer-events: none;
+        -webkit-mask-image: radial-gradient(circle var(--r) at var(--mx) var(--my), #000 99%, transparent 100%);
+        mask-image: radial-gradient(circle var(--r) at var(--mx) var(--my), #000 99%, transparent 100%);
+      }
+
       .paragraph {
         color: var(--banner-memo-color, #fff);
+        margin-top: fluid(20); // 與上方大標拉開間距（範本靠 SVG 標題盒高，母版純文字需補）
         opacity: 0;
         transform: translate(40px, 0);
         transition: opacity 0.5s 0.1s, transform 0.5s 0.1s;
@@ -313,14 +385,14 @@ onBeforeUnmount(() => {
   // 進場：active slide 內文字與按鈕依序淡入
   .swiper-slide-active .content .info {
     > .mb,
-    .title_lg {
+    .cus_txt {
       opacity: 1;
       transform: translate(0, 0);
     }
 
     > .mb:nth-child(1) { transition: opacity 1s 1s, transform 1s 1s; }
     > .mb:nth-child(2) { transition: opacity 1s 1.1s, transform 1s 1.1s; }
-    .title_lg { transition: opacity 1s 1s, transform 1s 1s; }
+    .cus_txt { transition: opacity 1s 1s, transform 1s 1s; }
 
     .paragraph {
       opacity: 1;

@@ -99,6 +99,8 @@ export function useEffectiveSettings() {
       bannerAccentColor: pub.bannerAccentColor || '',
       // 第二強調色（如 BlockBanner08 右側三角色塊，與左側梯形各自換色）；空＝版型預設
       bannerAccentColor2: pub.bannerAccentColor2 || '',
+      // BlockBanner21 游標圓反白：圓半徑（設計稿 px，預設 96）
+      bannerCircleSize: Number(pub.bannerCircleSize) || 96,
       // BlockBanner15 影片圓鈕：五部位獨立色 + 旋轉文字（空＝版型預設）
       bannerVideoOuterColor: pub.bannerVideoOuterColor || '',
       bannerVideoInnerColor: pub.bannerVideoInnerColor || '',

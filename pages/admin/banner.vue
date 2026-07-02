@@ -34,6 +34,8 @@ const currentSupportsNote = computed(() => !!currentBlockBanner.value?.supportsN
 const currentSupportsHollowText = computed(() => !!currentBlockBanner.value?.supportsHollowText)
 // 此版型是否有「主色色塊」可換色（如 BlockBanner06 的斜切色塊）；{ name, def }
 const currentAccentColor = computed(() => currentBlockBanner.value?.accentColor || null)
+// 此版型是否有「游標圓大小」可調（元件以 defineOptions({ circleSize:{ name, def, min, max } }) 標記，如 BlockBanner21）
+const currentCircleSize = computed(() => currentBlockBanner.value?.circleSize || null)
 // 第二色塊（如 BlockBanner08 左梯形 / 右三角各自換色）；{ name, def }
 const currentAccentColor2 = computed(() => currentBlockBanner.value?.accentColor2 || null)
 // 此版型是否有「影片圓鈕」可調（BlockBanner15）：五部位獨立色 + 旋轉文字
@@ -917,6 +919,32 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <span class="field__hint">{{ state.blockBanner }} 的主色色塊；留空＝版型預設（{{ currentAccentColor.def }}）。</span>
+      </div>
+
+      <!-- 游標圓大小（僅有此設計的版型，如 BlockBanner21 大標滑鼠反白圓）-->
+      <div v-if="currentCircleSize" class="field field--full">
+        <span class="field__label">{{ currentCircleSize.name || '游標圓大小' }} <em class="field__live">即時預覽</em></span>
+        <div class="nav-range">
+          <span class="nav-range__lbl">半徑</span>
+          <input
+            type="range"
+            :min="currentCircleSize.min || 40"
+            :max="currentCircleSize.max || 240"
+            step="1"
+            :value="state.bannerCircleSize ?? (currentCircleSize.def || 96)"
+            @input="setPreview('bannerCircleSize', Number($event.target.value))"
+          />
+          <input
+            type="number"
+            class="nav-range__num"
+            :min="currentCircleSize.min || 40"
+            :max="currentCircleSize.max || 240"
+            :value="state.bannerCircleSize ?? (currentCircleSize.def || 96)"
+            @input="setPreview('bannerCircleSize', Number($event.target.value) || (currentCircleSize.def || 96))"
+          />
+          <span class="nav-range__unit">px</span>
+        </div>
+        <span class="field__hint">游標圓反白的半徑（設計稿 px，隨螢幕等比縮放）；預設 {{ currentCircleSize.def || 96 }}。</span>
       </div>
 
       <!-- 第二色塊顏色（如 BlockBanner08 右側三角，與左側梯形各自換色）-->

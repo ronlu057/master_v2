@@ -68,6 +68,7 @@ const DEFAULTS = {
   bannerMemoColor: '',
   bannerAccentColor: '',
   bannerAccentColor2: '',
+  bannerCircleSize: 96,
   bannerVideoOuterColor: '',
   bannerVideoInnerColor: '',
   bannerVideoTextColor: '',

@@ -12,6 +12,8 @@ export const BANNER_LAYOUT_KEYS = [
   { key: 'bannerMemoColor', def: '' },
   { key: 'bannerAccentColor', def: '' },
   { key: 'bannerAccentColor2', def: '' },
+  // BlockBanner21 游標圓反白：圓半徑（設計稿 px，隨螢幕等比縮放）
+  { key: 'bannerCircleSize', def: 96 },
   // BlockBanner15 影片圓鈕：五部位獨立色 + 旋轉文字（留空＝版型預設）
   { key: 'bannerVideoOuterColor', def: '' },
   { key: 'bannerVideoInnerColor', def: '' },
@@ -286,6 +288,7 @@ export function useSiteSettings() {
         bannerMemoColor: state.bannerMemoColor || '',
         bannerAccentColor: state.bannerAccentColor || '',
         bannerAccentColor2: state.bannerAccentColor2 || '',
+        bannerCircleSize: Number(state.bannerCircleSize) || 96,
         bannerVideoOuterColor: state.bannerVideoOuterColor || '',
         bannerVideoInnerColor: state.bannerVideoInnerColor || '',
         bannerVideoTextColor: state.bannerVideoTextColor || '',

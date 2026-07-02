@@ -1005,10 +1005,15 @@
             },
             "productAlt": "KEYEAST 大型 CNC 精密加工機台",
             "alt": "精密機械廠房背景",
-            "title": { "tw": "KEYEAST MACHINERY" },
-            "memo": { "tw": "專注精密機械之研發、設計、製造與銷售，提供最佳解決方案。" },
-            "link": "/about/company-intro",
-            "videoLink": "https://www.youtube.com/watch?v=mRC8mVLoqx8"
+            "title": {
+              "tw": "KEYEAST MACHINERY"
+            },
+            "subtitle": {},
+            "memo": {
+              "tw": "專注精密機械之研發、設計、製造與銷售，提供最佳解決方案。"
+            },
+            "btnText": "",
+            "link": "/about/company-intro"
           },
           {
             "image": {
@@ -1021,10 +1026,39 @@
             },
             "productAlt": "KEYEAST 大型 CNC 精密加工機台",
             "alt": "精密機械廠房背景",
-            "title": { "tw": "PRECISION MACHINERY" },
-            "memo": { "tw": "30 年製造經驗，打造高剛性、高精度的加工設備。" },
-            "link": "/products",
-            "videoLink": "https://www.youtube.com/watch?v=mRC8mVLoqx8"
+            "title": {
+              "tw": "PRECISION MACHINERY"
+            },
+            "subtitle": {},
+            "memo": {
+              "tw": "30 年製造經驗，打造高剛性、高精度的加工設備。"
+            },
+            "btnText": "",
+            "link": "/products"
+          }
+        ],
+        "videoUrl": "",
+        "videoFile": ""
+      },
+      "BlockBanner21": {
+        "rows": [
+          {
+            "image": {
+              "pc": "/img/tw/banner/banner-1782957629524.jpg",
+              "mb": "/img/tw/banner/banner-1782957629524.jpg"
+            },
+            "alt": "女子身穿灰色外套，眼神望向遠方",
+            "title": {
+              "tw": "目光所向，無限可能"
+            },
+            "subtitle": {
+              "tw": "灰色外套下的沉思，望向遠方的憧憬。"
+            },
+            "memo": {
+              "tw": "每一次凝視，都是對未來的期許。探索屬於你的無限可能。"
+            },
+            "btnText": "",
+            "link": ""
           }
         ],
         "videoUrl": "",

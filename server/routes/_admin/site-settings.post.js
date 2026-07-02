@@ -71,6 +71,7 @@ const ALLOWED_KEYS = [
   'bannerMemoColor',
   'bannerAccentColor',
   'bannerAccentColor2',
+  'bannerCircleSize',
   'bannerVideoOuterColor',
   'bannerVideoInnerColor',
   'bannerVideoTextColor',
